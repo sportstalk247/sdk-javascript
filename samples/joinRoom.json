@@ -1,0 +1,34 @@
+{
+   "kind":"api.result",
+   "message":"Success",
+   "errors":{
+
+   },
+   "code":200,
+   "data":{
+      "room":{
+         "kind":"chat.room",
+         "id":"5dd9d5a038a28326ccfe5743",
+         "ownerid":"1",
+         "name":"The 5th Stand",
+         "description":"Stamford Bridge in your Pocket",
+         "iframeUrl":"",
+         "slug":"5th-stand",
+         "enableActions":true,
+         "enableEnterAndExit":false,
+         "open":true,
+         "inroom":1935,
+         "whenmodified":"2019-12-11T16:57:28.313Z"
+      },
+      "user":{
+         "kind":"chat.user",
+         "userid":"046282d5e2d249739e0080a4d2a04904",
+         "handle":"Sarah",
+         "handlelowercase":"sarah",
+         "displayname":"undefined",
+         "pictureurl":"undefined",
+         "profileurl":"undefined",
+         "banned":false
+      }
+   }
+}
