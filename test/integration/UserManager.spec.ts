@@ -1,5 +1,7 @@
 import * as chai from 'chai';
 import {RestfulUserManager} from "../../src/impl/REST/RestfulUserManager";
+import * as dotenv from 'dotenv';
+dotenv.config();
 
 const { expect } = chai;
 

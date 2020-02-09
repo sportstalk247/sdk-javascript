@@ -2,6 +2,8 @@ import { SportsTalkClient } from '../../src/SportsTalkClient';
 import * as chai from 'chai';
 import * as sinon from 'sinon';
 import {RestfulRoomManager} from "../../src/impl/REST/RestfulRoomManager";
+import * as dotenv from 'dotenv';
+dotenv.config();
 
 const onPurgeEvent = sinon.fake();
 const onChatEvent = sinon.fake();

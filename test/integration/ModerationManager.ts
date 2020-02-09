@@ -2,7 +2,8 @@ import { SportsTalkClient } from '../../src/SportsTalkClient';
 import {RestfulModerationManager} from "../../src";
 import * as chai from 'chai';
 import * as sinon from 'sinon';
-
+import * as dotenv from 'dotenv';
+dotenv.config();
 
 const { expect } = chai;
 const config = {

@@ -1,6 +1,8 @@
 import {RestfulRoomManager} from "../../src/impl/REST/RestfulRoomManager";
 import * as chai from 'chai';
 import {ModerationType} from "../../src/DataModels";
+import * as dotenv from 'dotenv';
+dotenv.config();
 
 const { expect } = chai;
 

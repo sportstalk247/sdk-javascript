@@ -1,7 +1,8 @@
 import * as chai from 'chai';
 import {RestfulWebhookManager} from "../../src/impl/REST/RestfulWebhookManager";
 import {WebhookEvent, WebhookType} from "../../src/DataModels";
-
+import * as dotenv from 'dotenv';
+dotenv.config();
 
 const { expect } = chai;
 

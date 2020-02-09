@@ -2,6 +2,8 @@ import { SportsTalkClient } from '../../src/SportsTalkClient';
 import {EventResult, ModerationType} from "../../src/DataModels";
 import * as chai from 'chai';
 import {RestfulModerationManager} from "../../src/impl/REST/RestfulModerationManager";
+import * as dotenv from 'dotenv';
+dotenv.config();
 
 let client;
 let mod;

@@ -1,6 +1,8 @@
 import { SportsTalkClient } from '../../src/SportsTalkClient';
 import * as chai from 'chai';
 import {RestfulRoomManager} from "../../src/impl/REST/RestfulRoomManager";
+import * as dotenv from 'dotenv';
+dotenv.config();
 
 let client;
 let mod;
