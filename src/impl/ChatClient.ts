@@ -1,26 +1,23 @@
 import {
     AdvertisementOptions,
-    ApiResult,
     CommandOptions,
     GoalOptions,
     EventHandlerConfig,
-    Reaction,
     RoomResult,
-    SportsTalkConfig,
-    UserResult,
     Room,
-    User, RoomUserResult
-} from "./DataModels";
+    RoomUserResult
+} from "../models/ChatModels";
 import {Promise} from "es6-promise";
-import {DEFAULT_CONFIG, MISSING_ROOM} from "./constants";
-import {IRoomManager, IEventManager, ISportsTalkClient, IUserManager} from "./API";
-import {SettingsError} from "./errors";
-import {RestfulEventManager} from "./impl/REST/RestfulEventManager"
-import {RestfulRoomManager} from "./impl/REST/RestfulRoomManager";
-import {RestfulUserManager} from "./impl/REST/RestfulUserManager";
+import {DEFAULT_TALK_CONFIG, MISSING_ROOM} from "../constants";
+import {IRoomManager, IEventManager, IChatClient, IUserManager} from "../API/ChatAPI";
+import {SettingsError} from "../errors";
+import {RestfulEventManager} from "./chat/REST/RestfulEventManager"
+import {RestfulRoomManager} from "./chat/REST/RestfulRoomManager";
+import {RestfulUserManager} from "./chat/REST/RestfulUserManager";
+import {ApiResult, Reaction, SportsTalkConfig, User, UserResult} from "../models/CommonModels";
 
 
-export class SportsTalkClient implements ISportsTalkClient {
+export class ChatClient implements IChatClient {
 
     private _config: SportsTalkConfig;
     //User
@@ -28,11 +25,6 @@ export class SportsTalkClient implements ISportsTalkClient {
 
     // Track polling.
     private _currentRoom: RoomResult;
-
-    // API setup for current room.
-    private _updatesApi: string;
-    private _commandApi: string;
-    private _roomApi: string;
 
     // EventResult handlers
 
@@ -45,13 +37,13 @@ export class SportsTalkClient implements ISportsTalkClient {
         return JSON.stringify(this);
     }
     /**
-     * Configures and creates a SportsTalkClient
+     * Configures and creates a ChatClient
      * @param config
      * @param eventHandlers
      * @return SportsTalkClient.  Currently only a REST based client is supported.  Future SDK versions will implement other options such as firebase messaging and websockets
      */
-    static create = (config: SportsTalkConfig = {}, eventHandlers?: EventHandlerConfig): SportsTalkClient => {
-        const client = new SportsTalkClient();
+    static create = (config: SportsTalkConfig = {}, eventHandlers?: EventHandlerConfig): ChatClient => {
+        const client = new ChatClient();
         client.setConfig(config);
         if(eventHandlers) {
             client.setEventHandlers(eventHandlers);
@@ -60,7 +52,7 @@ export class SportsTalkClient implements ISportsTalkClient {
     }
 
     setConfig = (config:SportsTalkConfig) => {
-        this._config = Object.assign(DEFAULT_CONFIG, config);
+        this._config = Object.assign(DEFAULT_TALK_CONFIG, config);
 
         if(this._eventManager) {
             this._eventManager.setConfig(this._config);
@@ -102,6 +94,7 @@ export class SportsTalkClient implements ISportsTalkClient {
     startTalk = () => {
         this._eventManager.startTalk();
     }
+
     stopTalk = () => {
         this._eventManager.stopTalk();
     }
@@ -142,16 +135,13 @@ export class SportsTalkClient implements ISportsTalkClient {
     joinRoom = (room: RoomResult | string): Promise<RoomUserResult> => {
         return this._roomManager.joinRoom(this._user, room).then(response => {
             this._currentRoom = response.room;
-            this._roomApi = `${this._config.endpoint}/room/${this._currentRoom.id}`
-            this._commandApi = `${this._roomApi}/command`;
-            this._updatesApi = `${this._roomApi}/updates`;
             this._eventManager.setCurrentRoom(this._currentRoom);
             return response;
         });
     }
 
     exitRoom = (): Promise<RoomUserResult> => {
-        if(!this._currentRoom) {
+        if(!this._eventManager.getCurrentRoom()) {
             throw new SettingsError("Cannot exit if not in a room!");
         }
         return this._roomManager.exitRoom(this._user, this._currentRoom).then(response=>{

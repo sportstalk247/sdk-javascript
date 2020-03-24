@@ -1,5 +1,5 @@
 import * as chai from 'chai';
-import {RestfulUserManager} from "../../src/impl/REST/RestfulUserManager";
+import {RestfulUserManager} from "../../../src/impl/chat/REST/RestfulUserManager";
 import * as dotenv from 'dotenv';
 dotenv.config();
 

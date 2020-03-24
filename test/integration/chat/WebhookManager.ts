@@ -1,6 +1,6 @@
 import * as chai from 'chai';
-import {RestfulWebhookManager} from "../../src/impl/REST/RestfulWebhookManager";
-import {WebhookEvent, WebhookType} from "../../src/DataModels";
+import {RestfulWebhookManager} from "../../../src/impl/chat/REST/RestfulWebhookManager";
+import {WebhookEvent, WebhookType} from "../../../src/models/ChatModels";
 import * as dotenv from 'dotenv';
 dotenv.config();
 

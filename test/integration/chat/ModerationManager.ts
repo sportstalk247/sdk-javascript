@@ -1,22 +1,25 @@
-import { SportsTalkClient } from '../../src/SportsTalkClient';
-import {EventHandlerConfig, Reaction} from "../../src/DataModels";
+import { ChatClient } from '../../../src/impl/ChatClient';
+import {RestfulModerationManager} from "../../../src";
 import * as chai from 'chai';
 import * as sinon from 'sinon';
 import * as dotenv from 'dotenv';
 dotenv.config();
 
-
 const { expect } = chai;
-const config = {apiKey:process.env.TEST_KEY, endpoint: process.env.TEST_ENDPOINT};
+const config = {
+    apiKey:process.env.TEST_KEY,
+    endpoint: process.env.TEST_ENDPOINT,
+}
 const delay = function(timer) {
     return new Promise(function(accept, reject){
         const timeout = setTimeout(accept, timer)
     })
 }
 
-describe("Event Manager", ()=>{
+describe("Moderation Manager", ()=>{
 
-    const client = SportsTalkClient.create(config)
+    const client = ChatClient.create(config)
+    const MM = new RestfulModerationManager(config);
     const EM = client.getEventManager();
     const RM = client.getRoomManager();
     const onChatStart = sinon.fake();

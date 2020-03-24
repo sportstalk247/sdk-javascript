@@ -1,6 +1,13 @@
 /**
  * Models used by API Result Models.
  */
+import {ApiResult, Kind, User, UserResult} from "./CommonModels";
+export {
+    Kind,
+    ApiResult,
+    User,
+    UserResult
+}
 export enum EventType {
     speech = "speech",
     purge = "purge",
@@ -9,11 +16,6 @@ export enum EventType {
     roomOpen = "roomopen",
     action = "action",
     reply = "reply"
-}
-
-export enum ModerationType {
-    pre = "pre",
-    post = "post"
 }
 
 export enum WebhookType {
@@ -34,28 +36,6 @@ export enum WebhookEvent {
     purge = "purge"
 }
 
-export enum Kind {
-    chat = "chat.event",
-    room = "chat.room",
-    user = "chat.user",
-    api = "api.result",
-    webhook = "chat.webhook"
-}
-
-export enum Reaction {
-    like = 'like'
-}
-
-/**
- * Used as an optional part of the constructor for a SportsTalk client.
- * Each property can also be set individually.
- */
-export interface SportsTalkConfig {
-    appId?: string,
-    apiKey?: string,
-    endpoint?: string,
-    user?: User,
-}
 
 export interface RoomUserResult {
     user: UserResult,
@@ -84,18 +64,6 @@ export interface EventHandlerConfig {
 export interface JoinRoomResponse {
     room: Room,
     user: User
-}
-
-/**
- * All API responses take the form of an ApiResult.  This includes ApiResult<null>.
- * For instance, the 200 response to a chat command is of the type ApiResult<null>
- */
-export interface ApiResult<T> {
-    kind: Kind.api,
-    message:string, // "Success"
-    errors: object,
-    code:number,  //e.g. 200, 400
-    data:[T]
 }
 
 /**
@@ -142,19 +110,6 @@ export interface RoomResult extends Room {
     whenmodified:string
 }
 
-export interface User {
-    userid: string,
-    handle: string,
-    handlelowercase?: string,
-    displayname?: string,
-    pictureurl?: string,
-    profileurl?: string,
-    banned?:boolean
-}
-
-export interface UserResult extends User {
-    kind?: Kind.user
-}
 export interface EventResult extends Event {
     kind: Kind.chat,
     id: string,
@@ -171,7 +126,7 @@ export interface EventResult extends Event {
     reactions?:Array<EventResult>
 }
 
-export interface WebHook {
+export interface ChatWebHook {
     id?: string,
     kind?: Kind.webhook,
     label: string,

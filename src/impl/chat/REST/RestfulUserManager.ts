@@ -1,10 +1,11 @@
 
-import {ApiResult, EventResult, SportsTalkConfig, User, UserResult} from "../../DataModels";
+import {EventResult} from "../../../models/ChatModels";
 import {Promise} from "es6-promise";
 import axios from "axios";
-import {GET, POST} from "../../constants";
-import {formify, getApiHeaders} from "../../utils";
-import {IUserManager} from "../../api";
+import {GET, POST} from "../../../constants";
+import {formify, getUrlEncodedHeaders} from "../../../utils";
+import {IUserManager} from "../../../API/ChatAPI";
+import {ApiResult, SportsTalkConfig, User, UserResult} from "../../../models/CommonModels";
 
 
 export class RestfulUserManager implements IUserManager {
@@ -17,7 +18,7 @@ export class RestfulUserManager implements IUserManager {
 
     setConfig = (config: SportsTalkConfig) => {
         this._config = config;
-        this._apiHeaders = getApiHeaders(this._config.apiKey)
+        this._apiHeaders = getUrlEncodedHeaders(this._config.apiKey)
     }
 
     /**

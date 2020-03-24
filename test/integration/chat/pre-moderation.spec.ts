@@ -1,15 +1,16 @@
-import { SportsTalkClient } from '../../src/SportsTalkClient';
-import {EventResult, ModerationType} from "../../src/DataModels";
+import { ChatClient } from '../../../src/impl/ChatClient';
+import {EventResult} from "../../../src/models/ChatModels";
 import * as chai from 'chai';
-import {RestfulModerationManager} from "../../src/impl/REST/RestfulModerationManager";
+import {RestfulModerationManager} from "../../../src/impl/chat/REST/RestfulModerationManager";
 import * as dotenv from 'dotenv';
+import {ModerationType} from "../../../src/models/CommonModels";
 dotenv.config();
 
 const { expect } = chai;
 describe('Pre Moderation sequences', function() {
     describe('DENY', function () {
         let roomid;
-        const client = SportsTalkClient.create({
+        const client = ChatClient.create({
             apiKey:process.env.TEST_KEY,
             endpoint: process.env.TEST_ENDPOINT,
         });
@@ -65,7 +66,7 @@ describe('Pre Moderation sequences', function() {
     describe('APPROVE', function () {
         this.timeout(20000);
         let roomid;
-        const client = SportsTalkClient.create({
+        const client = ChatClient.create({
             apiKey:process.env.TEST_KEY,
             endpoint: process.env.TEST_ENDPOINT,
         });

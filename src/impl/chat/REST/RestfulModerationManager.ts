@@ -1,9 +1,10 @@
-import {ApiResult, EventResult, SportsTalkConfig, WebHook} from "../../DataModels";
+import {EventResult, ChatWebHook} from "../../../models/ChatModels";
 import {Promise} from "es6-promise";
 import axios from "axios";
-import {formify, getApiHeaders, getJSONHeaders} from "../../utils";
-import {DEFAULT_CONFIG, POST, } from "../../constants";
-import {IModerationManager} from "../../api";
+import {formify, getUrlEncodedHeaders} from "../../../utils";
+import {DEFAULT_TALK_CONFIG, POST, } from "../../../constants";
+import {IModerationManager} from "../../../API/ChatAPI";
+import {ApiResult, SportsTalkConfig} from "../../../models/CommonModels";
 
 
 export class RestfulModerationManager implements IModerationManager {
@@ -15,8 +16,8 @@ export class RestfulModerationManager implements IModerationManager {
     }
 
     public setConfig(config: SportsTalkConfig) {
-        this._config = Object.assign(DEFAULT_CONFIG, config);
-        this._apiHeaders = getApiHeaders(this._config.apiKey);
+        this._config = Object.assign(DEFAULT_TALK_CONFIG, config);
+        this._apiHeaders = getUrlEncodedHeaders(this._config.apiKey);
     }
 
     getModerationQueueEvents = (): Promise<Array<EventResult>> => {

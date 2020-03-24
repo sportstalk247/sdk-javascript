@@ -1,21 +1,18 @@
 import {
     AdvertisementOptions,
-    ApiResult,
     CommandOptions,
     EventHandlerConfig,
     EventResult,
-    EventType, GoalOptions, Reaction,
-    Room,
-    SportsTalkConfig,
-    User
-} from "../../DataModels";
-import {DEFAULT_CONFIG, GET, POST} from "../../constants";
-import {IEventManager} from "../../api";
-import {formify, getApiHeaders} from "../../utils";
-import {SettingsError} from "../../errors";
-import {NO_HANDLER_SET, NO_ROOM_SET} from "../../messages";
+    EventType, GoalOptions, Room
+} from "../../../models/ChatModels";
+import {DEFAULT_TALK_CONFIG, GET, POST} from "../../../constants";
+import {IEventManager} from "../../../API/ChatAPI";
+import {formify, getUrlEncodedHeaders} from "../../../utils";
+import {SettingsError} from "../../../errors";
+import {NO_HANDLER_SET, NO_ROOM_SET} from "../../../messages";
 import axios, {AxiosPromise} from "axios";
 import {Promise} from "es6-promise";
+import {ApiResult, Reaction, SportsTalkConfig, User} from "../../../models/CommonModels";
 const INVALID_POLL_FREQUENCY = "Invalid poll _pollFrequency.  Must be between 250ms and 5000ms"
 
 export class RestfulEventManager implements IEventManager{
@@ -65,9 +62,9 @@ export class RestfulEventManager implements IEventManager{
     }
 
     setConfig = (config:SportsTalkConfig) => {
-        this._config = Object.assign(DEFAULT_CONFIG, config);
+        this._config = Object.assign(DEFAULT_TALK_CONFIG, config);
         this._user = Object.assign(this._user, this._config.user);
-        this._apiHeaders = getApiHeaders(this._config.apiKey)
+        this._apiHeaders = getUrlEncodedHeaders(this._config.apiKey)
     }
 
     getCurrentRoom = ():Room | null => {

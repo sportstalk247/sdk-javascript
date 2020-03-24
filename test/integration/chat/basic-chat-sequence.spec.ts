@@ -1,6 +1,6 @@
-import { SportsTalkClient } from '../../src/SportsTalkClient';
+import { ChatClient } from '../../../src/impl/ChatClient';
 import * as chai from 'chai';
-import {RestfulRoomManager} from "../../src/impl/REST/RestfulRoomManager";
+import {RestfulRoomManager} from "../../../src/impl/chat/REST/RestfulRoomManager";
 import * as dotenv from 'dotenv';
 dotenv.config();
 
@@ -9,7 +9,7 @@ let mod;
 const { expect } = chai;
 
 describe('BASIC Chat Sequence', function() {
-    const client = SportsTalkClient.create({
+    const client = ChatClient.create({
         apiKey:process.env.TEST_KEY,
         endpoint: process.env.TEST_ENDPOINT,
         user: {
@@ -17,7 +17,7 @@ describe('BASIC Chat Sequence', function() {
             handle: 'handle1'
         }
     });
-    const client2 = SportsTalkClient.create({
+    const client2 = ChatClient.create({
         apiKey:process.env.TEST_KEY,
         endpoint: process.env.TEST_ENDPOINT,
         user: {

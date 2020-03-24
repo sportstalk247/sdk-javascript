@@ -1,4 +1,4 @@
-import {SettingsError, ValidationError} from "../../src/errors";
+import {SettingsError, ValidationError} from "../../../src/errors";
 import * as chai from 'chai';
 const { expect } = chai;
 
