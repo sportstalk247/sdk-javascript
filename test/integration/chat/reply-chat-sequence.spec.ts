@@ -1,36 +1,33 @@
-import { SportsTalkClient } from '../../src/SportsTalkClient';
+import { ChatClient } from '../../../src/impl/ChatClient';
 import * as chai from 'chai';
-import {RestfulRoomManager} from "../../src/impl/REST/RestfulRoomManager";
+import {RestfulRoomManager} from "../../../src/impl/chat/REST/RestfulRoomManager";
 import * as dotenv from 'dotenv';
 dotenv.config();
 
 let client;
 let mod;
 const { expect } = chai;
+const config = {
+    apiKey:process.env.TEST_KEY,
+    endpoint: process.env.TEST_ENDPOINT,
+}
 
-describe('GOAL Chat Sequence', function() {
-    const client = SportsTalkClient.create({
-        apiKey:process.env.TEST_KEY,
-        endpoint: process.env.TEST_ENDPOINT,
+describe('REPLY Chat Sequence', function() {
+    const client = ChatClient.create({
+        ...config,
         user: {
             userid: 'testuser1',
             handle: 'handle1'
         }
     });
-    const image = "https://res.cloudinary.com/sportstalk247/image/upload/v1575821595/goal_l6ho1d.jpg";
-    client.setDefaultGoalImage(image);
-    const client2 = SportsTalkClient.create({
-        apiKey:process.env.TEST_KEY,
-        endpoint: process.env.TEST_ENDPOINT,
+    const client2 = ChatClient.create({
+        ...config,
         user: {
             userid: 'testuser2',
             handle: 'handle2'
         }
     });
-    const rm = new RestfulRoomManager({
-        apiKey:process.env.TEST_KEY,
-        endpoint: process.env.TEST_ENDPOINT,
-    });
+    const rm = new RestfulRoomManager(config);
     const em1 = client.getEventManager();
     const em2 = client2.getEventManager();
 
@@ -66,43 +63,31 @@ describe('GOAL Chat Sequence', function() {
                 client.sendCommand("Hello!"),
                 client2.sendCommand("This is me!")
             ]).then(results => {
+
                 done()
             }).catch(done);
         })
     })
     describe('GetUpdates fires', function () {
-        it('Shows the same to users', function (done) {
+        it('Shows the same to users, sends reply', function (done) {
             Promise.all([em1.getUpdates(), em2.getUpdates()])
-                .then(chatHistories => {
+                .then(async chatHistories => {
                     expect(chatHistories[0]).to.have.lengthOf(2);
                     expect(chatHistories[1]).to.have.lengthOf(2);
+                    await client2.sendReply("This is my reply", chatHistories[0][0].id);
                     done();
                 }).catch(done)
         })
     });
-    describe('GOAL', function () {
-        it('Lets user1 send a goal', function (done) {
-            Promise.all([
-                client.sendGoal("GOAL!!"),
-                client2.sendCommand("That was amazing!")
-            ]).then(results => {
-                done()
-            }).catch(done);
-        })
-    })
-    describe('GetUpdates fires', function () {
-        it('Shows the goal', function (done) {
+    describe('GetUpdates shows reply', function () {
+        it('Fires onReply', function (done) {
             Promise.all([em1.getUpdates(), em2.getUpdates()])
                 .then(chatHistories => {
-                    const goal = chatHistories[0].find(item=>item.customtype=="goal")
-                    expect(goal).to.be.not.null;
-                    // @ts-ignore
-                    expect(goal.custompayload).to.be.not.null;
-                    // @ts-ignore
-                    const payload = JSON.parse(goal.custompayload);
-                    expect(payload.img).to.be.equal(image)
-                    expect(chatHistories[0]).to.have.lengthOf(4);
-                    expect(chatHistories[1]).to.have.lengthOf(4);
+                    expect(chatHistories[0]).to.have.lengthOf(3);
+                    expect(chatHistories[1]).to.have.lengthOf(3);
+                    expect(chatHistories[0][chatHistories[0].length-1].eventtype).to.equal("reply");
+                    expect(chatHistories[0][chatHistories[0].length-1].replyto).to.haveOwnProperty('userid');
+                    expect(chatHistories[0][chatHistories[0].length-1].body).to.equal('This is my reply')
                     done();
                 }).catch(done)
         })

@@ -3,6 +3,8 @@
  * @param data
  */
 import {APPLICATION_JSON, FORM_ENCODED} from "./constants";
+import {ApiHeaders} from "./models/CommonModels";
+import {Comment, Conversation} from "./models/ConversationModels";
 
 export function formify(data) {
     const formBody: Array<String> = []
@@ -18,7 +20,7 @@ export function formify(data) {
  * Gets proper API headers with optional token.  Without the token, most requests do not require CORS.
  * @param apiKey
  */
-export function getApiHeaders(apiKey?: string) {
+export function getUrlEncodedHeaders(apiKey?: string): ApiHeaders {
     const headers  = {
       'Content-Type':FORM_ENCODED,
     }
@@ -28,7 +30,7 @@ export function getApiHeaders(apiKey?: string) {
     return headers;
 }
 
-export function getJSONHeaders(apiKey?: string) {
+export function getJSONHeaders(apiKey?: string): ApiHeaders {
     const headers  = {
         'Content-Type': APPLICATION_JSON
     }

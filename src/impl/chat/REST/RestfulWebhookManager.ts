@@ -1,9 +1,10 @@
-import { SportsTalkConfig, WebHook} from "../../DataModels";
+import { ChatWebHook} from "../../../models/ChatModels";
 import {Promise} from "es6-promise";
 import axios from "axios";
-import {getJSONHeaders} from "../../utils";
-import {DEFAULT_CONFIG, DELETE, GET, POST, PUT} from "../../constants";
-import {IWebhookManager} from "../../api";
+import {getJSONHeaders} from "../../../utils";
+import {DEFAULT_TALK_CONFIG, DELETE, GET, POST, PUT} from "../../../constants";
+import {IWebhookManager} from "../../../API/ChatAPI";
+import {SportsTalkConfig} from "../../../models/CommonModels";
 
 const MISSING_ID = "Missing webhook or webhook missing ID";
 
@@ -16,11 +17,11 @@ export class RestfulWebhookManager implements IWebhookManager {
     }
 
     public setConfig(config: SportsTalkConfig) {
-        this._config = Object.assign(DEFAULT_CONFIG, config);
+        this._config = Object.assign(DEFAULT_TALK_CONFIG, config);
         this._apiHeaders = getJSONHeaders(this._config.apiKey);
     }
 
-    listWebhooks = (): Promise<WebHook[]> => {
+    listWebhooks = (): Promise<ChatWebHook[]> => {
         return axios({
             url: `${this._config.endpoint}/webhook`,
             method: GET,
@@ -30,7 +31,7 @@ export class RestfulWebhookManager implements IWebhookManager {
         })
     }
 
-    createWebhook = (hook: WebHook): Promise<WebHook> =>{
+    createWebhook = (hook: ChatWebHook): Promise<ChatWebHook> =>{
         return axios({
             url: `${this._config.endpoint}/webhook`,
             method: POST,
@@ -41,7 +42,7 @@ export class RestfulWebhookManager implements IWebhookManager {
         })
     }
 
-    updateWebhook = (hook: WebHook): Promise<WebHook> => {
+    updateWebhook = (hook: ChatWebHook): Promise<ChatWebHook> => {
         if(!hook || !hook.id) {
             throw new Error(MISSING_ID);
         }
@@ -55,7 +56,7 @@ export class RestfulWebhookManager implements IWebhookManager {
         })
     }
 
-    deleteWebhook = (hook: WebHook | string): Promise<WebHook> => {
+    deleteWebhook = (hook: ChatWebHook | string): Promise<ChatWebHook> => {
         if(!hook) {
             throw new Error(MISSING_ID);
         }

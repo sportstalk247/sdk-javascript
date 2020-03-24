@@ -3,6 +3,7 @@
         "outDir": "./dist/",        // path to output directory
         "sourceMap": true,          // allow sourcemap support
         "declaration": true,
+        "experimentalDecorators": true,
         "strictNullChecks": true,   // enable strict null checks as a best practice
         "module": "commonjs",       // specify module code generation
 //        "lib": [
@@ -12,7 +13,6 @@
 //            "dom",
 //            "es2015.symbol.wellknown"
 //        ],
-        "strictNullChecks": true,
         "target": "es5",            // specify ECMAScript target version
         "allowJs": true             // allow a partial TypeScript and JavaScript codebase
     },

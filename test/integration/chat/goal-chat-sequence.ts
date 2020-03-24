@@ -1,49 +1,38 @@
-import { SportsTalkClient } from '../../src/SportsTalkClient';
+import { ChatClient } from '../../../src/impl/ChatClient';
 import * as chai from 'chai';
-import * as sinon from 'sinon';
-import {RestfulRoomManager} from "../../src/impl/REST/RestfulRoomManager";
+import {RestfulRoomManager} from "../../../src/impl/chat/REST/RestfulRoomManager";
 import * as dotenv from 'dotenv';
 dotenv.config();
 
-const onPurgeEvent = sinon.fake();
-const onChatEvent = sinon.fake();
-const delay = function(timer) {
-    return new Promise(function(accept, reject){
-        const timeout = setTimeout(accept, timer)
-    })
-}
+let client;
+let mod;
 const { expect } = chai;
-const config = {
-    apiKey:process.env.TEST_KEY,
-    endpoint: process.env.TEST_ENDPOINT,
-}
 
-describe('PURGE Chat Sequence', function() {
-    const client = SportsTalkClient.create({
-        ...config,
+describe('GOAL Chat Sequence', function() {
+    const client = ChatClient.create({
+        apiKey:process.env.TEST_KEY,
+        endpoint: process.env.TEST_ENDPOINT,
         user: {
             userid: 'testuser1',
             handle: 'handle1'
         }
     });
-    const client2 = SportsTalkClient.create({
-        ...config,
+    const image = "https://res.cloudinary.com/sportstalk247/image/upload/v1575821595/goal_l6ho1d.jpg";
+    client.setDefaultGoalImage(image);
+    const client2 = ChatClient.create({
+        apiKey:process.env.TEST_KEY,
+        endpoint: process.env.TEST_ENDPOINT,
         user: {
             userid: 'testuser2',
             handle: 'handle2'
         }
     });
-    const rm = new RestfulRoomManager(config);
+    const rm = new RestfulRoomManager({
+        apiKey:process.env.TEST_KEY,
+        endpoint: process.env.TEST_ENDPOINT,
+    });
     const em1 = client.getEventManager();
-    em1.setEventHandlers({
-        onPurgeEvent,
-        onChatEvent,
-    })
     const em2 = client2.getEventManager();
-    em2.setEventHandlers({
-        onPurgeEvent,
-        onChatEvent
-    })
 
     let theRoom;
     describe('User 1', function () {
@@ -67,8 +56,6 @@ describe('PURGE Chat Sequence', function() {
             }).then(room => {
                 return client2.joinRoom(room)
             }).then(() => {
-                client.startTalk()
-                client2.startTalk()
                 done()
             }).catch(done)
         })
@@ -84,27 +71,38 @@ describe('PURGE Chat Sequence', function() {
         })
     })
     describe('GetUpdates fires', function () {
-        it('Shows the same to users, sends reply', function (done) {
+        it('Shows the same to users', function (done) {
             Promise.all([em1.getUpdates(), em2.getUpdates()])
-                .then(async chatHistories => {
+                .then(chatHistories => {
                     expect(chatHistories[0]).to.have.lengthOf(2);
                     expect(chatHistories[1]).to.have.lengthOf(2);
-                    await client2.sendReply("This is my reply", chatHistories[0][0].id);
                     done();
                 }).catch(done)
         })
     });
-    describe('PURGE user 1', function () {
-        it('Sends a purge command for Handl2', function(done){
-          client.sendCommand("*purge zola handle2").then(async (result)=>{
-              done();
-          })
+    describe('GOAL', function () {
+        it('Lets user1 send a goal', function (done) {
+            Promise.all([
+                client.sendGoal("GOAL!!"),
+                client2.sendCommand("That was amazing!")
+            ]).then(results => {
+                done()
+            }).catch(done);
         })
     })
-    describe('GetUpdates shows purge', function () {
-        it('Fires onPurge', function (done) {
-            delay(3000).then(()=>{
-                    expect(onPurgeEvent.callCount).to.be.greaterThan(0);
+    describe('GetUpdates fires', function () {
+        it('Shows the goal', function (done) {
+            Promise.all([em1.getUpdates(), em2.getUpdates()])
+                .then(chatHistories => {
+                    const goal = chatHistories[0].find(item=>item.customtype=="goal")
+                    expect(goal).to.be.not.null;
+                    // @ts-ignore
+                    expect(goal.custompayload).to.be.not.null;
+                    // @ts-ignore
+                    const payload = JSON.parse(goal.custompayload);
+                    expect(payload.img).to.be.equal(image)
+                    expect(chatHistories[0]).to.have.lengthOf(4);
+                    expect(chatHistories[1]).to.have.lengthOf(4);
                     done();
                 }).catch(done)
         })
@@ -113,8 +111,6 @@ describe('PURGE Chat Sequence', function() {
         it('can be deleted', function (done) {
             rm.deleteRoom(theRoom)
                 .then(success => {
-                    client.stopTalk();
-                    client2.stopTalk();
                     done()
                 }).catch(done);
         })

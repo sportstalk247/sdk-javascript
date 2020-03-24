@@ -1,10 +1,12 @@
-import {IConfigurable, IRoomManager} from "../../api";
-import {Room, RoomResult, SportsTalkConfig, ApiResult, UserResult, User, RoomUserResult} from "../../DataModels";
+import {IRoomManager} from "../../../API/ChatAPI";
+import {Room, RoomResult, RoomUserResult} from "../../../models/ChatModels";
 import {Promise} from "es6-promise";
 import axios from "axios";
-import {GET, DELETE, POST, MISSING_ROOM} from "../../constants";
-import {formify, getApiHeaders} from "../../utils";
-import {SettingsError} from "../../errors";
+import {GET, DELETE, POST, MISSING_ROOM} from "../../../constants";
+import {formify, getUrlEncodedHeaders} from "../../../utils";
+import {SettingsError} from "../../../errors";
+import {ApiResult, SportsTalkConfig, User, UserResult} from "../../../models/CommonModels";
+import {ISportsTalkConfigurable} from "../../../API/CommonAPI";
 
 
 export class RestfulRoomManager implements IRoomManager {
@@ -19,7 +21,7 @@ export class RestfulRoomManager implements IRoomManager {
     setConfig(config: SportsTalkConfig) {
         this._config = config;
         this._knownRooms = []
-        this._apiHeaders = getApiHeaders(this._config.apiKey);
+        this._apiHeaders = getUrlEncodedHeaders(this._config.apiKey);
     }
 
     /**

@@ -1,8 +1,9 @@
-import { SportsTalkClient } from '../../src/SportsTalkClient';
-import {EventResult, ModerationType} from "../../src/DataModels";
+import { ChatClient } from '../../../src/impl/ChatClient';
+import {EventResult} from "../../../src/models/ChatModels";
 import * as chai from 'chai';
-import {RestfulModerationManager} from "../../src/impl/REST/RestfulModerationManager";
+import {RestfulModerationManager} from "../../../src/impl/chat/REST/RestfulModerationManager";
 import * as dotenv from 'dotenv';
+import {ModerationType} from "../../../src/models/CommonModels";
 dotenv.config();
 
 let client;
@@ -17,7 +18,7 @@ describe('Post moderation Sequence', function() {
     let roomid;
     let eventlength = 1;
 
-    client = SportsTalkClient.create(config)
+    client = ChatClient.create(config)
     mod = new RestfulModerationManager(config);
 
     it('Can create a room, join the room, moderate messages, kill room', (done) => {

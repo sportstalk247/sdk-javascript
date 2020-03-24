@@ -28,7 +28,7 @@ See a simple example below:
 
 ```
 // first create a client
-const client = SportsTalkClient.create({apiKey:'YourApiKeyHere'},  {...EventHandlerConfig});
+const client = ChatClient.create({apiKey:'YourApiKeyHere'},  {...EventHandlerConfig});
 
 // You can set the event handlers as part of the factory or with the setEventhandlers method.
 client.setEventHandlers({
@@ -61,8 +61,8 @@ For use of these events in action, see the demo page: https://www.sportstalk247.
 You can also use the client in node.
 
 ```
-import { SportsTalkClient } from 'sportstalk-js'
-const client = SportsTalkClient.create({apiKey:'YourApiKeyHere'}, {...EventHandlerConfig});
+import { ChatClient } from 'sportstalk-js'
+const client = ChatClient.create({apiKey:'YourApiKeyHere'}, {...EventHandlerConfig});
 ```
 
 ## Events Callbacks

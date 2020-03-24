@@ -1,26 +1,32 @@
-import { SportsTalkClient } from '../../src/SportsTalkClient';
+import { ChatClient } from '../../../src/impl/ChatClient';
 import * as chai from 'chai';
-import {RestfulRoomManager} from "../../src/impl/REST/RestfulRoomManager";
+import * as sinon from 'sinon';
+import {RestfulRoomManager} from "../../../src/impl/chat/REST/RestfulRoomManager";
 import * as dotenv from 'dotenv';
 dotenv.config();
 
-let client;
-let mod;
+const onPurgeEvent = sinon.fake();
+const onChatEvent = sinon.fake();
+const delay = function(timer) {
+    return new Promise(function(accept, reject){
+        const timeout = setTimeout(accept, timer)
+    })
+}
 const { expect } = chai;
 const config = {
     apiKey:process.env.TEST_KEY,
     endpoint: process.env.TEST_ENDPOINT,
 }
 
-describe('REPLY Chat Sequence', function() {
-    const client = SportsTalkClient.create({
+describe('PURGE Chat Sequence', function() {
+    const client = ChatClient.create({
         ...config,
         user: {
             userid: 'testuser1',
             handle: 'handle1'
         }
     });
-    const client2 = SportsTalkClient.create({
+    const client2 = ChatClient.create({
         ...config,
         user: {
             userid: 'testuser2',
@@ -29,7 +35,15 @@ describe('REPLY Chat Sequence', function() {
     });
     const rm = new RestfulRoomManager(config);
     const em1 = client.getEventManager();
+    em1.setEventHandlers({
+        onPurgeEvent,
+        onChatEvent,
+    })
     const em2 = client2.getEventManager();
+    em2.setEventHandlers({
+        onPurgeEvent,
+        onChatEvent
+    })
 
     let theRoom;
     describe('User 1', function () {
@@ -53,6 +67,8 @@ describe('REPLY Chat Sequence', function() {
             }).then(room => {
                 return client2.joinRoom(room)
             }).then(() => {
+                client.startTalk()
+                client2.startTalk()
                 done()
             }).catch(done)
         })
@@ -63,7 +79,6 @@ describe('REPLY Chat Sequence', function() {
                 client.sendCommand("Hello!"),
                 client2.sendCommand("This is me!")
             ]).then(results => {
-
                 done()
             }).catch(done);
         })
@@ -79,15 +94,17 @@ describe('REPLY Chat Sequence', function() {
                 }).catch(done)
         })
     });
-    describe('GetUpdates shows reply', function () {
-        it('Fires onReply', function (done) {
-            Promise.all([em1.getUpdates(), em2.getUpdates()])
-                .then(chatHistories => {
-                    expect(chatHistories[0]).to.have.lengthOf(3);
-                    expect(chatHistories[1]).to.have.lengthOf(3);
-                    expect(chatHistories[0][chatHistories[0].length-1].eventtype).to.equal("reply");
-                    expect(chatHistories[0][chatHistories[0].length-1].replyto).to.haveOwnProperty('userid');
-                    expect(chatHistories[0][chatHistories[0].length-1].body).to.equal('This is my reply')
+    describe('PURGE user 1', function () {
+        it('Sends a purge command for Handl2', function(done){
+          client.sendCommand("*purge zola handle2").then(async (result)=>{
+              done();
+          })
+        })
+    })
+    describe('GetUpdates shows purge', function () {
+        it('Fires onPurge', function (done) {
+            delay(3000).then(()=>{
+                    expect(onPurgeEvent.callCount).to.be.greaterThan(0);
                     done();
                 }).catch(done)
         })
@@ -96,6 +113,8 @@ describe('REPLY Chat Sequence', function() {
         it('can be deleted', function (done) {
             rm.deleteRoom(theRoom)
                 .then(success => {
+                    client.stopTalk();
+                    client2.stopTalk();
                     done()
                 }).catch(done);
         })

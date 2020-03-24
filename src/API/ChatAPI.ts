@@ -1,27 +1,20 @@
 import {
     AdvertisementOptions,
-    ApiResult,
     CommandOptions,
     EventHandlerConfig,
-    EventResult, GoalOptions, Reaction,
+    EventResult,
+    GoalOptions,
     Room,
-    RoomResult, RoomUserResult,
-    SportsTalkConfig,
-    User,
-    UserResult, WebHook
-} from "./DataModels";
+    RoomResult,
+    RoomUserResult,
+    ChatWebHook
+} from "../models/ChatModels";
 
 import {Promise} from "es6-promise";
+import {ISportsTalkConfigurable, IUserConfigurable} from "./CommonAPI";
+import {ApiResult, Reaction, User, UserResult} from "../models/CommonModels";
 
-export interface IConfigurable {
-    setConfig(config:SportsTalkConfig)
-}
-
-export interface IUserConfigurable {
-    setUser(user:User)
-}
-
-export interface IEventManager extends IConfigurable, IUserConfigurable  {
+export interface IEventManager extends ISportsTalkConfigurable, IUserConfigurable  {
     startTalk(),
     stopTalk(),
     setCurrentRoom(room: Room | null): Room | null,
@@ -36,7 +29,7 @@ export interface IEventManager extends IConfigurable, IUserConfigurable  {
     getEventHandlers(): EventHandlerConfig
 }
 
-export interface IRoomManager extends IConfigurable {
+export interface IRoomManager extends ISportsTalkConfigurable {
     listRooms(): Promise<Array<RoomResult>>
     deleteRoom(id: string | Room): Promise<ApiResult<null>>
     createRoom(room: Room): Promise<RoomResult>
@@ -45,7 +38,7 @@ export interface IRoomManager extends IConfigurable {
     exitRoom(user: User | string, room: Room | string): Promise<RoomUserResult>
 }
 
-export interface ITalkClient extends IUserConfigurable, IConfigurable{
+export interface ITalkClient extends IUserConfigurable, ISportsTalkConfigurable{
     sendCommand(command: string, options?: CommandOptions):  Promise<ApiResult<null | Event>>
     sendReply(message: string, replyto: string, options?: CommandOptions): Promise<ApiResult<null>>
     sendReaction(reaction: Reaction, reactToMessageId: Event | string, options?: CommandOptions): Promise<ApiResult<null>>
@@ -53,13 +46,13 @@ export interface ITalkClient extends IUserConfigurable, IConfigurable{
     sendGoal(message?:string, img?: string, options?: GoalOptions): Promise<ApiResult<null>>
 }
 
-export interface IUserManager extends IConfigurable {
+export interface IUserManager extends ISportsTalkConfigurable {
     listUserMessages(user:User | string, cursor?: string, limit?: number): Promise<Array<EventResult>>
     setBanStatus(user: User | string, isBanned: boolean): Promise<ApiResult<UserResult>>
     createOrUpdateUser(user: User): Promise<UserResult>
 }
 
-export interface ISportsTalkClient extends ITalkClient {
+export interface IChatClient extends ITalkClient {
     setEventHandlers(eventHandlers: EventHandlerConfig);
     startTalk();
     stopTalk();
@@ -69,13 +62,13 @@ export interface ISportsTalkClient extends ITalkClient {
     listParticipants(cursor?: string, maxresults?: number): Promise<Array<UserResult>>;
 }
 
-export interface IModerationManager extends IConfigurable {
+export interface IModerationManager extends ISportsTalkConfigurable {
 
 }
 
-export interface IWebhookManager extends IConfigurable {
-    listWebhooks(): Promise<WebHook[]>;
-    createWebhook(hook: WebHook): Promise<WebHook>;
-    updateWebhook(hook: WebHook): Promise<WebHook>;
-    deleteWebhook(hook: WebHook | string): Promise<WebHook>;
+export interface IWebhookManager extends ISportsTalkConfigurable {
+    listWebhooks(): Promise<ChatWebHook[]>;
+    createWebhook(hook: ChatWebHook): Promise<ChatWebHook>;
+    updateWebhook(hook: ChatWebHook): Promise<ChatWebHook>;
+    deleteWebhook(hook: ChatWebHook | string): Promise<ChatWebHook>;
 }
