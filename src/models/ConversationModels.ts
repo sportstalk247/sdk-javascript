@@ -24,6 +24,11 @@ export interface Conversation extends HasConversationID {
     udf2?: string
 }
 
+export interface Commentary {
+    conversation: Conversation,
+    comments: Comment[]
+}
+
 export interface ConversationResponse extends Conversation {
     kind: Kind.conversation
     appid: string,
@@ -59,10 +64,6 @@ export enum Vote {
     up   = "up",
     down = "down",
     none = "none"
-}
-
-export enum ReportType {
-    abuse = "abuse"
 }
 
 export interface ConversationDeletionResponse extends HasConversationID {

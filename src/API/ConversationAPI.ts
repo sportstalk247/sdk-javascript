@@ -4,10 +4,10 @@ import {
     CommentDeletionResponse,
     Conversation,
     ConversationResponse,
-    ConversationDeletionResponse, ReactionResponse, Vote, ReportType, CommentRequest
+    ConversationDeletionResponse, ReactionResponse, Vote, CommentRequest, Commentary
 } from "../models/ConversationModels";
-import {ApiResult} from "../../dist/DataModels";
-import {Reaction, SportsTalkConfig} from "../models/CommonModels";
+
+import {Reaction, SportsTalkConfig, ReportType} from "../models/CommonModels";
 
 export interface ICommentManager extends ISportsTalkConfigurable, IUserConfigurable{
     setConversation(conversation: Conversation | string): Conversation;
@@ -19,7 +19,7 @@ export interface ICommentManager extends ISportsTalkConfigurable, IUserConfigura
     report(comment: Comment, reporttype: ReportType)
     react(comment:Comment | string, reaction:Reaction, enable?: boolean): Promise<ReactionResponse>;
     getReplies(comment: Comment, request?: CommentRequest): Promise<Array<Comment>>
-    getComments(request?: CommentRequest, conversation?: Conversation): Promise<Array<Comment>>
+    getComments(request?: CommentRequest, conversation?: Conversation): Promise<Commentary>
     getConversation(): Conversation | null
 }
 

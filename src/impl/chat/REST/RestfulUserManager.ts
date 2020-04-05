@@ -1,9 +1,9 @@
 
 import {EventResult} from "../../../models/ChatModels";
 import {Promise} from "es6-promise";
-import axios from "axios";
+import axios, {AxiosRequestConfig} from "axios";
 import {GET, POST} from "../../../constants";
-import {formify, getUrlEncodedHeaders} from "../../../utils";
+import {buildAPI, formify, getJSONHeaders, getUrlEncodedHeaders} from "../../../utils";
 import {IUserManager} from "../../../API/ChatAPI";
 import {ApiResult, SportsTalkConfig, User, UserResult} from "../../../models/CommonModels";
 
@@ -11,6 +11,7 @@ import {ApiResult, SportsTalkConfig, User, UserResult} from "../../../models/Com
 export class RestfulUserManager implements IUserManager {
     _config: SportsTalkConfig;
     _apiHeaders: {};
+    _jsonHeaders: {};
 
     constructor(config: SportsTalkConfig) {
         this.setConfig(config);
@@ -19,6 +20,7 @@ export class RestfulUserManager implements IUserManager {
     setConfig = (config: SportsTalkConfig) => {
         this._config = config;
         this._apiHeaders = getUrlEncodedHeaders(this._config.apiKey)
+        this._jsonHeaders = getJSONHeaders(this._config.apiKey);
     }
 
     /**
@@ -29,27 +31,30 @@ export class RestfulUserManager implements IUserManager {
      * @param user a UserResult model.  The values of 'banned', 'handlelowercase' and 'kind' are ignored.
      */
     createOrUpdateUser = (user: User): Promise<UserResult> => {
-        return axios({
+        const config:AxiosRequestConfig = {
             method: POST,
-            url: `${this._config.endpoint}/user/${user.userid}`,
-            headers: this._apiHeaders,
-            data: formify({
+            url: buildAPI(this._config,`user/users/${user.userid}`),
+            headers: this._jsonHeaders,
+            data: {
                 userid: user.userid,
                 handle: user.handle,
                 displayname: user.displayname,
                 pictureurl: user.pictureurl,
                 profileurl: user.profileurl
-            })
-        }).then(response=>response.data.data);
+            }
+        };
+        return axios(config).then(response=>response.data.data).catch(e=>{
+            throw e;
+        });
     }
 
     listUserMessages = (user:User | string, cursor?: string, limit?: number): Promise<Array<EventResult>> => {
         // @ts-ignore
-        const url = `${this._config.endpoint}/user/${user.userid || user.id || user}/?limit=${limit}&cursor=${cursor}`;
+        const url = buildAPI(this._config,`/user/users/${user.userid || user.id || user}/?limit=${limit}&cursor=${cursor}`);
         return axios({
             method: GET,
             url: url,
-            headers: this._apiHeaders
+            headers: this._jsonHeaders
         }).then(result=>{
             return result.data.data
         })
@@ -63,12 +68,14 @@ export class RestfulUserManager implements IUserManager {
     setBanStatus = (user: User | string, isBanned: boolean): Promise<ApiResult<UserResult>> => {
         // @ts-ignore
         const userid = user.userid || user;
-        const url = `${this._config.endpoint}/user/${userid}/ban`;
+        const url = buildAPI(this._config,`/user/users/${userid}/ban`);
         return axios({
             method: POST,
             url: url,
-            headers: this._apiHeaders,
-            data: formify({banned: isBanned})
-        }).then(response=>response.data);
+            headers: this._jsonHeaders,
+            data: {banned: ""+isBanned}
+        }).then(response=>response.data).catch(e=>{
+            throw e;
+        })
     }
 }

@@ -9,9 +9,11 @@ let mod;
 const { expect } = chai;
 
 describe('GOAL Chat Sequence', function() {
+    // @ts-ignore
     const client = ChatClient.create({
         apiKey:process.env.TEST_KEY,
         endpoint: process.env.TEST_ENDPOINT,
+        appId: process.env.TEST_APP_ID,
         user: {
             userid: 'testuser1',
             handle: 'handle1'
@@ -19,17 +21,21 @@ describe('GOAL Chat Sequence', function() {
     });
     const image = "https://res.cloudinary.com/sportstalk247/image/upload/v1575821595/goal_l6ho1d.jpg";
     client.setDefaultGoalImage(image);
+    // @ts-ignore
     const client2 = ChatClient.create({
         apiKey:process.env.TEST_KEY,
         endpoint: process.env.TEST_ENDPOINT,
+        appId: process.env.TEST_APP_ID,
         user: {
             userid: 'testuser2',
             handle: 'handle2'
         }
     });
+    // @ts-ignore
     const rm = new RestfulRoomManager({
         apiKey:process.env.TEST_KEY,
         endpoint: process.env.TEST_ENDPOINT,
+        appId: process.env.TEST_APP_ID,
     });
     const em1 = client.getEventManager();
     const em2 = client2.getEventManager();

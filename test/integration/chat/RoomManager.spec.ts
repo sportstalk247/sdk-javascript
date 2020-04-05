@@ -1,16 +1,15 @@
 import {RestfulRoomManager} from "../../../src/impl/chat/REST/RestfulRoomManager";
 import * as chai from 'chai';
 import * as dotenv from 'dotenv';
-import {ModerationType} from "../../../src/models/CommonModels";
+import {ModerationType, SportsTalkConfig} from "../../../src/models/CommonModels";
 dotenv.config();
 
 const { expect } = chai;
-
+// @ts-ignore
+const config: SportsTalkConfig = {apiKey:process.env.TEST_KEY, appId: process.env.TEST_APP_ID, endpoint: process.env.TEST_ENDPOINT};
+let roomlist;
 describe("RoomManager", function(){
-    const RM = new RestfulRoomManager(  {
-        apiKey:process.env.TEST_KEY,
-        endpoint: process.env.TEST_ENDPOINT,
-    })
+    const RM = new RestfulRoomManager(  config);
     it("Can create a room without moderation", done=>{
         const name = "ROOMMANAGER Test Room"
         const slug = "RM-test-room"
@@ -67,19 +66,19 @@ describe("RoomManager", function(){
         }).catch(done);
     })
     it('Can list rooms', done=>{
-        let roomlist;
+
         Promise.all([
             RM.createRoom({
                 name: "Room1-list",
-                slug: "Room1-slug-list"
+                slug: "Room1-slug-list1234"
             }),
             RM.createRoom({
                 name: "Room2-list",
-                slug: "Room2-slug-list"
+                slug: "Room2-slug-list1234"
             }),
             RM.createRoom({
                 name: "Room3-list",
-                slug: "Room3-slug-list"
+                slug: "Room3-slug-list1234"
             }),
         ]).then(rooms=>{
             roomlist = rooms;
@@ -88,11 +87,19 @@ describe("RoomManager", function(){
         }).then(rooms=>{
             // Other rooms might hang around because of other tests. But we should for sure have at least 3 now.
             expect(rooms.length).to.be.greaterThan(2);
-            return Promise.all(roomlist.map(room=>{
+            return Promise.all(roomlist.map(room => {
                 return RM.deleteRoom(room);
             }))
         }).then(results=>{
             done();
-        }).catch(done);
+        }).catch(e=>{
+            RM.listRooms().then(roomlist=>{
+                return Promise.all(roomlist.map(room => {
+                    return RM.deleteRoom(room);
+                })).then(()=>{
+                    done(e)
+                })
+            })
+        });
     })
 })

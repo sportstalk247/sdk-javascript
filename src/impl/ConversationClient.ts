@@ -1,12 +1,11 @@
-import {Reaction, SportsTalkConfig, User} from "../models/CommonModels";
+import {Reaction, SportsTalkConfig, User, ReportType} from "../models/CommonModels";
 import {
     Conversation,
     Vote,
     Comment,
-    ReportType,
     CommentRequest,
     ConversationDeletionResponse,
-    ShortComment, ConversationResponse
+    ShortComment, ConversationResponse, Commentary
 } from "../models/ConversationModels";
 import {RestfulCommentManager} from "./conversation/REST/RestfulCommentManager";
 import {RestfulConversationManager} from "./conversation/REST/RestfulConversationManager";
@@ -118,7 +117,7 @@ export class ConversationClient implements IConversationClient {
      * @param request how to sort/filter the comments.  See CommentRequest
      * @param conversation optional, if removed will retrieve the comments for the conversation set with `setConversation()`
      */
-    public getComments = (request?: CommentRequest, conversation?: Conversation) => {
+    public getComments = (request?: CommentRequest, conversation?: Conversation): Promise<Commentary> => {
         return this._commentManager.getComments(request, conversation);
     }
 

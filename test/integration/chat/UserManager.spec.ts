@@ -1,16 +1,18 @@
 import * as chai from 'chai';
 import {RestfulUserManager} from "../../../src/impl/chat/REST/RestfulUserManager";
 import * as dotenv from 'dotenv';
+import {SportsTalkConfig} from "../../../src/models/CommonModels";
 dotenv.config();
 
 const { expect } = chai;
-
+// @ts-ignore
+const config: SportsTalkConfig = {apiKey:process.env.TEST_KEY, appId: process.env.TEST_APP_ID, endpoint: process.env.TEST_ENDPOINT};
 describe("UserManager", function(){
-    const UM = new RestfulUserManager(  {
-        apiKey:process.env.TEST_KEY,
-        endpoint: process.env.TEST_ENDPOINT,
-    })
+    const UM = new RestfulUserManager(  config);
     let user;
+    it("fake", function(done){
+        done();
+    })
     describe("Creation", function() {
         it("Can create a user", done => {
             UM.createOrUpdateUser({

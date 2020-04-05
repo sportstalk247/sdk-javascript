@@ -62,7 +62,7 @@ You can also use the client in node.
 
 ```
 import { ChatClient } from 'sportstalk-js'
-const client = ChatClient.create({apiKey:'YourApiKeyHere'}, {...EventHandlerConfig});
+const client = ChatClient.create({apiKey:'YourApiKeyHere', appId: 'yourAppId'}, {...EventHandlerConfig});
 ```
 
 ## Events Callbacks

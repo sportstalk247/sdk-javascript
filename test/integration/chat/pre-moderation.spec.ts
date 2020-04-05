@@ -3,21 +3,19 @@ import {EventResult} from "../../../src/models/ChatModels";
 import * as chai from 'chai';
 import {RestfulModerationManager} from "../../../src/impl/chat/REST/RestfulModerationManager";
 import * as dotenv from 'dotenv';
-import {ModerationType} from "../../../src/models/CommonModels";
+import {ModerationType, SportsTalkConfig} from "../../../src/models/CommonModels";
 dotenv.config();
 
 const { expect } = chai;
+const config: SportsTalkConfig = {apiKey:process.env.TEST_KEY, appId: process.env.TEST_APP_ID || "", endpoint: process.env.TEST_ENDPOINT};
+
 describe('Pre Moderation sequences', function() {
     describe('DENY', function () {
+        // @ts-ignore
+
         let roomid;
-        const client = ChatClient.create({
-            apiKey:process.env.TEST_KEY,
-            endpoint: process.env.TEST_ENDPOINT,
-        });
-        const mod = new RestfulModerationManager({
-            apiKey:process.env.TEST_KEY,
-            endpoint: process.env.TEST_ENDPOINT,
-        });
+        const client = ChatClient.create(config);
+        const mod = new RestfulModerationManager(config);
         it('Can create a room, join the room, deny messages, kill room', (done) => {
             client.createRoom({
                 name: "Pre-moderation test Room",
@@ -66,14 +64,8 @@ describe('Pre Moderation sequences', function() {
     describe('APPROVE', function () {
         this.timeout(20000);
         let roomid;
-        const client = ChatClient.create({
-            apiKey:process.env.TEST_KEY,
-            endpoint: process.env.TEST_ENDPOINT,
-        });
-        const mod = new RestfulModerationManager({
-            apiKey:process.env.TEST_KEY,
-            endpoint: process.env.TEST_ENDPOINT,
-        });
+        const client = ChatClient.create(config);
+        const mod = new RestfulModerationManager(config);
         it('Can create a room, join the room, approve messages, kill room', (done) => {
             client.createRoom({
                 name: "Pre-moderation test Room",
