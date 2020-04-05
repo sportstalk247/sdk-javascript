@@ -1,14 +1,14 @@
 import {EventResult, ChatWebHook} from "../../../models/ChatModels";
 import {Promise} from "es6-promise";
-import axios from "axios";
-import {formify, getUrlEncodedHeaders} from "../../../utils";
+import axios, {AxiosRequestConfig} from "axios";
+import {buildAPI, formify, getUrlEncodedHeaders} from "../../../utils";
 import {DEFAULT_TALK_CONFIG, POST, } from "../../../constants";
 import {IModerationManager} from "../../../API/ChatAPI";
 import {ApiResult, SportsTalkConfig} from "../../../models/CommonModels";
 
 
 export class RestfulModerationManager implements IModerationManager {
-    private _config: SportsTalkConfig = {};
+    private _config: SportsTalkConfig = {appId: ""};
     private _apiHeaders;
 
     constructor(config: SportsTalkConfig) {
@@ -41,16 +41,6 @@ export class RestfulModerationManager implements IModerationManager {
         }).catch(result => {
             return {}
         })
-    }
-
-    reportEvent = (event: EventResult): Promise<ApiResult<null> | Error> => {
-        // @ts-ignore
-        const id = event.id | event;
-        return axios({
-            method: POST,
-            url: `${this._config.endpoint}/room/${event.roomId}/report/${event.id}`,
-            headers: this._apiHeaders
-        }).then(result => result)
     }
 
     approveEvent = (event: EventResult): Promise<ApiResult<null> | Error> => {

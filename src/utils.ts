@@ -3,7 +3,7 @@
  * @param data
  */
 import {APPLICATION_JSON, FORM_ENCODED} from "./constants";
-import {ApiHeaders} from "./models/CommonModels";
+import {ApiHeaders, SportsTalkConfig} from "./models/CommonModels";
 import {Comment, Conversation} from "./models/ConversationModels";
 
 export function formify(data) {
@@ -14,6 +14,11 @@ export function formify(data) {
         formBody.push(`${encodedKey}=${encodedValue}`);
     }
     return formBody.join("&");
+}
+
+export function buildAPI(config: SportsTalkConfig, ext: string): string {
+    const endpoint = `${config.endpoint}/${config.appId}/${ext}`;
+    return endpoint;
 }
 
 /**

@@ -9,7 +9,7 @@ import {SportsTalkConfig} from "../../../models/CommonModels";
 const MISSING_ID = "Missing webhook or webhook missing ID";
 
 export class RestfulWebhookManager implements IWebhookManager {
-    private _config: SportsTalkConfig = {};
+    private _config: SportsTalkConfig = {appId: ""};
     private _apiHeaders;
 
     constructor(config: SportsTalkConfig) {

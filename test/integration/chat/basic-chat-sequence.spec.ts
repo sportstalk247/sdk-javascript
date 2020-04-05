@@ -2,32 +2,32 @@ import { ChatClient } from '../../../src/impl/ChatClient';
 import * as chai from 'chai';
 import {RestfulRoomManager} from "../../../src/impl/chat/REST/RestfulRoomManager";
 import * as dotenv from 'dotenv';
+import {SportsTalkConfig} from "../../../src/models/CommonModels";
 dotenv.config();
 
 let client;
 let mod;
 const { expect } = chai;
-
+// @ts-ignore
+const config: SportsTalkConfig = {apiKey:process.env.TEST_KEY, appId: process.env.TEST_APP_ID || "", endpoint: process.env.TEST_ENDPOINT};
 describe('BASIC Chat Sequence', function() {
-    const client = ChatClient.create({
-        apiKey:process.env.TEST_KEY,
-        endpoint: process.env.TEST_ENDPOINT,
-        user: {
+    const user1config: SportsTalkConfig = {...config,user: {
             userid: 'testuser1',
             handle: 'handle1'
-        }
-    });
-    const client2 = ChatClient.create({
-        apiKey:process.env.TEST_KEY,
-        endpoint: process.env.TEST_ENDPOINT,
+        }};
+
+    const user2config: SportsTalkConfig = {
+        ...config,
+
         user: {
             userid: 'testuser2',
             handle: 'handle2'
         }
-    });
+    }
+    const client = ChatClient.create(user1config);
+    const client2 = ChatClient.create(user2config);
     const rm = new RestfulRoomManager({
-        apiKey: process.env.TEST_KEY,
-        endpoint: process.env.TEST_ENDPOINT,
+       ...config
     });
     const em1 = client.getEventManager();
     const em2 = client2.getEventManager();
@@ -53,7 +53,7 @@ describe('BASIC Chat Sequence', function() {
                 slug: "chat-test-room",
             }).then(room => {
                 return client2.joinRoom(room)
-            }).then(() => {
+            }).then((resp) => {
                 done()
             }).catch(done)
         })
@@ -82,7 +82,6 @@ describe('BASIC Chat Sequence', function() {
         it("Leaves the room", async function() {
             await client.exitRoom();
             await client2.exitRoom();
-
         })
     })
     describe('Kill test room', function () {

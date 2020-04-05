@@ -61,3 +61,12 @@ export interface ApiResult<T> {
 export enum Reaction {
     like = 'like'
 }
+
+export enum ReportType {
+    abuse = 'abuse'
+}
+
+export interface ReportReason {
+    reporttype: ReportType,
+    userid: string
+}

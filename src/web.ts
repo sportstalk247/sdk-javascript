@@ -9,7 +9,7 @@ var ConversationClient = window.ConversationClient || conversation.default || co
 
 if(window) {
     // @ts-ignore
-    window.SportsTalkClient = SportsTalkClient;
+    window.ChatClient = SportsTalkClient;
     // @ts-ignore
     window.ConversationClient = ConversationClient;
     // @ts-ignore
@@ -17,7 +17,9 @@ if(window) {
     // @ts-ignore
     window.Conversation = {}
     // @ts-ignore
-    window.SportsTalk.Types = types;
+    window.SportsTalk.chat = {};
     // @ts-ignore
-    window.Conversation.Types = conversationtypes
+    window.SportsTalk.chat.Types = types;
+    // @ts-ignore
+    window.window.SportsTalk.conversation.Types = conversationtypes
 }

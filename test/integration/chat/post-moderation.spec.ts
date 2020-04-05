@@ -3,16 +3,14 @@ import {EventResult} from "../../../src/models/ChatModels";
 import * as chai from 'chai';
 import {RestfulModerationManager} from "../../../src/impl/chat/REST/RestfulModerationManager";
 import * as dotenv from 'dotenv';
-import {ModerationType} from "../../../src/models/CommonModels";
+import {ModerationType, SportsTalkConfig} from "../../../src/models/CommonModels";
 dotenv.config();
 
 let client;
 let mod;
 const { expect } = chai;
-const config = {
-    apiKey:process.env.TEST_KEY,
-    endpoint: process.env.TEST_ENDPOINT,
-}
+// @ts-ignore
+const config: SportsTalkConfig = {apiKey:process.env.TEST_KEY, appId: process.env.TEST_APP_ID, endpoint: process.env.TEST_ENDPOINT};
 
 describe('Post moderation Sequence', function() {
     let roomid;
@@ -37,6 +35,7 @@ describe('Post moderation Sequence', function() {
                handle: 'test'
            });
        }).then((resp)=>{
+           client.setUser(resp);
          //  console.log("POST created user")
            return client.joinRoom(roomid)
        }).then((room)=>{
@@ -54,9 +53,8 @@ describe('Post moderation Sequence', function() {
         //   console.log("GOT EVENTS");
            const list: Array<EventResult> =  events || [];
            eventlength = list.length;
-          // console.log(`Reporting ${eventlength} events`);
            return Promise.all(list.map(function(event) {
-               return mod.reportEvent(event)
+               return client.report(event, 'abuse')
            }))
        }).then(events=>{
           // console.log("REPORTED all events");
@@ -72,7 +70,6 @@ describe('Post moderation Sequence', function() {
            } catch(err) {
                console.log("Could not cleanly delete test room");
            }
-           console.log(e);
            done(e);
        });
     })

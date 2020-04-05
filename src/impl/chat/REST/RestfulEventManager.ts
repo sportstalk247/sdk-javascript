@@ -7,19 +7,20 @@ import {
 } from "../../../models/ChatModels";
 import {DEFAULT_TALK_CONFIG, GET, POST} from "../../../constants";
 import {IEventManager} from "../../../API/ChatAPI";
-import {formify, getUrlEncodedHeaders} from "../../../utils";
+import {buildAPI, formify, getJSONHeaders, getUrlEncodedHeaders} from "../../../utils";
 import {SettingsError} from "../../../errors";
 import {NO_HANDLER_SET, NO_ROOM_SET} from "../../../messages";
-import axios, {AxiosPromise} from "axios";
+import axios, {AxiosPromise, AxiosRequestConfig} from "axios";
 import {Promise} from "es6-promise";
-import {ApiResult, Reaction, SportsTalkConfig, User} from "../../../models/CommonModels";
+import {ApiResult, Reaction, ReportReason, SportsTalkConfig, User} from "../../../models/CommonModels";
 const INVALID_POLL_FREQUENCY = "Invalid poll _pollFrequency.  Must be between 250ms and 5000ms"
 
 export class RestfulEventManager implements IEventManager{
-    private _config: SportsTalkConfig = {};
+    private _config: SportsTalkConfig = {appId: ""};
     private _polling: any; // set interval id;
     private _apiHeaders = {}
-    private _currentRoom: Room | null;
+    private _jsonHeaders = {}
+    private _currentRoom: Room;
     private _updatesApi: string;
     private eventHandlers:EventHandlerConfig = {}
     // api endpoints
@@ -64,21 +65,22 @@ export class RestfulEventManager implements IEventManager{
     setConfig = (config:SportsTalkConfig) => {
         this._config = Object.assign(DEFAULT_TALK_CONFIG, config);
         this._user = Object.assign(this._user, this._config.user);
-        this._apiHeaders = getUrlEncodedHeaders(this._config.apiKey)
+        this._apiHeaders = getUrlEncodedHeaders(this._config.apiKey);
+        this._jsonHeaders = getJSONHeaders(this._config.apiKey);
     }
 
     getCurrentRoom = ():Room | null => {
         return this._currentRoom;
     }
 
-    setCurrentRoom = (room: Room | null): Room | null => {
+    setCurrentRoom = (room: Room): Room | null => {
         this.lastCursor = undefined;
         this.lastMessageId = undefined;
         this.firstMessageId = undefined;
         this.firstMessageTime = undefined;
         this._currentRoom = room;
         if(this._currentRoom) {
-            this._roomApi = `${this._config.endpoint}/room/${this._currentRoom.id}`
+            this._roomApi = buildAPI(this._config, `chat/rooms/${this._currentRoom.id}`);
         }else {
             this._roomApi = null;
         }
@@ -117,7 +119,7 @@ export class RestfulEventManager implements IEventManager{
             this.getUpdates().then(apiResult=>{
                 this._handleUpdates(apiResult);
             }).catch(error=> {
-                if(this.eventHandlers.onNetworkError) {
+                if(this.eventHandlers && this.eventHandlers.onNetworkError) {
                     this.eventHandlers.onNetworkError(error)
                 } else {
                     console.log(error);
@@ -141,7 +143,7 @@ export class RestfulEventManager implements IEventManager{
             url: this._updatesApi,
             headers: this._apiHeaders
         }).then((result) => {
-            if(this.eventHandlers.onNetworkResponse) {
+            if(this.eventHandlers && this.eventHandlers.onNetworkResponse) {
                 // @ts-ignore
                 this.eventHandlers.onNetworkResponse(result);
             }
@@ -151,36 +153,38 @@ export class RestfulEventManager implements IEventManager{
 
     private _handleUpdates = (update: EventResult[]) => {
         const events: Array<EventResult> = update;
-        for(var i = 0; i < events.length;  i++) {
-            const event: EventResult = events[i];
-            const date = event.added;
-            if (!this.lastCursor || date > this.lastCursor) {
-                this.lastCursor = date;
-                this.lastMessageId = event.id;
-            } else {
-                if (!this.firstMessageTime || date < this.firstMessageTime) {
-                    this.firstMessageTime = date;
-                    this.firstMessageId = event.id;
+        if(events && events.length) {
+            for (var i = 0; i < events.length; i++) {
+                const event: EventResult = events[i];
+                const date = event.added;
+                if (!this.lastCursor || date > this.lastCursor) {
+                    this.lastCursor = date;
+                    this.lastMessageId = event.id;
+                } else {
+                    if (!this.firstMessageTime || date < this.firstMessageTime) {
+                        this.firstMessageTime = date;
+                        this.firstMessageId = event.id;
+                    }
+                    continue;
                 }
-                continue;
+                if (event.eventtype == EventType.purge && this.eventHandlers.onPurgeEvent) {
+                    this.eventHandlers.onPurgeEvent(event);
+                    continue;
+                }
+                if (event.eventtype == EventType.reply && this.eventHandlers.onReply) {
+                    this.eventHandlers.onReply(event);
+                    continue;
+                }
+                if (event.eventtype == EventType.reaction && this.eventHandlers.onReaction) {
+                    this.eventHandlers.onReaction(event);
+                    continue;
+                }
+                if (this.eventHandlers.onChatEvent) {
+                    this.eventHandlers.onChatEvent(event);
+                    continue;
+                }
+                console.log("Unknown chat event:", event);
             }
-            if(event.eventtype == EventType.purge && this.eventHandlers.onPurgeEvent) {
-                this.eventHandlers.onPurgeEvent(event);
-                continue;
-            }
-            if(event.eventtype == EventType.reply && this.eventHandlers.onReply) {
-                this.eventHandlers.onReply(event);
-                continue;
-            }
-            if(event.eventtype == EventType.reaction && this.eventHandlers.onReaction) {
-                this.eventHandlers.onReaction(event);
-                continue;
-            }
-            if(this.eventHandlers.onChatEvent) {
-                this.eventHandlers.onChatEvent(event);
-                continue;
-            }
-            console.log("Unknown chat event:", event);
         }
     }
 
@@ -192,20 +196,24 @@ export class RestfulEventManager implements IEventManager{
      * @param command
      * @param options
      */
-    sendCommand = (user: User, room: Room, command: string, options?: CommandOptions): Promise<ApiResult<null | Event>> => {
+    sendCommand = (user: User, command: string, options?: CommandOptions): Promise<ApiResult<null | Event>> => {
         const data = Object.assign({
             command,
             userid: user.userid
         }, options);
-        return axios({
+        const config: AxiosRequestConfig = {
             method: POST,
             url: this._commandApi,
-            headers: this._apiHeaders,
-            data: formify(data)
-        }).then(response=>response);
+            headers: this._jsonHeaders,
+            data: data
+        };
+        // @ts-ignore
+        return axios(config).then(response=>response).catch(e=>{
+            throw e;
+        });
     }
 
-    sendReply = (user: User, room: Room, message: string, replyto: Event |string, options?: CommandOptions): Promise<ApiResult<null>> => {
+    sendReply = (user: User, message: string, replyto: Event |string, options?: CommandOptions): Promise<ApiResult<null>> => {
         // @ts-ignore
         const id = replyto.id || replyto;
         const data = Object.assign({
@@ -213,16 +221,31 @@ export class RestfulEventManager implements IEventManager{
             userid: user.userid,
             replyto,
         }, options);
-
-        return axios({
+        const config:AxiosRequestConfig = {
             method: POST,
             url: this._commandApi,
             headers:this._apiHeaders,
             data: formify(data)
-        }).then(response=>response.data.data);
+        }
+        return axios(config).then(response=>response.data.data);
     }
 
-    sendReaction = (user: User, room:Room, reaction: Reaction, reactToMessage: Event | string, options?: CommandOptions): Promise<ApiResult<null>> => {
+    reportEvent = (event: EventResult | string, reason: ReportReason): Promise<ApiResult<null>> => {
+        // @ts-ignore
+        const id = event.id || event;
+        const config:AxiosRequestConfig =  {
+            method: POST,
+            url: buildAPI(this._config, `chat/rooms/${this._currentRoom.id}/report/${id}`),
+            headers: this._jsonHeaders,
+            data: reason
+        };
+        // @ts-ignore
+        return axios(config).then(result => result).catch(e=>{
+            throw e;
+        })
+    }
+
+    sendReaction = (user: User, reaction: Reaction, reactToMessage: Event | string, options?: CommandOptions): Promise<ApiResult<null>> => {
         // @ts-ignore
         const source = reactToMessage.id || reactToMessage;
         const data = Object.assign({
@@ -231,33 +254,34 @@ export class RestfulEventManager implements IEventManager{
             reacted: true,
             reaction
         }, options);
-
-        return axios({
+        const config: AxiosRequestConfig = {
             method: POST,
             url:`${this._roomApi}/react/${source}`,
             headers: this._apiHeaders,
             data: formify(data)
-        }).then(response=>{
+        }
+        return axios(config).then(response=>{
             return response.data
         });
     }
 
-    sendAdvertisement = (user: User, room: Room, options: AdvertisementOptions): Promise<ApiResult<null>> => {
+    sendAdvertisement = (user: User, options: AdvertisementOptions): Promise<ApiResult<null>> => {
         const data = Object.assign({
             command: 'advertisement',
             customtype: 'advertisement',
             userid: user.userid,
             custompayload: JSON.stringify(options)
         });
-        return axios({
+        const config: AxiosRequestConfig = {
             method: POST,
-            headers: this._apiHeaders,
-            data: formify(data),
+            headers: this._jsonHeaders,
+            data: data,
             url: this._commandApi,
-        }).then(response=>response.data.data);
+        };
+        return axios(config).then(response=>response.data.data);
     }
 
-    sendGoal = (user: User, room: Room, img: string, message?:string, options?: GoalOptions): Promise<ApiResult<null>> => {
+    sendGoal = (user: User, img: string, message?:string, options?: GoalOptions): Promise<ApiResult<null>> => {
         const defaultOptions = {
             "img": img,
             "link":""

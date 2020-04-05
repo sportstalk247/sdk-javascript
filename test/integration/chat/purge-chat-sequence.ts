@@ -3,6 +3,7 @@ import * as chai from 'chai';
 import * as sinon from 'sinon';
 import {RestfulRoomManager} from "../../../src/impl/chat/REST/RestfulRoomManager";
 import * as dotenv from 'dotenv';
+import {SportsTalkConfig} from "../../../src/models/CommonModels";
 dotenv.config();
 
 const onPurgeEvent = sinon.fake();
@@ -13,10 +14,8 @@ const delay = function(timer) {
     })
 }
 const { expect } = chai;
-const config = {
-    apiKey:process.env.TEST_KEY,
-    endpoint: process.env.TEST_ENDPOINT,
-}
+// @ts-ignore
+const config: SportsTalkConfig = {apiKey:process.env.TEST_KEY, appId: process.env.TEST_APP_ID, endpoint: process.env.TEST_ENDPOINT};
 
 describe('PURGE Chat Sequence', function() {
     const client = ChatClient.create({

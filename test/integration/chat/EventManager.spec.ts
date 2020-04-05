@@ -3,12 +3,12 @@ import {EventHandlerConfig} from "../../../src/models/ChatModels";
 import * as chai from 'chai';
 import * as sinon from 'sinon';
 import * as dotenv from 'dotenv';
-import {Reaction} from "../../../src/models/CommonModels";
+import {Reaction, SportsTalkConfig} from "../../../src/models/CommonModels";
 dotenv.config();
 
 
 const { expect } = chai;
-const config = {apiKey:process.env.TEST_KEY, endpoint: process.env.TEST_ENDPOINT};
+const config: SportsTalkConfig = {apiKey:process.env.TEST_KEY, appId: process.env.TEST_APP_ID || "", endpoint: process.env.TEST_ENDPOINT};
 const delay = function(timer) {
     return new Promise(function(accept, reject){
         const timeout = setTimeout(accept, timer)
@@ -17,6 +17,7 @@ const delay = function(timer) {
 
 describe("Event Manager", ()=>{
 
+    // @ts-ignore
     const client = ChatClient.create(config)
     const EM = client.getEventManager();
     const RM = client.getRoomManager();

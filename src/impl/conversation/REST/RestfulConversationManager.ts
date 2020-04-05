@@ -1,9 +1,8 @@
 import {ApiHeaders, ClientConfig} from "../../../models/CommonModels";
-import axios from "axios";
+import axios, {AxiosRequestConfig} from "axios";
 import {Conversation, ConversationResponse, ConversationDeletionResponse} from "../../../models/ConversationModels";
 import {GET, POST, DELETE} from "../../../constants";
-import {getUrlEncodedHeaders, getJSONHeaders} from "../../../utils";
-import {ApiResult} from "../../../../dist/DataModels";
+import {getUrlEncodedHeaders, getJSONHeaders, buildAPI} from "../../../utils";
 import {IConversationManager} from "../../../API/ConversationAPI";
 import {getUrlConversationId} from "../ConversationUtils";
 
@@ -22,7 +21,7 @@ export class RestfulConversationManager implements IConversationManager {
     public createConversation = (settings: Conversation): Promise<ConversationResponse> => {
         return axios({
             method: POST,
-            url: `${this._config.endpoint}/comment`,
+            url: buildAPI(this._config, `/comment`),
             headers: this._jsonHeaders,
             data: settings,
         }).then(result=>{
@@ -37,7 +36,7 @@ export class RestfulConversationManager implements IConversationManager {
         const id = getUrlConversationId(conversation);
         return axios({
             method: GET,
-            url: `${this._config.endpoint}/comment/${id}`,
+            url: buildAPI(this._config, `/comment/${this._config.appId}/${id}`),
             headers: this._jsonHeaders,
         }).then(result=>{
             return result.data;
@@ -48,7 +47,7 @@ export class RestfulConversationManager implements IConversationManager {
         // @ts-ignore
         return axios({
             method: GET,
-            url: `${this._config.endpoint}/comment/?propertyid=${property}`,
+            url: buildAPI(this._config, `/comment/${this._config.appId}?propertyid=${property}`),
             headers: this._jsonHeaders,
         }).then(result=>{
             return result;
@@ -60,11 +59,12 @@ export class RestfulConversationManager implements IConversationManager {
         // @ts-ignore
         const id = getUrlConversationId(conversation);
         // @ts-ignore
-        return axios({
+        const config: AxiosRequestConfig = {
             method: DELETE,
-            url: `${this._config.endpoint}/comment/${id}`,
+            url: buildAPI(this._config, `comment/${id}`),
             headers: this._jsonHeaders,
-        }).then(result=>{
+        }
+        return axios(config).then(result=>{
             return result.data;
         });
     }

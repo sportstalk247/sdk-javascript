@@ -12,6 +12,7 @@ const { expect } = chai;
 describe('BASIC Conversation Sequence', function() {
     const client = ConversationClient.create({
         apiKey:process.env.TEST_KEY,
+        appId: process.env.TEST_APP_ID,
         endpoint: process.env.TEST_ENDPOINT,
         user: {
             userid: 'testuser1',
@@ -20,6 +21,7 @@ describe('BASIC Conversation Sequence', function() {
     });
     const client2 = ConversationClient.create({
         apiKey:process.env.TEST_KEY,
+        appId: process.env.TEST_APP_ID,
         endpoint: process.env.TEST_ENDPOINT,
         user: {
             userid: 'testuser2',
@@ -52,7 +54,7 @@ describe('BASIC Conversation Sequence', function() {
     });
     describe("User joins Conversation", function() {
         it("Lets user 2 join", function(done){
-            client.createConversation(conversation, true)
+            client2.createConversation(conversation, true)
                 .then(conversation=>{
                     return client2.makeComment("This is my comment")
                 })
@@ -62,22 +64,25 @@ describe('BASIC Conversation Sequence', function() {
                 .catch(done)
         })
     })
-    describe('Delete Conversation', function () {
-        it('Deletes Conversation', function (done) {
-            client.deleteConversation(	 "testconversation").then(results => {
-                done()
-            }).catch(res=>{
-                done(res);
-            });
-        })
-    });
-    // describe('User 2', function () {
-    //     it('Joins room', function (done) {
-    //         client2.createConversation({
-    //             name: "Test room",
-    //             slug: "chat-test-room",
-    //         }).then(room => {
-    //         }).catch(done)
-    //     })
-    // })
+
+   describe("User Interaction", function() {
+       it("Let's User1 comment", function(done){
+           client.makeComment("This is user1 comment")
+               .then(()=>client2.getComments())
+               .then((commentary)=>{
+                   expect(commentary.comments.length).to.be.greaterThan(0);
+                   done()
+               }).catch(done);
+
+       })
+   });
+   describe('Delete Conversation', function () {
+       it('Deletes Conversation', function (done) {
+           client.deleteConversation(	 "testconversation").then(results => {
+               done()
+           }).catch(res=>{
+               done(res);
+           });
+       })
+   });
 });

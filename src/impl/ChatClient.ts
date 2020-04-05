@@ -5,7 +5,7 @@ import {
     EventHandlerConfig,
     RoomResult,
     Room,
-    RoomUserResult
+    RoomUserResult, EventResult
 } from "../models/ChatModels";
 import {Promise} from "es6-promise";
 import {DEFAULT_TALK_CONFIG, MISSING_ROOM} from "../constants";
@@ -14,12 +14,20 @@ import {SettingsError} from "../errors";
 import {RestfulEventManager} from "./chat/REST/RestfulEventManager"
 import {RestfulRoomManager} from "./chat/REST/RestfulRoomManager";
 import {RestfulUserManager} from "./chat/REST/RestfulUserManager";
-import {ApiResult, Reaction, SportsTalkConfig, User, UserResult} from "../models/CommonModels";
+import {
+    ApiResult,
+    Reaction,
+    ReportReason,
+    ReportType,
+    SportsTalkConfig,
+    User,
+    UserResult
+} from "../models/CommonModels";
 
 
 export class ChatClient implements IChatClient {
 
-    private _config: SportsTalkConfig;
+    private _config: SportsTalkConfig = {appId: ""};
     //User
     private _user: User = {userid: "", handle: ""};
 
@@ -42,7 +50,7 @@ export class ChatClient implements IChatClient {
      * @param eventHandlers
      * @return SportsTalkClient.  Currently only a REST based client is supported.  Future SDK versions will implement other options such as firebase messaging and websockets
      */
-    static create = (config: SportsTalkConfig = {}, eventHandlers?: EventHandlerConfig): ChatClient => {
+    static create = (config: SportsTalkConfig = {appId: ""}, eventHandlers?: EventHandlerConfig): ChatClient => {
         const client = new ChatClient();
         client.setConfig(config);
         if(eventHandlers) {
@@ -101,7 +109,7 @@ export class ChatClient implements IChatClient {
     /**
      * RoomResult Handling
      */
-    listRooms = (): Promise<Array<RoomResult>> => {
+    listRooms = (): Promise<Array<Room>> => {
         return this._roomManager.listRooms();
     }
     /**
@@ -140,6 +148,14 @@ export class ChatClient implements IChatClient {
         });
     }
 
+    report = (event: EventResult | string, type: ReportType) => {
+        const reason: ReportReason = {
+            reporttype: type,
+            userid: this._user.userid
+        }
+        return this._eventManager.reportEvent(event, reason);
+    }
+
     exitRoom = (): Promise<RoomUserResult> => {
         if(!this._eventManager.getCurrentRoom()) {
             throw new SettingsError("Cannot exit if not in a room!");
@@ -174,7 +190,7 @@ export class ChatClient implements IChatClient {
      * @param options
      */
     sendCommand = (command: string, options?: CommandOptions): Promise<ApiResult<null | Event>> => {
-        return this._eventManager.sendCommand(this._user, this._currentRoom, command, options).then(response=>{
+        return this._eventManager.sendCommand(this._user, command, options).then(response=>{
             if(command.startsWith('*')) {
                 const onHelp = this._eventManager.getEventHandlers().onHelp;
                 if( command.startsWith('*help') && onHelp  && onHelp instanceof Function ) {
@@ -192,19 +208,19 @@ export class ChatClient implements IChatClient {
     }
 
     sendReply = (message: string, replyto: Event |string, options?: CommandOptions): Promise<ApiResult<null>> => {
-        return this._eventManager.sendReply(this._user, this._currentRoom, message, replyto, options);
+        return this._eventManager.sendReply(this._user, message, replyto, options);
     }
 
     sendReaction = (reaction: Reaction, reactToMessage: Event | string, options?: CommandOptions): Promise<ApiResult<null>> => {
-        return this._eventManager.sendReaction(this._user, this._currentRoom, reaction, reactToMessage, options);
+        return this._eventManager.sendReaction(this._user, reaction, reactToMessage, options);
     }
 
     sendAdvertisement = (options: AdvertisementOptions): Promise<ApiResult<null>> => {
-        return this._eventManager.sendAdvertisement(this._user, this._currentRoom, options);
+        return this._eventManager.sendAdvertisement(this._user, options);
     }
 
     sendGoal = (message?:string, img?: string, options?: GoalOptions): Promise<ApiResult<null>> => {
-       return this._eventManager.sendGoal(this._user, this._currentRoom, img || this._defaultGoalImage || '', message, options)
+       return this._eventManager.sendGoal(this._user,img || this._defaultGoalImage || '', message, options)
     }
 
 }
