@@ -57,7 +57,7 @@ export class RestfulUserManager implements IUserManager {
             url: url,
             headers: this._jsonHeaders
         }).then(result=>{
-            return result.data.data
+            return result.data.data.events
         })
     }
 
