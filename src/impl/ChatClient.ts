@@ -169,6 +169,8 @@ export class ChatClient implements IChatClient {
         return this._roomManager.exitRoom(this._user, this._currentRoom).then(response=>{
             this._eventManager.setCurrentRoom(null);
             return response;
+        }).catch(e=>{
+            throw e;
         })
     }
 
