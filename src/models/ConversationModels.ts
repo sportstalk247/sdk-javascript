@@ -49,15 +49,19 @@ export enum CommentSortMethod {
     votes       = "votes"
 }
 
-export enum CommentSortDirection {
+export enum ListSortDirection {
     forward     = "forward",
     backward    = "backward"
 }
-export interface CommentRequest {
+
+export interface ListRequest {
     cursor?: string,
+    limit?: number
+}
+export interface CommentRequest extends ListRequest{
     sort?: CommentSortMethod | string,
     includechilden?: boolean
-    direction?: CommentSortDirection
+    direction?: ListSortDirection
 }
 
 export enum Vote {

@@ -21,7 +21,7 @@ export class RestfulConversationManager implements IConversationManager {
     public createConversation = (settings: Conversation): Promise<ConversationResponse> => {
         return axios({
             method: POST,
-            url: buildAPI(this._config, `/comment`),
+            url: buildAPI(this._config, `comment/conversations`),
             headers: this._jsonHeaders,
             data: settings,
         }).then(result=>{
@@ -36,7 +36,7 @@ export class RestfulConversationManager implements IConversationManager {
         const id = getUrlConversationId(conversation);
         return axios({
             method: GET,
-            url: buildAPI(this._config, `/comment/${this._config.appId}/${id}`),
+            url: buildAPI(this._config, `comment/conversations/${this._config.appId}/${id}`),
             headers: this._jsonHeaders,
         }).then(result=>{
             return result.data;
@@ -47,7 +47,7 @@ export class RestfulConversationManager implements IConversationManager {
         // @ts-ignore
         return axios({
             method: GET,
-            url: buildAPI(this._config, `/comment/${this._config.appId}?propertyid=${property}`),
+            url: buildAPI(this._config, `comment/conversations/${this._config.appId}?propertyid=${property}`),
             headers: this._jsonHeaders,
         }).then(result=>{
             return result;
@@ -61,7 +61,7 @@ export class RestfulConversationManager implements IConversationManager {
         // @ts-ignore
         const config: AxiosRequestConfig = {
             method: DELETE,
-            url: buildAPI(this._config, `comment/${id}`),
+            url: buildAPI(this._config, `comment/conversations/${id}`),
             headers: this._jsonHeaders,
         }
         return axios(config).then(result=>{

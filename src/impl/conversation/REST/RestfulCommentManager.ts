@@ -107,7 +107,7 @@ export class RestfulCommentManager implements ICommentManager {
     private _makeComment = (comment: Comment): Promise<Comment> => {
         const config:AxiosRequestConfig = {
             method: POST,
-            url: buildAPI(this._config, `comment/${this._conversationId}/comments`),
+            url: buildAPI(this._config, `comment/conversations/${this._conversationId}/comments`),
             headers: this._jsonHeaders,
             data: comment
         }
@@ -127,7 +127,7 @@ export class RestfulCommentManager implements ICommentManager {
         const replyComment: Comment = Object.assign(comment, {replyto: replyId});
         return axios({
             method: POST,
-            url: buildAPI(this._config, `/comment/${this._conversationId}`),
+            url: buildAPI(this._config, `/comment/conversations/${this._conversationId}`),
             headers: this._jsonHeaders,
             data: replyComment
         }).then(result=>{
@@ -141,7 +141,7 @@ export class RestfulCommentManager implements ICommentManager {
         const id = getUrlCommentId(comment);
         return axios({
             method: GET,
-            url: buildAPI(this._config, `/comment/${this._conversationId}/${id}`),
+            url: buildAPI(this._config, `/comment/conversations/${this._conversationId}/${id}`),
             headers: this._jsonHeaders,
         }).then(result=>{
             return result.data;
@@ -153,7 +153,7 @@ export class RestfulCommentManager implements ICommentManager {
         const id = getUrlCommentId(comment);
         return axios({
             method: DELETE,
-            url: buildAPI(this._config, `comment/${this._conversationId}/${id}`),
+            url: buildAPI(this._config, `comment/conversations/${this._conversationId}/${id}`),
             headers: this._jsonHeaders,
         }).then(result=>{
             return result.data;
@@ -165,7 +165,7 @@ export class RestfulCommentManager implements ICommentManager {
         const id = getUrlCommentId(comment);
         return axios({
             method: GET,
-            url: `${this._config.endpoint}/comment/${this._conversationId}/${id}`,
+            url: `${this._config.endpoint}/comment/conversations/${this._conversationId}/${id}`,
             headers: this._jsonHeaders,
         }).then(result=>{
             return result.data;
@@ -188,7 +188,7 @@ export class RestfulCommentManager implements ICommentManager {
         }
         return axios({
             method: POST,
-            url: buildAPI(this._config, `/comment/${this._conversationId}/${id}/react`),
+            url: buildAPI(this._config, `/comment/conversations/${this._conversationId}/${id}/react`),
             headers: this._jsonHeaders,
             data
         }).then(result=>{
@@ -202,7 +202,7 @@ export class RestfulCommentManager implements ICommentManager {
         const id = getUrlCommentId(comment);
         return axios({
             method: POST,
-            url: buildAPI(this._config, `/comment/${this._conversationId}/${id}/react`),
+            url: buildAPI(this._config, `/comment/conversations/${this._conversationId}/${id}/vote`),
             headers: this._jsonHeaders,
             data: {
                 vote: vote,
@@ -219,7 +219,7 @@ export class RestfulCommentManager implements ICommentManager {
         const id = getUrlCommentId(comment);
         return axios({
             method: POST,
-            url: buildAPI(this._config, `/comment/${this._conversationId}/${id}/report`),
+            url: buildAPI(this._config, `/comment/conversations/${this._conversationId}/${id}/report`),
             headers: this._jsonHeaders,
             data: {
                 reporttype: reporttype,
@@ -235,7 +235,7 @@ export class RestfulCommentManager implements ICommentManager {
         const id = getUrlCommentId(comment);
         return axios({
             method: GET,
-            url: buildAPI(this._config, `/comment/${this._conversationId}/${id}`),
+            url: buildAPI(this._config, `/comment/conversations/${this._conversationId}/${id}`),
             headers: this._jsonHeaders,
             data: request
         }).then(result=>{
@@ -250,9 +250,8 @@ export class RestfulCommentManager implements ICommentManager {
         }
         return axios({
             method: GET,
-            url: buildAPI(this._config, `/comment/${id}/comments`),
+            url: buildAPI(this._config, `/comment/conversations/${id}/comments`, request),
             headers: this._jsonHeaders,
-            data: request
         }).then(result=>{
             const {conversation, comments} = result.data.data;
             return {

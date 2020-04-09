@@ -4,7 +4,7 @@
  */
 import {APPLICATION_JSON, FORM_ENCODED} from "./constants";
 import {ApiHeaders, SportsTalkConfig} from "./models/CommonModels";
-import {Comment, Conversation} from "./models/ConversationModels";
+import {Comment, CommentRequest, Conversation, ListRequest} from "./models/ConversationModels";
 
 export function formify(data) {
     const formBody: Array<String> = []
@@ -15,9 +15,12 @@ export function formify(data) {
     }
     return formBody.join("&");
 }
+export function buildAPI(config: SportsTalkConfig, ext: string, request?: CommentRequest): string {
 
-export function buildAPI(config: SportsTalkConfig, ext: string): string {
-    const endpoint = `${config.endpoint}/${config.appId}/${ext}`;
+    let endpoint = `${config.endpoint}/${config.appId}/${ext}`;
+    if(request && Object.keys(request).length > 0) {
+        endpoint = `${endpoint}?${formify(request)}`;
+    }
     return endpoint;
 }
 
