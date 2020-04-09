@@ -1,5 +1,5 @@
 
-import {EventResult} from "../../../models/ChatModels";
+import {EventResult, Room} from "../../../models/ChatModels";
 import {Promise} from "es6-promise";
 import axios, {AxiosRequestConfig} from "axios";
 import {GET, POST} from "../../../constants";
@@ -48,9 +48,10 @@ export class RestfulUserManager implements IUserManager {
         });
     }
 
-    listUserMessages = (user:User | string, cursor?: string, limit?: number): Promise<Array<EventResult>> => {
+    // @ts-ignore
+    listUserMessages = (user:User | string, room: Room | string, cursor: string = "", limit: number = 100): Promise<Array<EventResult>> => {
         // @ts-ignore
-        const url = buildAPI(this._config,`/user/users/${user.userid || user.id || user}/?limit=${limit}&cursor=${cursor}`);
+        const url = buildAPI(this._config,`/chat/rooms/${room.id || room}/messagesbyuser/${user.userid || user.id || user}/?limit=${limit}&cursor=${cursor}`);
         return axios({
             method: GET,
             url: url,

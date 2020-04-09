@@ -23,6 +23,7 @@ import {
     User,
     UserResult
 } from "../models/CommonModels";
+import {MUST_SET_USER} from "../messages";
 
 
 export class ChatClient implements IChatClient {
@@ -141,12 +142,17 @@ export class ChatClient implements IChatClient {
     }
 
     joinRoom = (room: RoomResult | string): Promise<RoomUserResult> => {
+        if(!this._user || !this._user.userid) {
+            throw new SettingsError(MUST_SET_USER);
+        }
         return this._roomManager.joinRoom(this._user, room).then(response => {
             this._currentRoom = response.room;
             this._eventManager.setCurrentRoom(this._currentRoom);
             return response;
         });
     }
+
+
 
     report = (event: EventResult | string, type: ReportType) => {
         const reason: ReportReason = {
@@ -179,6 +185,11 @@ export class ChatClient implements IChatClient {
      */
     getCurrentRoom = (): Room | null => {
         return this._eventManager.getCurrentRoom();
+    }
+
+    setCurrentRoom = (room: RoomResult) => {
+        this._currentRoom = room;
+        this._eventManager.setCurrentRoom(room);
     }
 
     /**

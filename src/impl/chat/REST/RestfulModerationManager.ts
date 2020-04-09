@@ -23,7 +23,7 @@ export class RestfulModerationManager implements IModerationManager {
     getModerationQueueEvents = (): Promise<Array<EventResult>> => {
         return axios({
             method: 'GET',
-            url: `${this._config.endpoint}/moderation/queue`,
+            url: buildAPI(this._config, `chat/moderation/queues/events`),
             headers: this._apiHeaders
         }).then(result => {
             return result.data.data.events;
@@ -33,9 +33,9 @@ export class RestfulModerationManager implements IModerationManager {
     removeEvent = (event: EventResult): Promise<ApiResult<null>> => {
         return axios({
             method: 'POST',
-            url: `${this._config.endpoint}/moderation/applydecisiontoevent/${event.id}`,
+            url: buildAPI(this._config, `/chat/moderation/queues/events/${event.id}/applydecision`),
             headers: this._apiHeaders,
-            data: formify({approve: false})
+            data: {approve: false}
         }).then(result => {
             return result.data;
         }).catch(result => {
@@ -48,9 +48,9 @@ export class RestfulModerationManager implements IModerationManager {
         const id = event.id | event;
         return axios({
             method: POST,
-            url: `${this._config.endpoint}/moderation/applydecisiontoevent/${event.id}`,
+            url: buildAPI(this._config, `/chat/moderation/queues/events/${event.id}/applydecision`),
             headers: this._apiHeaders,
-            data: formify({approve: true})
+            data: {approve: true}
         }).then(result => result)
     }
 }

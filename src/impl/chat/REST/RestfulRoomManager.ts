@@ -1,8 +1,8 @@
 import {IRoomManager} from "../../../API/ChatAPI";
-import {Room, RoomResult, RoomUserResult} from "../../../models/ChatModels";
+import {EventResult, Room, RoomResult, RoomUserResult} from "../../../models/ChatModels";
 import axios, {AxiosRequestConfig} from "axios";
 import {GET, DELETE, POST, MISSING_ROOM} from "../../../constants";
-import {buildAPI, formify, getJSONHeaders, getUrlEncodedHeaders} from "../../../utils";
+import {buildAPI, getJSONHeaders, getUrlEncodedHeaders} from "../../../utils";
 import {ApiResult, SportsTalkConfig, User, UserResult} from "../../../models/CommonModels";
 
 
@@ -17,7 +17,7 @@ export class RestfulRoomManager implements IRoomManager {
         this.setConfig(config);
     }
 
-    setConfig(config: SportsTalkConfig) {
+    setConfig = (config: SportsTalkConfig) => {
         this._config = config;
         this._knownRooms = []
         this._apiHeaders = getUrlEncodedHeaders(this._config.apiKey);
@@ -94,6 +94,7 @@ export class RestfulRoomManager implements IRoomManager {
         };
         return axios(config).then(result=>result.data.data);
     }
+
 
     joinRoom = (user: User, room: RoomResult | string): Promise<RoomUserResult> => {
         // @ts-ignore

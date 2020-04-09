@@ -50,6 +50,7 @@ export interface ITalkClient extends IUserConfigurable, ISportsTalkConfigurable{
 export interface IUserManager extends ISportsTalkConfigurable {
     listUserMessages(user:User | string, cursor?: string, limit?: number): Promise<Array<EventResult>>
     setBanStatus(user: User | string, isBanned: boolean): Promise<ApiResult<UserResult>>
+    listUserMessages(user:User | string, Room: Room|String, cursor?: string, limit?: number): Promise<Array<EventResult>>
     createOrUpdateUser(user: User): Promise<UserResult>
 }
 

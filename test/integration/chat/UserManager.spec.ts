@@ -2,6 +2,7 @@ import * as chai from 'chai';
 import {RestfulUserManager} from "../../../src/impl/chat/REST/RestfulUserManager";
 import * as dotenv from 'dotenv';
 import {SportsTalkConfig} from "../../../src/models/CommonModels";
+import {RestfulRoomManager} from "../../../src";
 dotenv.config();
 
 const { expect } = chai;
@@ -9,10 +10,9 @@ const { expect } = chai;
 const config: SportsTalkConfig = {apiKey:process.env.TEST_KEY, appId: process.env.TEST_APP_ID, endpoint: process.env.TEST_ENDPOINT};
 describe("UserManager", function(){
     const UM = new RestfulUserManager(  config);
+    const RM = new RestfulRoomManager(  config);
+
     let user;
-    it("fake", function(done){
-        done();
-    })
     describe("Creation", function() {
         it("Can create a user", done => {
             UM.createOrUpdateUser({
@@ -41,11 +41,21 @@ describe("UserManager", function(){
         })
     })
     describe("List", function(){
-        it("Can list user messages", done=>{
-            UM.listUserMessages(user).then(messages=> {
-                expect(messages.length).to.be.equal(0);
-                done();
-            }).catch(done);
+        it("Can list user messages", async ()=>{
+            try {
+                const room = await RM.createRoom({
+                    name: "ROOMMANAGER Test Room",
+                    slug: "RM-test-room"
+                });
+                const userlist = await UM.listUserMessages(user, room).then(messages => {
+                    expect(messages.length).to.be.equal(0);
+                });
+                const deleted = await RM.deleteRoom(room);
+                return deleted;
+            }catch(e) {
+                console.log(e);
+                throw e;
+            }
         })
     })
 })
