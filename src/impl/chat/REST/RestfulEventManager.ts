@@ -235,7 +235,7 @@ export class RestfulEventManager implements IEventManager{
         const id = event.id || event;
         const config:AxiosRequestConfig =  {
             method: POST,
-            url: buildAPI(this._config, `chat/rooms/${this._currentRoom.id}/report/${id}`),
+            url: buildAPI(this._config, `chat/rooms/${this._currentRoom.id}/events/${id}/report`),
             headers: this._jsonHeaders,
             data: reason
         };
@@ -256,7 +256,7 @@ export class RestfulEventManager implements IEventManager{
         }, options);
         const config: AxiosRequestConfig = {
             method: POST,
-            url:`${this._roomApi}/react/${source}`,
+            url:`${this._roomApi}/events/${source}/react`,
             headers: this._apiHeaders,
             data: formify(data)
         }
