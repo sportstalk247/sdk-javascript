@@ -48,6 +48,6 @@ export class RestfulConversationModerationManager implements IConversationModera
             url: buildAPI(this._config, `/chat/moderation/queues/comments/${comment.id}/applydecision`),
             headers: this._apiHeaders,
             data: {approve: true}
-        }).then(result => result)
+        }).then(result => result.data)
     }
 }
