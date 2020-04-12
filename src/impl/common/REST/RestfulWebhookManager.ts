@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, {AxiosRequestConfig} from "axios";
 import {buildAPI, getJSONHeaders} from "../../utils";
 import {DEFAULT_TALK_CONFIG, DELETE, GET, POST, PUT} from "../../../constants/api";
 import {SportsTalkConfig, WebHook} from "../../../models/CommonModels";
@@ -26,7 +26,7 @@ export class RestfulWebhookManager implements IWebhookManager {
             method: GET,
             headers: this._apiHeaders
         }).then(hooks=>{
-           return (hooks && hooks.data && hooks.data.webhooks) ? hooks.data.webhooks : []
+           return (hooks && hooks.data && hooks.data.data && hooks.data.data.webhooks) ? hooks.data.data.webhooks : []
         })
     }
 
@@ -61,12 +61,13 @@ export class RestfulWebhookManager implements IWebhookManager {
         }
         // @ts-ignore
         const id = hook.id || hook;
-        return axios({
+        const config:AxiosRequestConfig = {
             url: buildAPI(this._config, `${this._apiExt}/${id}`),
             method: DELETE,
             headers: this._apiHeaders
-        }).then(response=>{
-            return response.data;
+        }
+        return axios(config).then(response=>{
+            return response.data.data;
         })
     }
 

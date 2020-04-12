@@ -1,36 +1,38 @@
 import * as chai from 'chai';
 import {RestfulWebhookManager} from "../../../src/impl/common/REST/RestfulWebhookManager";
 import * as dotenv from 'dotenv';
-import {SportsTalkConfig, WebhookEvent, WebhookType} from "../../../src/models/CommonModels";
+import {SportsTalkConfig, WebHook, WebhookEvent, WebhookType} from "../../../src/models/CommonModels";
 dotenv.config();
 
 const { expect } = chai;
+let posthook:WebHook;
+let prehook:WebHook;
 // @ts-ignore
 const config: SportsTalkConfig = {apiKey:process.env.TEST_KEY, appId: process.env.TEST_APP_ID, endpoint: process.env.TEST_ENDPOINT};
 describe("Webhook Manager", function(){
     const HookManager = new RestfulWebhookManager(  config);
-    let posthook;
-    let prehook;
+
     describe("Creation", function() {
         it("Can create a post publish webhook", done => {
            HookManager.createWebhook({
-               label: "prepublish test hook",
+               label: "postpublish test hook",
                url: "https://localhost:443",
                enabled: true,
                type: WebhookType.postpublish,
                events: [
-                   WebhookEvent.speech,
-                   WebhookEvent.action,
-                   WebhookEvent.custom,
-                   WebhookEvent.enter,
-                   WebhookEvent.exit,
-                   WebhookEvent.purge,
-                   WebhookEvent.reaction,
-                   WebhookEvent.reply,
-                   WebhookEvent.roomclosed,
-                   WebhookEvent.roomopened]
+                   WebhookEvent.chatspeech,
+                   WebhookEvent.chataction,
+                   WebhookEvent.chatcustom,
+                   WebhookEvent.chatenter,
+                   WebhookEvent.chatexit,
+                   WebhookEvent.chatpurge,
+                   WebhookEvent.chatreaction,
+                   WebhookEvent.chatreply,
+                   WebhookEvent.chatroomclosed,
+                   WebhookEvent.chatroomopened]
            }).then(resp=>{
                posthook = resp;
+               expect(posthook.type).to.be.equal(WebhookType.postpublish);
                expect(resp).to.be.not.null;
                expect(resp.id).to.be.not.null;
                done()
@@ -46,23 +48,15 @@ describe("Webhook Manager", function(){
                 enabled: true,
                 type: WebhookType.prepublish,
                 events: [
-                    WebhookEvent.speech,
-                    WebhookEvent.action,
-                    WebhookEvent.custom,
-                    WebhookEvent.enter,
-                    WebhookEvent.exit,
-                    WebhookEvent.purge,
-                    WebhookEvent.reaction,
-                    WebhookEvent.reply,
-                    WebhookEvent.roomclosed,
-                    WebhookEvent.roomopened]
+                    WebhookEvent.chatspeech,
+                ]
             }).then(resp=>{
                 prehook = resp;
-                expect(resp).to.be.not.null;
+                expect(prehook.type).to.be.equal(WebhookType.prepublish);
                 expect(resp.id).to.be.not.null;
                 done()
-            }).catch(resp=>{
-                done(resp);
+            }).catch(e=>{
+                done(e);
             });
         })
     });
