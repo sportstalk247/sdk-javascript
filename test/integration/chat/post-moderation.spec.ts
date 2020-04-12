@@ -12,6 +12,11 @@ let mod;
 const { expect } = chai;
 // @ts-ignore
 const config: SportsTalkConfig = {apiKey:process.env.TEST_KEY, appId: process.env.TEST_APP_ID, endpoint: process.env.TEST_ENDPOINT};
+const delay = function(timer) {
+    return new Promise(function(accept, reject){
+        const timeout = setTimeout(accept, timer)
+    })
+}
 
 describe('Post moderation Sequence', function() {
     let roomid;
@@ -56,9 +61,11 @@ describe('Post moderation Sequence', function() {
            const list: Array<EventResult> =  events || [];
            eventlength = list.length;
            return Promise.all(list.map(function(event) {
-               return client.report(event, 'abuse')
+               return client.report(event, 'abuse').then()
            }))
-       }).then(events=>{
+       }).then(events=> {
+           return delay(1000);
+       }).then(()=>{
           // console.log("REPORTED all events");
            return mod.getModerationQueue()
        }).then(events=> {

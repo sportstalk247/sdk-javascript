@@ -64,7 +64,7 @@ export class RestfulUserManager implements IUserManager {
     }
 
     searchUsers = (search:string, type: SearchType): Promise<Array<UserResult>> => {
-        const url = buildAPI(this._config,`${this._apiExt}/search`);
+        const url = buildAPI(this._config,`user/search`);
         const data:any = {
             type: type,
         }
