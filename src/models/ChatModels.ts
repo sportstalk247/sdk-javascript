@@ -2,6 +2,7 @@
  * Models used by API Result Models.
  */
 import {ApiResult, Kind, User, UserResult} from "./CommonModels";
+
 export {
     Kind,
     ApiResult,
@@ -16,24 +17,6 @@ export enum EventType {
     roomOpen = "roomopen",
     action = "action",
     reply = "reply"
-}
-
-export enum WebhookType {
-    prepublish = "prepublish",
-    postpublish = "postpublish"
-}
-
-export enum WebhookEvent {
-    speech = "speech",
-    custom = "custom",
-    reply = "reply",
-    reaction = "reaction",
-    action ="action",
-    enter = "enter",
-    exit = "exit",
-    roomopened = "roomopened",
-    roomclosed = "roomclosed",
-    purge = "purge"
 }
 
 
@@ -126,12 +109,3 @@ export interface EventResult extends Event {
     reactions?:Array<EventResult>
 }
 
-export interface ChatWebHook {
-    id?: string,
-    kind?: Kind.webhook,
-    label: string,
-    url: string,
-    enabled: boolean,
-    type: WebhookType,
-    events: WebhookEvent[]
-}

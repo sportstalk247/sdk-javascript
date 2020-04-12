@@ -1,9 +1,8 @@
-import { ChatWebHook} from "../../../models/ChatModels";
 import {Promise} from "es6-promise";
 import axios from "axios";
 import {getJSONHeaders} from "../../utils";
 import {DEFAULT_TALK_CONFIG, DELETE, GET, POST, PUT} from "../../../constants/api";
-import {SportsTalkConfig} from "../../../models/CommonModels";
+import {SportsTalkConfig, WebHook} from "../../../models/CommonModels";
 import {IWebhookManager} from "../../../API/CommonAPI";
 
 const MISSING_ID = "Missing webhook or webhook missing ID";
@@ -21,7 +20,7 @@ export class RestfulWebhookManager implements IWebhookManager {
         this._apiHeaders = getJSONHeaders(this._config.apiKey);
     }
 
-    listWebhooks = (): Promise<ChatWebHook[]> => {
+    listWebhooks = (): Promise<WebHook[]> => {
         return axios({
             url: `${this._config.endpoint}/webhook`,
             method: GET,
@@ -31,7 +30,7 @@ export class RestfulWebhookManager implements IWebhookManager {
         })
     }
 
-    createWebhook = (hook: ChatWebHook): Promise<ChatWebHook> =>{
+    createWebhook = (hook: WebHook): Promise<WebHook> =>{
         return axios({
             url: `${this._config.endpoint}/webhook`,
             method: POST,
@@ -42,7 +41,7 @@ export class RestfulWebhookManager implements IWebhookManager {
         })
     }
 
-    updateWebhook = (hook: ChatWebHook): Promise<ChatWebHook> => {
+    updateWebhook = (hook: WebHook): Promise<WebHook> => {
         if(!hook || !hook.id) {
             throw new Error(MISSING_ID);
         }
@@ -56,7 +55,7 @@ export class RestfulWebhookManager implements IWebhookManager {
         })
     }
 
-    deleteWebhook = (hook: ChatWebHook | string): Promise<ChatWebHook> => {
+    deleteWebhook = (hook: WebHook | string): Promise<WebHook> => {
         if(!hook) {
             throw new Error(MISSING_ID);
         }

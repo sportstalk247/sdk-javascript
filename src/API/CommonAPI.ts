@@ -1,6 +1,4 @@
-import {ApiResult, ClientConfig, SearchType, SportsTalkConfig, User, UserResult} from "../models/CommonModels";
-import {Promise} from "es6-promise";
-import {ChatWebHook, EventResult} from "../models/ChatModels";
+import {ApiResult, ClientConfig, SearchType, SportsTalkConfig, User, UserResult, WebHook} from "../models/CommonModels";
 
 export interface ISportsTalkConfigurable {
     setConfig(config: SportsTalkConfig)
@@ -21,8 +19,8 @@ export interface IUserManager extends ISportsTalkConfigurable {
 }
 
 export interface IWebhookManager extends ISportsTalkConfigurable {
-    listWebhooks(): Promise<ChatWebHook[]>;
-    createWebhook(hook: ChatWebHook): Promise<ChatWebHook>;
-    updateWebhook(hook: ChatWebHook): Promise<ChatWebHook>;
-    deleteWebhook(hook: ChatWebHook | string): Promise<ChatWebHook>;
+    listWebhooks(): Promise<WebHook[]>;
+    createWebhook(hook: WebHook): Promise<WebHook>;
+    updateWebhook(hook: WebHook): Promise<WebHook>;
+    deleteWebhook(hook: WebHook | string): Promise<WebHook>;
 }

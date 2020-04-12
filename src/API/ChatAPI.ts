@@ -9,7 +9,6 @@ import {
     RoomUserResult
 } from "../models/ChatModels";
 
-import {Promise} from "es6-promise";
 import {ISportsTalkConfigurable, IUserConfigurable} from "./CommonAPI";
 import {ApiResult, Reaction, ReportReason, ReportType, User, UserResult} from "../models/CommonModels";
 

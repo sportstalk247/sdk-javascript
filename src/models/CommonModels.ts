@@ -76,3 +76,32 @@ export interface ReportReason {
     reporttype: ReportType,
     userid: string
 }
+
+export enum WebhookType {
+    prepublish = "prepublish",
+    postpublish = "postpublish"
+}
+
+export enum WebhookEvent {
+    chatspeech = "chatspeech",
+    chatcustom = "chatcustom",
+    chatreply = "chatreply",
+    chatreaction = "chatreaction",
+    chataction = "chataction",
+    chatenter = "chatenter",
+    chatexit = "chatexit",
+    chatquote = "chatquote",
+    chatroomopened = "chatroomopened",
+    chatroomclosed = "chatroomclosed",
+    chatpurge = "chatpurge"
+}
+
+export interface WebHook {
+    id?: string,
+    kind?: Kind.webhook,
+    label: string,
+    url: string,
+    enabled: boolean,
+    type: WebhookType,
+    events: WebhookEvent[]
+}

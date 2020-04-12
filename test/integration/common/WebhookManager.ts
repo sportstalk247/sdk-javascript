@@ -1,8 +1,7 @@
 import * as chai from 'chai';
 import {RestfulWebhookManager} from "../../../src/impl/common/REST/RestfulWebhookManager";
-import {WebhookEvent, WebhookType} from "../../../src/models/ChatModels";
 import * as dotenv from 'dotenv';
-import {SportsTalkConfig} from "../../../src/models/CommonModels";
+import {SportsTalkConfig, WebhookEvent, WebhookType} from "../../../src/models/CommonModels";
 dotenv.config();
 
 const { expect } = chai;
