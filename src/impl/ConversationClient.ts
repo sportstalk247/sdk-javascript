@@ -114,7 +114,7 @@ export class ConversationClient implements IConversationClient {
         return this._commentManager.report(comment, this._user, reportType);
     }
 
-    public getCommentReplies = (comment:Comment, request: CommentRequest): Promise<Comment[]> => {
+    public getCommentReplies = (comment:Comment, request?: CommentRequest): Promise<Commentary> => {
         return this._commentManager.getReplies(comment, request);
     }
 

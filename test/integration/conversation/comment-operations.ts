@@ -11,7 +11,7 @@ let client;
 let mod;
 const { expect } = chai;
 
-describe('Conversation Moderation', function() {
+describe('Comment Operations', function() {
     const config = {
         apiKey:process.env.TEST_KEY,
         appId: process.env.TEST_APP_ID,
@@ -58,9 +58,9 @@ describe('Conversation Moderation', function() {
             });
         })
     });
-    describe("Comment operations", function() {
+    describe("Responses", function() {
         let commentary: Commentary;
-        it("Reply", async()=>{
+        it("Reply", async ()=>{
             try {
                 const conv = await client2.createConversation(conversation, true)
                 const resp = await client2.makeComment("This is my comment")
@@ -71,6 +71,8 @@ describe('Conversation Moderation', function() {
                 const reply = await client.makeComment("I'm replying", resp);
                 commentary = await client.getComments();
                 expect(commentary.comments.length).to.be.greaterThan(0);
+                const replylist:Commentary = await client.getCommentReplies(resp);
+                expect(replylist.comments.length).to.be.greaterThan(0);
             } catch (e) {
                 throw e;
             }
@@ -78,7 +80,11 @@ describe('Conversation Moderation', function() {
         it("Lets you retrieve specific comments", async ()=>{
             const firstComment = commentary.comments[0];
             let comment = await client.getComment(firstComment);
-            expect(comment.id).to.be.equal(firstComment.id)
+            if(comment) {
+                expect(comment.id).to.be.equal(firstComment.id)
+            } else {
+                throw new Error("No comment retrieved!");
+            }
         })
         it("Lets you vote on a comment", async ()=>{
             const firstComment = commentary.comments[0];
@@ -106,9 +112,13 @@ describe('Conversation Moderation', function() {
        it("Lets a user delete their comment", async ()=>{
            const comment = await client.makeComment("Delete me");
            const deleted =  await client.deleteComment(comment, true);
+           expect(deleted.kind).to.be.equal(Kind.deletedcomment);
            const exists = await client.getComment(comment);
+           expect(exists).to.be.null;
        })
-   })
+   });
+
+
    describe('Delete Conversation', function () {
        it('Deletes Conversation', function (done) {
            client.deleteConversation(	 "TEST_ITEM").then(results => {

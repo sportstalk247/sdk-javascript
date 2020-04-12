@@ -7,7 +7,7 @@ import {
     Vote
 } from "../../../models/ConversationModels";
 import {DELETE, GET, POST, PUT} from "../../../constants/api";
-import {getUrlEncodedHeaders, getJSONHeaders, buildAPI} from "../../utils";
+import {getUrlEncodedHeaders, getJSONHeaders, buildAPI, formify} from "../../utils";
 import {getUrlCommentId, getUrlConversationId} from "../ConversationUtils";
 import {RequireUserError, SettingsError, ValidationError} from "../../errors";
 import {ICommentManager} from "../../../API/ConversationAPI";
@@ -131,7 +131,7 @@ export class RestfulCommentManager implements ICommentManager {
         });
     }
 
-    public getComment = (comment: Comment | string): Promise<Comment> => {
+    public getComment = (comment: Comment | string): Promise<Comment | null> => {
         // @ts-ignore
         this._requireConversation();
         const id = getUrlCommentId(comment);
@@ -142,7 +142,12 @@ export class RestfulCommentManager implements ICommentManager {
         }
         return axios(config).then(result=>{
             return result.data.data;
-        });
+        }).catch(e=>{
+            if(e.response.status === 404) {
+                return null;
+            }
+            throw e;
+        })
     }
 
     private _finalDelete = (comment: Comment | string, user:User): Promise<CommentDeletionResponse> => {
@@ -255,16 +260,20 @@ export class RestfulCommentManager implements ICommentManager {
         });
     }
 
-    public getReplies = (comment: Comment, request?: CommentRequest): Promise<Array<Comment>> =>{
+    public getReplies = (comment: Comment, request?: CommentRequest): Promise<Commentary> =>{
         this._requireConversation();
         const id = getUrlCommentId(comment);
+        const requestString = formify(request);
         return axios({
             method: GET,
-            url: buildAPI(this._config, `${this._apiExt}/${this._conversationId}/comments/${id}`),
+            url: buildAPI(this._config, `${this._apiExt}/${this._conversationId}/comments/${id}/replies/?${requestString}`),
             headers: this._jsonHeaders,
             data: request
         }).then(result=>{
-            return result.data;
+            return {
+                conversation: result.data.data.conversation,
+                comments: result.data.data.comments
+            }
         });
     }
 

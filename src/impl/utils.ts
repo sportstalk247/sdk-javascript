@@ -15,6 +15,7 @@ export function formify(data) {
     }
     return formBody.join("&");
 }
+
 export function buildAPI(config: SportsTalkConfig, ext: string, request?: CommentRequest): string {
 
     let endpoint = `${config.endpoint}/${config.appId}/${ext}`;
