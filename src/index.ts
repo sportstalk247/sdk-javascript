@@ -1,7 +1,7 @@
 import * as API from "./API/ChatAPI";
 import {ChatClient} from './impl/ChatClient';
 import {ConversationClient} from './impl/ConversationClient';
-import {RestfulModerationManager} from "./impl/chat/REST/RestfulModerationManager";
+import {RestfulChatModerationManager} from "./impl/chat/REST/RestfulChatModerationManager";
 import {RestfulEventManager} from "./impl/chat/REST/RestfulEventManager";
 import {RestfulUserManager} from "./impl/common/REST/RestfulUserManager";
 import {RestfulRoomManager} from "./impl/chat/REST/RestfulRoomManager";
@@ -12,7 +12,7 @@ import * as Errors from './errors';
 export {
     ChatClient,
     ConversationClient,
-    RestfulModerationManager,
+    RestfulChatModerationManager,
     RestfulEventManager,
     RestfulRoomManager,
     RestfulUserManager,

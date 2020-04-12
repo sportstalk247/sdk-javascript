@@ -3,11 +3,11 @@ import {Promise} from "es6-promise";
 import axios, {AxiosRequestConfig} from "axios";
 import {buildAPI, formify, getUrlEncodedHeaders} from "../../../utils";
 import {DEFAULT_TALK_CONFIG, POST, } from "../../../constants";
-import {IModerationManager} from "../../../API/ChatAPI";
+import {IChatModerationManager} from "../../../API/ChatAPI";
 import {ApiResult, SportsTalkConfig} from "../../../models/CommonModels";
 
 
-export class RestfulModerationManager implements IModerationManager {
+export class RestfulChatModerationManager implements IChatModerationManager {
     private _config: SportsTalkConfig = {appId: ""};
     private _apiHeaders;
 
@@ -20,7 +20,7 @@ export class RestfulModerationManager implements IModerationManager {
         this._apiHeaders = getUrlEncodedHeaders(this._config.apiKey);
     }
 
-    getModerationQueueEvents = (): Promise<Array<EventResult>> => {
+    getModerationQueue = (): Promise<Array<EventResult>> => {
         return axios({
             method: 'GET',
             url: buildAPI(this._config, `chat/moderation/queues/events`),
@@ -30,7 +30,7 @@ export class RestfulModerationManager implements IModerationManager {
         });
     }
 
-    removeEvent = (event: EventResult): Promise<ApiResult<null>> => {
+    rejectEvent = (event: EventResult): Promise<ApiResult<null>> => {
         return axios({
             method: 'POST',
             url: buildAPI(this._config, `/chat/moderation/queues/events/${event.id}/applydecision`),
@@ -43,7 +43,7 @@ export class RestfulModerationManager implements IModerationManager {
         })
     }
 
-    approveEvent = (event: EventResult): Promise<ApiResult<null> | Error> => {
+    approveEvent = (event: EventResult): Promise<ApiResult<null>> => {
         // @ts-ignore
         const id = event.id | event;
         return axios({

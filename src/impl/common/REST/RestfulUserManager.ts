@@ -8,7 +8,6 @@ import {IUserManager} from "../../../API/CommonAPI";
 
 export class RestfulUserManager implements IUserManager {
     _config: SportsTalkConfig;
-    _apiHeaders: {};
     _jsonHeaders: {};
 
     constructor(config: SportsTalkConfig) {
@@ -17,7 +16,6 @@ export class RestfulUserManager implements IUserManager {
 
     setConfig = (config: SportsTalkConfig) => {
         this._config = config;
-        this._apiHeaders = getUrlEncodedHeaders(this._config.apiKey)
         this._jsonHeaders = getJSONHeaders(this._config.apiKey);
     }
 

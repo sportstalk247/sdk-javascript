@@ -1,7 +1,7 @@
 import { ChatClient } from '../../../src/impl/ChatClient';
 import {EventResult} from "../../../src/models/ChatModels";
 import * as chai from 'chai';
-import {RestfulModerationManager} from "../../../src/impl/chat/REST/RestfulModerationManager";
+import {RestfulChatModerationManager} from "../../../src/impl/chat/REST/RestfulChatModerationManager";
 import * as dotenv from 'dotenv';
 import {ModerationType, SportsTalkConfig} from "../../../src/models/CommonModels";
 dotenv.config();
@@ -17,7 +17,7 @@ describe('Post moderation Sequence', function() {
     let eventlength = 1;
 
     client = ChatClient.create(config)
-    mod = new RestfulModerationManager(config);
+    mod = new RestfulChatModerationManager(config);
 
     it('Can create a room, join the room, moderate messages, kill room', (done) => {
        client.createRoom({

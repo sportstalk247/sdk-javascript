@@ -58,7 +58,9 @@ export interface IChatClient extends ITalkClient {
     listParticipants(cursor?: string, maxresults?: number): Promise<Array<User>>;
 }
 
-export interface IModerationManager extends ISportsTalkConfigurable {
-
+export interface IChatModerationManager extends ISportsTalkConfigurable {
+    getModerationQueue(): Promise<Array<EventResult>>
+    rejectEvent(event: EventResult): Promise<ApiResult<null>>
+    approveEvent(event: EventResult): Promise<ApiResult<null>>
 }
 

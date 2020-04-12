@@ -1,5 +1,5 @@
 import { ChatClient } from '../../../src/impl/ChatClient';
-import {RestfulModerationManager} from "../../../src";
+import {RestfulChatModerationManager} from "../../../src";
 import * as chai from 'chai';
 import * as sinon from 'sinon';
 import * as dotenv from 'dotenv';
@@ -17,7 +17,7 @@ const delay = function(timer) {
 describe("Moderation Manager", ()=>{
 
     const client = ChatClient.create(config)
-    const MM = new RestfulModerationManager(config);
+    const MM = new RestfulChatModerationManager(config);
     const EM = client.getEventManager();
     const RM = client.getRoomManager();
     const onChatStart = sinon.fake();

@@ -1,8 +1,7 @@
 import {ConversationClient} from '../../../src/impl/ConversationClient';
-import {Kind} from '../../../src/models/CommonModels';
+import {Kind, ModerationType, ReportType} from '../../../src/models/CommonModels';
 import * as chai from 'chai';
 import * as dotenv from 'dotenv';
-import {ModerationType} from "../../../src/models/CommonModels";
 
 dotenv.config();
 
@@ -10,7 +9,7 @@ let client;
 let mod;
 const { expect } = chai;
 
-describe('BASIC Conversation Sequence', function() {
+describe('Conversation Moderation', function() {
     const client = ConversationClient.create({
         apiKey:process.env.TEST_KEY,
         appId: process.env.TEST_APP_ID,
@@ -35,7 +34,7 @@ describe('BASIC Conversation Sequence', function() {
         "owneruserid" : 'testuser1',
         "property" : "testing",
         "moderation" : ModerationType.post,
-        "maxreports" : 3,
+        "maxreports" : 0,
         "title": "Test Conversation",
         "maxcommentlen": 512,
         "conversationisopen" : true,
@@ -70,14 +69,18 @@ describe('BASIC Conversation Sequence', function() {
         })
     })
 
-   describe("User Interaction", function() {
-       it("Let's User1 comment", function(done){
+   describe("User flags comment", function() {
+       it("Let's User2 flag User1's comment", function(done){
            client.makeComment("This is user1 comment")
                .then(()=>client2.getComments())
                .then((commentary)=>{
                    expect(commentary.comments.length).to.be.greaterThan(0);
+                   client2.reportComment(commentary.comments[0], ReportType.abuse)
                    done()
                }).catch(done);
+
+       })
+       it('Shows that comment is flagged', function(done){
 
        })
    });

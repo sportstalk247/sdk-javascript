@@ -1,7 +1,7 @@
 import { ChatClient } from '../../../src/impl/ChatClient';
 import {EventResult} from "../../../src/models/ChatModels";
 import * as chai from 'chai';
-import {RestfulModerationManager} from "../../../src/impl/chat/REST/RestfulModerationManager";
+import {RestfulChatModerationManager} from "../../../src/impl/chat/REST/RestfulChatModerationManager";
 import * as dotenv from 'dotenv';
 import {ModerationType, SportsTalkConfig} from "../../../src/models/CommonModels";
 dotenv.config();
@@ -19,7 +19,7 @@ describe('Pre Moderation sequences', function() {
 
         let roomid;
         const client = ChatClient.create(config);
-        const mod = new RestfulModerationManager(config);
+        const mod = new RestfulChatModerationManager(config);
         it('Can create a room, join the room, deny messages, kill room', (done) => {
             client.createRoom({
                 name: "Pre-moderation test Room",
@@ -40,7 +40,7 @@ describe('Pre Moderation sequences', function() {
             }).then(() => {
                 return client.sendCommand('Test message')
             }).then(() => {
-                return mod.getModerationQueueEvents()
+                return mod.getModerationQueue()
             }).then(events => {
                 expect(events.length).to.be.greaterThan(0);
                 const list: Array<EventResult> = events || [];
@@ -48,7 +48,7 @@ describe('Pre Moderation sequences', function() {
                     return mod.removeEvent(event)
                 }))
             }).then(events => {
-                return mod.getModerationQueueEvents()
+                return mod.getModerationQueue()
             }).then(events => {
                 expect(events).to.have.lengthOf(0);
             }).then(() => {
@@ -70,7 +70,7 @@ describe('Pre Moderation sequences', function() {
         this.timeout(20000);
         let roomid;
         const client = ChatClient.create(config);
-        const mod = new RestfulModerationManager(config);
+        const mod = new RestfulChatModerationManager(config);
         it('Can create a room, join the room, approve messages, kill room', (done) => {
             client.createRoom({
                 name: "Pre-moderation test Room",
@@ -91,7 +91,7 @@ describe('Pre Moderation sequences', function() {
             }).then(() => {
                 return client.sendCommand('Test message')
             }).then(() => {
-                return mod.getModerationQueueEvents()
+                return mod.getModerationQueue()
             }).then(events => {
                 expect(events.length).to.be.greaterThan(0);
                 const list: Array<EventResult> = events || [];
@@ -99,7 +99,7 @@ describe('Pre Moderation sequences', function() {
                     return mod.approveEvent(event)
                 }))
             }).then(events => {
-                return mod.getModerationQueueEvents()
+                return mod.getModerationQueue()
             }).then(events => {
                 expect(events).to.have.lengthOf(0);
                 return delay(1000);

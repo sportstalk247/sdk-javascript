@@ -30,6 +30,10 @@ export interface IConversationManager extends IConfigurable {
     deleteConversation(conversation: Conversation | string): Promise<ConversationDeletionResponse>
 }
 
+export interface IConversationModerationManager extends IConfigurable {
+
+}
+
 export interface IConversationClient extends ISportsTalkConfigurable, IUserConfigurable   {
     getConfig(): SportsTalkConfig;
     setConfig(config: SportsTalkConfig, commentManager?: ICommentManager, conversationManager?: IConversationManager): IConversationClient;
