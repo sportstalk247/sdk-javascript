@@ -49,6 +49,12 @@ export interface JoinRoomResponse {
     user: User
 }
 
+export interface DeletedRoomResponse {
+    kind: Kind.deletedroom,
+    deletedEventsCount: number,
+    room: Room
+}
+
 /**
  * Chat commands.
  */

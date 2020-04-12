@@ -1,5 +1,5 @@
 import {IRoomManager} from "../../../API/ChatAPI";
-import {EventResult, Room, RoomResult, RoomUserResult} from "../../../models/ChatModels";
+import {EventResult, Room, RoomResult, RoomUserResult, DeletedRoomResponse} from "../../../models/ChatModels";
 import axios, {AxiosRequestConfig} from "axios";
 import {GET, DELETE, POST} from "../../../constants/api";
 import {buildAPI, getJSONHeaders, getUrlEncodedHeaders} from "../../utils";
@@ -50,7 +50,7 @@ export class RestfulRoomManager implements IRoomManager {
         return this._knownRooms;
     }
 
-    deleteRoom = (room: Room | string): Promise<ApiResult<null>> => {
+    deleteRoom = (room: Room | string): Promise<DeletedRoomResponse> => {
         // @ts-ignore
         const id =  room.id || room;
         const config:AxiosRequestConfig = {
@@ -60,7 +60,7 @@ export class RestfulRoomManager implements IRoomManager {
         };
         // @ts-ignore
         return axios(config).then(result=>{
-            return result
+            return result.data.data
         }).catch(e=>{
             throw e;
         })

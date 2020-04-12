@@ -33,7 +33,8 @@ export enum Kind {
     conversation = "comment.conversation",
     deletedconversation = "delete.conversation",
     comment = "comment.comment",
-    deletedcomment ="delete.comment"
+    deletedcomment ="deleted.comment",
+    deletedroom = "deleted.room"
 }
 
 export interface UserResult extends User {

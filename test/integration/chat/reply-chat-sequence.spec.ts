@@ -2,7 +2,7 @@ import { ChatClient } from '../../../src/impl/ChatClient';
 import * as chai from 'chai';
 import {RestfulRoomManager} from "../../../src/impl/chat/REST/RestfulRoomManager";
 import * as dotenv from 'dotenv';
-import {SportsTalkConfig} from "../../../src/models/CommonModels";
+import {Kind, SportsTalkConfig} from "../../../src/models/CommonModels";
 dotenv.config();
 
 let client;
@@ -33,7 +33,7 @@ describe('REPLY Chat Sequence', function() {
     let theRoom;
     describe('User 1', function () {
         it('Joins room', function (done) {
-            client.createRoom({
+            rm.createRoom({
                 name: "Test room",
                 slug: "chat-test-room",
             }).then(room => {
@@ -46,12 +46,7 @@ describe('REPLY Chat Sequence', function() {
     });
     describe('User 2', function () {
         it('Joins room', function (done) {
-            client2.createRoom({
-                name: "Test room",
-                slug: "chat-test-room",
-            }).then(room => {
-                return client2.joinRoom(room)
-            }).then(() => {
+            client2.joinRoom(theRoom).then(() => {
                 done()
             }).catch(done)
         })
@@ -95,6 +90,7 @@ describe('REPLY Chat Sequence', function() {
         it('can be deleted', function (done) {
             rm.deleteRoom(theRoom)
                 .then(success => {
+                    expect(success.kind).to.be.equal(Kind.deletedroom)
                     done()
                 }).catch(done);
         })

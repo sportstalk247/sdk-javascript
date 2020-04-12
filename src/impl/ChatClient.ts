@@ -5,7 +5,7 @@ import {
     EventHandlerConfig,
     RoomResult,
     Room,
-    RoomUserResult, EventResult
+    RoomUserResult, EventResult, DeletedRoomResponse
 } from "../models/ChatModels";
 import {DEFAULT_TALK_CONFIG} from "../constants/api";
 import {IRoomManager, IEventManager, IChatClient} from "../API/ChatAPI";
@@ -172,14 +172,6 @@ export class ChatClient implements IChatClient {
         }).catch(e=>{
             throw e;
         })
-    }
-
-    createRoom = (room: Room): Promise<RoomResult> => {
-        return this._roomManager.createRoom(room);
-    }
-
-    deleteRoom = (room: Room | string): Promise<ApiResult<null>> => {
-        return this._roomManager.deleteRoom(room);
     }
 
     /**

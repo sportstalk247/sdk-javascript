@@ -1,6 +1,6 @@
 import {
     AdvertisementOptions,
-    CommandOptions,
+    CommandOptions, DeletedRoomResponse,
     EventHandlerConfig,
     EventResult,
     GoalOptions,
@@ -30,7 +30,7 @@ export interface IEventManager extends ISportsTalkConfigurable, IUserConfigurabl
 
 export interface IRoomManager extends ISportsTalkConfigurable {
     listRooms(): Promise<Array<Room>>
-    deleteRoom(id: string | Room): Promise<ApiResult<null>>
+    deleteRoom(id: string | Room): Promise<DeletedRoomResponse>
     createRoom(room: Room): Promise<RoomResult>
     listParticipants(room: Room, cursor?: string, maxresults?: number): Promise<Array<UserResult>>
     listUserMessages(user: User | string, Room: Room | String, cursor?: string, limit?: number): Promise<Array<EventResult>>
