@@ -45,7 +45,7 @@ export class RestfulConversationModerationManager implements IConversationModera
     approveComment = (comment: Comment): Promise<ApiResult<null>> => {
         return axios({
             method: POST,
-            url: buildAPI(this._config, `/chat/moderation/queues/events/${comment.id}/applydecision`),
+            url: buildAPI(this._config, `/chat/moderation/queues/comments/${comment.id}/applydecision`),
             headers: this._apiHeaders,
             data: {approve: true}
         }).then(result => result)
