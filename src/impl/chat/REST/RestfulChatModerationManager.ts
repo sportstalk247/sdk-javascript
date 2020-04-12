@@ -51,6 +51,6 @@ export class RestfulChatModerationManager implements IChatModerationManager {
             url: buildAPI(this._config, `/chat/moderation/queues/events/${event.id}/applydecision`),
             headers: this._apiHeaders,
             data: {approve: true}
-        }).then(result => result)
+        }).then(result => result.data)
     }
 }
