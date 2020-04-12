@@ -2,7 +2,7 @@ import * as chai from 'chai';
 import {RestfulUserManager} from "../../../src/impl/common/REST/RestfulUserManager";
 import * as dotenv from 'dotenv';
 import {SearchType, SportsTalkConfig} from "../../../src/models/CommonModels";
-import {RestfulRoomManager} from "../../../src";
+import {RestfulRoomManager} from "../../../src/impl/chat/REST/RestfulRoomManager";
 
 dotenv.config();
 
