@@ -4,7 +4,6 @@ import {Comment, ConversationDeletionResponse} from "../../../models/Conversatio
 import {GET, POST} from "../../../constants/api";
 import {getUrlEncodedHeaders, getJSONHeaders, buildAPI} from "../../utils";
 import {IConversationModerationManager} from "../../../API/ConversationAPI";
-import {Promise} from "es6-promise";
 
 export class RestfulConversationModerationManager implements IConversationModerationManager {
 

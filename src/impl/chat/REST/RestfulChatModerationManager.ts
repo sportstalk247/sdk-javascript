@@ -1,11 +1,9 @@
 import {EventResult} from "../../../models/ChatModels";
-import {Promise} from "es6-promise";
 import axios, {AxiosRequestConfig} from "axios";
 import {buildAPI, formify, getUrlEncodedHeaders} from "../../utils";
 import {DEFAULT_TALK_CONFIG, POST, } from "../../../constants/api";
 import {IChatModerationManager} from "../../../API/ChatAPI";
 import {ApiResult, SportsTalkConfig, WebHook} from "../../../models/CommonModels";
-
 
 export class RestfulChatModerationManager implements IChatModerationManager {
     private _config: SportsTalkConfig = {appId: ""};
