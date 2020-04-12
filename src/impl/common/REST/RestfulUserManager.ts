@@ -1,6 +1,6 @@
 import axios, {AxiosRequestConfig} from "axios";
 import {DELETE, POST} from "../../../constants/api";
-import {buildAPI, getJSONHeaders, getUrlEncodedHeaders} from "../../utils";
+import {buildCommentAPI, getJSONHeaders, getUrlEncodedHeaders} from "../../utils";
 import {ApiResult, SearchType, SportsTalkConfig, User, UserResult} from "../../../models/CommonModels";
 import {IUserManager} from "../../../API/CommonAPI";
 
@@ -28,7 +28,7 @@ export class RestfulUserManager implements IUserManager {
     createOrUpdateUser = (user: User): Promise<UserResult> => {
         const config:AxiosRequestConfig = {
             method: POST,
-            url: buildAPI(this._config,`user/users/${user.userid}`),
+            url: buildCommentAPI(this._config,`user/users/${user.userid}`),
             headers: this._jsonHeaders,
             data: {
                 userid: user.userid,
@@ -51,7 +51,7 @@ export class RestfulUserManager implements IUserManager {
     setBanStatus = (user: User | string, isBanned: boolean): Promise<ApiResult<UserResult>> => {
         // @ts-ignore
         const userid = user.userid || user;
-        const url = buildAPI(this._config,`/user/users/${userid}/ban`);
+        const url = buildCommentAPI(this._config,`/user/users/${userid}/ban`);
         return axios({
             method: POST,
             url: url,
@@ -63,7 +63,7 @@ export class RestfulUserManager implements IUserManager {
     }
 
     searchUsers = (search:string, type: SearchType): Promise<Array<UserResult>> => {
-        const url = buildAPI(this._config,`/user/users/search`);
+        const url = buildCommentAPI(this._config,`/user/users/search`);
         const data:any = {
             type: type,
         }
@@ -96,7 +96,7 @@ export class RestfulUserManager implements IUserManager {
         const id = user.userid || user;
         const config:AxiosRequestConfig = {
             method: DELETE,
-            url: buildAPI(this._config,`user/users/${id}`),
+            url: buildCommentAPI(this._config,`user/users/${id}`),
             headers: this._jsonHeaders,
         };
         return axios(config).then(response=>response.data.data).catch(e=>{

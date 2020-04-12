@@ -2,7 +2,7 @@ import {ApiHeaders, ApiResult, ClientConfig} from "../../../models/CommonModels"
 import axios, {AxiosRequestConfig} from "axios";
 import {Comment, ConversationDeletionResponse} from "../../../models/ConversationModels";
 import {GET, POST} from "../../../constants/api";
-import {getUrlEncodedHeaders, getJSONHeaders, buildAPI} from "../../utils";
+import {getUrlEncodedHeaders, getJSONHeaders, buildCommentAPI} from "../../utils";
 import {IConversationModerationManager} from "../../../API/ConversationAPI";
 
 export class RestfulConversationModerationManager implements IConversationModerationManager {
@@ -21,7 +21,7 @@ export class RestfulConversationModerationManager implements IConversationModera
     public getModerationQueue = (): Promise<ConversationDeletionResponse> => {
         const config: AxiosRequestConfig = {
             method: GET,
-            url: buildAPI(this._config, this._apiExt),
+            url: buildCommentAPI(this._config, this._apiExt),
             headers: this._jsonHeaders,
         }
         return axios(config).then(result=>{
@@ -32,7 +32,7 @@ export class RestfulConversationModerationManager implements IConversationModera
     rejectComment = (comment: Comment): Promise<ApiResult<null>> => {
         return axios({
             method: 'POST',
-            url: buildAPI(this._config, `${this._apiExt}/${comment.id}/applydecision`),
+            url: buildCommentAPI(this._config, `${this._apiExt}/${comment.id}/applydecision`),
             headers: this._apiHeaders,
             data: {approve: false}
         }).then(result => {
@@ -45,7 +45,7 @@ export class RestfulConversationModerationManager implements IConversationModera
     approveComment = (comment: Comment): Promise<ApiResult<null>> => {
         return axios({
             method: POST,
-            url: buildAPI(this._config, `${this._apiExt}/${comment.id}/applydecision`),
+            url: buildCommentAPI(this._config, `${this._apiExt}/${comment.id}/applydecision`),
             headers: this._apiHeaders,
             data: {approve: true}
         }).then(result => result.data)

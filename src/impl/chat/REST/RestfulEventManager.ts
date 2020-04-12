@@ -7,7 +7,7 @@ import {
 } from "../../../models/ChatModels";
 import {DEFAULT_TALK_CONFIG, GET, POST} from "../../../constants/api";
 import {IEventManager} from "../../../API/ChatAPI";
-import {buildAPI, formify, getJSONHeaders, getUrlEncodedHeaders} from "../../utils";
+import {buildCommentAPI, formify, getJSONHeaders, getUrlEncodedHeaders} from "../../utils";
 import {SettingsError} from "../../errors";
 import {NO_HANDLER_SET, NO_ROOM_SET} from "../../../constants/messages";
 import axios, {AxiosRequestConfig} from "axios";
@@ -79,7 +79,7 @@ export class RestfulEventManager implements IEventManager{
         this.firstMessageTime = undefined;
         this._currentRoom = room;
         if(this._currentRoom) {
-            this._roomApi = buildAPI(this._config, `chat/rooms/${this._currentRoom.id}`);
+            this._roomApi = buildCommentAPI(this._config, `chat/rooms/${this._currentRoom.id}`);
         }else {
             this._roomApi = null;
         }
@@ -234,7 +234,7 @@ export class RestfulEventManager implements IEventManager{
         const id = event.id || event;
         const config:AxiosRequestConfig =  {
             method: POST,
-            url: buildAPI(this._config, `chat/rooms/${this._currentRoom.id}/events/${id}/report`),
+            url: buildCommentAPI(this._config, `chat/rooms/${this._currentRoom.id}/events/${id}/report`),
             headers: this._jsonHeaders,
             data: reason
         };

@@ -8,7 +8,7 @@ import {
     Vote
 } from "../../../models/ConversationModels";
 import {DELETE, GET, POST, PUT} from "../../../constants/api";
-import {getUrlEncodedHeaders, getJSONHeaders, buildAPI} from "../../utils";
+import {getUrlEncodedHeaders, getJSONHeaders, buildCommentAPI} from "../../utils";
 import {getUrlCommentId, getUrlConversationId} from "../ConversationUtils";
 import {RequireUserError, SettingsError, ValidationError} from "../../errors";
 import {ICommentManager} from "../../../API/ConversationAPI";
@@ -28,6 +28,7 @@ export class RestfulCommentManager implements ICommentManager {
     private _apiHeaders: ApiHeaders;
     private _jsonHeaders: ApiHeaders;
     private _conversationId: string;
+    private _apiExt:string = 'comment/conversations';
 
     private static DEFAULT_COMMENT_REQUEST: CommentRequest = {
         includechilden: false,
@@ -42,9 +43,9 @@ export class RestfulCommentManager implements ICommentManager {
             throw new RequireUserError(USER_NEEDS_ID);
         }
     }
-    private _requireConversation = () => {
+    private _requireConversation = (message?:string) => {
         if(!this._conversationId) {
-            throw new SettingsError(NO_CONVERSATION_SET);
+            throw new SettingsError(message || NO_CONVERSATION_SET);
         }
     }
 
@@ -99,7 +100,7 @@ export class RestfulCommentManager implements ICommentManager {
     private _makeComment = (comment: Comment): Promise<Comment> => {
         const config:AxiosRequestConfig = {
             method: POST,
-            url: buildAPI(this._config, `comment/conversations/${this._conversationId}/comments`),
+            url: buildCommentAPI(this._config, `${this._apiExt}/comments`),
             headers: this._jsonHeaders,
             data: comment
         }
@@ -116,12 +117,14 @@ export class RestfulCommentManager implements ICommentManager {
         if(!replyId) {
             throw new ValidationError(MISSING_REPLYTO_ID);
         }
-        const replyComment: Comment = Object.assign(comment, {replyto: replyId});
         return axios({
             method: POST,
-            url: buildAPI(this._config, `/comment/conversations/${this._conversationId}`),
+            url: buildCommentAPI(this._config, `${this._apiExt}/${this._conversationId}/${replyId}`),
             headers: this._jsonHeaders,
-            data: replyComment
+            data: {
+                body: comment.body,
+                userid: comment.userid
+            }
         }).then(result=>{
             return result.data;
         });
@@ -133,7 +136,7 @@ export class RestfulCommentManager implements ICommentManager {
         const id = getUrlCommentId(comment);
         return axios({
             method: GET,
-            url: buildAPI(this._config, `/comment/conversations/${this._conversationId}/${id}`),
+            url: buildCommentAPI(this._config, `${this._apiExt}/${this._conversationId}/${id}`),
             headers: this._jsonHeaders,
         }).then(result=>{
             return result.data;
@@ -145,7 +148,7 @@ export class RestfulCommentManager implements ICommentManager {
         const id = getUrlCommentId(comment);
         return axios({
             method: DELETE,
-            url: buildAPI(this._config, `comment/conversations/${this._conversationId}/${id}`),
+            url: buildCommentAPI(this._config, `${this._apiExt}/${this._conversationId}/${id}`),
             headers: this._jsonHeaders,
         }).then(result => {
             return result.data;
@@ -157,7 +160,7 @@ export class RestfulCommentManager implements ICommentManager {
         const id = getUrlCommentId(comment);
         const config:AxiosRequestConfig = {
             method: PUT,
-            url: buildAPI(this._config, `comment/conversations/${this._conversationId}/${id}?userid=${user.userid}&deleted=true`),
+            url: buildCommentAPI(this._config, `${this._apiExt}/${this._conversationId}/${id}?userid=${user.userid}&deleted=true`),
             headers: this._jsonHeaders,
         }
         return axios(config).then(result => {
@@ -175,9 +178,13 @@ export class RestfulCommentManager implements ICommentManager {
         this._requireConversation();
         const id = getUrlCommentId(comment);
         return axios({
-            method: GET,
-            url: `${this._config.endpoint}/comment/conversations/${this._conversationId}/${id}`,
+            method: PUT,
+            url: buildCommentAPI(this._config,`${this._apiExt}/${this._conversationId}/${id}`),
             headers: this._jsonHeaders,
+            data: {
+                body: comment.body,
+                userid: comment.userid
+            }
         }).then(result=>{
             return result.data;
         });
@@ -199,7 +206,7 @@ export class RestfulCommentManager implements ICommentManager {
         }
         return axios({
             method: POST,
-            url: buildAPI(this._config, `/comment/conversations/${this._conversationId}/${id}/react`),
+            url: buildCommentAPI(this._config, `${this._apiExt}/${this._conversationId}/${id}/react`),
             headers: this._jsonHeaders,
             data
         }).then(result=>{
@@ -213,7 +220,7 @@ export class RestfulCommentManager implements ICommentManager {
         const id = getUrlCommentId(comment);
         return axios({
             method: POST,
-            url: buildAPI(this._config, `/comment/conversations/${this._conversationId}/${id}/vote`),
+            url: buildCommentAPI(this._config, `${this._apiExt}/${this._conversationId}/${id}/vote`),
             headers: this._jsonHeaders,
             data: {
                 vote: vote,
@@ -230,7 +237,7 @@ export class RestfulCommentManager implements ICommentManager {
         const id = getUrlCommentId(comment);
         return axios({
             method: POST,
-            url: buildAPI(this._config, `/comment/conversations/${this._conversationId}/${id}/report`),
+            url: buildCommentAPI(this._config, `${this._apiExt}/${this._conversationId}/${id}/report`),
             headers: this._jsonHeaders,
             data: {
                 reporttype: reporttype,
@@ -246,7 +253,7 @@ export class RestfulCommentManager implements ICommentManager {
         const id = getUrlCommentId(comment);
         return axios({
             method: GET,
-            url: buildAPI(this._config, `/comment/conversations/${this._conversationId}/${id}`),
+            url: buildCommentAPI(this._config, `${this._apiExt}/${this._conversationId}/${id}`),
             headers: this._jsonHeaders,
             data: request
         }).then(result=>{
@@ -255,13 +262,16 @@ export class RestfulCommentManager implements ICommentManager {
     }
 
     public getComments = (request?: CommentRequest, conversation?: Conversation): Promise<Commentary>=> {
+        if(!conversation) {
+            this._requireConversation("Must set a conversation in method call or set a default");
+        }
         const id = conversation ? getUrlConversationId(conversation) : this._conversationId;
         if(!id) {
            throw new SettingsError(NO_CONVERSATION_SET);
         }
         return axios({
             method: GET,
-            url: buildAPI(this._config, `/comment/conversations/${id}/comments`, request),
+            url: buildCommentAPI(this._config, `${this._apiExt}/${id}/comments`, request),
             headers: this._jsonHeaders,
         }).then(result=>{
             const {conversation, comments} = result.data.data;
