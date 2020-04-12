@@ -21,5 +21,7 @@ if(window) {
     // @ts-ignore
     window.SportsTalk.chat.Types = types;
     // @ts-ignore
+    window.SportsTalk.conversation = {};
+    // @ts-ignore
     window.SportsTalk.conversation.Types = conversationtypes
 }

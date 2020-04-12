@@ -19,12 +19,13 @@ export class RestfulConversationManager implements IConversationManager {
     }
 
     public createConversation = (settings: Conversation): Promise<ConversationResponse> => {
-        return axios({
+        const config: AxiosRequestConfig = {
             method: POST,
             url: buildAPI(this._config, `comment/conversations`),
             headers: this._jsonHeaders,
             data: settings,
-        }).then(result=>{
+        };
+        return axios(config).then(result=>{
            return result.data.data;
         }).catch(e=>{
             throw e;

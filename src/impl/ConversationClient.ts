@@ -16,6 +16,7 @@ export class ConversationClient implements IConversationClient {
     private _config: SportsTalkConfig;
     private _conversationManager: IConversationManager;
     private _commentManager: ICommentManager;
+    private _user: User;
 
     static create(config: SportsTalkConfig, initialConversation?:Conversation | string, commentManager?: IConversationManager, conversationManager?: IConversationManager): ConversationClient {
         const commentClient = new ConversationClient();
@@ -32,7 +33,7 @@ export class ConversationClient implements IConversationClient {
     }
 
     public setUser = (user:User) => {
-        this._commentManager.setUser(user);
+        this._user = user;
     }
 
     public setConfig = (config: SportsTalkConfig, commentManager?: ICommentManager, conversationManager?: IConversationManager) => {
@@ -45,6 +46,9 @@ export class ConversationClient implements IConversationClient {
         this._config = config;
         this._conversationManager.setConfig(this._config);
         this._commentManager.setConfig(this._config);
+        if(config.user) {
+            this._user = config.user;
+        }
         return this;
     }
 
@@ -81,7 +85,7 @@ export class ConversationClient implements IConversationClient {
      * @param replyto either the comment object to reply to or the ID as a string
      */
     public makeComment = (comment: string, replyto?: Comment | string) => {
-        return this._commentManager.create(comment, replyto);
+        return this._commentManager.create(comment, this._user, replyto);
     }
 
     public getComment = (comment: Comment | string) => {
@@ -89,23 +93,23 @@ export class ConversationClient implements IConversationClient {
     }
 
     public deleteComment = (comment:Comment | string) => {
-        return this._commentManager.delete(comment);
+        return this._commentManager.delete(comment, this._user);
     }
 
     public updateComment = (comment:Comment): Promise<Comment> => {
-        return this._commentManager.update(comment);
+        return this._commentManager.update(comment, this._user);
     }
 
     public reactToComment = (comment:Comment, reaction:Reaction) => {
-        return this._commentManager.react(comment, reaction);
+        return this._commentManager.react(comment, this._user, reaction);
     }
 
     public voteOnComment = (comment:Comment, vote:Vote) => {
-        return this._commentManager.vote(comment, vote);
+        return this._commentManager.vote(comment, this._user, vote);
     }
 
     public reportComment = (comment:Comment, reportType: ReportType) => {
-        return this._commentManager.report(comment, reportType);
+        return this._commentManager.report(comment, this._user, reportType);
     }
 
     public getCommentReplies = (comment:Comment, request: CommentRequest) => {

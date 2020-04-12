@@ -1,4 +1,5 @@
 import {ConversationClient} from '../../../src/impl/ConversationClient';
+import {Kind} from '../../../src/models/CommonModels';
 import * as chai from 'chai';
 import * as dotenv from 'dotenv';
 import {ModerationType} from "../../../src/models/CommonModels";
@@ -30,7 +31,7 @@ describe('BASIC Conversation Sequence', function() {
     });
 
     const conversation = {
-        conversationid: "testconversation",
+        "conversationid": "TEST_ITEM",
         "owneruserid" : 'testuser1',
         "property" : "testing",
         "moderation" : ModerationType.post,
@@ -46,6 +47,9 @@ describe('BASIC Conversation Sequence', function() {
     describe('Setup Conversation', function () {
         it('User Creates Conversation', function (done) {
             client.createConversation(conversation, true).then(results => {
+                expect(results.kind).to.be.equal(Kind.conversation)
+                expect(results.owneruserid).to.be.equal('testuser1');
+                expect(results.conversationid).to.be.equal('TEST_ITEM');
                 done()
             }).catch(res=>{
                 done(res);
@@ -59,6 +63,7 @@ describe('BASIC Conversation Sequence', function() {
                     return client2.makeComment("This is my comment")
                 })
                 .then(resp=>{
+                    expect(resp.body).to.be.equal("This is my comment");
                     done();
                 })
                 .catch(done)
@@ -78,7 +83,7 @@ describe('BASIC Conversation Sequence', function() {
    });
    describe('Delete Conversation', function () {
        it('Deletes Conversation', function (done) {
-           client.deleteConversation(	 "testconversation").then(results => {
+           client.deleteConversation(	 "TEST_ITEM").then(results => {
                done()
            }).catch(res=>{
                done(res);

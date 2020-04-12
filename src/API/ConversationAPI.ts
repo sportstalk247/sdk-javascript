@@ -4,20 +4,20 @@ import {
     CommentDeletionResponse,
     Conversation,
     ConversationResponse,
-    ConversationDeletionResponse, ReactionResponse, Vote, CommentRequest, Commentary
+    ConversationDeletionResponse, ReactionResponse, Vote, CommentRequest, Commentary, User
 } from "../models/ConversationModels";
 
 import {Reaction, SportsTalkConfig, ReportType} from "../models/CommonModels";
 
-export interface ICommentManager extends ISportsTalkConfigurable, IUserConfigurable{
+export interface ICommentManager extends ISportsTalkConfigurable {
     setConversation(conversation: Conversation | string): Conversation;
-    create(comment: Comment | string, replyto?: Comment | string): Promise<Comment>;
+    create(comment: Comment | string, user: User, replyto?: Comment | string): Promise<Comment>;
     get(comment: Comment | string): Promise<Comment>;
-    delete(comment: Comment | string): Promise<CommentDeletionResponse>
-    update(comment: Comment): Promise<Comment>;
-    vote(comment: Comment, vote:Vote);
-    report(comment: Comment, reporttype: ReportType)
-    react(comment:Comment | string, reaction:Reaction, enable?: boolean): Promise<ReactionResponse>;
+    delete(comment: Comment | string, user: User, final?: boolean): Promise<CommentDeletionResponse>
+    update(comment: Comment, user: User): Promise<Comment>;
+    vote(comment: Comment, user: User, vote:Vote);
+    report(comment: Comment, user:User, reporttype: ReportType)
+    react(comment:Comment | string, user: User, reaction:Reaction, enable?: boolean): Promise<ReactionResponse>;
     getReplies(comment: Comment, request?: CommentRequest): Promise<Array<Comment>>
     getComments(request?: CommentRequest, conversation?: Conversation): Promise<Commentary>
     getConversation(): Conversation | null
