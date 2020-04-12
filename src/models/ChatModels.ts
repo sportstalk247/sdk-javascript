@@ -87,9 +87,10 @@ export interface Room {
     description?: string,
     moderation?: string,
     slug?: string,
-    enableActions?: boolean,
+    enableactions?: boolean,
     roomisopen?: boolean,
-    enableEnterAndExit?: boolean,
+    enableenterAndexit?: boolean,
+    iframeurl?:string
 }
 
 export interface RoomResult extends Room {
@@ -102,7 +103,7 @@ export interface RoomResult extends Room {
 export interface EventResult extends Event {
     kind: Kind.chat,
     id: string,
-    roomId: string,
+    roomid: string,
     added: number,
     body: string,
     eventtype: EventType,

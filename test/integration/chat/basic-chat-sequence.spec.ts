@@ -35,7 +35,7 @@ describe('BASIC Chat Sequence', function() {
     let theRoom;
     describe('User 1', function () {
         it('Joins room', function (done) {
-            client.createRoom({
+            rm.createRoom({
                 name: "Test room",
                 slug: "chat-test-room",
             }).then(room => {
@@ -48,14 +48,10 @@ describe('BASIC Chat Sequence', function() {
     });
     describe('User 2', function () {
         it('Joins room', function (done) {
-            client2.createRoom({
-                name: "Test room",
-                slug: "chat-test-room",
-            }).then(room => {
-                return client2.joinRoom(room)
-            }).then((resp) => {
-                done()
-            }).catch(done)
+            client2.joinRoom(theRoom)
+                .then((resp) => {
+                    done()
+                }).catch(done)
         })
     })
     describe('Users chat', function () {

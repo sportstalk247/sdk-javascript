@@ -4,6 +4,7 @@ import * as chai from 'chai';
 import {RestfulChatModerationManager} from "../../../src/impl/chat/REST/RestfulChatModerationManager";
 import * as dotenv from 'dotenv';
 import {ModerationType, SportsTalkConfig} from "../../../src/models/CommonModels";
+import {RestfulRoomManager} from "../../../src/impl/chat/REST/RestfulRoomManager";
 dotenv.config();
 
 const { expect } = chai;
@@ -19,9 +20,10 @@ describe('Pre Moderation sequences', function() {
 
         let roomid;
         const client = ChatClient.create(config);
+        const rm = new RestfulRoomManager(config);
         const mod = new RestfulChatModerationManager(config);
         it('Can create a room, join the room, deny messages, kill room', (done) => {
-            client.createRoom({
+            rm.createRoom({
                 name: "Pre-moderation test Room",
                 slug: "pre-test-room",
                 moderation: ModerationType.pre,
@@ -52,11 +54,11 @@ describe('Pre Moderation sequences', function() {
             }).then(events => {
                 expect(events).to.have.lengthOf(0);
             }).then(() => {
-                client.deleteRoom(roomid);
+                rm.deleteRoom(roomid);
                 done();
             }).catch(async e=>{
                 try {
-                    await client.deleteRoom(roomid);
+                    await rm.deleteRoom(roomid);
                 } catch(err) {
                     console.log("Could not cleanly delete test room");
                 }
@@ -70,9 +72,10 @@ describe('Pre Moderation sequences', function() {
         this.timeout(20000);
         let roomid;
         const client = ChatClient.create(config);
+        const rm = new RestfulRoomManager(config);
         const mod = new RestfulChatModerationManager(config);
         it('Can create a room, join the room, approve messages, kill room', (done) => {
-            client.createRoom({
+            rm.createRoom({
                 name: "Pre-moderation test Room",
                 slug: "pre-test-room2",
                 moderation: ModerationType.pre,
@@ -107,11 +110,11 @@ describe('Pre Moderation sequences', function() {
                 return client.getEventManager().getUpdates()
             }).then((events) => {
                // expect(events).to.have.lengthOf(1)
-                client.deleteRoom(roomid);
+                rm.deleteRoom(roomid);
                 done();
             }).catch(async e=>{
                 try {
-                    await client.deleteRoom(roomid);
+                    await rm.deleteRoom(roomid);
                 } catch(err) {
                     console.log("Could not cleanly delete test room");
                 }
