@@ -3,8 +3,8 @@ import {Promise} from "es6-promise";
 import axios from "axios";
 import {getJSONHeaders} from "../../../utils";
 import {DEFAULT_TALK_CONFIG, DELETE, GET, POST, PUT} from "../../../constants";
-import {IWebhookManager} from "../../../API/ChatAPI";
 import {SportsTalkConfig} from "../../../models/CommonModels";
+import {IWebhookManager} from "../../../API/CommonAPI";
 
 const MISSING_ID = "Missing webhook or webhook missing ID";
 

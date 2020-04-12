@@ -1,11 +1,9 @@
-
-import {EventResult, Room} from "../../../models/ChatModels";
 import {Promise} from "es6-promise";
 import axios, {AxiosRequestConfig} from "axios";
-import {GET, POST} from "../../../constants";
-import {buildAPI, formify, getJSONHeaders, getUrlEncodedHeaders} from "../../../utils";
-import {IUserManager} from "../../../API/ChatAPI";
-import {ApiResult, SportsTalkConfig, User, UserResult} from "../../../models/CommonModels";
+import {DELETE, POST} from "../../../constants";
+import {buildAPI, getJSONHeaders, getUrlEncodedHeaders} from "../../../utils";
+import {ApiResult, SearchType, SportsTalkConfig, User, UserResult} from "../../../models/CommonModels";
+import {IUserManager} from "../../../API/CommonAPI";
 
 
 export class RestfulUserManager implements IUserManager {
@@ -48,19 +46,6 @@ export class RestfulUserManager implements IUserManager {
         });
     }
 
-    // @ts-ignore
-    listUserMessages = (user:User | string, room: Room | string, cursor: string = "", limit: number = 100): Promise<Array<EventResult>> => {
-        // @ts-ignore
-        const url = buildAPI(this._config,`/chat/rooms/${room.id || room}/messagesbyuser/${user.userid || user.id || user}/?limit=${limit}&cursor=${cursor}`);
-        return axios({
-            method: GET,
-            url: url,
-            headers: this._jsonHeaders
-        }).then(result=>{
-            return result.data.data.events
-        })
-    }
-
     /**
      * Bans or unbans a user.  If isBanned = true the user will be banned (global).  This same command with isBanned = false will unban them.
      * @param user
@@ -78,5 +63,47 @@ export class RestfulUserManager implements IUserManager {
         }).then(response=>response.data).catch(e=>{
             throw e;
         })
+    }
+
+    searchUsers = (search:string, type: SearchType): Promise<Array<UserResult>> => {
+        const url = buildAPI(this._config,`/user/users/search`);
+        const data:any = {
+            type: type,
+        }
+        if(!type || type === SearchType.handle) {
+            data.handle = search;
+        }
+        if(type=== SearchType.userid)  {
+            data.userid = search;
+        }
+        if(type === SearchType.name) {
+            data.name = search;
+        }
+        const config:AxiosRequestConfig = {
+            method: POST,
+            url: url,
+            headers: this._jsonHeaders,
+            data
+        }
+        return axios(config)
+            .then(response=>{
+                return response.data.data.users;
+            })
+            .catch(e=>{
+                throw e;
+            })
+    }
+
+    deleteUser = (user:User | string):Promise<UserResult> => {
+        // @ts-ignore
+        const id = user.userid || user;
+        const config:AxiosRequestConfig = {
+            method: DELETE,
+            url: buildAPI(this._config,`user/users/${id}`),
+            headers: this._jsonHeaders,
+        };
+        return axios(config).then(response=>response.data.data).catch(e=>{
+            throw e;
+        });
     }
 }

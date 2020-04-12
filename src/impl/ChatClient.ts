@@ -9,11 +9,11 @@ import {
 } from "../models/ChatModels";
 import {Promise} from "es6-promise";
 import {DEFAULT_TALK_CONFIG, MISSING_ROOM} from "../constants";
-import {IRoomManager, IEventManager, IChatClient, IUserManager} from "../API/ChatAPI";
+import {IRoomManager, IEventManager, IChatClient} from "../API/ChatAPI";
 import {SettingsError} from "../errors";
 import {RestfulEventManager} from "./chat/REST/RestfulEventManager"
 import {RestfulRoomManager} from "./chat/REST/RestfulRoomManager";
-import {RestfulUserManager} from "./chat/REST/RestfulUserManager";
+import {RestfulUserManager} from "./common/REST/RestfulUserManager";
 import {
     ApiResult,
     Reaction,
@@ -24,6 +24,7 @@ import {
     UserResult
 } from "../models/CommonModels";
 import {MUST_SET_USER} from "../messages";
+import {IUserManager} from "../API/CommonAPI";
 
 
 export class ChatClient implements IChatClient {

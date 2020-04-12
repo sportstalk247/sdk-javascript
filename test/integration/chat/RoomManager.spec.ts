@@ -102,4 +102,22 @@ describe("RoomManager", function(){
             })
         });
     })
+    describe("List", function(){
+        it("Can list user messages", async ()=>{
+            try {
+                const room = await RM.createRoom({
+                    name: "ROOMMANAGER Test Room",
+                    slug: "RM-test-room"
+                });
+                const userlist = await RM.listUserMessages({userid:'fake-user', handle:'fake-user'}, room).then(messages => {
+                    expect(messages.length).to.be.equal(0);
+                });
+                const deleted = await RM.deleteRoom(room);
+                return deleted;
+            }catch(e) {
+                console.log(e);
+                throw e;
+            }
+        })
+    })
 })

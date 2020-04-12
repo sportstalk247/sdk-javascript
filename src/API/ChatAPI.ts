@@ -6,8 +6,7 @@ import {
     GoalOptions,
     Room,
     RoomResult,
-    RoomUserResult,
-    ChatWebHook
+    RoomUserResult
 } from "../models/ChatModels";
 
 import {Promise} from "es6-promise";
@@ -35,6 +34,7 @@ export interface IRoomManager extends ISportsTalkConfigurable {
     deleteRoom(id: string | Room): Promise<ApiResult<null>>
     createRoom(room: Room): Promise<RoomResult>
     listParticipants(room: Room, cursor?: string, maxresults?: number): Promise<Array<UserResult>>
+    listUserMessages(user: User | string, Room: Room | String, cursor?: string, limit?: number): Promise<Array<EventResult>>
     joinRoom(user: User, room: Room | string): Promise<RoomUserResult>
     exitRoom(user: User | string, room: Room | string): Promise<RoomUserResult>
 }
@@ -45,13 +45,6 @@ export interface ITalkClient extends IUserConfigurable, ISportsTalkConfigurable{
     sendReaction(reaction: Reaction, reactToMessageId: Event | string, options?: CommandOptions): Promise<ApiResult<null>>
     sendAdvertisement(options: AdvertisementOptions): Promise<ApiResult<null>>
     sendGoal(message?:string, img?: string, options?: GoalOptions): Promise<ApiResult<null>>
-}
-
-export interface IUserManager extends ISportsTalkConfigurable {
-    listUserMessages(user:User | string, cursor?: string, limit?: number): Promise<Array<EventResult>>
-    setBanStatus(user: User | string, isBanned: boolean): Promise<ApiResult<UserResult>>
-    listUserMessages(user:User | string, Room: Room|String, cursor?: string, limit?: number): Promise<Array<EventResult>>
-    createOrUpdateUser(user: User): Promise<UserResult>
 }
 
 export interface IChatClient extends ITalkClient {
@@ -69,9 +62,3 @@ export interface IModerationManager extends ISportsTalkConfigurable {
 
 }
 
-export interface IWebhookManager extends ISportsTalkConfigurable {
-    listWebhooks(): Promise<ChatWebHook[]>;
-    createWebhook(hook: ChatWebHook): Promise<ChatWebHook>;
-    updateWebhook(hook: ChatWebHook): Promise<ChatWebHook>;
-    deleteWebhook(hook: ChatWebHook | string): Promise<ChatWebHook>;
-}

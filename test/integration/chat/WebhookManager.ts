@@ -1,5 +1,5 @@
 import * as chai from 'chai';
-import {RestfulWebhookManager} from "../../../src/impl/chat/REST/RestfulWebhookManager";
+import {RestfulWebhookManager} from "../../../src/impl/common/REST/RestfulWebhookManager";
 import {WebhookEvent, WebhookType} from "../../../src/models/ChatModels";
 import * as dotenv from 'dotenv';
 import {SportsTalkConfig} from "../../../src/models/CommonModels";

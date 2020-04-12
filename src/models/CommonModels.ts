@@ -38,6 +38,12 @@ export interface UserResult extends User {
     kind?: Kind.user
 }
 
+export enum SearchType {
+    handle = 'handle',
+    name = 'name',
+    userid = 'userid'
+}
+
 /**
  * Used as an optional part of the constructor for a SportsTalk client.
  * Each property can also be set individually.

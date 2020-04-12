@@ -1,8 +1,9 @@
 import * as chai from 'chai';
-import {RestfulUserManager} from "../../../src/impl/chat/REST/RestfulUserManager";
+import {RestfulUserManager} from "../../../src/impl/common/REST/RestfulUserManager";
 import * as dotenv from 'dotenv';
-import {SportsTalkConfig} from "../../../src/models/CommonModels";
+import {SearchType, SportsTalkConfig} from "../../../src/models/CommonModels";
 import {RestfulRoomManager} from "../../../src";
+
 dotenv.config();
 
 const { expect } = chai;
@@ -40,22 +41,23 @@ describe("UserManager", function(){
             }).catch(done)
         })
     })
-    describe("List", function(){
-        it("Can list user messages", async ()=>{
-            try {
-                const room = await RM.createRoom({
-                    name: "ROOMMANAGER Test Room",
-                    slug: "RM-test-room"
-                });
-                const userlist = await UM.listUserMessages(user, room).then(messages => {
-                    expect(messages.length).to.be.equal(0);
-                });
-                const deleted = await RM.deleteRoom(room);
-                return deleted;
-            }catch(e) {
-                console.log(e);
-                throw e;
-            }
+    describe("Search", function() {
+        it("Can search by userid", async()=>{
+           const results = await UM.searchUsers("testuserid", SearchType.userid)
+           expect(results.length).to.be.equal(1);
+        })
+        it("Can search by name", async()=>{
+            const results = await UM.searchUsers("someuser", SearchType.name)
+            expect(results.length).to.be.equal(0);
+        })
+        it("Can search by handle", async()=>{
+            const results = await UM.searchUsers("testuserhandle", SearchType.handle)
+            expect(results.length).to.be.equal(1);
+        })
+        it("Won't find by bad handle", async()=>{
+            const results = await UM.searchUsers("doesntexisthandle", SearchType.handle)
+            expect(results.length).to.be.equal(0);
         })
     })
+
 })

@@ -5,7 +5,6 @@ import {GET, DELETE, POST, MISSING_ROOM} from "../../../constants";
 import {buildAPI, getJSONHeaders, getUrlEncodedHeaders} from "../../../utils";
 import {ApiResult, SportsTalkConfig, User, UserResult} from "../../../models/CommonModels";
 
-
 export class RestfulRoomManager implements IRoomManager {
     private _config: SportsTalkConfig;
     private _knownRooms: Room[] = [];
@@ -81,6 +80,20 @@ export class RestfulRoomManager implements IRoomManager {
             throw e;
         })
     }
+
+    // @ts-ignore
+    listUserMessages = (user:User | string, room: Room | string, cursor: string = "", limit: number = 100): Promise<Array<EventResult>> => {
+        // @ts-ignore
+        const url = buildAPI(this._config,`/chat/rooms/${room.id || room}/messagesbyuser/${user.userid || user.id || user}/?limit=${limit}&cursor=${cursor}`);
+        return axios({
+            method: GET,
+            url: url,
+            headers: this._jsonHeaders
+        }).then(result=>{
+            return result.data.data.events
+        })
+    }
+
 
     /*
     * @param cursor
