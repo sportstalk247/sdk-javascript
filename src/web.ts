@@ -2,6 +2,7 @@
 const client = require('./impl/ChatClient');
 const conversation = require('./impl/ConversationClient');
 const types = require('./models/ChatModels');
+const common = require('./models/CommonModels');
 const conversationtypes = require('./models/ConversationModels');
 // @ts-ignore
 var SportsTalkClient = window.SportsTalkClient || client.default || client.ChatClient || client;
@@ -22,6 +23,10 @@ if(window) {
     window.SportsTalk.chat.Types = types;
     // @ts-ignore
     window.SportsTalk.conversation = {};
+    // @ts-ignore
+    window.SportsTalk.common = {};
+    // @ts-ignore
+    window.SportsTalk.common.Types = common;
     // @ts-ignore
     window.SportsTalk.conversation.Types = conversationtypes
 }
