@@ -5,7 +5,7 @@ import {
     Comment,
     CommentRequest,
     ConversationDeletionResponse,
-    ShortComment, ConversationResponse, Commentary, CommentDeletionResponse
+    ConversationResponse, Commentary, CommentDeletionResponse
 } from "../models/ConversationModels";
 import {RestfulCommentManager} from "./conversation/REST/RestfulCommentManager";
 import {RestfulConversationManager} from "./conversation/REST/RestfulConversationManager";
@@ -110,11 +110,11 @@ export class ConversationClient implements IConversationClient {
         return this._commentManager.vote(comment, this._user, vote);
     }
 
-    public reportComment = (comment:Comment, reportType: ReportType) => {
+    public reportComment = (comment:Comment, reportType: ReportType): Promise<Comment> => {
         return this._commentManager.report(comment, this._user, reportType);
     }
 
-    public getCommentReplies = (comment:Comment, request: CommentRequest) => {
+    public getCommentReplies = (comment:Comment, request: CommentRequest): Promise<Comment[]> => {
         return this._commentManager.getReplies(comment, request);
     }
 

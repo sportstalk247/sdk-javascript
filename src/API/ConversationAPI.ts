@@ -38,7 +38,7 @@ export interface IConversationModerationManager extends IConfigurable {
 
 export interface IConversationClient extends ISportsTalkConfigurable, IUserConfigurable   {
     getConfig(): SportsTalkConfig;
-    setConfig(config: SportsTalkConfig, commentManager?: ICommentManager, conversationManager?: IConversationManager): IConversationClient;
+    setConfig(config: SportsTalkConfig, commentManager?: ICommentManager, conversationManager?: IConversationManager)
     createConversation (conversation: Conversation, setDefault: boolean): Promise<Conversation>;
     setConversation(conversation: Conversation | string): Conversation;
     getConversation(conversation: Conversation | string): Promise<Conversation>;
@@ -51,6 +51,6 @@ export interface IConversationClient extends ISportsTalkConfigurable, IUserConfi
     reactToComment(comment:Comment | string, reaction:Reaction): Promise<Comment>;
     voteOnComment(comment:Comment | string, vote:Vote);
     reportComment(comment:Comment | string, reportType: ReportType): Promise<Comment>;
-    getCommentReplies(comment:Comment, request: CommentRequest): Array<Comment>;
-    getComments(request?: CommentRequest, conversation?: Conversation): Array<Comment>;
+    getCommentReplies(comment:Comment, request: CommentRequest): Promise<Array<Comment>>
+    getComments(request?: CommentRequest, conversation?: Conversation): Promise<Commentary>
 }
