@@ -8,6 +8,7 @@ import {ApiResult, SportsTalkConfig, WebHook} from "../../../models/CommonModels
 export class RestfulChatModerationManager implements IChatModerationManager {
     private _config: SportsTalkConfig = {appId: ""};
     private _apiHeaders;
+    private _apiExt:string = 'chat/moderation/queues/events';
 
     constructor(config: SportsTalkConfig) {
         this.setConfig(config);
@@ -21,7 +22,7 @@ export class RestfulChatModerationManager implements IChatModerationManager {
     getModerationQueue = (): Promise<Array<EventResult>> => {
         return axios({
             method: 'GET',
-            url: buildAPI(this._config, `chat/moderation/queues/events`),
+            url: buildAPI(this._config, this._apiExt),
             headers: this._apiHeaders
         }).then(result => {
             return result.data.data.events;
@@ -31,7 +32,7 @@ export class RestfulChatModerationManager implements IChatModerationManager {
     rejectEvent = (event: EventResult): Promise<ApiResult<null>> => {
         return axios({
             method: 'POST',
-            url: buildAPI(this._config, `/chat/moderation/queues/events/${event.id}/applydecision`),
+            url: buildAPI(this._config, `${this._apiExt}/${event.id}/applydecision`),
             headers: this._apiHeaders,
             data: {approve: false}
         }).then(result => {
@@ -46,7 +47,7 @@ export class RestfulChatModerationManager implements IChatModerationManager {
         const id = event.id | event;
         return axios({
             method: POST,
-            url: buildAPI(this._config, `/chat/moderation/queues/events/${event.id}/applydecision`),
+            url: buildAPI(this._config, `${this._apiExt}/${event.id}/applydecision`),
             headers: this._apiHeaders,
             data: {approve: true}
         }).then(result => result.data)
