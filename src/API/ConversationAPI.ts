@@ -8,7 +8,6 @@ import {
 } from "../models/ConversationModels";
 
 import {Reaction, SportsTalkConfig, ReportType, ApiResult} from "../models/CommonModels";
-import {Promise} from "es6-promise";
 
 export interface ICommentManager extends ISportsTalkConfigurable {
     setConversation(conversation: Conversation | string): Conversation;

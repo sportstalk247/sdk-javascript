@@ -93,7 +93,9 @@ export enum WebhookEvent {
     chatquote = "chatquote",
     chatroomopened = "chatroomopened",
     chatroomclosed = "chatroomclosed",
-    chatpurge = "chatpurge"
+    chatpurge = "chatpurge",
+    commentspeech = "commentspeech",
+    commentreply = 'commentreply'
 }
 
 export interface WebHook {
