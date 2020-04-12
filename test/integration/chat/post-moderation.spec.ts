@@ -4,6 +4,7 @@ import * as chai from 'chai';
 import {RestfulChatModerationManager} from "../../../src/impl/chat/REST/RestfulChatModerationManager";
 import * as dotenv from 'dotenv';
 import {ModerationType, SportsTalkConfig} from "../../../src/models/CommonModels";
+import {RestfulRoomManager} from "../../../src/impl/chat/REST/RestfulRoomManager";
 dotenv.config();
 
 let client;
@@ -18,9 +19,10 @@ describe('Post moderation Sequence', function() {
 
     client = ChatClient.create(config)
     mod = new RestfulChatModerationManager(config);
+    const rm = new RestfulRoomManager(config);
 
     it('Can create a room, join the room, moderate messages, kill room', (done) => {
-       client.createRoom({
+       rm.createRoom({
            name: "post moderation test room",
            slug: "post-test-room",
            moderation: ModerationType.post,
@@ -62,11 +64,11 @@ describe('Post moderation Sequence', function() {
        }).then(events=> {
            expect(events.length).to.be.equal(eventlength)
        }).then(()=>{
-            client.deleteRoom(roomid);
+            rm.deleteRoom(roomid);
             done();
        }).catch(async e=>{
            try {
-               await client.deleteRoom(roomid);
+               await rm.deleteRoom(roomid);
            } catch(err) {
                console.log("Could not cleanly delete test room");
            }
