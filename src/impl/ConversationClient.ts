@@ -5,7 +5,7 @@ import {
     Comment,
     CommentRequest,
     ConversationDeletionResponse,
-    ConversationResponse, Commentary, CommentDeletionResponse
+    ConversationResponse, Commentary, CommentDeletionResponse, ConversationRequest, ConversationListResponse
 } from "../models/ConversationModels";
 import {RestfulCommentManager} from "./conversation/REST/RestfulCommentManager";
 import {RestfulConversationManager} from "./conversation/REST/RestfulConversationManager";
@@ -126,6 +126,10 @@ export class ConversationClient implements IConversationClient {
     public getComments = (request?: CommentRequest, conversation?: Conversation): Promise<Commentary> => {
         // @ts-ignore
         return this._commentManager.getComments(request, conversation);
+    }
+
+    public listConversations = (filter?: ConversationRequest): Promise<ConversationListResponse> => {
+        return this._conversationManager.listConversations( filter);
     }
 
 }

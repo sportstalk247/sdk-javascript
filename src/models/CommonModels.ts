@@ -34,7 +34,8 @@ export enum Kind {
     deletedconversation = "delete.conversation",
     comment = "comment.comment",
     deletedcomment ="delete.comment",
-    deletedroom = "deleted.room"
+    deletedroom = "deleted.room",
+    conversationlist = "list.commentconversations",
 }
 
 export interface UserResult extends User {
@@ -109,4 +110,8 @@ export interface WebHook {
     enabled: boolean,
     type: WebhookType,
     events: WebhookEvent[]
+}
+
+export interface ListResponse {
+    cursor?: string,
 }

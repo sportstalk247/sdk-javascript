@@ -1,8 +1,13 @@
 import {ApiHeaders, ClientConfig} from "../../../models/CommonModels";
 import axios, {AxiosRequestConfig} from "axios";
-import {Conversation, ConversationResponse, ConversationDeletionResponse} from "../../../models/ConversationModels";
+import {
+    Conversation,
+    ConversationResponse,
+    ConversationDeletionResponse,
+    ConversationRequest, ConversationListResponse
+} from "../../../models/ConversationModels";
 import {GET, POST, DELETE} from "../../../constants/api";
-import {getUrlEncodedHeaders, getJSONHeaders, buildAPI} from "../../utils";
+import {getUrlEncodedHeaders, getJSONHeaders, buildAPI, formify} from "../../utils";
 import {IConversationManager} from "../../../API/ConversationAPI";
 import {getUrlConversationId} from "../ConversationUtils";
 
@@ -68,6 +73,24 @@ export class RestfulConversationManager implements IConversationManager {
         }
         return axios(config).then(result=>{
             return result.data;
+        });
+    }
+
+    public listConversations = (filter?: ConversationRequest): Promise<ConversationListResponse> => {
+        let query = "";
+        if(filter) {
+            query = `?${formify(filter)}`;
+        }
+        const config: AxiosRequestConfig = {
+            method: GET,
+            url: buildAPI(this._config, `${this._apiExt}/${query}`),
+            headers: this._jsonHeaders,
+        }
+        return axios(config).then(result=>{
+            return {
+                cursor: result.data.data.cursor,
+                conversations: result.data.data.conversations
+            };
         });
     }
 }

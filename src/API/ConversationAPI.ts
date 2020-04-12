@@ -4,7 +4,14 @@ import {
     CommentDeletionResponse,
     Conversation,
     ConversationResponse,
-    ConversationDeletionResponse, Vote, CommentRequest, Commentary, User, CommentResponse
+    ConversationDeletionResponse,
+    Vote,
+    CommentRequest,
+    Commentary,
+    User,
+    CommentResponse,
+    ConversationRequest,
+    ConversationListResponse
 } from "../models/ConversationModels";
 
 import {Reaction, SportsTalkConfig, ReportType, ApiResult} from "../models/CommonModels";
@@ -27,6 +34,7 @@ export interface IConversationManager extends IConfigurable {
     createConversation(settings: Conversation): Promise<ConversationResponse>;
     getConversation(conversation: Conversation | string): Promise<ConversationResponse>;
     getConversationsByProperty(property:string): Promise<Array<Conversation>>;
+    listConversations(filter?: ConversationRequest):Promise<ConversationListResponse>
     deleteConversation(conversation: Conversation | string): Promise<ConversationDeletionResponse>
 }
 
@@ -53,4 +61,5 @@ export interface IConversationClient extends ISportsTalkConfigurable, IUserConfi
     reportComment(comment:Comment | string, reportType: ReportType): Promise<Comment>;
     getCommentReplies(comment:Comment, request?: CommentRequest): Promise<Commentary>
     getComments(request?: CommentRequest, conversation?: Conversation): Promise<Commentary>
+    listConversations(filter?: ConversationRequest): Promise<ConversationListResponse>
 }

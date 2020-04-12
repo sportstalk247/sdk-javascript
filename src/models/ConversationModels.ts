@@ -1,4 +1,4 @@
-import {Kind, ModerationType, ReportReason, User} from "./CommonModels";
+import {Kind, ListResponse, ModerationType, ReportReason, User} from "./CommonModels";
 
 export {
     Kind,
@@ -107,4 +107,13 @@ export interface ShortComment {
 
 export interface CommentResponse extends HasConversationID, Comment {
     kind: Kind.comment
+}
+
+export interface ConversationRequest extends ListRequest {
+    propertyid?: string,
+}
+
+
+export interface ConversationListResponse extends ListResponse{
+    conversations: Conversation[]
 }
