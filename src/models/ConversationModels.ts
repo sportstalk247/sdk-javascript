@@ -41,7 +41,12 @@ export enum CommentType {
     comment = "comment"
 }
 
-export interface CommentDeletionResponse {}
+export interface CommentDeletionResponse {
+    kind: Kind.deletedcomment,
+    conversationid: string,
+    commentid: string,
+    deletedComments: number
+}
 
 export enum CommentSortMethod {
     oldest      = "oldest",

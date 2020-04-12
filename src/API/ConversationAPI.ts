@@ -46,11 +46,11 @@ export interface IConversationClient extends ISportsTalkConfigurable, IUserConfi
     deleteConversation(conversation: Conversation | string);
     makeComment(comment: string, replyto?: Comment | string): Promise<Comment>;
     getComment(comment: Comment | string): Promise<Comment>;
-    deleteComment(comment:Comment | string);
+    deleteComment(comment:Comment | string, final: boolean): Promise<CommentDeletionResponse>;
     updateComment(comment:Comment): Promise<Comment>;
-    reactToComment(comment:Comment | string, reaction:Reaction);
+    reactToComment(comment:Comment | string, reaction:Reaction): Promise<Comment>;
     voteOnComment(comment:Comment | string, vote:Vote);
-    reportComment(comment:Comment | string, reportType: ReportType);
-    getCommentReplies(comment:Comment, request: CommentRequest);
-    getComments(request?: CommentRequest, conversation?: Conversation);
+    reportComment(comment:Comment | string, reportType: ReportType): Promise<Comment>;
+    getCommentReplies(comment:Comment, request: CommentRequest): Array<Comment>;
+    getComments(request?: CommentRequest, conversation?: Conversation): Array<Comment>;
 }

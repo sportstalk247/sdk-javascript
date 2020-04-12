@@ -162,11 +162,13 @@ export class RestfulCommentManager implements ICommentManager {
         const id = getUrlCommentId(comment);
         const config:AxiosRequestConfig = {
             method: PUT,
-            url: buildAPI(this._config, `${this._apiExt}/${this._conversationId}/comments/${id}?userid=${user.userid}&deleted=true`),
+            url: buildAPI(this._config, `${this._apiExt}/${this._conversationId}/comments/${id}/?userid=${user.userid}&deleted=true`),
             headers: this._jsonHeaders,
         }
         return axios(config).then(result => {
             return result.data;
+        }).catch(e=>{
+            throw e;
         });
     }
     public delete = (comment: Comment | string, user: User, final?: boolean): Promise<CommentDeletionResponse> => {

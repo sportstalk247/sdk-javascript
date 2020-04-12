@@ -3,7 +3,7 @@ import {Kind, ModerationType, Reaction, ReportType} from '../../../src/models/Co
 import * as chai from 'chai';
 import * as dotenv from 'dotenv';
 import {RestfulConversationModerationManager} from "../../../src/impl/conversation/REST/RestfulConversationModerationManager";
-import {Commentary, CommentResponse} from "../../../src/models/ConversationModels";
+import {Commentary, CommentResponse, Vote} from "../../../src/models/ConversationModels";
 
 dotenv.config();
 
@@ -80,6 +80,12 @@ describe('Conversation Moderation', function() {
             let comment = await client.getComment(firstComment);
             expect(comment.id).to.be.equal(firstComment.id)
         })
+        it("Lets you vote on a comment", async ()=>{
+            const firstComment = commentary.comments[0];
+            let comment = await client.getComment(firstComment);
+            let voted = await client.voteOnComment(firstComment, Vote.up);
+            return;
+        })
     })
 
    describe("User flags comment", function() {
@@ -88,13 +94,21 @@ describe('Conversation Moderation', function() {
            const commentary = await client2.getComments();
            expect(commentary.comments.length).to.be.greaterThan(0);
            await client2.reportComment(commentary.comments[0], ReportType.abuse)
-           await client.reportComment(commentary.comments[0], ReportType.abuse)
+          // await client.reportComment(commentary.comments[0], ReportType.abuse)
        })
        it('Shows that comment is flagged', async () => {
             const queue = await ModerationClient.getModerationQueue();
             expect(queue.length).to.be.greaterThan(0);
        })
    });
+
+   describe("Comment Deletion", function(){
+       it("Lets a user delete their comment", async ()=>{
+           const comment = await client.makeComment("Delete me");
+           const deleted =  await client.deleteComment(comment, true);
+           const exists = await client.getComment(comment);
+       })
+   })
    describe('Delete Conversation', function () {
        it('Deletes Conversation', function (done) {
            client.deleteConversation(	 "TEST_ITEM").then(results => {

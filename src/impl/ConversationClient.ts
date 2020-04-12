@@ -5,7 +5,7 @@ import {
     Comment,
     CommentRequest,
     ConversationDeletionResponse,
-    ShortComment, ConversationResponse, Commentary
+    ShortComment, ConversationResponse, Commentary, CommentDeletionResponse
 } from "../models/ConversationModels";
 import {RestfulCommentManager} from "./conversation/REST/RestfulCommentManager";
 import {RestfulConversationManager} from "./conversation/REST/RestfulConversationManager";
@@ -93,8 +93,8 @@ export class ConversationClient implements IConversationClient {
         return this._commentManager.getComment(comment);
     }
 
-    public deleteComment = (comment:Comment | string) => {
-        return this._commentManager.delete(comment, this._user);
+    public deleteComment = (comment:Comment | string, final: boolean): Promise<CommentDeletionResponse> => {
+        return this._commentManager.delete(comment, this._user, final);
     }
 
     public updateComment = (comment:Comment): Promise<Comment> => {
