@@ -7,10 +7,10 @@ import {
     ReactionResponse,
     Vote
 } from "../../../models/ConversationModels";
-import {DELETE, GET, POST, PUT} from "../../../constants";
-import {getUrlEncodedHeaders, getJSONHeaders, buildAPI} from "../../../utils";
+import {DELETE, GET, POST, PUT} from "../../../constants/api";
+import {getUrlEncodedHeaders, getJSONHeaders, buildAPI} from "../../utils";
 import {getUrlCommentId, getUrlConversationId} from "../ConversationUtils";
-import {RequireUserError, SettingsError, ValidationError} from "../../../errors";
+import {RequireUserError, SettingsError, ValidationError} from "../../errors";
 import {ICommentManager} from "../../../API/ConversationAPI";
 import {
     MISSING_REPLYTO_ID,
@@ -18,7 +18,7 @@ import {
     NO_CONVERSATION_SET,
     USER_NEEDS_HANDLE,
     USER_NEEDS_ID
-} from "../../../messages";
+} from "../../../constants/messages";
 
 import axios, {AxiosRequestConfig} from "axios";
 

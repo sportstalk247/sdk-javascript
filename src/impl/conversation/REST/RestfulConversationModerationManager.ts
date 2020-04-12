@@ -1,8 +1,8 @@
 import {ApiHeaders, ApiResult, ClientConfig} from "../../../models/CommonModels";
 import axios, {AxiosRequestConfig} from "axios";
-import {Conversation, Comment, ConversationDeletionResponse} from "../../../models/ConversationModels";
-import {GET, POST} from "../../../constants";
-import {getUrlEncodedHeaders, getJSONHeaders, buildAPI} from "../../../utils";
+import {Comment, ConversationDeletionResponse} from "../../../models/ConversationModels";
+import {GET, POST} from "../../../constants/api";
+import {getUrlEncodedHeaders, getJSONHeaders, buildAPI} from "../../utils";
 import {IConversationModerationManager} from "../../../API/ConversationAPI";
 import {Promise} from "es6-promise";
 

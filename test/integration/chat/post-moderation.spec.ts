@@ -43,7 +43,7 @@ describe('Post moderation Sequence', function() {
            return client.sendCommand('Test message')
        }).then((message)=>{
          //  console.log("SENT message")
-           return mod.getModerationQueueEvents()
+           return mod.getModerationQueue();
        }).then(events=> {
         //   console.log("GOT Moderation queue")
            expect(events.length).to.be.equal(0);
@@ -58,7 +58,7 @@ describe('Post moderation Sequence', function() {
            }))
        }).then(events=>{
           // console.log("REPORTED all events");
-           return mod.getModerationQueueEvents()
+           return mod.getModerationQueue()
        }).then(events=> {
            expect(events.length).to.be.equal(eventlength)
        }).then(()=>{

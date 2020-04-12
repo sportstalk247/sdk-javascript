@@ -6,8 +6,8 @@ import {RestfulEventManager} from "./impl/chat/REST/RestfulEventManager";
 import {RestfulUserManager} from "./impl/common/REST/RestfulUserManager";
 import {RestfulRoomManager} from "./impl/chat/REST/RestfulRoomManager";
 import * as Models from './models/ChatModels';
-import * as Constants from './constants';
-import * as Errors from './errors';
+import * as Constants from './constants/api';
+import * as Errors from './impl/errors';
 
 export {
     ChatClient,

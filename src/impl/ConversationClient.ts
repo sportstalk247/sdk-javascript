@@ -67,16 +67,17 @@ export class ConversationClient implements IConversationClient {
     }
 
     public getConversation = (conversation: Conversation | string): Promise<Conversation> => {
-       return this._conversationManager.getConversation(conversation)
+       return <Promise<Conversation>> this._conversationManager.getConversation(conversation)
     }
 
     public getConversationsByProperty = (property: string): Promise<Array<Conversation>> => {
-       return this._conversationManager.getConversationsByProperty(property);
+       // @ts-ignore
+        return this._conversationManager.getConversationsByProperty(property);
     }
 
     // Deletes a conversation.  Be careful.
     public deleteConversation = (conversation: Conversation | string): Promise<ConversationDeletionResponse> => {
-        return this._conversationManager.deleteConversation(conversation);
+        return <Promise<ConversationDeletionResponse>> this._conversationManager.deleteConversation(conversation);
     }
 
     /**
@@ -97,6 +98,7 @@ export class ConversationClient implements IConversationClient {
     }
 
     public updateComment = (comment:Comment): Promise<Comment> => {
+        // @ts-ignore
         return this._commentManager.update(comment, this._user);
     }
 
@@ -122,6 +124,7 @@ export class ConversationClient implements IConversationClient {
      * @param conversation optional, if removed will retrieve the comments for the conversation set with `setConversation()`
      */
     public getComments = (request?: CommentRequest, conversation?: Conversation): Promise<Commentary> => {
+        // @ts-ignore
         return this._commentManager.getComments(request, conversation);
     }
 

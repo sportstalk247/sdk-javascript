@@ -8,9 +8,9 @@ import {
     RoomUserResult, EventResult
 } from "../models/ChatModels";
 import {Promise} from "es6-promise";
-import {DEFAULT_TALK_CONFIG, MISSING_ROOM} from "../constants";
+import {DEFAULT_TALK_CONFIG, MISSING_ROOM} from "../constants/api";
 import {IRoomManager, IEventManager, IChatClient} from "../API/ChatAPI";
-import {SettingsError} from "../errors";
+import {SettingsError} from "./errors";
 import {RestfulEventManager} from "./chat/REST/RestfulEventManager"
 import {RestfulRoomManager} from "./chat/REST/RestfulRoomManager";
 import {RestfulUserManager} from "./common/REST/RestfulUserManager";
@@ -23,7 +23,7 @@ import {
     User,
     UserResult
 } from "../models/CommonModels";
-import {MUST_SET_USER} from "../messages";
+import {MUST_SET_USER} from "../constants/messages";
 import {IUserManager} from "../API/CommonAPI";
 
 

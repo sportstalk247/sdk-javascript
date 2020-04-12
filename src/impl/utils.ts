@@ -2,9 +2,9 @@
  * Creates a one-layer-deep urlEncoded string.
  * @param data
  */
-import {APPLICATION_JSON, FORM_ENCODED} from "./constants";
-import {ApiHeaders, SportsTalkConfig} from "./models/CommonModels";
-import {Comment, CommentRequest, Conversation, ListRequest} from "./models/ConversationModels";
+import {APPLICATION_JSON, FORM_ENCODED} from "../constants/api";
+import {ApiHeaders, SportsTalkConfig} from "../models/CommonModels";
+import {Comment, CommentRequest, Conversation, ListRequest} from "../models/ConversationModels";
 
 export function formify(data) {
     const formBody: Array<String> = []

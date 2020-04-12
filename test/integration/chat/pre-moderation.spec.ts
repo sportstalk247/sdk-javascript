@@ -45,7 +45,7 @@ describe('Pre Moderation sequences', function() {
                 expect(events.length).to.be.greaterThan(0);
                 const list: Array<EventResult> = events || [];
                 return Promise.all(list.map(function (event) {
-                    return mod.removeEvent(event)
+                    return mod.rejectEvent(event)
                 }))
             }).then(events => {
                 return mod.getModerationQueue()
