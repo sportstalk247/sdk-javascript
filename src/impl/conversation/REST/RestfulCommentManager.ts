@@ -131,16 +131,17 @@ export class RestfulCommentManager implements ICommentManager {
         });
     }
 
-    public get = (comment: Comment | string): Promise<Comment> => {
+    public getComment = (comment: Comment | string): Promise<Comment> => {
         // @ts-ignore
         this._requireConversation();
         const id = getUrlCommentId(comment);
-        return axios({
+        const config: AxiosRequestConfig = {
             method: GET,
-            url: buildAPI(this._config, `${this._apiExt}/${this._conversationId}/${id}`),
+            url: buildAPI(this._config, `${this._apiExt}/${this._conversationId}/comments/${id}`),
             headers: this._jsonHeaders,
-        }).then(result=>{
-            return result.data;
+        }
+        return axios(config).then(result=>{
+            return result.data.data;
         });
     }
 
@@ -149,10 +150,10 @@ export class RestfulCommentManager implements ICommentManager {
         const id = getUrlCommentId(comment);
         return axios({
             method: DELETE,
-            url: buildAPI(this._config, `${this._apiExt}/${this._conversationId}/${id}`),
+            url: buildAPI(this._config, `${this._apiExt}/${this._conversationId}/comments/${id}`),
             headers: this._jsonHeaders,
         }).then(result => {
-            return result.data;
+            return result.data.data;
         });
     }
 
@@ -161,7 +162,7 @@ export class RestfulCommentManager implements ICommentManager {
         const id = getUrlCommentId(comment);
         const config:AxiosRequestConfig = {
             method: PUT,
-            url: buildAPI(this._config, `${this._apiExt}/${this._conversationId}/${id}?userid=${user.userid}&deleted=true`),
+            url: buildAPI(this._config, `${this._apiExt}/${this._conversationId}/comments/${id}?userid=${user.userid}&deleted=true`),
             headers: this._jsonHeaders,
         }
         return axios(config).then(result => {

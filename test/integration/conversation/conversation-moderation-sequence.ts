@@ -3,7 +3,7 @@ import {Kind, ModerationType, Reaction, ReportType} from '../../../src/models/Co
 import * as chai from 'chai';
 import * as dotenv from 'dotenv';
 import {RestfulConversationModerationManager} from "../../../src/impl/conversation/REST/RestfulConversationModerationManager";
-import {CommentResponse} from "../../../src/models/ConversationModels";
+import {Commentary, CommentResponse} from "../../../src/models/ConversationModels";
 
 dotenv.config();
 
@@ -16,7 +16,6 @@ describe('Conversation Moderation', function() {
         apiKey:process.env.TEST_KEY,
         appId: process.env.TEST_APP_ID,
         endpoint: process.env.TEST_ENDPOINT,
-
     };
     const client = ConversationClient.create(Object.assign(config, {
         user: {
@@ -59,8 +58,9 @@ describe('Conversation Moderation', function() {
             });
         })
     });
-    describe("User joins Conversation", function() {
-        it("Lets user 2 join", async()=>{
+    describe("Comment operations", function() {
+        let commentary: Commentary;
+        it("Reply", async()=>{
             try {
                 const conv = await client2.createConversation(conversation, true)
                 const resp = await client2.makeComment("This is my comment")
@@ -69,11 +69,16 @@ describe('Conversation Moderation', function() {
                 const response:CommentResponse = await client.reactToComment(resp, Reaction.like);
                 expect(response.kind).to.be.equal(Kind.comment);
                 const reply = await client.makeComment("I'm replying", resp);
-                const commentary = await client.getComments();
-                expect(commentary.comments.length).to.be.greaterThan(1);
+                commentary = await client.getComments();
+                expect(commentary.comments.length).to.be.greaterThan(0);
             } catch (e) {
                 throw e;
             }
+        });
+        it("Lets you retrieve specific comments", async ()=>{
+            const firstComment = commentary.comments[0];
+            let comment = await client.getComment(firstComment);
+            expect(comment.id).to.be.equal(firstComment.id)
         })
     })
 

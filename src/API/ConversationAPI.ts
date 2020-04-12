@@ -12,7 +12,7 @@ import {Reaction, SportsTalkConfig, ReportType, ApiResult} from "../models/Commo
 export interface ICommentManager extends ISportsTalkConfigurable {
     setConversation(conversation: Conversation | string): Conversation;
     create(comment: Comment | string, user: User, replyto?: Comment | string): Promise<Comment>;
-    get(comment: Comment | string): Promise<Comment>;
+    getComment(comment: Comment | string): Promise<Comment>;
     delete(comment: Comment | string, user: User, final?: boolean): Promise<CommentDeletionResponse>
     update(comment: Comment, user: User): Promise<Comment>;
     vote(comment: Comment, user: User, vote:Vote): Promise<Comment>

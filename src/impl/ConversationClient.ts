@@ -90,7 +90,7 @@ export class ConversationClient implements IConversationClient {
     }
 
     public getComment = (comment: Comment | string) => {
-        return this._commentManager.get(comment);
+        return this._commentManager.getComment(comment);
     }
 
     public deleteComment = (comment:Comment | string) => {
