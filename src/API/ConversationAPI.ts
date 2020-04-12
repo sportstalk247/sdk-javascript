@@ -7,7 +7,8 @@ import {
     ConversationDeletionResponse, ReactionResponse, Vote, CommentRequest, Commentary, User
 } from "../models/ConversationModels";
 
-import {Reaction, SportsTalkConfig, ReportType} from "../models/CommonModels";
+import {Reaction, SportsTalkConfig, ReportType, ApiResult} from "../models/CommonModels";
+import {Promise} from "es6-promise";
 
 export interface ICommentManager extends ISportsTalkConfigurable {
     setConversation(conversation: Conversation | string): Conversation;
@@ -31,7 +32,9 @@ export interface IConversationManager extends IConfigurable {
 }
 
 export interface IConversationModerationManager extends IConfigurable {
-
+    getModerationQueue(): Promise<ConversationDeletionResponse>
+    rejectComment(comment: Comment): Promise<ApiResult<null>>
+    approveComment(comment: Comment): Promise<ApiResult<null>>
 }
 
 export interface IConversationClient extends ISportsTalkConfigurable, IUserConfigurable   {
