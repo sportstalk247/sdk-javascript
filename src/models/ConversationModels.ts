@@ -1,4 +1,4 @@
-import {Kind, ModerationType, User} from "./CommonModels";
+import {Kind, ModerationType, ReportReason, User} from "./CommonModels";
 
 export {
     Kind,
@@ -36,8 +36,9 @@ export interface ConversationResponse extends Conversation {
     open: boolean
 }
 
-export interface ReactionResponse {
 
+export enum CommentType {
+    comment = "comment"
 }
 
 export interface CommentDeletionResponse {}
@@ -81,9 +82,24 @@ export interface ConversationDeletionResponse extends HasConversationID {
 export interface Comment extends User {
     id?: string;
     body: string,
+    appid?: string,
     replyto?: string
+    replycount?: number,
+    reactions?: Array<any>,
+    active?: boolean,
+    added?: number,
+    modified?: number,
+    commenttype: CommentType,
+    votecount?: number,
+    votescore?: number,
+    moderation?: string,
+    reports: Array<ReportReason>
 }
 
 export interface ShortComment {
     body: string;
+}
+
+export interface CommentResponse extends HasConversationID, Comment {
+    kind: Kind.comment
 }

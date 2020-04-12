@@ -4,7 +4,7 @@ import {
     CommentDeletionResponse,
     Conversation,
     ConversationResponse,
-    ConversationDeletionResponse, ReactionResponse, Vote, CommentRequest, Commentary, User
+    ConversationDeletionResponse, Vote, CommentRequest, Commentary, User, CommentResponse
 } from "../models/ConversationModels";
 
 import {Reaction, SportsTalkConfig, ReportType, ApiResult} from "../models/CommonModels";
@@ -15,9 +15,9 @@ export interface ICommentManager extends ISportsTalkConfigurable {
     get(comment: Comment | string): Promise<Comment>;
     delete(comment: Comment | string, user: User, final?: boolean): Promise<CommentDeletionResponse>
     update(comment: Comment, user: User): Promise<Comment>;
-    vote(comment: Comment, user: User, vote:Vote);
-    report(comment: Comment, user:User, reporttype: ReportType)
-    react(comment:Comment | string, user: User, reaction:Reaction, enable?: boolean): Promise<ReactionResponse>;
+    vote(comment: Comment, user: User, vote:Vote): Promise<Comment>
+    report(comment: Comment, user:User, reporttype: ReportType): Promise<Comment>
+    react(comment:Comment | string, user: User, reaction:Reaction, enable?: boolean): Promise<Comment>;
     getReplies(comment: Comment, request?: CommentRequest): Promise<Array<Comment>>
     getComments(request?: CommentRequest, conversation?: Conversation): Promise<Commentary>
     getConversation(): Conversation | null
@@ -44,8 +44,8 @@ export interface IConversationClient extends ISportsTalkConfigurable, IUserConfi
     getConversation(conversation: Conversation | string): Promise<Conversation>;
     getConversationsByProperty(property: string): Promise<Array<Conversation>>;
     deleteConversation(conversation: Conversation | string);
-    makeComment(comment: string, replyto?: Comment | string);
-    getComment(comment: Comment | string);
+    makeComment(comment: string, replyto?: Comment | string): Promise<Comment>;
+    getComment(comment: Comment | string): Promise<Comment>;
     deleteComment(comment:Comment | string);
     updateComment(comment:Comment): Promise<Comment>;
     reactToComment(comment:Comment | string, reaction:Reaction);

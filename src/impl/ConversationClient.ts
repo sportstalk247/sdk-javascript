@@ -102,7 +102,7 @@ export class ConversationClient implements IConversationClient {
         return this._commentManager.update(comment, this._user);
     }
 
-    public reactToComment = (comment:Comment, reaction:Reaction) => {
+    public reactToComment = (comment:Comment, reaction:Reaction): Promise<Comment> => {
         return this._commentManager.react(comment, this._user, reaction);
     }
 

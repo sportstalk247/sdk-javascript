@@ -1,8 +1,9 @@
 import {ConversationClient} from '../../../src/impl/ConversationClient';
-import {Kind, ModerationType, ReportType} from '../../../src/models/CommonModels';
+import {Kind, ModerationType, Reaction, ReportType} from '../../../src/models/CommonModels';
 import * as chai from 'chai';
 import * as dotenv from 'dotenv';
 import {RestfulConversationModerationManager} from "../../../src/impl/conversation/REST/RestfulConversationModerationManager";
+import {CommentResponse} from "../../../src/models/ConversationModels";
 
 dotenv.config();
 
@@ -59,31 +60,30 @@ describe('Conversation Moderation', function() {
         })
     });
     describe("User joins Conversation", function() {
-        it("Lets user 2 join", function(done){
-            client2.createConversation(conversation, true)
-                .then(conversation=>{
-                    return client2.makeComment("This is my comment")
-                })
-                .then(resp=>{
-                    expect(resp.body).to.be.equal("This is my comment");
-                    done();
-                })
-                .catch(e=>{
-                    done(e);
-                })
+        it("Lets user 2 join", async()=>{
+            try {
+                const conv = await client2.createConversation(conversation, true)
+                const resp = await client2.makeComment("This is my comment")
+                expect(resp.body).to.be.equal("This is my comment");
+                // @ts-ignore
+                const response:CommentResponse = await client.reactToComment(resp, Reaction.like);
+                expect(response.kind).to.be.equal(Kind.comment);
+                const reply = await client.makeComment("I'm replying", resp);
+                const commentary = await client.getComments();
+                expect(commentary.comments.length).to.be.greaterThan(1);
+            } catch (e) {
+                throw e;
+            }
         })
     })
 
    describe("User flags comment", function() {
-       it("Let's User2 flag User1's comment", function(done){
-           client.makeComment("This is user1 comment")
-               .then(()=>client2.getComments())
-               .then((commentary)=>{
-                   expect(commentary.comments.length).to.be.greaterThan(0);
-                   client2.reportComment(commentary.comments[0], ReportType.abuse)
-                   done()
-               }).catch(done);
-
+       it("Let's User2 flag User1's comment", async ()=> {
+           await client.makeComment("This is user1 comment");
+           const commentary = await client2.getComments();
+           expect(commentary.comments.length).to.be.greaterThan(0);
+           await client2.reportComment(commentary.comments[0], ReportType.abuse)
+           await client.reportComment(commentary.comments[0], ReportType.abuse)
        })
        it('Shows that comment is flagged', async () => {
             const queue = await ModerationClient.getModerationQueue();

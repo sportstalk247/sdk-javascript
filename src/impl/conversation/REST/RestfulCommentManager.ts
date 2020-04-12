@@ -4,7 +4,6 @@ import {
     CommentRequest,
     CommentSortMethod,
     Conversation,
-    ReactionResponse,
     Vote
 } from "../../../models/ConversationModels";
 import {DELETE, GET, POST, PUT} from "../../../constants/api";
@@ -118,15 +117,16 @@ export class RestfulCommentManager implements ICommentManager {
         if(!replyId) {
             throw new ValidationError(MISSING_REPLYTO_ID);
         }
-        return axios({
+        const config: AxiosRequestConfig = {
             method: POST,
-            url: buildAPI(this._config, `${this._apiExt}/${this._conversationId}/${replyId}`),
+            url: buildAPI(this._config, `${this._apiExt}/${this._conversationId}/comments/${replyId}`),
             headers: this._jsonHeaders,
             data: {
                 body: comment.body,
                 userid: comment.userid
             }
-        }).then(result=>{
+        }
+        return axios(config).then(result=>{
             return result.data;
         });
     }
@@ -180,7 +180,7 @@ export class RestfulCommentManager implements ICommentManager {
         const id = getUrlCommentId(comment);
         return axios({
             method: PUT,
-            url: buildAPI(this._config,`${this._apiExt}/${this._conversationId}/${id}`),
+            url: buildAPI(this._config,`${this._apiExt}/${this._conversationId}/comments/${id}`),
             headers: this._jsonHeaders,
             data: {
                 body: comment.body,
@@ -196,7 +196,7 @@ export class RestfulCommentManager implements ICommentManager {
      * @param reaction The reaction type.  Currently only "like" is supported and built-in.
      * @param enable Whether the reaction should be toggled on or off, defaults to true.
      */
-    public react = (comment:Comment | string, user:User, reaction:Reaction, enable = true): Promise<ReactionResponse> => {
+    public react = (comment:Comment | string, user:User, reaction:Reaction, enable = true): Promise<Comment> => {
         this._requireConversation();
         this._requireUser(user);
         const id = getUrlCommentId(comment);
@@ -205,23 +205,26 @@ export class RestfulCommentManager implements ICommentManager {
             reaction : reaction,
             reacted : enable ? true : false // null protection.
         }
-        return axios({
+        const config:AxiosRequestConfig = {
             method: POST,
-            url: buildAPI(this._config, `${this._apiExt}/${this._conversationId}/${id}/react`),
+            url: buildAPI(this._config, `${this._apiExt}/${this._conversationId}/comments/${id}/react`),
             headers: this._jsonHeaders,
             data
-        }).then(result=>{
-            return result.data;
-        });
+        }
+        return axios(config).then(result=>{
+            return result.data.data
+        }).catch(e=>{
+            throw e;
+        })
     }
 
-    public vote = (comment: Comment, user:User, vote:Vote) => {
+    public vote = (comment: Comment, user:User, vote:Vote): Promise<Comment> => {
         this._requireConversation();
         this._requireUser(user);
         const id = getUrlCommentId(comment);
         return axios({
             method: POST,
-            url: buildAPI(this._config, `${this._apiExt}/${this._conversationId}/${id}/vote`),
+            url: buildAPI(this._config, `${this._apiExt}/${this._conversationId}/comments/${id}/vote`),
             headers: this._jsonHeaders,
             data: {
                 vote: vote,
@@ -232,13 +235,13 @@ export class RestfulCommentManager implements ICommentManager {
         });
     }
 
-    public report = (comment: Comment, user:User, reporttype: ReportType) => {
+    public report = (comment: Comment, user:User, reporttype: ReportType): Promise<Comment> => {
         this._requireConversation();
         this._requireUser(user)
         const id = getUrlCommentId(comment);
         return axios({
             method: POST,
-            url: buildAPI(this._config, `${this._apiExt}/${this._conversationId}/${id}/report`),
+            url: buildAPI(this._config, `${this._apiExt}/${this._conversationId}/comments/${id}/report`),
             headers: this._jsonHeaders,
             data: {
                 reporttype: reporttype,
@@ -254,7 +257,7 @@ export class RestfulCommentManager implements ICommentManager {
         const id = getUrlCommentId(comment);
         return axios({
             method: GET,
-            url: buildAPI(this._config, `${this._apiExt}/${this._conversationId}/${id}`),
+            url: buildAPI(this._config, `${this._apiExt}/${this._conversationId}/comments/${id}`),
             headers: this._jsonHeaders,
             data: request
         }).then(result=>{

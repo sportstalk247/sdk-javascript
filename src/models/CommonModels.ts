@@ -31,7 +31,8 @@ export enum Kind {
     api = "api.result",
     webhook = "chat.webhook",
     conversation = "comment.conversation",
-    deletedconversation = "delete.conversation"
+    deletedconversation = "delete.conversation",
+    comment = "comment.comment"
 }
 
 export interface UserResult extends User {
