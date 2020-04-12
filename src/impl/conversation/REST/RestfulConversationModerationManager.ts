@@ -10,7 +10,7 @@ export class RestfulConversationModerationManager implements IConversationModera
     _config: ClientConfig;
     _apiHeaders: ApiHeaders;
     _jsonHeaders: ApiHeaders;
-    _apiExt:string = '/comment/moderation/queues/comments';
+    _apiExt:string = 'comment/moderation/queues/comments';
 
     public setConfig = (config: ClientConfig) => {
         this._config = config;

@@ -15,6 +15,7 @@ import {ICommentManager} from "../../../API/ConversationAPI";
 import {
     MISSING_REPLYTO_ID,
     MUST_SET_USER,
+    MUST_SPECIFY_CONVERSATION,
     NO_CONVERSATION_SET,
     USER_NEEDS_HANDLE,
     USER_NEEDS_ID
@@ -263,7 +264,7 @@ export class RestfulCommentManager implements ICommentManager {
 
     public getComments = (request?: CommentRequest, conversation?: Conversation): Promise<Commentary>=> {
         if(!conversation) {
-            this._requireConversation("Must set a conversation in method call or set a default");
+            this._requireConversation(MUST_SPECIFY_CONVERSATION);
         }
         const id = conversation ? getUrlConversationId(conversation) : this._conversationId;
         if(!id) {

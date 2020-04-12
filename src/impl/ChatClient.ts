@@ -7,7 +7,7 @@ import {
     Room,
     RoomUserResult, EventResult
 } from "../models/ChatModels";
-import {DEFAULT_TALK_CONFIG, MISSING_ROOM} from "../constants/api";
+import {DEFAULT_TALK_CONFIG} from "../constants/api";
 import {IRoomManager, IEventManager, IChatClient} from "../API/ChatAPI";
 import {SettingsError} from "./errors";
 import {RestfulEventManager} from "./chat/REST/RestfulEventManager"
@@ -22,7 +22,7 @@ import {
     User,
     UserResult
 } from "../models/CommonModels";
-import {MUST_SET_USER} from "../constants/messages";
+import {MISSING_ROOM, MUST_SET_USER} from "../constants/messages";
 import {IUserManager} from "../API/CommonAPI";
 
 

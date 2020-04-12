@@ -1,9 +1,10 @@
 import {IRoomManager} from "../../../API/ChatAPI";
 import {EventResult, Room, RoomResult, RoomUserResult} from "../../../models/ChatModels";
 import axios, {AxiosRequestConfig} from "axios";
-import {GET, DELETE, POST, MISSING_ROOM} from "../../../constants/api";
+import {GET, DELETE, POST} from "../../../constants/api";
 import {buildAPI, getJSONHeaders, getUrlEncodedHeaders} from "../../utils";
 import {ApiResult, SportsTalkConfig, User, UserResult} from "../../../models/CommonModels";
+import {MISSING_ROOM} from "../../../constants/messages";
 
 export class RestfulRoomManager implements IRoomManager {
     private _config: SportsTalkConfig;
