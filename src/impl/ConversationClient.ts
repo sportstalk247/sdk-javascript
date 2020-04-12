@@ -5,7 +5,7 @@ import {
     Comment,
     CommentRequest,
     ConversationDeletionResponse,
-    ConversationResponse, Commentary, CommentDeletionResponse, ConversationRequest, ConversationListResponse
+    ConversationResponse, CommentListResponse, CommentDeletionResponse, ConversationRequest, ConversationListResponse
 } from "../models/ConversationModels";
 import {RestfulCommentManager} from "./conversation/REST/RestfulCommentManager";
 import {RestfulConversationManager} from "./conversation/REST/RestfulConversationManager";
@@ -114,7 +114,7 @@ export class ConversationClient implements IConversationClient {
         return this._commentManager.report(comment, this._user, reportType);
     }
 
-    public getCommentReplies = (comment:Comment, request?: CommentRequest): Promise<Commentary> => {
+    public getCommentReplies = (comment:Comment, request?: CommentRequest): Promise<CommentListResponse> => {
         return this._commentManager.getReplies(comment, request);
     }
 
@@ -123,7 +123,7 @@ export class ConversationClient implements IConversationClient {
      * @param request how to sort/filter the comments.  See CommentRequest
      * @param conversation optional, if removed will retrieve the comments for the conversation set with `setConversation()`
      */
-    public getComments = (request?: CommentRequest, conversation?: Conversation): Promise<Commentary> => {
+    public getComments = (request?: CommentRequest, conversation?: Conversation): Promise<CommentListResponse> => {
         // @ts-ignore
         return this._commentManager.getComments(request, conversation);
     }

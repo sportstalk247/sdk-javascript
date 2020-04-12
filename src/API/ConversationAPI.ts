@@ -7,7 +7,7 @@ import {
     ConversationDeletionResponse,
     Vote,
     CommentRequest,
-    Commentary,
+    CommentListResponse,
     User,
     CommentResponse,
     ConversationRequest,
@@ -25,8 +25,8 @@ export interface ICommentManager extends ISportsTalkConfigurable {
     vote(comment: Comment, user: User, vote:Vote): Promise<Comment>
     report(comment: Comment, user:User, reporttype: ReportType): Promise<Comment>
     react(comment:Comment | string, user: User, reaction:Reaction, enable?: boolean): Promise<Comment>;
-    getReplies(comment: Comment, request?: CommentRequest): Promise<Commentary>
-    getComments(request?: CommentRequest, conversation?: Conversation): Promise<Commentary>
+    getReplies(comment: Comment, request?: CommentRequest): Promise<CommentListResponse>
+    getComments(request?: CommentRequest, conversation?: Conversation): Promise<CommentListResponse>
     getConversation(): Conversation | null
 }
 
@@ -59,7 +59,7 @@ export interface IConversationClient extends ISportsTalkConfigurable, IUserConfi
     reactToComment(comment:Comment | string, reaction:Reaction): Promise<Comment>;
     voteOnComment(comment:Comment | string, vote:Vote);
     reportComment(comment:Comment | string, reportType: ReportType): Promise<Comment>;
-    getCommentReplies(comment:Comment, request?: CommentRequest): Promise<Commentary>
-    getComments(request?: CommentRequest, conversation?: Conversation): Promise<Commentary>
+    getCommentReplies(comment:Comment, request?: CommentRequest): Promise<CommentListResponse>
+    getComments(request?: CommentRequest, conversation?: Conversation): Promise<CommentListResponse>
     listConversations(filter?: ConversationRequest): Promise<ConversationListResponse>
 }

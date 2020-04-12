@@ -1,6 +1,6 @@
 import {ApiHeaders, Reaction, SportsTalkConfig, User, ReportType} from "../../../models/CommonModels";
 import {
-    Comment, Commentary, CommentDeletionResponse,
+    Comment, CommentListResponse, CommentDeletionResponse,
     CommentRequest,
     CommentSortMethod,
     Conversation,
@@ -260,7 +260,7 @@ export class RestfulCommentManager implements ICommentManager {
         });
     }
 
-    public getReplies = (comment: Comment, request?: CommentRequest): Promise<Commentary> =>{
+    public getReplies = (comment: Comment, request?: CommentRequest): Promise<CommentListResponse> =>{
         this._requireConversation();
         const id = getUrlCommentId(comment);
         const requestString = formify(request);
@@ -277,7 +277,7 @@ export class RestfulCommentManager implements ICommentManager {
         });
     }
 
-    public getComments = (request?: CommentRequest, conversation?: Conversation): Promise<Commentary>=> {
+    public getComments = (request?: CommentRequest, conversation?: Conversation): Promise<CommentListResponse>=> {
         if(!conversation) {
             this._requireConversation(MUST_SPECIFY_CONVERSATION);
         }
@@ -290,10 +290,11 @@ export class RestfulCommentManager implements ICommentManager {
             url: buildAPI(this._config, `${this._apiExt}/${id}/comments`, request),
             headers: this._jsonHeaders,
         }).then(result=>{
-            const {conversation, comments} = result.data.data;
+            const {conversation, comments, cursor} = result.data.data;
             return {
                 conversation,
-                comments
+                comments,
+                cursor
             };
         });
     }

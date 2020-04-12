@@ -24,7 +24,7 @@ export interface Conversation extends HasConversationID {
     udf2?: string
 }
 
-export interface Commentary {
+export interface CommentListResponse extends ListResponse {
     conversation: Conversation,
     comments: Comment[]
 }
@@ -112,7 +112,6 @@ export interface CommentResponse extends HasConversationID, Comment {
 export interface ConversationRequest extends ListRequest {
     propertyid?: string,
 }
-
 
 export interface ConversationListResponse extends ListResponse{
     conversations: Conversation[]

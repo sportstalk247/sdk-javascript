@@ -3,7 +3,7 @@ import {Kind, ModerationType, Reaction, ReportType} from '../../../src/models/Co
 import * as chai from 'chai';
 import * as dotenv from 'dotenv';
 import {RestfulConversationModerationManager} from "../../../src/impl/conversation/REST/RestfulConversationModerationManager";
-import {Commentary, CommentResponse, Vote} from "../../../src/models/ConversationModels";
+import {CommentListResponse, CommentResponse, Vote} from "../../../src/models/ConversationModels";
 
 dotenv.config();
 
@@ -59,7 +59,7 @@ describe('Comment Operations', function() {
         })
     });
     describe("Responses", function() {
-        let commentary: Commentary;
+        let commentary: CommentListResponse;
         it("Reply", async ()=>{
             try {
                 const conv = await client2.createConversation(conversation, true)
@@ -71,7 +71,7 @@ describe('Comment Operations', function() {
                 const reply = await client.makeComment("I'm replying", resp);
                 commentary = await client.getComments();
                 expect(commentary.comments.length).to.be.greaterThan(0);
-                const replylist:Commentary = await client.getCommentReplies(resp);
+                const replylist:CommentListResponse = await client.getCommentReplies(resp);
                 expect(replylist.comments.length).to.be.greaterThan(0);
             } catch (e) {
                 throw e;
