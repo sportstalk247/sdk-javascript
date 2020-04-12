@@ -2,7 +2,7 @@ import {ApiHeaders, ClientConfig} from "../../../models/CommonModels";
 import axios, {AxiosRequestConfig} from "axios";
 import {Conversation, ConversationResponse, ConversationDeletionResponse} from "../../../models/ConversationModels";
 import {GET, POST, DELETE} from "../../../constants/api";
-import {getUrlEncodedHeaders, getJSONHeaders, buildCommentAPI} from "../../utils";
+import {getUrlEncodedHeaders, getJSONHeaders, buildAPI} from "../../utils";
 import {IConversationManager} from "../../../API/ConversationAPI";
 import {getUrlConversationId} from "../ConversationUtils";
 
@@ -22,7 +22,7 @@ export class RestfulConversationManager implements IConversationManager {
     public createConversation = (settings: Conversation): Promise<ConversationResponse> => {
         const config: AxiosRequestConfig = {
             method: POST,
-            url: buildCommentAPI(this._config, this._apiExt),
+            url: buildAPI(this._config, this._apiExt),
             headers: this._jsonHeaders,
             data: settings,
         };
@@ -38,7 +38,7 @@ export class RestfulConversationManager implements IConversationManager {
         const id = getUrlConversationId(conversation);
         return axios({
             method: GET,
-            url: buildCommentAPI(this._config, `${this._apiExt}/${id}`),
+            url: buildAPI(this._config, `${this._apiExt}/${id}`),
             headers: this._jsonHeaders,
         }).then(result=>{
             return result.data;
@@ -49,7 +49,7 @@ export class RestfulConversationManager implements IConversationManager {
         // @ts-ignore
         return axios({
             method: GET,
-            url: buildCommentAPI(this._config, `${this._apiExt}/?propertyid=${property}`),
+            url: buildAPI(this._config, `${this._apiExt}/?propertyid=${property}`),
             headers: this._jsonHeaders,
         }).then(result=>{
             return result;
@@ -63,7 +63,7 @@ export class RestfulConversationManager implements IConversationManager {
         // @ts-ignore
         const config: AxiosRequestConfig = {
             method: DELETE,
-            url: buildCommentAPI(this._config, `${this._apiExt}/${id}`),
+            url: buildAPI(this._config, `${this._apiExt}/${id}`),
             headers: this._jsonHeaders,
         }
         return axios(config).then(result=>{

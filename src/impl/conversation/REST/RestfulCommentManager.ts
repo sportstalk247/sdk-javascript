@@ -8,7 +8,7 @@ import {
     Vote
 } from "../../../models/ConversationModels";
 import {DELETE, GET, POST, PUT} from "../../../constants/api";
-import {getUrlEncodedHeaders, getJSONHeaders, buildCommentAPI} from "../../utils";
+import {getUrlEncodedHeaders, getJSONHeaders, buildAPI} from "../../utils";
 import {getUrlCommentId, getUrlConversationId} from "../ConversationUtils";
 import {RequireUserError, SettingsError, ValidationError} from "../../errors";
 import {ICommentManager} from "../../../API/ConversationAPI";
@@ -100,7 +100,7 @@ export class RestfulCommentManager implements ICommentManager {
     private _makeComment = (comment: Comment): Promise<Comment> => {
         const config:AxiosRequestConfig = {
             method: POST,
-            url: buildCommentAPI(this._config, `${this._apiExt}/comments`),
+            url: buildAPI(this._config, `${this._apiExt}/comments`),
             headers: this._jsonHeaders,
             data: comment
         }
@@ -119,7 +119,7 @@ export class RestfulCommentManager implements ICommentManager {
         }
         return axios({
             method: POST,
-            url: buildCommentAPI(this._config, `${this._apiExt}/${this._conversationId}/${replyId}`),
+            url: buildAPI(this._config, `${this._apiExt}/${this._conversationId}/${replyId}`),
             headers: this._jsonHeaders,
             data: {
                 body: comment.body,
@@ -136,7 +136,7 @@ export class RestfulCommentManager implements ICommentManager {
         const id = getUrlCommentId(comment);
         return axios({
             method: GET,
-            url: buildCommentAPI(this._config, `${this._apiExt}/${this._conversationId}/${id}`),
+            url: buildAPI(this._config, `${this._apiExt}/${this._conversationId}/${id}`),
             headers: this._jsonHeaders,
         }).then(result=>{
             return result.data;
@@ -148,7 +148,7 @@ export class RestfulCommentManager implements ICommentManager {
         const id = getUrlCommentId(comment);
         return axios({
             method: DELETE,
-            url: buildCommentAPI(this._config, `${this._apiExt}/${this._conversationId}/${id}`),
+            url: buildAPI(this._config, `${this._apiExt}/${this._conversationId}/${id}`),
             headers: this._jsonHeaders,
         }).then(result => {
             return result.data;
@@ -160,7 +160,7 @@ export class RestfulCommentManager implements ICommentManager {
         const id = getUrlCommentId(comment);
         const config:AxiosRequestConfig = {
             method: PUT,
-            url: buildCommentAPI(this._config, `${this._apiExt}/${this._conversationId}/${id}?userid=${user.userid}&deleted=true`),
+            url: buildAPI(this._config, `${this._apiExt}/${this._conversationId}/${id}?userid=${user.userid}&deleted=true`),
             headers: this._jsonHeaders,
         }
         return axios(config).then(result => {
@@ -179,7 +179,7 @@ export class RestfulCommentManager implements ICommentManager {
         const id = getUrlCommentId(comment);
         return axios({
             method: PUT,
-            url: buildCommentAPI(this._config,`${this._apiExt}/${this._conversationId}/${id}`),
+            url: buildAPI(this._config,`${this._apiExt}/${this._conversationId}/${id}`),
             headers: this._jsonHeaders,
             data: {
                 body: comment.body,
@@ -206,7 +206,7 @@ export class RestfulCommentManager implements ICommentManager {
         }
         return axios({
             method: POST,
-            url: buildCommentAPI(this._config, `${this._apiExt}/${this._conversationId}/${id}/react`),
+            url: buildAPI(this._config, `${this._apiExt}/${this._conversationId}/${id}/react`),
             headers: this._jsonHeaders,
             data
         }).then(result=>{
@@ -220,7 +220,7 @@ export class RestfulCommentManager implements ICommentManager {
         const id = getUrlCommentId(comment);
         return axios({
             method: POST,
-            url: buildCommentAPI(this._config, `${this._apiExt}/${this._conversationId}/${id}/vote`),
+            url: buildAPI(this._config, `${this._apiExt}/${this._conversationId}/${id}/vote`),
             headers: this._jsonHeaders,
             data: {
                 vote: vote,
@@ -237,7 +237,7 @@ export class RestfulCommentManager implements ICommentManager {
         const id = getUrlCommentId(comment);
         return axios({
             method: POST,
-            url: buildCommentAPI(this._config, `${this._apiExt}/${this._conversationId}/${id}/report`),
+            url: buildAPI(this._config, `${this._apiExt}/${this._conversationId}/${id}/report`),
             headers: this._jsonHeaders,
             data: {
                 reporttype: reporttype,
@@ -253,7 +253,7 @@ export class RestfulCommentManager implements ICommentManager {
         const id = getUrlCommentId(comment);
         return axios({
             method: GET,
-            url: buildCommentAPI(this._config, `${this._apiExt}/${this._conversationId}/${id}`),
+            url: buildAPI(this._config, `${this._apiExt}/${this._conversationId}/${id}`),
             headers: this._jsonHeaders,
             data: request
         }).then(result=>{
@@ -271,7 +271,7 @@ export class RestfulCommentManager implements ICommentManager {
         }
         return axios({
             method: GET,
-            url: buildCommentAPI(this._config, `${this._apiExt}/${id}/comments`, request),
+            url: buildAPI(this._config, `${this._apiExt}/${id}/comments`, request),
             headers: this._jsonHeaders,
         }).then(result=>{
             const {conversation, comments} = result.data.data;

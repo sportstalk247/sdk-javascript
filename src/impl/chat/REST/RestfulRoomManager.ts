@@ -2,7 +2,7 @@ import {IRoomManager} from "../../../API/ChatAPI";
 import {EventResult, Room, RoomResult, RoomUserResult} from "../../../models/ChatModels";
 import axios, {AxiosRequestConfig} from "axios";
 import {GET, DELETE, POST, MISSING_ROOM} from "../../../constants/api";
-import {buildCommentAPI, getJSONHeaders, getUrlEncodedHeaders} from "../../utils";
+import {buildAPI, getJSONHeaders, getUrlEncodedHeaders} from "../../utils";
 import {ApiResult, SportsTalkConfig, User, UserResult} from "../../../models/CommonModels";
 
 export class RestfulRoomManager implements IRoomManager {
@@ -29,7 +29,7 @@ export class RestfulRoomManager implements IRoomManager {
     listRooms = (): Promise<Array<Room>> => {
         const config:AxiosRequestConfig = {
             method: GET,
-            url: buildCommentAPI(this._config, this._apiExt),
+            url: buildAPI(this._config, this._apiExt),
             headers: this._apiHeaders,
         };
         return axios(config).then(result=>{
@@ -54,7 +54,7 @@ export class RestfulRoomManager implements IRoomManager {
         const id =  room.id || room;
         const config:AxiosRequestConfig = {
             method: DELETE,
-            url: buildCommentAPI(this._config,`${this._apiExt}/${id}`),
+            url: buildAPI(this._config,`${this._apiExt}/${id}`),
             headers: this._jsonHeaders
         };
         // @ts-ignore
@@ -70,7 +70,7 @@ export class RestfulRoomManager implements IRoomManager {
     createRoom = (room: Room): Promise<RoomResult> => {
         const config:AxiosRequestConfig = {
             method: POST,
-            url: buildCommentAPI(this._config, this._apiExt),
+            url: buildAPI(this._config, this._apiExt),
             headers: this._jsonHeaders,
             data: room
         };
@@ -84,7 +84,7 @@ export class RestfulRoomManager implements IRoomManager {
     // @ts-ignore
     listUserMessages = (user:User | string, room: Room | string, cursor: string = "", limit: number = 100): Promise<Array<EventResult>> => {
         // @ts-ignore
-        const url = buildCommentAPI(this._config,`/chat/rooms/${room.id || room}/messagesbyuser/${user.userid || user.id || user}/?limit=${limit}&cursor=${cursor}`);
+        const url = buildAPI(this._config,`/chat/rooms/${room.id || room}/messagesbyuser/${user.userid || user.id || user}/?limit=${limit}&cursor=${cursor}`);
         return axios({
             method: GET,
             url: url,
@@ -102,7 +102,7 @@ export class RestfulRoomManager implements IRoomManager {
     listParticipants = (room: Room, cursor?: string, maxresults: number = 200): Promise<Array<UserResult>> => {
         const config:AxiosRequestConfig = {
             method: GET,
-            url: buildCommentAPI(this._config,`${this._apiExt}/${room.id}/participants?cursor=${cursor}&maxresults=${maxresults}`),
+            url: buildAPI(this._config,`${this._apiExt}/${room.id}/participants?cursor=${cursor}&maxresults=${maxresults}`),
             headers: this._apiHeaders
         };
         return axios(config).then(result=>result.data.data);
@@ -114,7 +114,7 @@ export class RestfulRoomManager implements IRoomManager {
         const roomId = room.id || room;
         const config: AxiosRequestConfig = {
             method: POST,
-            url: buildCommentAPI(this._config,`${this._apiExt}/${roomId}/join`),
+            url: buildAPI(this._config,`${this._apiExt}/${roomId}/join`),
             headers: this._jsonHeaders,
             data:{
                 userId: user.userid,
@@ -136,7 +136,7 @@ export class RestfulRoomManager implements IRoomManager {
         const userId = user.id || user;
         const config:AxiosRequestConfig = {
             method: POST,
-            url: buildCommentAPI(this._config,`${this._apiExt}/${roomId}/exit`),
+            url: buildAPI(this._config,`${this._apiExt}/${roomId}/exit`),
             headers: this._jsonHeaders,
             data: {
                 userId: userId

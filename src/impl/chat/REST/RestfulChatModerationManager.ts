@@ -1,6 +1,6 @@
 import {EventResult} from "../../../models/ChatModels";
 import axios, {AxiosRequestConfig} from "axios";
-import {buildCommentAPI, formify, getUrlEncodedHeaders} from "../../utils";
+import {buildAPI, formify, getUrlEncodedHeaders} from "../../utils";
 import {DEFAULT_TALK_CONFIG, POST, } from "../../../constants/api";
 import {IChatModerationManager} from "../../../API/ChatAPI";
 import {ApiResult, SportsTalkConfig, WebHook} from "../../../models/CommonModels";
@@ -21,7 +21,7 @@ export class RestfulChatModerationManager implements IChatModerationManager {
     getModerationQueue = (): Promise<Array<EventResult>> => {
         return axios({
             method: 'GET',
-            url: buildCommentAPI(this._config, `chat/moderation/queues/events`),
+            url: buildAPI(this._config, `chat/moderation/queues/events`),
             headers: this._apiHeaders
         }).then(result => {
             return result.data.data.events;
@@ -31,7 +31,7 @@ export class RestfulChatModerationManager implements IChatModerationManager {
     rejectEvent = (event: EventResult): Promise<ApiResult<null>> => {
         return axios({
             method: 'POST',
-            url: buildCommentAPI(this._config, `/chat/moderation/queues/events/${event.id}/applydecision`),
+            url: buildAPI(this._config, `/chat/moderation/queues/events/${event.id}/applydecision`),
             headers: this._apiHeaders,
             data: {approve: false}
         }).then(result => {
@@ -46,7 +46,7 @@ export class RestfulChatModerationManager implements IChatModerationManager {
         const id = event.id | event;
         return axios({
             method: POST,
-            url: buildCommentAPI(this._config, `/chat/moderation/queues/events/${event.id}/applydecision`),
+            url: buildAPI(this._config, `/chat/moderation/queues/events/${event.id}/applydecision`),
             headers: this._apiHeaders,
             data: {approve: true}
         }).then(result => result.data)

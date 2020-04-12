@@ -1,5 +1,5 @@
 import axios from "axios";
-import {getJSONHeaders} from "../../utils";
+import {buildAPI, getJSONHeaders} from "../../utils";
 import {DEFAULT_TALK_CONFIG, DELETE, GET, POST, PUT} from "../../../constants/api";
 import {SportsTalkConfig, WebHook} from "../../../models/CommonModels";
 import {IWebhookManager} from "../../../API/CommonAPI";
@@ -9,6 +9,7 @@ const MISSING_ID = "Missing webhook or webhook missing ID";
 export class RestfulWebhookManager implements IWebhookManager {
     private _config: SportsTalkConfig = {appId: ""};
     private _apiHeaders;
+    private _apiExt = 'webhook/hooks';
 
     constructor(config: SportsTalkConfig) {
         this.setConfig(config);
@@ -21,7 +22,7 @@ export class RestfulWebhookManager implements IWebhookManager {
 
     listWebhooks = (): Promise<WebHook[]> => {
         return axios({
-            url: `${this._config.endpoint}/webhook`,
+            url: buildAPI(this._config, this._apiExt),
             method: GET,
             headers: this._apiHeaders
         }).then(hooks=>{
@@ -31,7 +32,7 @@ export class RestfulWebhookManager implements IWebhookManager {
 
     createWebhook = (hook: WebHook): Promise<WebHook> =>{
         return axios({
-            url: `${this._config.endpoint}/webhook`,
+            url: buildAPI(this._config, this._apiExt),
             method: POST,
             headers: this._apiHeaders,
             data: hook
@@ -45,7 +46,7 @@ export class RestfulWebhookManager implements IWebhookManager {
             throw new Error(MISSING_ID);
         }
         return axios({
-            url: `${this._config.endpoint}/webhook/${hook.id}`,
+            url: buildAPI(this._config, `${this._apiExt}/${hook.id}`),
             method: PUT,
             headers: this._apiHeaders,
             data: hook
@@ -61,7 +62,7 @@ export class RestfulWebhookManager implements IWebhookManager {
         // @ts-ignore
         const id = hook.id || hook;
         return axios({
-            url: `${this._config.endpoint}/webhook/${id}`,
+            url: buildAPI(this._config, `${this._apiExt}/${id}`),
             method: DELETE,
             headers: this._apiHeaders
         }).then(response=>{
