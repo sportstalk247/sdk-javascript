@@ -18,7 +18,7 @@ export class RestfulConversationModerationManager implements IConversationModera
         this._jsonHeaders = getJSONHeaders(this._config.apiKey);
     }
 
-    public getModerationQueue = (): Promise<ConversationDeletionResponse> => {
+    public getModerationQueue = (): Promise<Array<Comment>> => {
         const config: AxiosRequestConfig = {
             method: GET,
             url: buildAPI(this._config, this._apiExt),

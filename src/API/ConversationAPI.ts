@@ -31,7 +31,7 @@ export interface IConversationManager extends IConfigurable {
 }
 
 export interface IConversationModerationManager extends IConfigurable {
-    getModerationQueue(): Promise<ConversationDeletionResponse>
+    getModerationQueue(): Promise<Array<Comment>>
     rejectComment(comment: Comment): Promise<ApiResult<null>>
     approveComment(comment: Comment): Promise<ApiResult<null>>
 }
