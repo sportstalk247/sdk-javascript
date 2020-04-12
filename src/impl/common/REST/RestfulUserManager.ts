@@ -1,4 +1,3 @@
-import {Promise} from "es6-promise";
 import axios, {AxiosRequestConfig} from "axios";
 import {DELETE, POST} from "../../../constants/api";
 import {buildAPI, getJSONHeaders, getUrlEncodedHeaders} from "../../utils";

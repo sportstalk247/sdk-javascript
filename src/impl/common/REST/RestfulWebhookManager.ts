@@ -1,4 +1,3 @@
-import {Promise} from "es6-promise";
 import axios from "axios";
 import {getJSONHeaders} from "../../utils";
 import {DEFAULT_TALK_CONFIG, DELETE, GET, POST, PUT} from "../../../constants/api";

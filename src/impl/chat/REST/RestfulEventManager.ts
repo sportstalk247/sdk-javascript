@@ -10,8 +10,7 @@ import {IEventManager} from "../../../API/ChatAPI";
 import {buildAPI, formify, getJSONHeaders, getUrlEncodedHeaders} from "../../utils";
 import {SettingsError} from "../../errors";
 import {NO_HANDLER_SET, NO_ROOM_SET} from "../../../constants/messages";
-import axios, {AxiosPromise, AxiosRequestConfig} from "axios";
-import {Promise} from "es6-promise";
+import axios, {AxiosRequestConfig} from "axios";
 import {ApiResult, Reaction, ReportReason, SportsTalkConfig, User} from "../../../models/CommonModels";
 const INVALID_POLL_FREQUENCY = "Invalid poll _pollFrequency.  Must be between 250ms and 5000ms"
 

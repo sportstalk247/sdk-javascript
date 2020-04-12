@@ -7,7 +7,6 @@ import {
     Room,
     RoomUserResult, EventResult
 } from "../models/ChatModels";
-import {Promise} from "es6-promise";
 import {DEFAULT_TALK_CONFIG, MISSING_ROOM} from "../constants/api";
 import {IRoomManager, IEventManager, IChatClient} from "../API/ChatAPI";
 import {SettingsError} from "./errors";
