@@ -38,23 +38,22 @@ export interface IRoomManager extends ISportsTalkConfigurable {
     exitRoom(user: User | string, room: Room | string): Promise<RoomUserResult>
 }
 
-export interface ITalkClient extends IUserConfigurable, ISportsTalkConfigurable{
+export interface IChatClient extends IUserConfigurable, ISportsTalkConfigurable{
     sendCommand(command: string, options?: CommandOptions):  Promise<ApiResult<null | Event>>
     sendReply(message: string, replyto: string, options?: CommandOptions): Promise<ApiResult<null>>
     sendReaction(reaction: Reaction, reactToMessageId: Event | string, options?: CommandOptions): Promise<ApiResult<null>>
     sendAdvertisement(options: AdvertisementOptions): Promise<ApiResult<null>>
     sendGoal(message?:string, img?: string, options?: GoalOptions): Promise<ApiResult<null>>
-}
-
-export interface IChatClient extends ITalkClient {
-    setEventHandlers(eventHandlers: EventHandlerConfig);
-    startTalk();
-    stopTalk();
     report(event: EventResult | string, reason: ReportType):  Promise<ApiResult<null>>,
     listRooms(): Promise<Array<Room>>;
     joinRoom(room: RoomResult | string): Promise<RoomUserResult>;
     getCurrentRoom(): Room | null;
     listParticipants(cursor?: string, maxresults?: number): Promise<Array<User>>;
+    setEventHandlers(eventHandlers: EventHandlerConfig);
+    createOrUpdateUser(user: User, setDefault?:boolean): Promise<User>
+    getLatestEvents(): Promise<EventResult[]>
+    startTalk();
+    stopTalk();
 }
 
 export interface IChatModerationManager extends ISportsTalkConfigurable {

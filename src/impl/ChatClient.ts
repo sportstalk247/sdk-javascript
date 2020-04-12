@@ -137,8 +137,17 @@ export class ChatClient implements IChatClient {
      * If the user exists, updates the user. Otherwise creates a new user.
      * @param user a User model.  The values of 'banned', 'handlelowercase' and 'kind' are ignored.
      */
-    createOrUpdateUser = (user: User): Promise<User> => {
-        return this._userManager.createOrUpdateUser(user)
+    createOrUpdateUser = (user: User, setDefault:boolean = true): Promise<User> => {
+        return this._userManager.createOrUpdateUser(user).then(user=>{
+            if(setDefault) {
+                this._user = user;
+            }
+            return user;
+        })
+    }
+
+    public getLatestEvents = (): Promise<EventResult[]> => {
+        return this._eventManager.getUpdates()
     }
 
     joinRoom = (room: RoomResult | string): Promise<RoomUserResult> => {
@@ -149,7 +158,9 @@ export class ChatClient implements IChatClient {
             this._currentRoom = response.room;
             this._eventManager.setCurrentRoom(this._currentRoom);
             return response;
-        });
+        }).catch(e=>{
+            throw e;
+        })
     }
 
 

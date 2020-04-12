@@ -1,13 +1,16 @@
-import { ChatClient } from '../../../src/impl/ChatClient';
+import {ChatClient} from '../../../src/impl/ChatClient';
 import {EventResult} from "../../../src/models/ChatModels";
 import * as chai from 'chai';
 import {RestfulChatModerationManager} from "../../../src/impl/chat/REST/RestfulChatModerationManager";
 import * as dotenv from 'dotenv';
-import {ModerationType, SportsTalkConfig} from "../../../src/models/CommonModels";
+import {ModerationType, ReportType, SportsTalkConfig} from "../../../src/models/CommonModels";
 import {RestfulRoomManager} from "../../../src/impl/chat/REST/RestfulRoomManager";
+
 dotenv.config();
 
 let client;
+let client2;
+let client3;
 let mod;
 const { expect } = chai;
 // @ts-ignore
@@ -23,29 +26,41 @@ describe('Post moderation Sequence', function() {
     let eventlength = 1;
 
     client = ChatClient.create(config)
+    client2 = ChatClient.create(config)
+    client3 = ChatClient.create(config)
     mod = new RestfulChatModerationManager(config);
     const rm = new RestfulRoomManager(config);
 
     it('Can create a room, join the room, moderate messages, kill room', (done) => {
        rm.createRoom({
+           enableprofanityfilter: false,
            name: "post moderation test room",
            slug: "post-test-room",
-           moderation: ModerationType.post,
+           maxreports: 0,
+           moderation: ModerationType.post
        }).then(room=>{
         //  console.log('POST Created room');
            roomid = room.id;
            expect(room.moderation).to.be.equal(ModerationType.post)
            return room;
-       }).then(room=> {
-           return client.createOrUpdateUser({
+       }).then(async(room)=> {
+           const user1  = await client.createOrUpdateUser({
                userid: 'testsequence',
                handle: 'test'
            });
-       }).then((resp)=>{
-           client.setUser(resp);
+           await client.setUser(user1);
+           const user2 = await client2.createOrUpdateUser({
+               userid:"testsequence2", handle:"tester"
+           });
+           client2.setUser(user2);
+           const user3 = await client3.createOrUpdateUser({
+               userid:"testsequence3", handle:"tester3"
+           });
+           client3.setUser(user3);
+       }).then(async (resp)=>{
          //  console.log("POST created user")
-           return client.joinRoom(roomid)
-       }).then((room)=>{
+           return Promise.all([client.joinRoom(roomid),client2.joinRoom(roomid), client3.joinRoom(roomid)])
+       }).then(()=>{
          //  console.log("JOINED room")
            return client.sendCommand('Test message')
        }).then((message)=>{
@@ -60,8 +75,10 @@ describe('Post moderation Sequence', function() {
         //   console.log("GOT EVENTS");
            const list: Array<EventResult> =  events || [];
            eventlength = list.length;
-           return Promise.all(list.map(function(event) {
-               return client.report(event, 'abuse').then()
+           return Promise.all(list.map(async function(event) {
+               await client.report(event, ReportType.abuse);
+               await client2.report(event, ReportType.abuse);
+               await client3.report(event, ReportType.abuse);
            }))
        }).then(events=> {
            return delay(1000);
@@ -69,7 +86,7 @@ describe('Post moderation Sequence', function() {
           // console.log("REPORTED all events");
            return mod.getModerationQueue()
        }).then(events=> {
-           expect(events.length).to.be.equal(eventlength)
+           expect(events.length).to.be.greaterThan(0);
        }).then(()=>{
             rm.deleteRoom(roomid);
             done();
