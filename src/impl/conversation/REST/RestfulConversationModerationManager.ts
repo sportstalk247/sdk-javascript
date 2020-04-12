@@ -10,6 +10,7 @@ export class RestfulConversationModerationManager implements IConversationModera
     _config: ClientConfig;
     _apiHeaders: ApiHeaders;
     _jsonHeaders: ApiHeaders;
+    _apiExt:string = '/comment/moderation/queues/comments';
 
     public setConfig = (config: ClientConfig) => {
         this._config = config;
@@ -20,7 +21,7 @@ export class RestfulConversationModerationManager implements IConversationModera
     public getModerationQueue = (): Promise<ConversationDeletionResponse> => {
         const config: AxiosRequestConfig = {
             method: GET,
-            url: buildAPI(this._config, `/comment/moderation/queues/comments`),
+            url: buildAPI(this._config, this._apiExt),
             headers: this._jsonHeaders,
         }
         return axios(config).then(result=>{
@@ -31,7 +32,7 @@ export class RestfulConversationModerationManager implements IConversationModera
     rejectComment = (comment: Comment): Promise<ApiResult<null>> => {
         return axios({
             method: 'POST',
-            url: buildAPI(this._config, `/comment/moderation/queues/comments/${comment.id}/applydecision`),
+            url: buildAPI(this._config, `${this._apiExt}/${comment.id}/applydecision`),
             headers: this._apiHeaders,
             data: {approve: false}
         }).then(result => {
@@ -44,7 +45,7 @@ export class RestfulConversationModerationManager implements IConversationModera
     approveComment = (comment: Comment): Promise<ApiResult<null>> => {
         return axios({
             method: POST,
-            url: buildAPI(this._config, `/chat/moderation/queues/comments/${comment.id}/applydecision`),
+            url: buildAPI(this._config, `${this._apiExt}/${comment.id}/applydecision`),
             headers: this._apiHeaders,
             data: {approve: true}
         }).then(result => result.data)
