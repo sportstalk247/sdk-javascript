@@ -108,6 +108,21 @@ describe('Comment Operations', function() {
        })
    });
 
+    describe("User updates comment", function() {
+        it("Let's User2 flag User1's comment", async ()=> {
+            const comment = await client.makeComment("This is user1 comment to update");
+            const newComment = Object.assign({}, comment, {body: "UPDATED"});
+            const updated = await client.updateComment(newComment);
+            expect(updated.body).to.be.equal("UPDATED");
+            expect(updated.body === comment.body).to.be.false;
+            // await client.reportComment(commentary.comments[0], ReportType.abuse)
+        })
+        it('Shows that comment is flagged', async () => {
+            const queue = await ModerationClient.getModerationQueue();
+            expect(queue.length).to.be.greaterThan(0);
+        })
+    });
+
    describe("Comment Deletion", function(){
        it("Lets a user delete their comment", async ()=>{
            const comment = await client.makeComment("Delete me");

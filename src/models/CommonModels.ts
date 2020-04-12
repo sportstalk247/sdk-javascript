@@ -33,7 +33,7 @@ export enum Kind {
     conversation = "comment.conversation",
     deletedconversation = "delete.conversation",
     comment = "comment.comment",
-    deletedcomment ="deleted.comment",
+    deletedcomment ="delete.comment",
     deletedroom = "deleted.room"
 }
 
