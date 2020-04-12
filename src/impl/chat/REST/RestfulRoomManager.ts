@@ -134,13 +134,13 @@ export class RestfulRoomManager implements IRoomManager {
         // @ts-ignore
         const roomId = room.id || room;
         // @ts-ignore
-        const userId = user.id || user;
+        const userId = user.userid || user;
         const config:AxiosRequestConfig = {
             method: POST,
             url: buildAPI(this._config,`${this._apiExt}/${roomId}/exit`),
             headers: this._jsonHeaders,
             data: {
-                userId: userId
+                userid: userId
             }
         };
         return axios(config).then(response => {
