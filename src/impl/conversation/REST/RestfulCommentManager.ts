@@ -101,7 +101,7 @@ export class RestfulCommentManager implements ICommentManager {
     private _makeComment = (comment: Comment): Promise<Comment> => {
         const config:AxiosRequestConfig = {
             method: POST,
-            url: buildAPI(this._config, `${this._apiExt}/comments`),
+            url: buildAPI(this._config, `${this._apiExt}/${this._conversationId}/comments`),
             headers: this._jsonHeaders,
             data: comment
         }

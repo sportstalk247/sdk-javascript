@@ -2,6 +2,7 @@ import {ConversationClient} from '../../../src/impl/ConversationClient';
 import {Kind, ModerationType, ReportType} from '../../../src/models/CommonModels';
 import * as chai from 'chai';
 import * as dotenv from 'dotenv';
+import {RestfulConversationModerationManager} from "../../../src/impl/conversation/REST/RestfulConversationModerationManager";
 
 dotenv.config();
 
@@ -10,24 +11,26 @@ let mod;
 const { expect } = chai;
 
 describe('Conversation Moderation', function() {
-    const client = ConversationClient.create({
+    const config = {
         apiKey:process.env.TEST_KEY,
         appId: process.env.TEST_APP_ID,
         endpoint: process.env.TEST_ENDPOINT,
+
+    };
+    const client = ConversationClient.create(Object.assign(config, {
         user: {
             userid: 'testuser1',
             handle: 'handle1'
         }
-    });
-    const client2 = ConversationClient.create({
-        apiKey:process.env.TEST_KEY,
-        appId: process.env.TEST_APP_ID,
-        endpoint: process.env.TEST_ENDPOINT,
+    }));
+    const client2 = ConversationClient.create(Object.assign(config, {
         user: {
             userid: 'testuser2',
             handle: 'handle2'
         }
-    });
+    }));
+
+    const ModerationClient = new RestfulConversationModerationManager(config)
 
     const conversation = {
         "conversationid": "TEST_ITEM",
@@ -65,7 +68,9 @@ describe('Conversation Moderation', function() {
                     expect(resp.body).to.be.equal("This is my comment");
                     done();
                 })
-                .catch(done)
+                .catch(e=>{
+                    done(e);
+                })
         })
     })
 
@@ -80,8 +85,9 @@ describe('Conversation Moderation', function() {
                }).catch(done);
 
        })
-       it('Shows that comment is flagged', function(done){
-
+       it('Shows that comment is flagged', async () => {
+            const queue = await ModerationClient.getModerationQueue();
+            expect(queue.length).to.be.greaterThan(0);
        })
    });
    describe('Delete Conversation', function () {

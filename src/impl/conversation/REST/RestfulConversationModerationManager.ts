@@ -11,6 +11,12 @@ export class RestfulConversationModerationManager implements IConversationModera
     _apiHeaders: ApiHeaders;
     _jsonHeaders: ApiHeaders;
     _apiExt:string = 'comment/moderation/queues/comments';
+    constructor(config?:ClientConfig) {
+       if(config) {
+           this.setConfig(config);
+       }
+
+    }
 
     public setConfig = (config: ClientConfig) => {
         this._config = config;
@@ -25,7 +31,9 @@ export class RestfulConversationModerationManager implements IConversationModera
             headers: this._jsonHeaders,
         }
         return axios(config).then(result=>{
-            return result.data;
+            return result.data.data.comments;
+        }).catch(e=>{
+            throw e;
         });
     }
 
