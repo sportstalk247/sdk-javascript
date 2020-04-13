@@ -66,7 +66,9 @@ describe('BASIC Conversation Sequence', function() {
                     expect(resp.body).to.be.equal("This is my comment");
                     done();
                 })
-                .catch(done)
+                .catch(e=>{
+                    done(e);
+                })
         })
     })
 

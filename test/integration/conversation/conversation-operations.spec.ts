@@ -10,9 +10,9 @@ dotenv.config();
 
 const { expect } = chai;
 
-describe('Comment Operations', function() {
+describe('Conversation Operations', function() {
     const config = {
-        apiKey:process.env.TEST_KEY,
+        apiToken:process.env.TEST_KEY,
         appId: process.env.TEST_APP_ID,
         endpoint: process.env.TEST_ENDPOINT,
     };
