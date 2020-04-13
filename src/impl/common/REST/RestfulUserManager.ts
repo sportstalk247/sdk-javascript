@@ -16,7 +16,7 @@ export class RestfulUserManager implements IUserManager {
 
     setConfig = (config: SportsTalkConfig) => {
         this._config = config;
-        this._jsonHeaders = getJSONHeaders(this._config.apiKey);
+        this._jsonHeaders = getJSONHeaders(this._config.apiToken);
     }
 
     /**

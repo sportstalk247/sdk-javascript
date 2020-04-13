@@ -12,7 +12,7 @@ const { expect } = chai;
 
 describe('BASIC Conversation Sequence', function() {
     const client = ConversationClient.create({
-        apiKey:process.env.TEST_KEY,
+        apiToken:process.env.TEST_KEY,
         appId: process.env.TEST_APP_ID,
         endpoint: process.env.TEST_ENDPOINT,
         user: {
@@ -21,7 +21,7 @@ describe('BASIC Conversation Sequence', function() {
         }
     });
     const client2 = ConversationClient.create({
-        apiKey:process.env.TEST_KEY,
+        apiToken:process.env.TEST_KEY,
         appId: process.env.TEST_APP_ID,
         endpoint: process.env.TEST_ENDPOINT,
         user: {

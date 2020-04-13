@@ -14,7 +14,7 @@ let client3;
 let mod;
 const { expect } = chai;
 // @ts-ignore
-const config: SportsTalkConfig = {apiKey:process.env.TEST_KEY, appId: process.env.TEST_APP_ID, endpoint: process.env.TEST_ENDPOINT};
+const config: SportsTalkConfig = {apiToken:process.env.TEST_KEY, appId: process.env.TEST_APP_ID, endpoint: process.env.TEST_ENDPOINT};
 const delay = function(timer) {
     return new Promise(function(accept, reject){
         const timeout = setTimeout(accept, timer)

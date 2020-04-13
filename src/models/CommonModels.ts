@@ -5,7 +5,7 @@ export enum ModerationType {
 
 export interface ClientConfig {
     appId?: string,
-    apiKey?: string,
+    apiToken?: string,
     endpoint?: string,
 }
 

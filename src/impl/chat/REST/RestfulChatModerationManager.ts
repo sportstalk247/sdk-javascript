@@ -16,7 +16,7 @@ export class RestfulChatModerationManager implements IChatModerationManager {
 
     public setConfig(config: SportsTalkConfig) {
         this._config = Object.assign(DEFAULT_TALK_CONFIG, config);
-        this._apiHeaders = getUrlEncodedHeaders(this._config.apiKey);
+        this._apiHeaders = getUrlEncodedHeaders(this._config.apiToken);
     }
 
     getModerationQueue = (): Promise<Array<EventResult>> => {

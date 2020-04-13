@@ -17,7 +17,7 @@ export class RestfulWebhookManager implements IWebhookManager {
 
     public setConfig(config: SportsTalkConfig) {
         this._config = Object.assign(DEFAULT_TALK_CONFIG, config);
-        this._apiHeaders = getJSONHeaders(this._config.apiKey);
+        this._apiHeaders = getJSONHeaders(this._config.apiToken);
     }
 
     listWebhooks = (): Promise<WebHook[]> => {

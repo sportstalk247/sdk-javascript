@@ -11,7 +11,7 @@ const { expect } = chai;
 describe('GOAL Chat Sequence', function() {
     // @ts-ignore
     const client = ChatClient.create({
-        apiKey:process.env.TEST_KEY,
+        apiToken:process.env.TEST_KEY,
         endpoint: process.env.TEST_ENDPOINT,
         appId: process.env.TEST_APP_ID,
         user: {
@@ -23,7 +23,7 @@ describe('GOAL Chat Sequence', function() {
     client.setDefaultGoalImage(image);
     // @ts-ignore
     const client2 = ChatClient.create({
-        apiKey:process.env.TEST_KEY,
+        apiToken:process.env.TEST_KEY,
         endpoint: process.env.TEST_ENDPOINT,
         appId: process.env.TEST_APP_ID,
         user: {
@@ -33,7 +33,7 @@ describe('GOAL Chat Sequence', function() {
     });
     // @ts-ignore
     const rm = new RestfulRoomManager({
-        apiKey:process.env.TEST_KEY,
+        apiToken:process.env.TEST_KEY,
         endpoint: process.env.TEST_ENDPOINT,
         appId: process.env.TEST_APP_ID,
     });

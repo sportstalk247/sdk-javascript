@@ -6,7 +6,7 @@ dotenv.config();
 
 const { expect } = chai;
 // @ts-ignore
-const config: SportsTalkConfig = {apiKey:process.env.TEST_KEY, appId: process.env.TEST_APP_ID, endpoint: process.env.TEST_ENDPOINT};
+const config: SportsTalkConfig = {apiToken:process.env.TEST_KEY, appId: process.env.TEST_APP_ID, endpoint: process.env.TEST_ENDPOINT};
 let roomlist;
 describe("RoomManager", function(){
     const RM = new RestfulRoomManager(  config);

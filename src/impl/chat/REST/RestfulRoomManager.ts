@@ -20,8 +20,8 @@ export class RestfulRoomManager implements IRoomManager {
     setConfig = (config: SportsTalkConfig) => {
         this._config = config;
         this._knownRooms = []
-        this._apiHeaders = getUrlEncodedHeaders(this._config.apiKey);
-        this._jsonHeaders = getJSONHeaders(this._config.apiKey);
+        this._apiHeaders = getUrlEncodedHeaders(this._config.apiToken);
+        this._jsonHeaders = getJSONHeaders(this._config.apiToken);
     }
 
     /**

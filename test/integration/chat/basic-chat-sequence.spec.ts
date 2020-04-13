@@ -9,7 +9,7 @@ let client;
 let mod;
 const { expect } = chai;
 // @ts-ignore
-const config: SportsTalkConfig = {apiKey:process.env.TEST_KEY, appId: process.env.TEST_APP_ID || "", endpoint: process.env.TEST_ENDPOINT};
+const config: SportsTalkConfig = {apiToken:process.env.TEST_KEY, appId: process.env.TEST_APP_ID || "", endpoint: process.env.TEST_ENDPOINT};
 describe('BASIC Chat Sequence', function() {
     const user1config: SportsTalkConfig = {...config,user: {
             userid: 'testuser1',

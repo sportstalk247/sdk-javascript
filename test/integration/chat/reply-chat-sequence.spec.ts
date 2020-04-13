@@ -9,7 +9,7 @@ let client;
 let mod;
 const { expect } = chai;
 // @ts-ignore
-const config: SportsTalkConfig = {apiKey:process.env.TEST_KEY, appId: process.env.TEST_APP_ID, endpoint: process.env.TEST_ENDPOINT};
+const config: SportsTalkConfig = {apiToken:process.env.TEST_KEY, appId: process.env.TEST_APP_ID, endpoint: process.env.TEST_ENDPOINT};
 
 describe('REPLY Chat Sequence', function() {
     const client = ChatClient.create({

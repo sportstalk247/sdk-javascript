@@ -20,8 +20,8 @@ export class RestfulConversationManager implements IConversationManager {
 
     public setConfig = (config: ClientConfig) => {
         this._config = config;
-        this._apiHeaders = getUrlEncodedHeaders(this._config.apiKey);
-        this._jsonHeaders = getJSONHeaders(this._config.apiKey);
+        this._apiHeaders = getUrlEncodedHeaders(this._config.apiToken);
+        this._jsonHeaders = getJSONHeaders(this._config.apiToken);
     }
 
     public createConversation = (settings: Conversation): Promise<ConversationResponse> => {

@@ -1,4 +1,4 @@
-import {ApiHeaders, Reaction, SportsTalkConfig, User, ReportType} from "../../../models/CommonModels";
+import {ApiHeaders, Reaction, SportsTalkConfig, User, ReportType, ClientConfig} from "../../../models/CommonModels";
 import {
     Comment, CommentListResponse, CommentDeletionResponse,
     CommentRequest,
@@ -16,7 +16,6 @@ import {
     MUST_SET_USER,
     MUST_SPECIFY_CONVERSATION,
     NO_CONVERSATION_SET,
-    USER_NEEDS_HANDLE,
     USER_NEEDS_ID
 } from "../../../constants/messages";
 
@@ -29,6 +28,15 @@ export class RestfulCommentManager implements ICommentManager {
     private _jsonHeaders: ApiHeaders;
     private _conversationId: string;
     private _apiExt:string = 'comment/conversations';
+
+    constructor(conversation?: Conversation, config?: ClientConfig) {
+        if(conversation) {
+            this.setConversation(conversation);
+        }
+        if(config) {
+            this.setConfig(config);
+        }
+    }
 
     private static DEFAULT_COMMENT_REQUEST: CommentRequest = {
         includechilden: false,
@@ -58,23 +66,14 @@ export class RestfulCommentManager implements ICommentManager {
         }
     }
 
-    constructor(conversation?: Conversation, config?: SportsTalkConfig) {
-        if(conversation) {
-            this.setConversation(conversation);
-        }
-        if(config) {
-            this.setConfig(config);
-        }
-    }
-
     public getConversation = (): Conversation | null => {
         return this._conversation;
     }
 
     public setConfig = (config: SportsTalkConfig, conversation?: Conversation): SportsTalkConfig => {
         this._config = config;
-        this._apiHeaders = getUrlEncodedHeaders(this._config.apiKey)
-        this._jsonHeaders = getJSONHeaders(this._config.apiKey);
+        this._apiHeaders = getUrlEncodedHeaders(this._config.apiToken)
+        this._jsonHeaders = getJSONHeaders(this._config.apiToken);
         if(conversation) {
             this.setConversation(conversation);
         }

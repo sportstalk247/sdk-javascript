@@ -8,7 +8,7 @@ const { expect } = chai;
 let posthook:WebHook;
 let prehook:WebHook;
 // @ts-ignore
-const config: SportsTalkConfig = {apiKey:process.env.TEST_KEY, appId: process.env.TEST_APP_ID, endpoint: process.env.TEST_ENDPOINT};
+const config: SportsTalkConfig = {apiToken:process.env.TEST_KEY, appId: process.env.TEST_APP_ID, endpoint: process.env.TEST_ENDPOINT};
 describe("Webhook Manager", function(){
     const HookManager = new RestfulWebhookManager(  config);
 

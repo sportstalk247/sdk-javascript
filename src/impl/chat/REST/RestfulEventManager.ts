@@ -64,8 +64,8 @@ export class RestfulEventManager implements IEventManager{
     setConfig = (config:SportsTalkConfig) => {
         this._config = Object.assign(DEFAULT_TALK_CONFIG, config);
         this._user = Object.assign(this._user, this._config.user);
-        this._apiHeaders = getUrlEncodedHeaders(this._config.apiKey);
-        this._jsonHeaders = getJSONHeaders(this._config.apiKey);
+        this._apiHeaders = getUrlEncodedHeaders(this._config.apiToken);
+        this._jsonHeaders = getJSONHeaders(this._config.apiToken);
     }
 
     getCurrentRoom = ():Room | null => {

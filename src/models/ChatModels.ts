@@ -19,7 +19,6 @@ export enum EventType {
     reply = "reply"
 }
 
-
 export interface RoomUserResult {
     user: UserResult,
     room: RoomResult
