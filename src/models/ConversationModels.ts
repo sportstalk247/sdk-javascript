@@ -98,6 +98,7 @@ export interface Comment extends User {
     votecount?: number,
     votescore?: number,
     moderation?: string,
+    votes?: Array<Vote>,
     reports: Array<ReportReason>
 }
 

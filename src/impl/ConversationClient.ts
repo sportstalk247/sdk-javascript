@@ -106,7 +106,7 @@ export class ConversationClient implements IConversationClient {
         return this._commentManager.react(comment, this._user, reaction);
     }
 
-    public voteOnComment = (comment:Comment, vote:Vote) => {
+    public voteOnComment = (comment:Comment, vote:Vote): Promise<Comment> => {
         return this._commentManager.vote(comment, this._user, vote);
     }
 

@@ -238,7 +238,7 @@ export class RestfulCommentManager implements ICommentManager {
                 userid: user.userid
             }
         }).then(result=>{
-            return result.data;
+            return result.data.data;
         });
     }
 

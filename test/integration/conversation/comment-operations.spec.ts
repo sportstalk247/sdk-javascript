@@ -90,6 +90,9 @@ describe('Comment Operations', function() {
             const firstComment = commentary.comments[0];
             let comment = await client.getComment(firstComment);
             let voted = await client.voteOnComment(firstComment, Vote.up);
+            expect(voted.votes).to.have.lengthOf(1);
+            expect(voted.votescore).to.be.equal(1);
+            expect(voted.votecount).to.be.equal(1);
             return;
         })
     })
