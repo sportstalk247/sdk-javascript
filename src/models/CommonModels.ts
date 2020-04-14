@@ -27,7 +27,7 @@ export interface User {
 export enum Kind {
     chat = "chat.event",
     room = "chat.room",
-    user = "chat.user",
+    user = "app.user",
     api = "api.result",
     webhook = "chat.webhook",
     conversation = "comment.conversation",
@@ -35,6 +35,7 @@ export enum Kind {
     comment = "comment.comment",
     deletedcomment ="delete.comment",
     deletedroom = "deleted.room",
+    deleteduser = "deleted.appuser",
     conversationlist = "list.commentconversations",
 }
 

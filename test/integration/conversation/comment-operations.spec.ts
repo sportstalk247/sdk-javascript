@@ -234,7 +234,7 @@ describe('Comment Operations', function() {
            }
        })
        it("throws error if a reply is missing an id", async ()=>{
-           const commentManager = new RestfulCommentManager({property: 'test', moderation: ModerationType.post, conversationid: '12342'}, config);
+           const commentManager = new RestfulCommentManager( config,{property: 'test', moderation: ModerationType.post, conversationid: '12342'});
            try {
                // @ts-ignore
                const comment = await commentManager.create("some comment body", {userid: "fake", handle:"fake"}, {});
@@ -245,7 +245,7 @@ describe('Comment Operations', function() {
            }
        })
        it("throws error if comment has no user", async ()=>{
-           const commentManager = new RestfulCommentManager({property: 'test', moderation: ModerationType.post, conversationid: '12342'}, config);
+           const commentManager = new RestfulCommentManager(config,{property: 'test', moderation: ModerationType.post, conversationid: '12342'});
            try {
                // @ts-ignore
                const comment = await commentManager.create("some comment body", {userid: "", handle:"fake"}, {});
@@ -259,16 +259,20 @@ describe('Comment Operations', function() {
     describe("Configuration", function(){
         it("Will accept a config", () => {
             const commentManager = new RestfulCommentManager();
-            commentManager.setConfig({
-                apiToken:"",
-            })
-
             let conversation = commentManager.getConversation();
             expect(conversation).to.be.undefined
-            commentManager.setConversation({conversationid: "TEST", property: "testing", moderation: ModerationType.post})
+            const setconv = commentManager.setConversation({conversationid: "TEST", property: "testing", moderation: ModerationType.post});
+            expect(setconv.conversationid).to.be.equal("TEST");
             conversation = commentManager.getConversation();
             // @ts-ignore
             expect(conversation.conversationid).to.be.equal("TEST");
+        })
+        it("Can set a conversation in constructor",()=>{
+            const conversation = {conversationid: "TEST", property: "testing", moderation: ModerationType.post};
+            const commentManager = new RestfulCommentManager({apiToken:"",}, conversation);
+            const setconversation = commentManager.getConversation();
+            // @ts-ignore
+            expect(setconversation.conversationid).to.be.equal("TEST");
         })
     })
 });

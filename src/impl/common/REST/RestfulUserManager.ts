@@ -39,9 +39,7 @@ export class RestfulUserManager implements IUserManager {
                 profileurl: user.profileurl
             }
         };
-        return axios(config).then(response=>response.data.data).catch(e=>{
-            throw e;
-        });
+        return axios(config).then(response=>response.data.data);
     }
 
     /**
@@ -58,9 +56,7 @@ export class RestfulUserManager implements IUserManager {
             url: url,
             headers: this._jsonHeaders,
             data: {banned: ""+isBanned}
-        }).then(response=>response.data).catch(e=>{
-            throw e;
-        })
+        }).then(response=>response.data);
     }
 
     searchUsers = (search:string, type: SearchType): Promise<Array<UserResult>> => {
@@ -86,10 +82,7 @@ export class RestfulUserManager implements IUserManager {
         return axios(config)
             .then(response=>{
                 return response.data.data.users;
-            })
-            .catch(e=>{
-                throw e;
-            })
+            });
     }
 
     deleteUser = (user:User | string):Promise<UserResult> => {
@@ -100,8 +93,6 @@ export class RestfulUserManager implements IUserManager {
             url: buildAPI(this._config,`${this._apiExt}/${id}`),
             headers: this._jsonHeaders,
         };
-        return axios(config).then(response=>response.data.data).catch(e=>{
-            throw e;
-        });
+        return axios(config).then(response=>response.data.data.user);
     }
 }

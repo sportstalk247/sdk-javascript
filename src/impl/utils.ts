@@ -17,7 +17,6 @@ export function formify(data) {
 }
 
 export function buildAPI(config: SportsTalkConfig, ext: string, request?: CommentRequest): string {
-
     let endpoint = `${config.endpoint}/${config.appId}/${ext}`;
     if(request && Object.keys(request).length > 0) {
         endpoint = `${endpoint}?${formify(request)}`;

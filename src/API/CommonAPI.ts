@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 import {ApiResult, ClientConfig, SearchType, SportsTalkConfig, User, UserResult, WebHook} from "../models/CommonModels";
 
 export interface ISportsTalkConfigurable {

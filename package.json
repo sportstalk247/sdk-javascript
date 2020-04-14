@@ -46,15 +46,15 @@
   ],
   "nyc": {
     "include": [
-      "src/**/*.ts",
+      "src/impl/**/*.ts",
       "src/**/*.tsx"
+    ],
+    "exclude": [
+      "**/*.d.ts"
     ],
     "extension": [
       ".ts",
       ".tsx"
-    ],
-    "exclude": [
-      "**/*.d.ts"
     ],
     "sourceMap": true,
     "instrument": true,

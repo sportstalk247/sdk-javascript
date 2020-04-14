@@ -1,3 +1,5 @@
+/* istanbul ignore file */
+
 import {IConfigurable, ISportsTalkConfigurable, IUserConfigurable} from "./CommonAPI";
 import {
     Comment,

@@ -37,7 +37,7 @@ export class RestfulCommentManager implements ICommentManager {
     private _conversationId: string;
     private _apiExt:string = 'comment/conversations';
 
-    constructor(conversation?: Conversation, config?: ClientConfig) {
+    constructor(config?: ClientConfig, conversation?: Conversation) {
         if(conversation) {
             this.setConversation(conversation);
         }
