@@ -1,7 +1,7 @@
 import * as chai from 'chai';
 import {RestfulWebhookManager} from "../../../src/impl/common/REST/RestfulWebhookManager";
 import * as dotenv from 'dotenv';
-import {SportsTalkConfig, WebHook, WebhookEvent, WebhookType} from "../../../src/models/CommonModels";
+import {Kind, SportsTalkConfig, WebHook, WebhookEvent, WebhookType} from "../../../src/models/CommonModels";
 dotenv.config();
 
 const { expect } = chai;
@@ -94,11 +94,19 @@ describe("Webhook Manager", function(){
     describe("Delete", function(){
         it('Can delete hooks', async()=>{
             try {
+                let hook;
                 if (prehook) {
-                    await HookManager.deleteWebhook(prehook);
+                    hook = await HookManager.deleteWebhook(prehook);
+                    expect(hook.kind).to.be.equal(Kind.webhook);
+                    const listsofhooks = await HookManager.listWebhooks();
+                    const found = listsofhooks.find(webhook => webhook.id === hook.id);
+                    expect(!found).to.be.true;
                 }
                 if (posthook) {
-                    await HookManager.deleteWebhook(posthook)
+                    hook = await HookManager.deleteWebhook(posthook)
+                    const listsofhooks = await HookManager.listWebhooks();
+                    const found = listsofhooks.find(webhook => webhook.id === hook.id);
+                    expect(!found).to.be.true;
                 }
             }catch(e) {
                 throw e;

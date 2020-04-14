@@ -51,7 +51,7 @@ export class RestfulWebhookManager implements IWebhookManager {
             headers: this._apiHeaders,
             data: hook
         }).then(response=>{
-            return response.data.data
+            return <WebHook>response.data.data
         })
     }
 
