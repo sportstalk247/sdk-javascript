@@ -46,18 +46,7 @@ export class RestfulConversationManager implements IConversationManager {
             url: buildAPI(this._config, `${this._apiExt}/${id}`),
             headers: this._jsonHeaders,
         }).then(result=>{
-            return result.data;
-        });
-    }
-
-    public getConversationsByProperty = (property:string): Promise<Array<Conversation>> => {
-        // @ts-ignore
-        return axios({
-            method: GET,
-            url: buildAPI(this._config, `${this._apiExt}/?propertyid=${property}`),
-            headers: this._jsonHeaders,
-        }).then(result=>{
-            return result;
+            return result.data.data;
         });
     }
 

@@ -33,7 +33,6 @@ export interface ICommentManager extends ISportsTalkConfigurable {
 export interface IConversationManager extends IConfigurable {
     createConversation(settings: Conversation): Promise<ConversationResponse>;
     getConversation(conversation: Conversation | string): Promise<ConversationResponse>;
-    getConversationsByProperty(property:string): Promise<Array<Conversation>>;
     listConversations(filter?: ConversationRequest):Promise<ConversationListResponse>
     deleteConversation(conversation: Conversation | string): Promise<ConversationDeletionResponse>
 }

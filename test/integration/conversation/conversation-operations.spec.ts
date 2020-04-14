@@ -3,6 +3,7 @@ import {Kind, ModerationType, Reaction, ReportType} from '../../../src/models/Co
 import * as chai from 'chai';
 import * as dotenv from 'dotenv';
 import {RestfulConversationModerationManager} from "../../../src/impl/conversation/REST/RestfulConversationModerationManager";
+import {Conversation} from "../../../src/models/ConversationModels";
 
 
 dotenv.config();
@@ -69,13 +70,23 @@ describe('Conversation Operations', function() {
     });
 
     describe('list conversations', function() {
+        let conversation:Conversation;
         it("Can list all conversations", async () => {
             const response = await client.listConversations();
             expect(response.conversations.length).to.be.greaterThan(1);
+            conversation = response.conversations[0];
         });
         it("Can filter conversations", async()=>{
             const response = await client.listConversations({propertyid: "UNIQUE_PROPERTY_KEY"});
             expect(response.conversations.length).to.be.equal(1);
+        })
+        it("Can get conversation by conversation", async()=>{
+            const requestedConversation = await client.getConversation(conversation);
+            expect(requestedConversation.conversationid).to.be.equal(conversation.conversationid);
+        })
+        it("Can get conversation by conversationid string", async()=>{
+            const requestedConversation = await client.getConversation(conversation.conversationid);
+            expect(requestedConversation.conversationid).to.be.equal(conversation.conversationid);
         })
     })
 
