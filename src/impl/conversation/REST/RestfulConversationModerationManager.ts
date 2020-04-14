@@ -2,7 +2,7 @@ import {ApiHeaders, ApiResult, ClientConfig} from "../../../models/CommonModels"
 import axios, {AxiosRequestConfig} from "axios";
 import {Comment} from "../../../models/ConversationModels";
 import {GET, POST} from "../../../constants/api";
-import {getUrlEncodedHeaders, getJSONHeaders, buildAPI} from "../../utils";
+import {getUrlEncodedHeaders, getJSONHeaders, buildAPI, formify} from "../../utils";
 import {IConversationModerationManager} from "../../../API/ConversationAPI";
 
 export class RestfulConversationModerationManager implements IConversationModerationManager {
@@ -32,30 +32,30 @@ export class RestfulConversationModerationManager implements IConversationModera
         }
         return axios(config).then(result=>{
             return result.data.data.comments;
-        }).catch(e=>{
-            throw e;
         });
     }
 
-    rejectComment = (comment: Comment): Promise<ApiResult<null>> => {
-        return axios({
+    rejectComment = (comment: Comment): Promise<Comment> => {
+        const config:AxiosRequestConfig = {
             method: 'POST',
             url: buildAPI(this._config, `${this._apiExt}/${comment.id}/applydecision`),
             headers: this._apiHeaders,
-            data: {approve: false}
-        }).then(result => {
-            return result.data;
-        }).catch(result => {
-            return {}
+            data: formify({approve: false})
+        }
+        return axios(config).then(result => {
+            return result.data.data;
         })
     }
 
-    approveComment = (comment: Comment): Promise<ApiResult<null>> => {
-        return axios({
+    approveComment = (comment: Comment): Promise<Comment> => {
+        const config: AxiosRequestConfig = {
             method: POST,
             url: buildAPI(this._config, `${this._apiExt}/${comment.id}/applydecision`),
             headers: this._apiHeaders,
-            data: {approve: true}
-        }).then(result => result.data)
+            data: formify({approve: true})
+        };
+        return axios(config).then(result => {
+            return result.data.data
+        })
     }
 }

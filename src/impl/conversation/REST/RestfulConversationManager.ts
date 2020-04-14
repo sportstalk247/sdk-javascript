@@ -33,8 +33,6 @@ export class RestfulConversationManager implements IConversationManager {
         };
         return axios(config).then(result=>{
            return result.data.data;
-        }).catch(e=>{
-            throw e;
         });
     }
 

@@ -43,7 +43,7 @@ export enum CommentType {
 
 export interface CommentDeletionResponse {
     kind: Kind.deletedcomment,
-    conversationid: string,
+    conversationid?: string,
     commentid: string,
     deletedComments: number
 }
@@ -84,8 +84,15 @@ export interface ConversationDeletionResponse extends HasConversationID {
     deletedComments: number
 }
 
+export enum CommentModeration {
+    flagged = "flagged",
+    rejected = "rejected",
+    approved = "approved"
+}
+
 export interface Comment extends User {
-    id?: string;
+    id: string;
+    conversationid?: string
     body: string,
     appid?: string,
     replyto?: string
@@ -94,19 +101,20 @@ export interface Comment extends User {
     active?: boolean,
     added?: number,
     modified?: number,
-    commenttype: CommentType,
+    deleted?: boolean,
+    commenttype?: CommentType,
     votecount?: number,
     votescore?: number,
-    moderation?: string,
+    moderation?: CommentModeration,
     votes?: Array<Vote>,
-    reports: Array<ReportReason>
+    reports?: Array<ReportReason>
 }
 
 export interface ShortComment {
     body: string;
 }
 
-export interface CommentResponse extends HasConversationID, Comment {
+export interface CommentResponse extends Comment {
     kind: Kind.comment
 }
 

@@ -30,7 +30,7 @@ describe('Conversation Operations', function() {
         }
     }));
 
-    const ModerationClient = new RestfulConversationModerationManager(config)
+    let ModerationClient: RestfulConversationModerationManager;
 
     const conversation = {
         "conversationid": "TEST_ITEM",
@@ -58,6 +58,11 @@ describe('Conversation Operations', function() {
         "udf1" : "/sample/userdefined1",
         "udf2" : "/sample/userdefined2/äöüÄÖÜß"
     }
+    describe("Moderation Manager", function() {
+        it("Can configure with constructor", ()=>{
+
+        })
+    })
 
     describe('Setup Conversation', function () {
         it('User Creates Conversation', async function () {
@@ -90,10 +95,10 @@ describe('Conversation Operations', function() {
         })
     })
 
-   describe('Delete Conversation', function () {
-       it('Deletes Conversation', async function () {
-          await client.deleteConversation(	 "TEST_ITEM");
-          await client.deleteConversation("TEST_ITEM_UNIQUE");
-       })
-   });
+    describe('Delete Conversation', function () {
+        it('Deletes Conversation', async function () {
+           await client.deleteConversation(	 "TEST_ITEM");
+           await client.deleteConversation(conversation2);
+        })
+    });
 });

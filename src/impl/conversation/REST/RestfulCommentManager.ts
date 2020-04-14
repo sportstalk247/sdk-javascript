@@ -1,4 +1,12 @@
-import {ApiHeaders, Reaction, SportsTalkConfig, User, ReportType, ClientConfig} from "../../../models/CommonModels";
+import {
+    ApiHeaders,
+    Reaction,
+    SportsTalkConfig,
+    User,
+    ReportType,
+    ClientConfig,
+    Kind
+} from "../../../models/CommonModels";
 import {
     Comment, CommentListResponse, CommentDeletionResponse,
     CommentRequest,
@@ -38,11 +46,6 @@ export class RestfulCommentManager implements ICommentManager {
         }
     }
 
-    private static DEFAULT_COMMENT_REQUEST: CommentRequest = {
-        includechilden: false,
-        sort: CommentSortMethod.oldest
-    }
-
     private _requireUser = (user) => {
         if(!user) {
             throw new RequireUserError(MUST_SET_USER);
@@ -53,17 +56,17 @@ export class RestfulCommentManager implements ICommentManager {
     }
     private _requireConversation = (message?:string) => {
         if(!this._conversationId) {
+            /* istanbul ignore next */
             throw new SettingsError(message || NO_CONVERSATION_SET);
         }
     }
 
     private _buildUserComment = (comment: Comment | string, user: User): Comment => {
-        // @ts-ignore
-        if(comment.userid && comment.body) {
-            return <Comment>comment;
-        } else {
-            return <Comment>Object.assign({}, user, {body: comment});
+        let final:any = comment;
+        if(typeof comment === 'string') {
+            final = {body: comment}
         }
+        return <Comment>Object.assign({}, final, user);
     }
 
     public getConversation = (): Conversation | null => {
@@ -83,7 +86,7 @@ export class RestfulCommentManager implements ICommentManager {
     public setConversation = (conversation: Conversation): Conversation => {
         this._conversation = conversation;
         this._conversationId = getUrlConversationId(conversation);
-        return conversation
+        return this._conversation;
     }
 
     public create = (comment: Comment | string, user: User, replyto?: Comment | string): Promise<Comment> => {
@@ -105,15 +108,13 @@ export class RestfulCommentManager implements ICommentManager {
         }
         return axios(config).then(result=>{
             return result.data.data;
-        }).catch(e=>{
-            throw e;
-        })
+        });
     }
 
     private _makeReply = (comment: Comment, replyTo: Comment | string): Promise<Comment> => {
         // @ts-ignore
         const replyId = replyTo.id || replyTo || comment.replyto;
-        if(!replyId) {
+        if(!replyId || !(typeof replyId === 'string')) {
             throw new ValidationError(MISSING_REPLYTO_ID);
         }
         const config: AxiosRequestConfig = {
@@ -152,11 +153,12 @@ export class RestfulCommentManager implements ICommentManager {
     private _finalDelete = (comment: Comment | string, user:User): Promise<CommentDeletionResponse> => {
         this._requireConversation();
         const id = getUrlCommentId(comment);
-        return axios({
+        const config:AxiosRequestConfig = {
             method: DELETE,
             url: buildAPI(this._config, `${this._apiExt}/${this._conversationId}/comments/${id}`),
             headers: this._jsonHeaders,
-        }).then(result => {
+        }
+        return axios(config).then(result => {
             return result.data.data;
         });
     }
@@ -164,17 +166,26 @@ export class RestfulCommentManager implements ICommentManager {
     private _markDeleted = async (comment: Comment | string, user:User): Promise<CommentDeletionResponse> => {
         this._requireUser(user);
         const id = getUrlCommentId(comment);
+        /* istanbul ignore next */
         const config:AxiosRequestConfig = {
             method: PUT,
-            url: buildAPI(this._config, `${this._apiExt}/${this._conversationId}/comments/${id}/?userid=${user.userid}&deleted=true`),
+            url: buildAPI(this._config, `${this._apiExt}/${this._conversationId}/comments/${id}/setdeleted?userid=${user.userid}&deleted=true`),
             headers: this._jsonHeaders,
         }
+
         return axios(config).then(result => {
-            return result.data;
-        }).catch(e=>{
-            throw e;
+            const comment:Comment = result.data.data;
+            // @ts-ignore
+            const response: CommentDeletionResponse = {
+                kind: Kind.deletedcomment,
+                conversationid: comment.conversationid,
+                commentid: comment.id,
+                deletedComments: 1
+            }
+            return response;
         });
     }
+
     public delete = (comment: Comment | string, user: User, final?: boolean): Promise<CommentDeletionResponse> => {
         if(final) {
             return this._finalDelete(comment, user);
@@ -220,9 +231,7 @@ export class RestfulCommentManager implements ICommentManager {
         }
         return axios(config).then(result=>{
             return result.data.data
-        }).catch(e=>{
-            throw e;
-        })
+        });
     }
 
     public vote = (comment: Comment, user:User, vote:Vote): Promise<Comment> => {
@@ -284,11 +293,12 @@ export class RestfulCommentManager implements ICommentManager {
         if(!id) {
            throw new SettingsError(NO_CONVERSATION_SET);
         }
-        return axios({
+        const config: AxiosRequestConfig = {
             method: GET,
             url: buildAPI(this._config, `${this._apiExt}/${id}/comments`, request),
             headers: this._jsonHeaders,
-        }).then(result=>{
+        }
+        return axios(config).then(result => {
             const {conversation, comments, cursor} = result.data.data;
             return {
                 conversation,

@@ -3,20 +3,30 @@ import {Kind, ModerationType, Reaction, ReportType} from '../../../src/models/Co
 import * as chai from 'chai';
 import * as dotenv from 'dotenv';
 import {RestfulConversationModerationManager} from "../../../src/impl/conversation/REST/RestfulConversationModerationManager";
-import {CommentListResponse, CommentResponse, Vote} from "../../../src/models/ConversationModels";
+import {
+    Comment,
+    CommentListResponse,
+    CommentModeration,
+    CommentResponse,
+    Vote
+} from "../../../src/models/ConversationModels";
+import {RestfulCommentManager} from "../../../src/impl/conversation/REST/RestfulCommentManager";
+import {RequireUserError, SettingsError, ValidationError} from "../../../src/impl/errors";
+import {MISSING_REPLYTO_ID, NO_CONVERSATION_SET, USER_NEEDS_ID} from "../../../src/constants/messages";
 
 dotenv.config();
 
 let client;
 let mod;
 const { expect } = chai;
+const config = {
+    apiToken:process.env.TEST_KEY,
+    appId: process.env.TEST_APP_ID,
+    endpoint: process.env.TEST_ENDPOINT,
+};
 
 describe('Comment Operations', function() {
-    const config = {
-        apiToken:process.env.TEST_KEY,
-        appId: process.env.TEST_APP_ID,
-        endpoint: process.env.TEST_ENDPOINT,
-    };
+
     const client = ConversationClient.create(Object.assign(config, {
         user: {
             userid: 'testuser1',
@@ -78,8 +88,15 @@ describe('Comment Operations', function() {
             }
         });
         it("Lets you retrieve specific comments", async ()=>{
-            const firstComment = commentary.comments[0];
+            const firstComment:Comment = commentary.comments[0];
             let comment = await client.getComment(firstComment);
+            if(comment) {
+                expect(comment.id).to.be.equal(firstComment.id)
+            } else {
+                throw new Error("No comment retrieved!");
+            }
+            // @ts-ignore
+            comment = await client.getComment(firstComment.id);
             if(comment) {
                 expect(comment.id).to.be.equal(firstComment.id)
             } else {
@@ -108,21 +125,39 @@ describe('Comment Operations', function() {
        it('Shows that comment is flagged', async () => {
             const queue = await ModerationClient.getModerationQueue();
             expect(queue.length).to.be.greaterThan(0);
+            expect(queue[0].moderation).to.be.equal(CommentModeration.flagged);
        })
    });
 
     describe("User updates comment", function() {
+        let queue: Comment[]
+        let rejectcomment;
+        let acceptcomment;
         it("Let's User2 flag User1's comment", async ()=> {
-            const comment = await client.makeComment("This is user1 comment to update");
-            const newComment = Object.assign({}, comment, {body: "UPDATED"});
+            rejectcomment = await client.makeComment("This is user1 comment to update");
+            const newComment = Object.assign({}, rejectcomment, {body: "UPDATED"});
             const updated = await client.updateComment(newComment);
             expect(updated.body).to.be.equal("UPDATED");
-            expect(updated.body === comment.body).to.be.false;
-            // await client.reportComment(commentary.comments[0], ReportType.abuse)
+            expect(updated.body === rejectcomment.body).to.be.false;
+            await client.reportComment(rejectcomment, ReportType.abuse)
         })
+
         it('Shows that comment is flagged', async () => {
-            const queue = await ModerationClient.getModerationQueue();
+            queue = await ModerationClient.getModerationQueue();
             expect(queue.length).to.be.greaterThan(0);
+            expect(queue[0].active).to.be.false;
+        })
+        it('Lets the moderator reject a comment', async()=>{
+            const moderated = await ModerationClient.rejectComment(queue[0]);
+            expect(moderated.moderation).to.be.equal(CommentModeration.rejected);
+        })
+        it('Can create a comment that gets accepted', async()=>{
+            acceptcomment = await client.makeComment("This is user1 comment to update");
+            await client2.reportComment(acceptcomment, ReportType.abuse);
+            const newqueue = await ModerationClient.getModerationQueue();
+            expect(newqueue.length).to.be.greaterThan(0);
+            const approved = await ModerationClient.approveComment(acceptcomment)
+            expect(approved.moderation).to.be.equal(CommentModeration.approved);
         })
     });
 
@@ -133,6 +168,15 @@ describe('Comment Operations', function() {
            expect(deleted.kind).to.be.equal(Kind.deletedcomment);
            const exists = await client.getComment(comment);
            expect(exists).to.be.null;
+       })
+       it("Lets a user mark their comment for deletion", async ()=>{
+           const comment = await client.makeComment("Delete me v2");
+           const deleted =  await client.deleteComment(comment, false);
+           expect(deleted.kind).to.be.equal(Kind.deletedcomment);
+           // @ts-ignore
+           const exists = await client.getComment(comment);
+           expect(exists).to.be.not.null;
+           expect(exists && exists.deleted).to.be.true;
        })
    });
 
@@ -146,4 +190,85 @@ describe('Comment Operations', function() {
            });
        })
    });
+   describe('Error behavior', function(){
+       it("Throws error if no converation id", async()=>{
+           const commentManager = new RestfulCommentManager();
+           commentManager.setConfig(config);
+           try {
+               // @ts-ignore
+               commentManager.getComments({}, {});
+               throw new Error("Shouldn't happen");
+           } catch (e) {
+               expect(e instanceof SettingsError).to.be.true;
+               expect(e.message).to.be.equal(NO_CONVERSATION_SET)
+           }
+       })
+       it("Throws error on getComment if no conversation set", ()=>{
+           const commentManager = new RestfulCommentManager();
+           try {
+               const comment = commentManager.getComment("someID");
+               throw new Error("should have failed")
+           }catch(e) {
+               expect(e instanceof SettingsError).to.be.true;
+               expect(e.message).to.be.equal(NO_CONVERSATION_SET)
+           }
+       })
+       it("Throws error on getComment if no conversation set", ()=>{
+           const commentManager = new RestfulCommentManager();
+           try {
+               const comment = commentManager.create("some comment body", {userid: "fake", handle:"fake"});
+               throw new Error("should have failed")
+           }catch(e) {
+               expect(e instanceof SettingsError).to.be.true;
+               expect(e.message).to.be.equal(NO_CONVERSATION_SET)
+           }
+       })
+       it("Throws error on getComment if no conversation set", ()=>{
+           const commentManager = new RestfulCommentManager();
+           try {
+               const comment = commentManager.update({userid: "fake", handle:"fake", body: "some body", id:"fakeid"});
+               throw new Error("should have failed")
+           }catch(e) {
+               expect(e instanceof SettingsError).to.be.true;
+               expect(e.message).to.be.equal(NO_CONVERSATION_SET)
+           }
+       })
+       it("throws error if a reply is missing an id", async ()=>{
+           const commentManager = new RestfulCommentManager({property: 'test', moderation: ModerationType.post, conversationid: '12342'}, config);
+           try {
+               // @ts-ignore
+               const comment = await commentManager.create("some comment body", {userid: "fake", handle:"fake"}, {});
+               throw new Error("should have failed")
+           } catch(e) {
+               expect(e instanceof ValidationError).to.be.true;
+               expect(e.message).to.be.equal(MISSING_REPLYTO_ID)
+           }
+       })
+       it("throws error if comment has no user", async ()=>{
+           const commentManager = new RestfulCommentManager({property: 'test', moderation: ModerationType.post, conversationid: '12342'}, config);
+           try {
+               // @ts-ignore
+               const comment = await commentManager.create("some comment body", {userid: "", handle:"fake"}, {});
+               throw new Error("should have failed")
+           } catch(e) {
+               expect(e instanceof RequireUserError).to.be.true;
+               expect(e.message).to.be.equal(USER_NEEDS_ID)
+           }
+       })
+   })
+    describe("Configuration", function(){
+        it("Will accept a config", () => {
+            const commentManager = new RestfulCommentManager();
+            commentManager.setConfig({
+                apiToken:"",
+            })
+
+            let conversation = commentManager.getConversation();
+            expect(conversation).to.be.undefined
+            commentManager.setConversation({conversationid: "TEST", property: "testing", moderation: ModerationType.post})
+            conversation = commentManager.getConversation();
+            // @ts-ignore
+            expect(conversation.conversationid).to.be.equal("TEST");
+        })
+    })
 });
