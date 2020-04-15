@@ -1,11 +1,11 @@
 import axios, {AxiosRequestConfig} from "axios";
-import {DELETE, POST} from "../../../constants/api";
+import {DELETE, POST} from "../../constants/api";
 import {buildAPI, getJSONHeaders, getUrlEncodedHeaders} from "../../utils";
-import {ApiResult, SearchType, SportsTalkConfig, User, UserResult} from "../../../models/CommonModels";
-import {IUserManager} from "../../../API/CommonAPI";
+import {RestApiResult, SearchType, SportsTalkConfig, User, UserResult} from "../../../models/CommonModels";
+import {IUserService} from "../../../API/CommonAPI";
 
 
-export class RestfulUserManager implements IUserManager {
+export class RestfulUserManager implements IUserService {
     private _config: SportsTalkConfig;
     private _jsonHeaders: {};
     private _apiExt = 'user/users';
@@ -47,7 +47,7 @@ export class RestfulUserManager implements IUserManager {
      * @param user
      * @param isBanned
      */
-    setBanStatus = (user: User | string, isBanned: boolean): Promise<ApiResult<UserResult>> => {
+    setBanStatus = (user: User | string, isBanned: boolean): Promise<RestApiResult<UserResult>> => {
         // @ts-ignore
         const userid = user.userid || user;
         const url = buildAPI(this._config,`${this._apiExt}/${userid}/ban`);

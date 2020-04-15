@@ -11,10 +11,10 @@ export interface HasConversationID {
 }
 
 export interface Conversation extends HasConversationID {
-    owneruserid?: string,
     conversationid: string,
     property: string,
     moderation: ModerationType,
+    owneruserid?: string,
     maxreports? : number,
     title?: string,
     maxcommentlen?: number,

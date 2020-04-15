@@ -1,14 +1,8 @@
 /**
  * Models used by API Result Models.
  */
-import {ApiResult, Kind, User, UserResult} from "./CommonModels";
+import {RestApiResult, Kind, User, UserResult, MessageResult} from "./CommonModels";
 
-export {
-    Kind,
-    ApiResult,
-    User,
-    UserResult
-}
 export enum EventType {
     speech = "speech",
     purge = "purge",
@@ -31,15 +25,15 @@ export interface RoomUserResult {
  */
 export interface EventHandlerConfig {
     onChatStart?: Function;
-    onNetworkResponse?(response: ApiResult<any>);
+    onNetworkResponse?(response: RestApiResult<any>);
     onChatEvent?(event: EventResult),
     onGoalEvent?(event: EventResult),
     onAdEvent?(event: EventResult),
     onReply?(event: EventResult),
     onReaction?(event:EventResult),
     onPurgeEvent?(event:EventResult),
-    onAdminCommand?(response: ApiResult<Kind.api>),
-    onHelp?(result:ApiResult<any>),
+    onAdminCommand?(response: RestApiResult<Kind.api>),
+    onHelp?(result: MessageResult<Event | null>),
     onNetworkError?(error: Error)
 }
 
@@ -96,10 +90,11 @@ export interface Room {
 }
 
 export interface RoomResult extends Room {
-    kind: Kind.room,  //"chat.room"
-    ownerid:string,
-    inroom:number,
-    whenmodified:string
+    id: string,
+    kind?: Kind.room,  //"chat.room"
+    ownerid?:string,
+    inroom?:number,
+    whenmodified?:string
 }
 
 export interface EventResult extends Event {

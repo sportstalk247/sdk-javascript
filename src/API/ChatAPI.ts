@@ -12,25 +12,25 @@ import {
 } from "../models/ChatModels";
 
 import {ISportsTalkConfigurable, IUserConfigurable} from "./CommonAPI";
-import {ApiResult, Reaction, ReportReason, ReportType, User, UserResult} from "../models/CommonModels";
+import {MessageResult, Reaction, ReportReason, ReportType, User, UserResult} from "../models/CommonModels";
 
-export interface IEventManager extends ISportsTalkConfigurable, IUserConfigurable  {
+export interface IEventService extends ISportsTalkConfigurable, IUserConfigurable  {
     startTalk(),
     stopTalk(),
-    setCurrentRoom(room: Room | null): Room | null,
+    setCurrentRoom(room: RoomResult | null): Room | null,
     setEventHandlers(eventHandlers: EventHandlerConfig),
-    getCurrentRoom(): Room | null,
+    getCurrentRoom(): RoomResult | null,
     getUpdates(): Promise<EventResult[]>,
-    reportEvent(event: EventResult | string, reason: ReportReason): Promise<ApiResult<null>>,
-    sendCommand(user:User, command: string, options?: CommandOptions):  Promise<ApiResult<null | Event>>
-    sendReply(user: User, message: string, replyto: string | Event, options?: CommandOptions): Promise<ApiResult<null>>
-    sendReaction(user: User,  reaction: Reaction, reactToMessageId: Event | string, options?: CommandOptions): Promise<ApiResult<null>>
-    sendAdvertisement(user: User, options: AdvertisementOptions): Promise<ApiResult<null>>
-    sendGoal(user: User, img: string, message?:string, options?: GoalOptions): Promise<ApiResult<null>>
+    reportEvent(event: EventResult | string, reason: ReportReason): Promise<MessageResult<null>>,
+    sendCommand(user:User, command: string, options?: CommandOptions):  Promise<MessageResult<null | Event>>
+    sendReply(user: User, message: string, replyto: string | Event, options?: CommandOptions): Promise<MessageResult<null>>
+    sendReaction(user: User,  reaction: Reaction, reactToMessageId: Event | string, options?: CommandOptions): Promise<MessageResult<null>>
+    sendAdvertisement(user: User, options: AdvertisementOptions): Promise<MessageResult<null>>
+    sendGoal(user: User, img: string, message?:string, options?: GoalOptions): Promise<MessageResult<null>>
     getEventHandlers(): EventHandlerConfig
 }
 
-export interface IRoomManager extends ISportsTalkConfigurable {
+export interface IRoomService extends ISportsTalkConfigurable {
     listRooms(): Promise<Array<Room>>
     deleteRoom(id: string | Room): Promise<DeletedRoomResponse>
     createRoom(room: Room): Promise<RoomResult>
@@ -41,26 +41,29 @@ export interface IRoomManager extends ISportsTalkConfigurable {
 }
 
 export interface IChatClient extends IUserConfigurable, ISportsTalkConfigurable{
-    sendCommand(command: string, options?: CommandOptions):  Promise<ApiResult<null | Event>>
-    sendReply(message: string, replyto: string, options?: CommandOptions): Promise<ApiResult<null>>
-    sendReaction(reaction: Reaction, reactToMessageId: Event | string, options?: CommandOptions): Promise<ApiResult<null>>
-    sendAdvertisement(options: AdvertisementOptions): Promise<ApiResult<null>>
-    sendGoal(message?:string, img?: string, options?: GoalOptions): Promise<ApiResult<null>>
-    report(event: EventResult | string, reason: ReportType):  Promise<ApiResult<null>>,
+    sendCommand(command: string, options?: CommandOptions):  Promise<MessageResult<null | Event>>
+    sendReply(message: string, replyto: string, options?: CommandOptions): Promise<MessageResult<null>>
+    sendReaction(reaction: Reaction, reactToMessageId: Event | string, options?: CommandOptions): Promise<MessageResult<null>>
+    sendAdvertisement(options: AdvertisementOptions): Promise<MessageResult<null>>
+    sendGoal(message?:string, img?: string, options?: GoalOptions): Promise<MessageResult<null>>
+    setDefaultGoalImage(url: string);
+    report(event: EventResult | string, reason: ReportType):  Promise<MessageResult<null>>,
     listRooms(): Promise<Array<Room>>;
     joinRoom(room: RoomResult | string): Promise<RoomUserResult>;
     getCurrentRoom(): Room | null;
+    setCurrentRoom(room:RoomResult);
     listParticipants(cursor?: string, maxresults?: number): Promise<Array<User>>;
     setEventHandlers(eventHandlers: EventHandlerConfig);
+    getEventHandlers():EventHandlerConfig;
     createOrUpdateUser(user: User, setDefault?:boolean): Promise<User>
     getLatestEvents(): Promise<EventResult[]>
     startTalk();
     stopTalk();
 }
 
-export interface IChatModerationManager extends ISportsTalkConfigurable {
+export interface IChatModerationService extends ISportsTalkConfigurable {
     getModerationQueue(): Promise<Array<EventResult>>
-    rejectEvent(event: EventResult): Promise<ApiResult<null>>
-    approveEvent(event: EventResult): Promise<ApiResult<null>>
+    rejectEvent(event: EventResult): Promise<MessageResult<null>>
+    approveEvent(event: EventResult): Promise<MessageResult<null>>
 }
 

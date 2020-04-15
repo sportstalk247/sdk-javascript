@@ -7,23 +7,23 @@ import {
     ConversationDeletionResponse,
     ConversationResponse, CommentListResponse, CommentDeletionResponse, ConversationRequest, ConversationListResponse
 } from "../models/ConversationModels";
-import {RestfulCommentManager} from "./conversation/REST/RestfulCommentManager";
-import {RestfulConversationManager} from "./conversation/REST/RestfulConversationManager";
-import {IConversationManager, ICommentManager, IConversationClient} from "../API/ConversationAPI";
+import {RestfulCommentService} from "./conversation/REST/RestfulCommentService";
+import {RestfulConversationService} from "./conversation/REST/RestfulConversationService";
+import {IConversationService, ICommentService, IConversationClient} from "../API/ConversationAPI";
 
 
 export class ConversationClient implements IConversationClient {
     private _config: SportsTalkConfig;
-    private _conversationManager: IConversationManager;
-    private _commentManager: ICommentManager;
+    private _conversationService: IConversationService;
+    private _commentService: ICommentService;
     private _user: User;
 
-    static create(config: SportsTalkConfig, initialConversation?:Conversation | string, commentManager?: IConversationManager, conversationManager?: IConversationManager): ConversationClient {
+    static create(config: SportsTalkConfig, initialConversation?:Conversation | string, commentManager?: IConversationService, conversationManager?: IConversationService): ConversationClient {
         const commentClient = new ConversationClient();
         // @ts-ignore
         commentClient.setConfig(config, commentManager, conversationManager)
         if(initialConversation) {
-            commentClient.setConversation(initialConversation)
+            commentClient.setDefaultConversation(initialConversation)
         }
         return commentClient;
     }
@@ -35,17 +35,20 @@ export class ConversationClient implements IConversationClient {
     public setUser = (user:User) => {
         this._user = user;
     }
+    public getUser = () => {
+        return this._user;
+    }
 
-    public setConfig = (config: SportsTalkConfig, commentManager?: ICommentManager, conversationManager?: IConversationManager) => {
-        if(!this._commentManager || commentManager) {
-            this._commentManager = commentManager || new RestfulCommentManager()
+    public setConfig = (config: SportsTalkConfig, commentManager?: ICommentService, conversationManager?: IConversationService) => {
+        if(!this._commentService || commentManager) {
+            this._commentService = commentManager || new RestfulCommentService()
         }
-        if(!this._conversationManager || conversationManager) {
-            this._conversationManager = conversationManager || new RestfulConversationManager();
+        if(!this._conversationService || conversationManager) {
+            this._conversationService = conversationManager || new RestfulConversationService();
         }
         this._config = config;
-        this._conversationManager.setConfig(this._config);
-        this._commentManager.setConfig(this._config);
+        this._conversationService.setConfig(this._config);
+        this._commentService.setConfig(this._config);
         if(config.user) {
             this._user = config.user;
         }
@@ -54,30 +57,28 @@ export class ConversationClient implements IConversationClient {
 
 
     public createConversation = async (conversation: Conversation, setDefault: boolean = true) => {
-        const created:ConversationResponse = await this._conversationManager.createConversation(conversation);
+        const created:ConversationResponse = await this._conversationService.createConversation(conversation);
         if(setDefault) {
-            this._commentManager.setConversation(created);
+            this._commentService.setConversation(created);
         }
         return created;
     }
 
-    public setConversation = (conversation: Conversation | string): Conversation => {
-        this._commentManager.setConversation(conversation);
-        return <Conversation>this._commentManager.getConversation();
+    public setDefaultConversation = (conversation: Conversation | string): Conversation => {
+        this._commentService.setConversation(conversation);
+        return <Conversation>this._commentService.getConversation();
+    }
+    public getDefaultConversation = () => {
+        return this._commentService.getConversation();
     }
 
     public getConversation = (conversation: Conversation | string): Promise<Conversation> => {
-       return <Promise<Conversation>> this._conversationManager.getConversation(conversation)
-    }
-
-    public getConversationsByProperty = (property: string): Promise<Array<Conversation>> => {
-       // @ts-ignore
-        return this._conversationManager.getConversationsByProperty(property);
+       return <Promise<Conversation>> this._conversationService.getConversation(conversation)
     }
 
     // Deletes a conversation.  Be careful.
     public deleteConversation = (conversation: Conversation | string): Promise<ConversationDeletionResponse> => {
-        return <Promise<ConversationDeletionResponse>> this._conversationManager.deleteConversation(conversation);
+        return <Promise<ConversationDeletionResponse>> this._conversationService.deleteConversation(conversation);
     }
 
     /**
@@ -86,36 +87,36 @@ export class ConversationClient implements IConversationClient {
      * @param replyto either the comment object to reply to or the ID as a string
      */
     public makeComment = (comment: string, replyto?: Comment | string) => {
-        return this._commentManager.create(comment, this._user, replyto);
+        return this._commentService.create(comment, this._user, replyto);
     }
 
     public getComment = (comment: Comment | string) => {
-        return this._commentManager.getComment(comment);
+        return this._commentService.getComment(comment);
     }
 
     public deleteComment = (comment:Comment | string, final: boolean): Promise<CommentDeletionResponse> => {
-        return this._commentManager.delete(comment, this._user, final);
+        return this._commentService.delete(comment, this._user, final);
     }
 
     public updateComment = (comment:Comment): Promise<Comment> => {
         // @ts-ignore
-        return this._commentManager.update(comment, this._user);
+        return this._commentService.update(comment, this._user);
     }
 
     public reactToComment = (comment:Comment, reaction:Reaction): Promise<Comment> => {
-        return this._commentManager.react(comment, this._user, reaction);
+        return this._commentService.react(comment, this._user, reaction);
     }
 
     public voteOnComment = (comment:Comment, vote:Vote): Promise<Comment> => {
-        return this._commentManager.vote(comment, this._user, vote);
+        return this._commentService.vote(comment, this._user, vote);
     }
 
     public reportComment = (comment:Comment, reportType: ReportType): Promise<Comment> => {
-        return this._commentManager.report(comment, this._user, reportType);
+        return this._commentService.report(comment, this._user, reportType);
     }
 
     public getCommentReplies = (comment:Comment, request?: CommentRequest): Promise<CommentListResponse> => {
-        return this._commentManager.getReplies(comment, request);
+        return this._commentService.getReplies(comment, request);
     }
 
     /**
@@ -125,11 +126,11 @@ export class ConversationClient implements IConversationClient {
      */
     public getComments = (request?: CommentRequest, conversation?: Conversation): Promise<CommentListResponse> => {
         // @ts-ignore
-        return this._commentManager.getComments(request, conversation);
+        return this._commentService.getComments(request, conversation);
     }
 
     public listConversations = (filter?: ConversationRequest): Promise<ConversationListResponse> => {
-        return this._conversationManager.listConversations( filter);
+        return this._conversationService.listConversations( filter);
     }
 
 }

@@ -1,6 +1,7 @@
 export const MISSING_REPLYTO_ID = "Need a replyto message ID to reply";
 export const MISSING_ROOM = 'Need to join a room first!'
 export const MUST_SET_USER = "Must set user";
+export const MUST_SET_APPID = "Must set an AppID";
 export const MUST_SPECIFY_CONVERSATION = "Must set a conversation in method call or set a default"
 export const NO_CONVERSATION_SET = "Need to join a conversation first";
 export const NO_HANDLER_SET = "No event handler set";

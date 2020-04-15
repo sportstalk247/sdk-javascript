@@ -1,11 +1,11 @@
 import {EventResult} from "../../../models/ChatModels";
 import axios, {AxiosRequestConfig} from "axios";
 import {buildAPI, formify, getUrlEncodedHeaders} from "../../utils";
-import {DEFAULT_TALK_CONFIG, POST, } from "../../../constants/api";
-import {IChatModerationManager} from "../../../API/ChatAPI";
-import {ApiResult, SportsTalkConfig, WebHook} from "../../../models/CommonModels";
+import {DEFAULT_CONFIG, POST, } from "../../constants/api";
+import {IChatModerationService} from "../../../API/ChatAPI";
+import {RestApiResult, SportsTalkConfig, WebHook} from "../../../models/CommonModels";
 
-export class RestfulChatModerationManager implements IChatModerationManager {
+export class RestfulChatModerationService implements IChatModerationService {
     private _config: SportsTalkConfig = {appId: ""};
     private _apiHeaders;
     private _apiExt:string = 'chat/moderation/queues/events';
@@ -15,7 +15,7 @@ export class RestfulChatModerationManager implements IChatModerationManager {
     }
 
     public setConfig(config: SportsTalkConfig) {
-        this._config = Object.assign(DEFAULT_TALK_CONFIG, config);
+        this._config = Object.assign(DEFAULT_CONFIG, config);
         this._apiHeaders = getUrlEncodedHeaders(this._config.apiToken);
     }
 
@@ -29,7 +29,7 @@ export class RestfulChatModerationManager implements IChatModerationManager {
         });
     }
 
-    rejectEvent = (event: EventResult): Promise<ApiResult<null>> => {
+    rejectEvent = (event: EventResult): Promise<RestApiResult<null>> => {
         return axios({
             method: 'POST',
             url: buildAPI(this._config, `${this._apiExt}/${event.id}/applydecision`),
@@ -42,7 +42,7 @@ export class RestfulChatModerationManager implements IChatModerationManager {
         })
     }
 
-    approveEvent = (event: EventResult): Promise<ApiResult<null>> => {
+    approveEvent = (event: EventResult): Promise<RestApiResult<null>> => {
         // @ts-ignore
         const id = event.id | event;
         return axios({

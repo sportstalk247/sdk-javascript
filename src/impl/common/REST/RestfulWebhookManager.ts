@@ -1,12 +1,13 @@
 import axios, {AxiosRequestConfig} from "axios";
 import {buildAPI, getJSONHeaders} from "../../utils";
-import {DEFAULT_TALK_CONFIG, DELETE, GET, POST, PUT} from "../../../constants/api";
+import {DEFAULT_CONFIG, DELETE, GET, POST, PUT} from "../../constants/api";
 import {SportsTalkConfig, WebHook} from "../../../models/CommonModels";
-import {IWebhookManager} from "../../../API/CommonAPI";
+import {IWebhookService} from "../../../API/CommonAPI";
+import {ValidationError} from "../../errors";
 
 const MISSING_ID = "Missing webhook or webhook missing ID";
 
-export class RestfulWebhookManager implements IWebhookManager {
+export class RestfulWebhookManager implements IWebhookService {
     private _config: SportsTalkConfig = {appId: ""};
     private _apiHeaders;
     private _apiExt = 'webhook/hooks';
@@ -16,7 +17,7 @@ export class RestfulWebhookManager implements IWebhookManager {
     }
 
     public setConfig(config: SportsTalkConfig) {
-        this._config = Object.assign(DEFAULT_TALK_CONFIG, config);
+        this._config = Object.assign(DEFAULT_CONFIG, config);
         this._apiHeaders = getJSONHeaders(this._config.apiToken);
     }
 
@@ -43,7 +44,7 @@ export class RestfulWebhookManager implements IWebhookManager {
 
     updateWebhook = (hook: WebHook): Promise<WebHook> => {
         if(!hook || !hook.id) {
-            throw new Error(MISSING_ID);
+            throw new ValidationError(MISSING_ID);
         }
         return axios({
             url: buildAPI(this._config, `${this._apiExt}/${hook.id}`),
@@ -57,7 +58,7 @@ export class RestfulWebhookManager implements IWebhookManager {
 
     deleteWebhook = (hook: WebHook | string): Promise<WebHook> => {
         if(!hook) {
-            throw new Error(MISSING_ID);
+            throw new ValidationError(MISSING_ID);
         }
         // @ts-ignore
         const id = hook.id || hook;

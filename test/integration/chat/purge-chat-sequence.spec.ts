@@ -1,7 +1,7 @@
 import { ChatClient } from '../../../src/impl/ChatClient';
 import * as chai from 'chai';
 import * as sinon from 'sinon';
-import {RestfulRoomManager} from "../../../src/impl/chat/REST/RestfulRoomManager";
+import {RestfulRoomService} from "../../../src/impl/chat/REST/RestfulRoomService";
 import * as dotenv from 'dotenv';
 import {SportsTalkConfig} from "../../../src/models/CommonModels";
 dotenv.config();
@@ -18,21 +18,21 @@ const { expect } = chai;
 const config: SportsTalkConfig = {apiToken:process.env.TEST_KEY, appId: process.env.TEST_APP_ID, endpoint: process.env.TEST_ENDPOINT};
 
 describe('PURGE Chat Sequence', function() {
-    const client = ChatClient.create({
+    const client = <ChatClient> ChatClient.create({
         ...config,
         user: {
             userid: 'testuser1',
             handle: 'handle1'
         }
     });
-    const client2 = ChatClient.create({
+    const client2 = <ChatClient> ChatClient.create({
         ...config,
         user: {
             userid: 'testuser2',
             handle: 'handle2'
         }
     });
-    const rm = new RestfulRoomManager(config);
+    const rm = new RestfulRoomService(config);
     const em1 = client.getEventManager();
     em1.setEventHandlers({
         onPurgeEvent,

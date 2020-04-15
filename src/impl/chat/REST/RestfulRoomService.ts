@@ -1,12 +1,11 @@
-import {IRoomManager} from "../../../API/ChatAPI";
+import {IRoomService} from "../../../API/ChatAPI";
 import {EventResult, Room, RoomResult, RoomUserResult, DeletedRoomResponse} from "../../../models/ChatModels";
 import axios, {AxiosRequestConfig} from "axios";
-import {GET, DELETE, POST} from "../../../constants/api";
-import {buildAPI, getJSONHeaders, getUrlEncodedHeaders} from "../../utils";
-import {ApiResult, SportsTalkConfig, User, UserResult} from "../../../models/CommonModels";
-import {MISSING_ROOM} from "../../../constants/messages";
+import {GET, DELETE, POST} from "../../constants/api";
+import {buildAPI, forceObjKeyOrString, getJSONHeaders, getUrlEncodedHeaders} from "../../utils";
+import { SportsTalkConfig, User, UserResult} from "../../../models/CommonModels";
 
-export class RestfulRoomManager implements IRoomManager {
+export class RestfulRoomService implements IRoomService {
     private _config: SportsTalkConfig;
     private _knownRooms: Room[] = [];
     private _apiHeaders = {};
@@ -36,9 +35,7 @@ export class RestfulRoomManager implements IRoomManager {
         return axios(config).then(result=>{
             this._knownRooms = result.data.data;
             return this._knownRooms;
-        }).catch(e=>{
-            throw e;
-        })
+        });
     }
 
     getKnownRooms = async (): Promise<Array<Room>> => {
@@ -52,7 +49,7 @@ export class RestfulRoomManager implements IRoomManager {
 
     deleteRoom = (room: Room | string): Promise<DeletedRoomResponse> => {
         // @ts-ignore
-        const id =  room.id || room;
+        const id =  forceObjKeyOrString(room);
         const config:AxiosRequestConfig = {
             method: DELETE,
             url: buildAPI(this._config,`${this._apiExt}/${id}`),
@@ -61,9 +58,7 @@ export class RestfulRoomManager implements IRoomManager {
         // @ts-ignore
         return axios(config).then(result=>{
             return result.data.data
-        }).catch(e=>{
-            throw e;
-        })
+        });
     }
 
 
@@ -77,22 +72,22 @@ export class RestfulRoomManager implements IRoomManager {
         };
         return axios(config).then(result=>{
             return result.data.data;
-        }).catch(e=>{
-            throw e;
-        })
+        });
     }
 
     // @ts-ignore
     listUserMessages = (user:User | string, room: Room | string, cursor: string = "", limit: number = 100): Promise<Array<EventResult>> => {
         // @ts-ignore
-        const url = buildAPI(this._config,`${this._apiExt}/${room.id || room}/messagesbyuser/${user.userid || user.id || user}/?limit=${limit}&cursor=${cursor}`);
+        const roomid = forceObjKeyOrString(room);
+        const userid = forceObjKeyOrString(user, 'userid');
+        const url = buildAPI(this._config,`${this._apiExt}/${roomid}/messagesbyuser/${userid}/?limit=${limit}&cursor=${cursor}`);
         return axios({
             method: GET,
             url: url,
             headers: this._jsonHeaders
         }).then(result=>{
             return result.data.data.events
-        })
+        });
     }
 
 
@@ -112,7 +107,7 @@ export class RestfulRoomManager implements IRoomManager {
 
     joinRoom = (user: User, room: RoomResult | string): Promise<RoomUserResult> => {
         // @ts-ignore
-        const roomId = room.id || room;
+        const roomId = forceObjKeyOrString(room);
         const config: AxiosRequestConfig = {
             method: POST,
             url: buildAPI(this._config,`${this._apiExt}/${roomId}/join`),
@@ -131,10 +126,8 @@ export class RestfulRoomManager implements IRoomManager {
     }
 
     exitRoom = (user: User | string, room: Room | string): Promise<RoomUserResult> => {
-        // @ts-ignore
-        const roomId = room.id || room;
-        // @ts-ignore
-        const userId = user.userid || user;
+        const roomId = forceObjKeyOrString(room);
+        const userId = forceObjKeyOrString(user, 'userid');
         const config:AxiosRequestConfig = {
             method: POST,
             url: buildAPI(this._config,`${this._apiExt}/${roomId}/exit`),

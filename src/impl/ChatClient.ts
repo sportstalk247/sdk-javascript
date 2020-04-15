@@ -7,23 +7,23 @@ import {
     Room,
     RoomUserResult, EventResult, DeletedRoomResponse
 } from "../models/ChatModels";
-import {DEFAULT_TALK_CONFIG} from "../constants/api";
-import {IRoomManager, IEventManager, IChatClient} from "../API/ChatAPI";
+import {DEFAULT_CONFIG} from "./constants/api";
+import {IRoomService, IEventService, IChatClient} from "../API/ChatAPI";
 import {SettingsError} from "./errors";
-import {RestfulEventManager} from "./chat/REST/RestfulEventManager"
-import {RestfulRoomManager} from "./chat/REST/RestfulRoomManager";
+import {RestfulEventService} from "./chat/REST/RestfulEventService"
+import {RestfulRoomService} from "./chat/REST/RestfulRoomService";
 import {RestfulUserManager} from "./common/REST/RestfulUserManager";
 import {
-    ApiResult,
+    RestApiResult,
     Reaction,
     ReportReason,
     ReportType,
     SportsTalkConfig,
     User,
-    UserResult
+    UserResult, MessageResult
 } from "../models/CommonModels";
-import {MISSING_ROOM, MUST_SET_USER} from "../constants/messages";
-import {IUserManager} from "../API/CommonAPI";
+import {MISSING_ROOM, MUST_SET_USER} from "./constants/messages";
+import {IUserService} from "../API/CommonAPI";
 
 
 export class ChatClient implements IChatClient {
@@ -38,9 +38,9 @@ export class ChatClient implements IChatClient {
     // EventResult handlers
 
     private _defaultGoalImage: string | undefined;
-    private _eventManager: IEventManager;
-    private _roomManager: IRoomManager;
-    private _userManager: IUserManager;
+    private _eventService: IEventService;
+    private _roomService: IRoomService;
+    private _userService: IUserService;
 
     getDebug = () => {
         return JSON.stringify(this);
@@ -51,7 +51,7 @@ export class ChatClient implements IChatClient {
      * @param eventHandlers
      * @return SportsTalkClient.  Currently only a REST based client is supported.  Future SDK versions will implement other options such as firebase messaging and websockets
      */
-    static create = (config: SportsTalkConfig = {appId: ""}, eventHandlers?: EventHandlerConfig): ChatClient => {
+    static create = (config: SportsTalkConfig = {appId: ""}, eventHandlers?: EventHandlerConfig): IChatClient => {
         const client = new ChatClient();
         client.setConfig(config);
         if(eventHandlers) {
@@ -61,23 +61,23 @@ export class ChatClient implements IChatClient {
     }
 
     setConfig = (config:SportsTalkConfig) => {
-        this._config = Object.assign(DEFAULT_TALK_CONFIG, config);
+        this._config = Object.assign(DEFAULT_CONFIG, config);
 
-        if(this._eventManager) {
-            this._eventManager.setConfig(this._config);
+        if(this._eventService) {
+            this._eventService.setConfig(this._config);
         }
 
-        if(this._roomManager) {
-            this._roomManager.setConfig(this._config);
+        if(this._roomService) {
+            this._roomService.setConfig(this._config);
         }
 
-        if(this._userManager) {
-            this._userManager.setConfig(this._config);
+        if(this._userService) {
+            this._userService.setConfig(this._config);
         }
 
-        this._eventManager = this._eventManager || new RestfulEventManager(this._config);
-        this._roomManager = this._roomManager || new RestfulRoomManager(this._config);
-        this._userManager = this._userManager || new RestfulUserManager(this._config);
+        this._eventService = this._eventService || new RestfulEventService(this._config);
+        this._roomService = this._roomService || new RestfulRoomService(this._config);
+        this._userService = this._userService || new RestfulUserManager(this._config);
 
         if(this._config.user){
             Object.assign(this._user, this._config.user);
@@ -89,29 +89,33 @@ export class ChatClient implements IChatClient {
     }
 
     setEventHandlers = (eventHandlers: EventHandlerConfig) => {
-        this._eventManager.setEventHandlers(eventHandlers);
+        this._eventService.setEventHandlers(eventHandlers);
+    }
+
+    getEventHandlers = ():EventHandlerConfig => {
+        return this._eventService.getEventHandlers();
     }
 
     getEventManager = () => {
-        return this._eventManager;
+        return this._eventService;
     }
 
     getRoomManager = () => {
-        return this._roomManager;
+        return this._roomService;
     }
 
     startTalk = () => {
-        this._eventManager.startTalk();
+        this._eventService.startTalk();
     }
 
     stopTalk = () => {
-        this._eventManager.stopTalk();
+        this._eventService.stopTalk();
     }
     /**
      * RoomResult Handling
      */
     listRooms = (): Promise<Array<Room>> => {
-        return this._roomManager.listRooms();
+        return this._roomService.listRooms();
     }
     /**
      *
@@ -122,7 +126,7 @@ export class ChatClient implements IChatClient {
         if(!this._currentRoom) {
             throw new SettingsError(MISSING_ROOM);
         }
-        return this._roomManager.listParticipants(this._currentRoom, cursor, maxresults);
+        return this._roomService.listParticipants(this._currentRoom, cursor, maxresults);
     }
 
     setUser = (user:User) => {
@@ -138,7 +142,7 @@ export class ChatClient implements IChatClient {
      * @param user a User model.  The values of 'banned', 'handlelowercase' and 'kind' are ignored.
      */
     createOrUpdateUser = (user: User, setDefault:boolean = true): Promise<User> => {
-        return this._userManager.createOrUpdateUser(user).then(user=>{
+        return this._userService.createOrUpdateUser(user).then(user=>{
             if(setDefault) {
                 this._user = user;
             }
@@ -147,54 +151,48 @@ export class ChatClient implements IChatClient {
     }
 
     public getLatestEvents = (): Promise<EventResult[]> => {
-        return this._eventManager.getUpdates()
+        return this._eventService.getUpdates()
     }
 
     joinRoom = (room: RoomResult | string): Promise<RoomUserResult> => {
         if(!this._user || !this._user.userid) {
             throw new SettingsError(MUST_SET_USER);
         }
-        return this._roomManager.joinRoom(this._user, room).then(response => {
+        return this._roomService.joinRoom(this._user, room).then(response => {
             this._currentRoom = response.room;
-            this._eventManager.setCurrentRoom(this._currentRoom);
+            this._eventService.setCurrentRoom(this._currentRoom);
             return response;
-        }).catch(e=>{
-            throw e;
         })
     }
-
-
 
     report = (event: EventResult | string, type: ReportType) => {
         const reason: ReportReason = {
             reporttype: type,
             userid: this._user.userid
         }
-        return this._eventManager.reportEvent(event, reason);
+        return this._eventService.reportEvent(event, reason);
     }
 
     exitRoom = (): Promise<RoomUserResult> => {
-        if(!this._eventManager.getCurrentRoom()) {
+        if(!this._eventService.getCurrentRoom()) {
             throw new SettingsError("Cannot exit if not in a room!");
         }
-        return this._roomManager.exitRoom(this._user, this._currentRoom).then(response=>{
-            this._eventManager.setCurrentRoom(null);
+        return this._roomService.exitRoom(this._user, this._currentRoom).then(response=>{
+            this._eventService.setCurrentRoom(null);
             return response;
-        }).catch(e=>{
-            throw e;
-        })
+        });
     }
 
     /**
      * Gets currently set room.  Returns the current room or undefined if a room has not been joined.
      */
-    getCurrentRoom = (): Room | null => {
-        return this._eventManager.getCurrentRoom();
+    getCurrentRoom = (): RoomResult | null => {
+        return this._eventService.getCurrentRoom();
     }
 
     setCurrentRoom = (room: RoomResult) => {
         this._currentRoom = room;
-        this._eventManager.setCurrentRoom(room);
+        this._eventService.setCurrentRoom(room);
     }
 
     /**
@@ -205,14 +203,14 @@ export class ChatClient implements IChatClient {
      * @param command
      * @param options
      */
-    sendCommand = (command: string, options?: CommandOptions): Promise<ApiResult<null | Event>> => {
-        return this._eventManager.sendCommand(this._user, command, options).then(response=>{
+    sendCommand = (command: string, options?: CommandOptions): Promise<MessageResult<null | Event>> => {
+        return this._eventService.sendCommand(this._user, command, options).then(response=>{
             if(command.startsWith('*')) {
-                const onHelp = this._eventManager.getEventHandlers().onHelp;
+                const onHelp = this._eventService.getEventHandlers().onHelp;
                 if( command.startsWith('*help') && onHelp  && onHelp instanceof Function ) {
                     onHelp(response);
                 } else {
-                    const adminCommand = this._eventManager.getEventHandlers().onAdminCommand;
+                    const adminCommand = this._eventService.getEventHandlers().onAdminCommand;
                     if (adminCommand && adminCommand instanceof Function) {
                         // @ts-ignore
                         adminCommand(response);
@@ -223,20 +221,21 @@ export class ChatClient implements IChatClient {
         })
     }
 
-    sendReply = (message: string, replyto: Event |string, options?: CommandOptions): Promise<ApiResult<null>> => {
-        return this._eventManager.sendReply(this._user, message, replyto, options);
+    sendReply = (message: string, replyto: Event |string, options?: CommandOptions): Promise<MessageResult<null>> => {
+        return this._eventService.sendReply(this._user, message, replyto, options);
     }
 
-    sendReaction = (reaction: Reaction, reactToMessage: Event | string, options?: CommandOptions): Promise<ApiResult<null>> => {
-        return this._eventManager.sendReaction(this._user, reaction, reactToMessage, options);
+    sendReaction = (reaction: Reaction, reactToMessage: Event | string, options?: CommandOptions): Promise<MessageResult<null>> => {
+        return this._eventService.sendReaction(this._user, reaction, reactToMessage, options);
     }
 
-    sendAdvertisement = (options: AdvertisementOptions): Promise<ApiResult<null>> => {
-        return this._eventManager.sendAdvertisement(this._user, options);
+    /* istanbul ignore next */
+    sendAdvertisement = (options: AdvertisementOptions): Promise<MessageResult<null>> => {
+        return this._eventService.sendAdvertisement(this._user, options);
     }
-
-    sendGoal = (message?:string, img?: string, options?: GoalOptions): Promise<ApiResult<null>> => {
-       return this._eventManager.sendGoal(this._user,img || this._defaultGoalImage || '', message, options)
+    /* istanbul ignore next */
+    sendGoal = (message?:string, img?: string, options?: GoalOptions): Promise<MessageResult<null>> => {
+       return this._eventService.sendGoal(this._user,img || this._defaultGoalImage || '', message, options)
     }
 
 }

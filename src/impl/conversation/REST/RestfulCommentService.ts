@@ -14,22 +14,22 @@ import {
     Conversation,
     Vote
 } from "../../../models/ConversationModels";
-import {DELETE, GET, POST, PUT} from "../../../constants/api";
+import {DELETE, GET, POST, PUT} from "../../constants/api";
 import {getUrlEncodedHeaders, getJSONHeaders, buildAPI, formify} from "../../utils";
 import {getUrlCommentId, getUrlConversationId} from "../ConversationUtils";
 import {RequireUserError, SettingsError, ValidationError} from "../../errors";
-import {ICommentManager} from "../../../API/ConversationAPI";
+import {ICommentService} from "../../../API/ConversationAPI";
 import {
     MISSING_REPLYTO_ID,
     MUST_SET_USER,
     MUST_SPECIFY_CONVERSATION,
     NO_CONVERSATION_SET,
     USER_NEEDS_ID
-} from "../../../constants/messages";
+} from "../../constants/messages";
 
 import axios, {AxiosRequestConfig} from "axios";
 
-export class RestfulCommentManager implements ICommentManager {
+export class RestfulCommentService implements ICommentService {
     private _config: SportsTalkConfig;
     private _conversation: Conversation;
     private _apiHeaders: ApiHeaders;
@@ -150,7 +150,7 @@ export class RestfulCommentManager implements ICommentManager {
         })
     }
 
-    private _finalDelete = (comment: Comment | string, user:User): Promise<CommentDeletionResponse> => {
+    private _finalDelete = async (comment: Comment | string, user:User): Promise<CommentDeletionResponse> => {
         this._requireConversation();
         const id = getUrlCommentId(comment);
         const config:AxiosRequestConfig = {
@@ -158,9 +158,8 @@ export class RestfulCommentManager implements ICommentManager {
             url: buildAPI(this._config, `${this._apiExt}/${this._conversationId}/comments/${id}`),
             headers: this._jsonHeaders,
         }
-        return axios(config).then(result => {
-            return result.data.data;
-        });
+        const result = await axios(config);
+        return result.data.data;
     }
 
     private _markDeleted = async (comment: Comment | string, user:User): Promise<CommentDeletionResponse> => {

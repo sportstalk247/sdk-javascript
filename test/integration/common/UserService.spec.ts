@@ -2,7 +2,7 @@ import * as chai from 'chai';
 import {RestfulUserManager} from "../../../src/impl/common/REST/RestfulUserManager";
 import * as dotenv from 'dotenv';
 import {Kind, SearchType, SportsTalkConfig} from "../../../src/models/CommonModels";
-import {RestfulRoomManager} from "../../../src/impl/chat/REST/RestfulRoomManager";
+import {RestfulRoomService} from "../../../src/impl/chat/REST/RestfulRoomService";
 
 dotenv.config();
 
@@ -11,7 +11,7 @@ const { expect } = chai;
 const config: SportsTalkConfig = {apiToken:process.env.TEST_KEY, appId: process.env.TEST_APP_ID, endpoint: process.env.TEST_ENDPOINT};
 describe("UserManager", function(){
     const UM = new RestfulUserManager(  config);
-    const RM = new RestfulRoomManager(  config);
+    const RM = new RestfulRoomService(  config);
 
     let user;
     describe("Creation", function() {

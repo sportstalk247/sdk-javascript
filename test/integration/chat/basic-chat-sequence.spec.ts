@@ -1,6 +1,6 @@
 import { ChatClient } from '../../../src/impl/ChatClient';
 import * as chai from 'chai';
-import {RestfulRoomManager} from "../../../src/impl/chat/REST/RestfulRoomManager";
+import {RestfulRoomService} from "../../../src/impl/chat/REST/RestfulRoomService";
 import * as dotenv from 'dotenv';
 import {SportsTalkConfig} from "../../../src/models/CommonModels";
 dotenv.config();
@@ -24,9 +24,9 @@ describe('BASIC Chat Sequence', function() {
             handle: 'handle2'
         }
     }
-    const client = ChatClient.create(user1config);
-    const client2 = ChatClient.create(user2config);
-    const rm = new RestfulRoomManager({
+    const client:ChatClient = <ChatClient>ChatClient.create(user1config);
+    const client2:ChatClient = <ChatClient>ChatClient.create(user2config);
+    const rm = new RestfulRoomService({
        ...config
     });
     const em1 = client.getEventManager();
@@ -74,6 +74,30 @@ describe('BASIC Chat Sequence', function() {
                 }).catch(done)
         })
     });
+    describe("Get help", function(){
+        it("Lets user ask for help", async()=>{
+            let helpcalled = false;
+            let admincalled = false
+            client.setEventHandlers({
+                onHelp:function() {
+                    helpcalled = true;
+                }
+            })
+            const resp = await client.sendCommand("*help");
+            expect(helpcalled).to.be.true;
+        })
+        it("Lets user issue admin command", async()=>{
+
+            let admincalled = false
+            client.setEventHandlers({
+                onAdminCommand: function() {
+                    admincalled=true;
+                }
+            })
+            const resp = await client.sendCommand("*ban");
+            expect(admincalled).to.be.true;
+        })
+    })
     describe("leave room", function(){
         it("Leaves the room", async function() {
             await client.exitRoom();
