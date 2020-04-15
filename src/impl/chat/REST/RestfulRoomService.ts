@@ -1,7 +1,14 @@
 import {IRoomService} from "../../../API/ChatAPI";
-import {EventResult, Room, RoomResult, RoomUserResult, DeletedRoomResponse} from "../../../models/ChatModels";
+import {
+    EventResult,
+    Room,
+    RoomResult,
+    RoomUserResult,
+    DeletedRoomResponse,
+    RoomExitResult
+} from "../../../models/ChatModels";
 import axios, {AxiosRequestConfig} from "axios";
-import {GET, DELETE, POST} from "../../constants/api";
+import {GET, DELETE, POST, API_SUCCESS_MESSAGE} from "../../constants/api";
 import {buildAPI, forceObjKeyOrString, getJSONHeaders, getUrlEncodedHeaders} from "../../utils";
 import { SportsTalkConfig, User, UserResult} from "../../../models/CommonModels";
 
@@ -122,10 +129,10 @@ export class RestfulRoomService implements IRoomService {
         }
         return axios(config).then(response => {
             return response.data.data;
-        });
+        })
     }
 
-    exitRoom = (user: User | string, room: Room | string): Promise<RoomUserResult> => {
+    exitRoom = (user: User | string, room: Room | string): Promise<RoomExitResult> => {
         const roomId = forceObjKeyOrString(room);
         const userId = forceObjKeyOrString(user, 'userid');
         const config:AxiosRequestConfig = {
@@ -137,7 +144,7 @@ export class RestfulRoomService implements IRoomService {
             }
         };
         return axios(config).then(response => {
-            return response.data.data;
-        });
+            return <RoomExitResult> response.data.message
+        })
     }
 }

@@ -5,7 +5,7 @@ import {
     EventHandlerConfig,
     RoomResult,
     Room,
-    RoomUserResult, EventResult, DeletedRoomResponse
+    RoomUserResult, EventResult, DeletedRoomResponse, CommandResponse, RoomExitResult
 } from "../models/ChatModels";
 import {DEFAULT_CONFIG} from "./constants/api";
 import {IRoomService, IEventService, IChatClient} from "../API/ChatAPI";
@@ -14,7 +14,6 @@ import {RestfulEventService} from "./chat/REST/RestfulEventService"
 import {RestfulRoomService} from "./chat/REST/RestfulRoomService";
 import {RestfulUserManager} from "./common/REST/RestfulUserManager";
 import {
-    RestApiResult,
     Reaction,
     ReportReason,
     ReportType,
@@ -84,8 +83,9 @@ export class ChatClient implements IChatClient {
         }
     }
 
-    setDefaultGoalImage = (url: string) => {
+    setDefaultGoalImage = (url: string):string => {
         this._defaultGoalImage = url;
+        return this._defaultGoalImage;
     }
 
     setEventHandlers = (eventHandlers: EventHandlerConfig) => {
@@ -96,11 +96,11 @@ export class ChatClient implements IChatClient {
         return this._eventService.getEventHandlers();
     }
 
-    getEventManager = () => {
+    getEventService = ():IEventService => {
         return this._eventService;
     }
 
-    getRoomManager = () => {
+    getRoomService = ():IRoomService => {
         return this._roomService;
     }
 
@@ -173,7 +173,7 @@ export class ChatClient implements IChatClient {
         return this._eventService.reportEvent(event, reason);
     }
 
-    exitRoom = (): Promise<RoomUserResult> => {
+    exitRoom = (): Promise<RoomExitResult> => {
         if(!this._eventService.getCurrentRoom()) {
             throw new SettingsError("Cannot exit if not in a room!");
         }
@@ -203,7 +203,7 @@ export class ChatClient implements IChatClient {
      * @param command
      * @param options
      */
-    sendCommand = (command: string, options?: CommandOptions): Promise<MessageResult<null | Event>> => {
+    sendCommand = (command: string, options?: CommandOptions): Promise<MessageResult<null | CommandResponse>> => {
         return this._eventService.sendCommand(this._user, command, options).then(response=>{
             if(command.startsWith('*')) {
                 const onHelp = this._eventService.getEventHandlers().onHelp;
@@ -221,21 +221,24 @@ export class ChatClient implements IChatClient {
         })
     }
 
-    sendReply = (message: string, replyto: Event |string, options?: CommandOptions): Promise<MessageResult<null>> => {
+    sendReply = (message: string, replyto: Event |string, options?: CommandOptions): Promise<MessageResult<CommandResponse | null>> => {
         return this._eventService.sendReply(this._user, message, replyto, options);
     }
 
-    sendReaction = (reaction: Reaction, reactToMessage: Event | string, options?: CommandOptions): Promise<MessageResult<null>> => {
+    sendReaction = (reaction: Reaction, reactToMessage: Event | string, options?: CommandOptions): Promise<MessageResult<null | CommandResponse>> => {
         return this._eventService.sendReaction(this._user, reaction, reactToMessage, options);
     }
 
     /* istanbul ignore next */
-    sendAdvertisement = (options: AdvertisementOptions): Promise<MessageResult<null>> => {
+    sendAdvertisement = (options: AdvertisementOptions): Promise<MessageResult<null | CommandResponse>> => {
         return this._eventService.sendAdvertisement(this._user, options);
     }
     /* istanbul ignore next */
-    sendGoal = (message?:string, img?: string, options?: GoalOptions): Promise<MessageResult<null>> => {
+    sendGoal = (message?:string, img?: string, options?: GoalOptions): Promise<MessageResult<null | CommandResponse>> => {
        return this._eventService.sendGoal(this._user,img || this._defaultGoalImage || '', message, options)
+    }
+    deleteEvent = (event: EventResult | string) =>{
+        return this._eventService.deleteEvent(event);
     }
 
 }

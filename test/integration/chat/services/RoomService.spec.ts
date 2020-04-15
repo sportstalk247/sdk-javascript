@@ -8,10 +8,10 @@ const { expect } = chai;
 // @ts-ignore
 const config: SportsTalkConfig = {apiToken:process.env.TEST_KEY, appId: process.env.TEST_APP_ID, endpoint: process.env.TEST_ENDPOINT};
 let roomlist;
-describe("RoomManager", function(){
+describe("RoomService", function(){
     const RM = new RestfulRoomService(  config);
     it("Can create a room without moderation", done=>{
-        const name = "ROOMMANAGER Test Room"
+        const name = "ROOMService Test Room"
         const slug = "RM-test-room"
         let newRoom;
         RM.createRoom({
@@ -28,7 +28,7 @@ describe("RoomManager", function(){
         }).catch(done);
     })
     it("Can create a room with PRE moderation", done=>{
-        const name = "ROOMMANAGER Test Room PRE"
+        const name = "ROOMService Test Room PRE"
         const slug = "RM-test-room-pre"
         let newRoom;
         RM.createRoom({
@@ -47,7 +47,7 @@ describe("RoomManager", function(){
         }).catch(done);
     })
     it("Can create a room with POST moderation", done=>{
-        const name = "ROOMMANAGER Test Room POST"
+        const name = "ROOMService Test Room POST"
         const slug = "RM-test-room-POST"
         let newRoom;
         RM.createRoom({
@@ -106,7 +106,7 @@ describe("RoomManager", function(){
         it("Can list user messages", async ()=>{
             try {
                 const room = await RM.createRoom({
-                    name: "ROOMMANAGER Test Room",
+                    name: "ROOMService Test Room",
                     slug: "RM-test-room"
                 });
                 const userlist = await RM.listUserMessages({userid:'fake-user', handle:'fake-user'}, room).then(messages => {

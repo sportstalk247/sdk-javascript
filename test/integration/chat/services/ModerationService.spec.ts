@@ -14,7 +14,7 @@ const delay = function(timer) {
     })
 }
 
-describe("Moderation Manager", ()=>{
+describe("Moderation Service", ()=>{
 
     const client =<ChatClient> ChatClient.create(config)
     const MM = new RestfulChatModerationService(config);
@@ -33,8 +33,8 @@ describe("Moderation Manager", ()=>{
         onReply
     });
 
-    const EM = client.getEventManager();
-    const RM = client.getRoomManager();
+    const EM = client.getEventService();
+    const RM = client.getRoomService();
     let room;
 
     describe("Triggers callbacks", function() {

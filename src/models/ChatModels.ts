@@ -33,7 +33,7 @@ export interface EventHandlerConfig {
     onReaction?(event:EventResult),
     onPurgeEvent?(event:EventResult),
     onAdminCommand?(response: RestApiResult<Kind.api>),
-    onHelp?(result: MessageResult<Event | null>),
+    onHelp?(result: MessageResult<Event | CommandResponse | null>),
     onNetworkError?(error: Error)
 }
 
@@ -46,6 +46,10 @@ export interface DeletedRoomResponse {
     kind: Kind.deletedroom,
     deletedEventsCount: number,
     room: Room
+}
+
+export interface CommandResponse {
+    speech?: Event
 }
 
 /**
@@ -69,6 +73,10 @@ export interface GoalOptions {
     id?: string,
     commentary?: string,
     side?: string
+}
+
+export enum RoomExitResult {
+    success = "Success"
 }
 
 /**

@@ -1,11 +1,11 @@
 import {
     AdvertisementOptions,
-    CommandOptions,
+    CommandOptions, CommandResponse,
     EventHandlerConfig,
     EventResult,
     EventType, GoalOptions, Room, RoomResult
 } from "../../../models/ChatModels";
-import {DEFAULT_CONFIG, GET, POST} from "../../constants/api";
+import {DEFAULT_CONFIG, DELETE, GET, POST} from "../../constants/api";
 import {IEventService} from "../../../API/ChatAPI";
 import {buildAPI, formify, getJSONHeaders, getUrlEncodedHeaders} from "../../utils";
 import {SettingsError} from "../../errors";
@@ -199,7 +199,7 @@ export class RestfulEventService implements IEventService{
      * @param command
      * @param options
      */
-    sendCommand = (user: User, command: string, options?: CommandOptions): Promise<RestApiResult<null | Event>> => {
+    sendCommand = (user: User, command: string, options?: CommandOptions): Promise<RestApiResult<null | CommandResponse>> => {
         const data = Object.assign({
             command,
             userid: user.userid
@@ -211,12 +211,10 @@ export class RestfulEventService implements IEventService{
             data: data
         };
         // @ts-ignore
-        return axios(config).then(response=>response).catch(e=>{
-            throw e;
-        });
+        return axios(config).then(response=>response.data);
     }
 
-    sendReply = (user: User, message: string, replyto: Event |string, options?: CommandOptions): Promise<RestApiResult<null>> => {
+    sendReply = (user: User, message: string, replyto: Event |string, options?: CommandOptions): Promise<RestApiResult<null | CommandResponse>> => {
         // @ts-ignore
         const id = replyto.id || replyto;
         const data = Object.assign({
@@ -230,7 +228,7 @@ export class RestfulEventService implements IEventService{
             headers:this._apiHeaders,
             data: formify(data)
         }
-        return axios(config).then(response=>response.data.data);
+        return axios(config).then(response=>response.data);
     }
 
     reportEvent = (event: EventResult | string, reason: ReportReason): Promise<RestApiResult<null>> => {
@@ -284,7 +282,7 @@ export class RestfulEventService implements IEventService{
         return axios(config).then(response=>response.data.data);
     }
 
-    sendGoal = (user: User, img: string, message?:string, options?: GoalOptions): Promise<RestApiResult<null>> => {
+    sendGoal = (user: User, img: string, message?:string, options?: GoalOptions): Promise<RestApiResult<null | CommandResponse>> => {
         const defaultOptions = {
             "img": img,
             "link":""
@@ -304,6 +302,18 @@ export class RestfulEventService implements IEventService{
             url: this._commandApi,
             headers: this._apiHeaders,
             data: formify(data)
-        }).then(response=>response.data.data);
+        }).then(response=>response.data);
+    }
+
+    deleteEvent = (event: EventResult | string): Promise<RestApiResult<null>> => {
+        // @ts-ignore
+        const id = event.id || event;
+        const config:AxiosRequestConfig =  {
+            method: DELETE,
+            url: buildAPI(this._config, `chat/rooms/${this._currentRoom.id}/events/${id}`),
+            headers: this._jsonHeaders,
+        };
+        // @ts-ignore
+        return axios(config).then(result => result.data);
     }
 }

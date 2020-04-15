@@ -107,7 +107,7 @@ describe('Pre Moderation sequences', function() {
                 expect(events).to.have.lengthOf(0);
                 return delay(1000);
             }).then(()=>{
-                return client.getEventManager().getUpdates()
+                return client.getEventService().getUpdates()
             }).then((events) => {
                // expect(events).to.have.lengthOf(1)
                 rm.deleteRoom(roomid);

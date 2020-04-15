@@ -3,6 +3,7 @@ import * as chai from 'chai';
 import {RestfulRoomService} from "../../../src/impl/chat/REST/RestfulRoomService";
 import * as dotenv from 'dotenv';
 import {Kind, SportsTalkConfig} from "../../../src/models/CommonModels";
+import {EventResult} from "../../../src/models/ChatModels";
 dotenv.config();
 
 let client;
@@ -27,8 +28,8 @@ describe('REPLY Chat Sequence', function() {
         }
     });
     const rm = new RestfulRoomService(config);
-    const em1 = client.getEventManager();
-    const em2 = client2.getEventManager();
+    const em1 = client.getEventService();
+    const em2 = client2.getEventService();
 
     let theRoom;
     describe('User 1', function () {
@@ -68,12 +69,13 @@ describe('REPLY Chat Sequence', function() {
                 .then(async chatHistories => {
                     expect(chatHistories[0]).to.have.lengthOf(2);
                     expect(chatHistories[1]).to.have.lengthOf(2);
-                    await client2.sendReply("This is my reply", chatHistories[0][0].id);
+                    const reply = await client2.sendReply("This is my reply", chatHistories[0][0].id);
                     done();
                 }).catch(done)
         })
     });
-    describe('GetUpdates shows reply', function () {
+    describe('GetUpdates reply and delete', function () {
+        let toDelete:EventResult;
         it('Fires onReply', function (done) {
             Promise.all([em1.getUpdates(), em2.getUpdates()])
                 .then(chatHistories => {
@@ -82,10 +84,18 @@ describe('REPLY Chat Sequence', function() {
                     expect(chatHistories[0][chatHistories[0].length-1].eventtype).to.equal("reply");
                     expect(chatHistories[0][chatHistories[0].length-1].replyto).to.haveOwnProperty('userid');
                     expect(chatHistories[0][chatHistories[0].length-1].body).to.equal('This is my reply')
+                    return chatHistories[0];
+                }).then(events=>{
+                    toDelete = events[0];
                     done();
-                }).catch(done)
+                })
+                .catch(done)
         })
+        it("deletes first event", async ()=>{
+            const deletion = await client.deleteEvent(toDelete);
+        });
     });
+
     describe('Kill test room', function () {
         it('can be deleted', function (done) {
             rm.deleteRoom(theRoom)

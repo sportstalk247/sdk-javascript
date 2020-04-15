@@ -3,6 +3,7 @@ import * as chai from 'chai';
 import {RestfulRoomService} from "../../../src/impl/chat/REST/RestfulRoomService";
 import * as dotenv from 'dotenv';
 import {SportsTalkConfig} from "../../../src/models/CommonModels";
+import {API_SUCCESS_MESSAGE} from "../../../src/impl/constants/api";
 dotenv.config();
 
 let client;
@@ -29,8 +30,8 @@ describe('BASIC Chat Sequence', function() {
     const rm = new RestfulRoomService({
        ...config
     });
-    const em1 = client.getEventManager();
-    const em2 = client2.getEventManager();
+    const em1 = client.getEventService();
+    const em2 = client2.getEventService();
 
     let theRoom;
     describe('User 1', function () {
@@ -100,8 +101,9 @@ describe('BASIC Chat Sequence', function() {
     })
     describe("leave room", function(){
         it("Leaves the room", async function() {
-            await client.exitRoom();
-            await client2.exitRoom();
+            const exit = await client.exitRoom();
+            const exit2 = await client2.exitRoom();
+            expect(exit).to.equal(API_SUCCESS_MESSAGE);
         })
     })
     describe('Kill test room', function () {

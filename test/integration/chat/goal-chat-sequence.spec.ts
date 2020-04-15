@@ -22,7 +22,7 @@ describe('GOAL Chat Sequence', function() {
     const image = "https://res.cloudinary.com/sportstalk247/image/upload/v1575821595/goal_l6ho1d.jpg";
     client.setDefaultGoalImage(image);
     // @ts-ignore
-    const client2:ChatClient = <ChatClient>ChatClient.create({
+    const client2:ChatClient = <ChatClient> ChatClient.create({
         apiToken:process.env.TEST_KEY,
         endpoint: process.env.TEST_ENDPOINT,
         appId: process.env.TEST_APP_ID,
@@ -37,8 +37,8 @@ describe('GOAL Chat Sequence', function() {
         endpoint: process.env.TEST_ENDPOINT,
         appId: process.env.TEST_APP_ID,
     });
-    const em1 = client.getEventManager();
-    const em2 = client2.getEventManager();
+    const em1 = client.getEventService();
+    const em2 = client2.getEventService();
 
     let theRoom;
     describe('User 1', function () {

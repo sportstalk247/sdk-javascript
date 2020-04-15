@@ -15,12 +15,12 @@ const delay = function(timer) {
     })
 }
 
-describe("Event Manager", ()=>{
+describe("Event Service", ()=>{
 
     // @ts-ignore
     const client = <ChatClient> ChatClient.create(config)
-    const EM = client.getEventManager();
-    const RM = client.getRoomManager();
+    const EM = client.getEventService();
+    const RM = client.getRoomService();
     const onChatStart = sinon.fake();
     const onChatEvent = sinon.spy();
     const onAdminCommand = sinon.fake();

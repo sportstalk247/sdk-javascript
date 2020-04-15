@@ -33,12 +33,12 @@ describe('PURGE Chat Sequence', function() {
         }
     });
     const rm = new RestfulRoomService(config);
-    const em1 = client.getEventManager();
+    const em1 = client.getEventService();
     em1.setEventHandlers({
         onPurgeEvent,
         onChatEvent,
     })
-    const em2 = client2.getEventManager();
+    const em2 = client2.getEventService();
     em2.setEventHandlers({
         onPurgeEvent,
         onChatEvent

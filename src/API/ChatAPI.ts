@@ -2,17 +2,25 @@
 
 import {
     AdvertisementOptions,
-    CommandOptions, DeletedRoomResponse,
+    CommandOptions, CommandResponse, DeletedRoomResponse,
     EventHandlerConfig,
     EventResult,
     GoalOptions,
-    Room,
+    Room, RoomExitResult,
     RoomResult,
     RoomUserResult
 } from "../models/ChatModels";
 
 import {ISportsTalkConfigurable, IUserConfigurable} from "./CommonAPI";
-import {MessageResult, Reaction, ReportReason, ReportType, User, UserResult} from "../models/CommonModels";
+import {
+    MessageResult,
+    Reaction,
+    ReportReason,
+    ReportType,
+    RestApiResult,
+    User,
+    UserResult
+} from "../models/CommonModels";
 
 export interface IEventService extends ISportsTalkConfigurable, IUserConfigurable  {
     startTalk(),
@@ -22,12 +30,13 @@ export interface IEventService extends ISportsTalkConfigurable, IUserConfigurabl
     getCurrentRoom(): RoomResult | null,
     getUpdates(): Promise<EventResult[]>,
     reportEvent(event: EventResult | string, reason: ReportReason): Promise<MessageResult<null>>,
-    sendCommand(user:User, command: string, options?: CommandOptions):  Promise<MessageResult<null | Event>>
-    sendReply(user: User, message: string, replyto: string | Event, options?: CommandOptions): Promise<MessageResult<null>>
-    sendReaction(user: User,  reaction: Reaction, reactToMessageId: Event | string, options?: CommandOptions): Promise<MessageResult<null>>
-    sendAdvertisement(user: User, options: AdvertisementOptions): Promise<MessageResult<null>>
-    sendGoal(user: User, img: string, message?:string, options?: GoalOptions): Promise<MessageResult<null>>
+    sendCommand(user:User, command: string, options?: CommandOptions):  Promise<MessageResult<null | CommandResponse>>
+    sendReply(user: User, message: string, replyto: string | Event, options?: CommandOptions): Promise<MessageResult<null | CommandResponse>>
+    sendReaction(user: User,  reaction: Reaction, reactToMessageId: Event | string, options?: CommandOptions): Promise<MessageResult<null | CommandResponse>>
+    sendAdvertisement(user: User, options: AdvertisementOptions): Promise<MessageResult<null | CommandResponse>>
+    sendGoal(user: User, img: string, message?:string, options?: GoalOptions): Promise<MessageResult<null | CommandResponse>>
     getEventHandlers(): EventHandlerConfig
+    deleteEvent(event: EventResult | string): Promise<MessageResult<null>>
 }
 
 export interface IRoomService extends ISportsTalkConfigurable {
@@ -37,15 +46,15 @@ export interface IRoomService extends ISportsTalkConfigurable {
     listParticipants(room: Room, cursor?: string, maxresults?: number): Promise<Array<UserResult>>
     listUserMessages(user: User | string, Room: Room | String, cursor?: string, limit?: number): Promise<Array<EventResult>>
     joinRoom(user: User, room: Room | string): Promise<RoomUserResult>
-    exitRoom(user: User | string, room: Room | string): Promise<RoomUserResult>
+    exitRoom(user: User | string, room: Room | string): Promise<RoomExitResult>
 }
 
 export interface IChatClient extends IUserConfigurable, ISportsTalkConfigurable{
-    sendCommand(command: string, options?: CommandOptions):  Promise<MessageResult<null | Event>>
-    sendReply(message: string, replyto: string, options?: CommandOptions): Promise<MessageResult<null>>
-    sendReaction(reaction: Reaction, reactToMessageId: Event | string, options?: CommandOptions): Promise<MessageResult<null>>
-    sendAdvertisement(options: AdvertisementOptions): Promise<MessageResult<null>>
-    sendGoal(message?:string, img?: string, options?: GoalOptions): Promise<MessageResult<null>>
+    sendCommand(command: string, options?: CommandOptions):  Promise<MessageResult<null | CommandResponse>>
+    sendReply(message: string, replyto: string, options?: CommandOptions): Promise<MessageResult<null | CommandResponse>>
+    sendReaction(reaction: Reaction, reactToMessageId: Event | string, options?: CommandOptions): Promise<MessageResult<null | CommandResponse>>
+    sendAdvertisement(options: AdvertisementOptions): Promise<MessageResult<null | CommandResponse>>
+    sendGoal(message?:string, img?: string, options?: GoalOptions): Promise<MessageResult<null | CommandResponse>>
     setDefaultGoalImage(url: string);
     report(event: EventResult | string, reason: ReportType):  Promise<MessageResult<null>>,
     listRooms(): Promise<Array<Room>>;
