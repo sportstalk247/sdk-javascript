@@ -194,6 +194,24 @@ export class RestfulEventService implements IEventService{
     /**
      * ROOM COMMANDS SECTION
      */
+
+    private _evaluateCommandResponse = (command: string, response: RestApiResult<null | CommandResponse> ): RestApiResult<null | CommandResponse> => {
+        if(command.startsWith('*')) {
+            const onHelp = this.eventHandlers.onHelp;
+            if( command.startsWith('*help') && onHelp  && onHelp instanceof Function ) {
+                onHelp(response);
+                return response;
+            }
+            if(command.startsWith("*purge") && this.eventHandlers.onPurgeEvent())
+                const adminCommand = this.eventHandlers.onAdminCommand;
+                if (adminCommand && adminCommand instanceof Function) {
+                    // @ts-ignore
+                    adminCommand(response);
+                }
+            }
+        }
+        return response;
+    }
     /**
      *
      * @param command
@@ -211,7 +229,9 @@ export class RestfulEventService implements IEventService{
             data: data
         };
         // @ts-ignore
-        return axios(config).then(response=>response.data);
+        return axios(config).then(response=>{
+            return this._evaluateCommandResponse(command, response.data)
+        });
     }
 
     sendReply = (user: User, message: string, replyto: Event |string, options?: CommandOptions): Promise<RestApiResult<null | CommandResponse>> => {

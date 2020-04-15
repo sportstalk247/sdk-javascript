@@ -204,21 +204,7 @@ export class ChatClient implements IChatClient {
      * @param options
      */
     sendCommand = (command: string, options?: CommandOptions): Promise<MessageResult<null | CommandResponse>> => {
-        return this._eventService.sendCommand(this._user, command, options).then(response=>{
-            if(command.startsWith('*')) {
-                const onHelp = this._eventService.getEventHandlers().onHelp;
-                if( command.startsWith('*help') && onHelp  && onHelp instanceof Function ) {
-                    onHelp(response);
-                } else {
-                    const adminCommand = this._eventService.getEventHandlers().onAdminCommand;
-                    if (adminCommand && adminCommand instanceof Function) {
-                        // @ts-ignore
-                        adminCommand(response);
-                    }
-                }
-            }
-            return response;
-        })
+        return this._eventService.sendCommand(this._user, command, options);
     }
 
     sendReply = (message: string, replyto: Event |string, options?: CommandOptions): Promise<MessageResult<CommandResponse | null>> => {

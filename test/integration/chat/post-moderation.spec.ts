@@ -70,7 +70,7 @@ describe('Post moderation Sequence', function() {
         //   console.log("GOT Moderation queue")
            expect(events.length).to.be.equal(0);
        }).then(()=>{
-           return client.getEventManager().getUpdates()
+           return client.getEventService().getUpdates()
        }).then((events)=>{
         //   console.log("GOT EVENTS");
            const list: Array<EventResult> =  events || [];
