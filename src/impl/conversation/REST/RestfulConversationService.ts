@@ -6,12 +6,12 @@ import {
     ConversationDeletionResponse,
     ConversationRequest, ConversationListResponse
 } from "../../../models/ConversationModels";
-import {GET, POST, DELETE} from "../../../constants/api";
+import {GET, POST, DELETE} from "../../constants/api";
 import {getUrlEncodedHeaders, getJSONHeaders, buildAPI, formify} from "../../utils";
-import {IConversationManager} from "../../../API/ConversationAPI";
+import {IConversationService} from "../../../API/ConversationAPI";
 import {getUrlConversationId} from "../ConversationUtils";
 
-export class RestfulConversationManager implements IConversationManager {
+export class RestfulConversationService implements IConversationService {
 
     _config: ClientConfig;
     _apiHeaders: ApiHeaders;

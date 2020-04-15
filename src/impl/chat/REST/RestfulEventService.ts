@@ -3,23 +3,23 @@ import {
     CommandOptions,
     EventHandlerConfig,
     EventResult,
-    EventType, GoalOptions, Room
+    EventType, GoalOptions, Room, RoomResult
 } from "../../../models/ChatModels";
-import {DEFAULT_TALK_CONFIG, GET, POST} from "../../../constants/api";
-import {IEventManager} from "../../../API/ChatAPI";
+import {DEFAULT_CONFIG, GET, POST} from "../../constants/api";
+import {IEventService} from "../../../API/ChatAPI";
 import {buildAPI, formify, getJSONHeaders, getUrlEncodedHeaders} from "../../utils";
 import {SettingsError} from "../../errors";
-import {NO_HANDLER_SET, NO_ROOM_SET} from "../../../constants/messages";
+import {NO_HANDLER_SET, NO_ROOM_SET} from "../../constants/messages";
 import axios, {AxiosRequestConfig} from "axios";
-import {ApiResult, Reaction, ReportReason, SportsTalkConfig, User} from "../../../models/CommonModels";
+import {RestApiResult, Reaction, ReportReason, SportsTalkConfig, User} from "../../../models/CommonModels";
 const INVALID_POLL_FREQUENCY = "Invalid poll _pollFrequency.  Must be between 250ms and 5000ms"
 
-export class RestfulEventManager implements IEventManager{
+export class RestfulEventService implements IEventService{
     private _config: SportsTalkConfig = {appId: ""};
     private _polling: any; // set interval id;
     private _apiHeaders = {}
     private _jsonHeaders = {}
-    private _currentRoom: Room;
+    private _currentRoom: RoomResult;
     private _updatesApi: string;
     private eventHandlers:EventHandlerConfig = {}
     // api endpoints
@@ -61,18 +61,22 @@ export class RestfulEventManager implements IEventManager{
         this._user = this._config.user;
     }
 
+    getUser = () => {
+        return this._user;
+    }
+
     setConfig = (config:SportsTalkConfig) => {
-        this._config = Object.assign(DEFAULT_TALK_CONFIG, config);
+        this._config = Object.assign(DEFAULT_CONFIG, config);
         this._user = Object.assign(this._user, this._config.user);
         this._apiHeaders = getUrlEncodedHeaders(this._config.apiToken);
         this._jsonHeaders = getJSONHeaders(this._config.apiToken);
     }
 
-    getCurrentRoom = ():Room | null => {
+    getCurrentRoom = (): RoomResult | null => {
         return this._currentRoom;
     }
 
-    setCurrentRoom = (room: Room): Room | null => {
+    setCurrentRoom = (room: RoomResult): Room | null => {
         this.lastCursor = undefined;
         this.lastMessageId = undefined;
         this.firstMessageId = undefined;
@@ -195,7 +199,7 @@ export class RestfulEventManager implements IEventManager{
      * @param command
      * @param options
      */
-    sendCommand = (user: User, command: string, options?: CommandOptions): Promise<ApiResult<null | Event>> => {
+    sendCommand = (user: User, command: string, options?: CommandOptions): Promise<RestApiResult<null | Event>> => {
         const data = Object.assign({
             command,
             userid: user.userid
@@ -212,7 +216,7 @@ export class RestfulEventManager implements IEventManager{
         });
     }
 
-    sendReply = (user: User, message: string, replyto: Event |string, options?: CommandOptions): Promise<ApiResult<null>> => {
+    sendReply = (user: User, message: string, replyto: Event |string, options?: CommandOptions): Promise<RestApiResult<null>> => {
         // @ts-ignore
         const id = replyto.id || replyto;
         const data = Object.assign({
@@ -229,7 +233,7 @@ export class RestfulEventManager implements IEventManager{
         return axios(config).then(response=>response.data.data);
     }
 
-    reportEvent = (event: EventResult | string, reason: ReportReason): Promise<ApiResult<null>> => {
+    reportEvent = (event: EventResult | string, reason: ReportReason): Promise<RestApiResult<null>> => {
         // @ts-ignore
         const id = event.id || event;
         const config:AxiosRequestConfig =  {
@@ -244,7 +248,7 @@ export class RestfulEventManager implements IEventManager{
         })
     }
 
-    sendReaction = (user: User, reaction: Reaction, reactToMessage: Event | string, options?: CommandOptions): Promise<ApiResult<null>> => {
+    sendReaction = (user: User, reaction: Reaction, reactToMessage: Event | string, options?: CommandOptions): Promise<RestApiResult<null>> => {
         // @ts-ignore
         const source = reactToMessage.id || reactToMessage;
         const data = Object.assign({
@@ -264,7 +268,7 @@ export class RestfulEventManager implements IEventManager{
         });
     }
 
-    sendAdvertisement = (user: User, options: AdvertisementOptions): Promise<ApiResult<null>> => {
+    sendAdvertisement = (user: User, options: AdvertisementOptions): Promise<RestApiResult<null>> => {
         const data = Object.assign({
             command: 'advertisement',
             customtype: 'advertisement',
@@ -280,7 +284,7 @@ export class RestfulEventManager implements IEventManager{
         return axios(config).then(response=>response.data.data);
     }
 
-    sendGoal = (user: User, img: string, message?:string, options?: GoalOptions): Promise<ApiResult<null>> => {
+    sendGoal = (user: User, img: string, message?:string, options?: GoalOptions): Promise<RestApiResult<null>> => {
         const defaultOptions = {
             "img": img,
             "link":""

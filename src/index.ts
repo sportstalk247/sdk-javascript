@@ -1,41 +1,49 @@
 import * as API from "./API/ChatAPI";
 import {ChatClient} from './impl/ChatClient';
 import {ConversationClient} from './impl/ConversationClient';
-import {RestfulChatModerationManager} from "./impl/chat/REST/RestfulChatModerationManager";
-import {RestfulEventManager} from "./impl/chat/REST/RestfulEventManager";
-import {RestfulRoomManager} from "./impl/chat/REST/RestfulRoomManager";
+import {RestfulChatModerationService} from "./impl/chat/REST/RestfulChatModerationService";
+import {RestfulEventService} from "./impl/chat/REST/RestfulEventService";
+import {RestfulRoomService} from "./impl/chat/REST/RestfulRoomService";
 import {RestfulUserManager} from "./impl/common/REST/RestfulUserManager";
 import * as ChatModels from './models/ChatModels';
 import * as ConversationModels from './models/ConversationModels';
 import * as CommonModels from './models/CommonModels';
-import * as Constants from './constants/api';
-import * as Messages from './constants/messages';
+import * as Constants from './impl/constants/api';
+import * as Messages from './impl/constants/messages';
 import * as Errors from './impl/errors';
-import {RestfulConversationManager} from "./impl/conversation/REST/RestfulConversationManager";
-import {RestfulCommentManager} from './impl/conversation/REST/RestfulCommentManager'
+import {RestfulConversationService} from "./impl/conversation/REST/RestfulConversationService";
+import {RestfulCommentService} from './impl/conversation/REST/RestfulCommentService'
 import {RestfulWebhookManager} from "./impl/common/REST/RestfulWebhookManager";
 
 const Chat = {
-    RestfulChatModerationManager,
-    RestfulEventManager,
-    RestfulRoomManager,
+    RestfulChatModerationManager: RestfulChatModerationService,
+    RestfulEventManager: RestfulEventService,
+    RestfulRoomManager: RestfulRoomService,
 }
 
 const Conversation = {
-    RestfulConversationManager,
-    RestfulCommentManager
+    RestfulConversationManager: RestfulConversationService,
+    RestfulCommentManager: RestfulCommentService
 }
 const Common = {
     RestfulUserManager,
     RestfulWebhookManager
 }
 
-export {
-    ChatClient,
-    ConversationClient,
+const REST ={
     Chat,
     Conversation,
     Common,
+}
+
+const impl = {
+    REST
+}
+
+export {
+    ChatClient,
+    ConversationClient,
+    impl,
     ChatModels,
     ConversationModels,
     CommonModels,

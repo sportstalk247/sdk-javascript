@@ -1,30 +1,41 @@
-import {ApiHeaders, ApiResult, ClientConfig} from "../../../models/CommonModels";
+import {ApiHeaders, RestApiResult, ClientConfig} from "../../../models/CommonModels";
 import axios, {AxiosRequestConfig} from "axios";
 import {Comment} from "../../../models/ConversationModels";
-import {GET, POST} from "../../../constants/api";
+import {DEFAULT_CONFIG, GET, POST} from "../../constants/api";
 import {getUrlEncodedHeaders, getJSONHeaders, buildAPI, formify} from "../../utils";
-import {IConversationModerationManager} from "../../../API/ConversationAPI";
+import {ICommentModerationService} from "../../../API/ConversationAPI";
+import {SettingsError} from "../../errors";
+import {MUST_SET_APPID} from "../../constants/messages";
 
-export class RestfulConversationModerationManager implements IConversationModerationManager {
+export class RestfulCommentModerationService implements ICommentModerationService {
 
-    _config: ClientConfig;
-    _apiHeaders: ApiHeaders;
-    _jsonHeaders: ApiHeaders;
-    _apiExt:string = 'comment/moderation/queues/comments';
+    private _config: ClientConfig;
+    private _apiHeaders: ApiHeaders;
+    private _jsonHeaders: ApiHeaders;
+    private _apiExt:string = 'comment/moderation/queues/comments';
+
     constructor(config?:ClientConfig) {
-       if(config) {
-           this.setConfig(config);
-       }
-
+       this.setConfig(config);
     }
 
-    public setConfig = (config: ClientConfig) => {
-        this._config = config;
+    private _requireAppId = () =>{
+        if(!this._config || !this._config.appId) {
+            throw new SettingsError(MUST_SET_APPID);
+        }
+    }
+
+    public getConfig = () => {
+        return this._config;
+    }
+
+    public setConfig = (config: ClientConfig = {}) => {
+        this._config = Object.assign({}, DEFAULT_CONFIG, config);
         this._apiHeaders = getUrlEncodedHeaders(this._config.apiToken);
         this._jsonHeaders = getJSONHeaders(this._config.apiToken);
     }
 
     public getModerationQueue = (): Promise<Array<Comment>> => {
+        this._requireAppId();
         const config: AxiosRequestConfig = {
             method: GET,
             url: buildAPI(this._config, this._apiExt),

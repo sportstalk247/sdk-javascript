@@ -2,7 +2,7 @@ import {ConversationClient} from '../../../src/impl/ConversationClient';
 import {Kind, ModerationType, Reaction, ReportType} from '../../../src/models/CommonModels';
 import * as chai from 'chai';
 import * as dotenv from 'dotenv';
-import {RestfulConversationModerationManager} from "../../../src/impl/conversation/REST/RestfulConversationModerationManager";
+import {RestfulCommentModerationService} from "../../../src/impl/conversation/REST/RestfulCommentModerationService";
 import {
     Comment,
     CommentListResponse,
@@ -10,9 +10,9 @@ import {
     CommentResponse,
     Vote
 } from "../../../src/models/ConversationModels";
-import {RestfulCommentManager} from "../../../src/impl/conversation/REST/RestfulCommentManager";
+import {RestfulCommentService} from "../../../src/impl/conversation/REST/RestfulCommentService";
 import {RequireUserError, SettingsError, ValidationError} from "../../../src/impl/errors";
-import {MISSING_REPLYTO_ID, NO_CONVERSATION_SET, USER_NEEDS_ID} from "../../../src/constants/messages";
+import {MISSING_REPLYTO_ID, NO_CONVERSATION_SET, USER_NEEDS_ID} from "../../../src/impl/constants/messages";
 
 dotenv.config();
 
@@ -40,7 +40,7 @@ describe('Comment Operations', function() {
         }
     }));
 
-    const ModerationClient = new RestfulConversationModerationManager(config)
+    const ModerationClient = new RestfulCommentModerationService(config)
 
     const conversation = {
         "conversationid": "TEST_ITEM",
@@ -192,7 +192,7 @@ describe('Comment Operations', function() {
    });
    describe('Error behavior', function(){
        it("Throws error if no converation id", async()=>{
-           const commentManager = new RestfulCommentManager();
+           const commentManager = new RestfulCommentService();
            commentManager.setConfig(config);
            try {
                // @ts-ignore
@@ -204,7 +204,7 @@ describe('Comment Operations', function() {
            }
        })
        it("Throws error on getComment if no conversation set", ()=>{
-           const commentManager = new RestfulCommentManager();
+           const commentManager = new RestfulCommentService();
            try {
                const comment = commentManager.getComment("someID");
                throw new Error("should have failed")
@@ -214,7 +214,7 @@ describe('Comment Operations', function() {
            }
        })
        it("Throws error on getComment if no conversation set", ()=>{
-           const commentManager = new RestfulCommentManager();
+           const commentManager = new RestfulCommentService();
            try {
                const comment = commentManager.create("some comment body", {userid: "fake", handle:"fake"});
                throw new Error("should have failed")
@@ -224,7 +224,7 @@ describe('Comment Operations', function() {
            }
        })
        it("Throws error on getComment if no conversation set", ()=>{
-           const commentManager = new RestfulCommentManager();
+           const commentManager = new RestfulCommentService();
            try {
                const comment = commentManager.update({userid: "fake", handle:"fake", body: "some body", id:"fakeid"});
                throw new Error("should have failed")
@@ -234,7 +234,7 @@ describe('Comment Operations', function() {
            }
        })
        it("throws error if a reply is missing an id", async ()=>{
-           const commentManager = new RestfulCommentManager( config,{property: 'test', moderation: ModerationType.post, conversationid: '12342'});
+           const commentManager = new RestfulCommentService( config,{property: 'test', moderation: ModerationType.post, conversationid: '12342'});
            try {
                // @ts-ignore
                const comment = await commentManager.create("some comment body", {userid: "fake", handle:"fake"}, {});
@@ -245,7 +245,7 @@ describe('Comment Operations', function() {
            }
        })
        it("throws error if comment has no user", async ()=>{
-           const commentManager = new RestfulCommentManager(config,{property: 'test', moderation: ModerationType.post, conversationid: '12342'});
+           const commentManager = new RestfulCommentService(config,{property: 'test', moderation: ModerationType.post, conversationid: '12342'});
            try {
                // @ts-ignore
                const comment = await commentManager.create("some comment body", {userid: "", handle:"fake"}, {});
@@ -258,7 +258,7 @@ describe('Comment Operations', function() {
    })
     describe("Configuration", function(){
         it("Will accept a config", () => {
-            const commentManager = new RestfulCommentManager();
+            const commentManager = new RestfulCommentService();
             let conversation = commentManager.getConversation();
             expect(conversation).to.be.undefined
             const setconv = commentManager.setConversation({conversationid: "TEST", property: "testing", moderation: ModerationType.post});
@@ -269,7 +269,7 @@ describe('Comment Operations', function() {
         })
         it("Can set a conversation in constructor",()=>{
             const conversation = {conversationid: "TEST", property: "testing", moderation: ModerationType.post};
-            const commentManager = new RestfulCommentManager({apiToken:"",}, conversation);
+            const commentManager = new RestfulCommentService({apiToken:"",}, conversation);
             const setconversation = commentManager.getConversation();
             // @ts-ignore
             expect(setconversation.conversationid).to.be.equal("TEST");

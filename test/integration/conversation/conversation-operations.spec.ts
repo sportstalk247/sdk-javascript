@@ -2,8 +2,9 @@ import {ConversationClient} from '../../../src/impl/ConversationClient';
 import {Kind, ModerationType, Reaction, ReportType} from '../../../src/models/CommonModels';
 import * as chai from 'chai';
 import * as dotenv from 'dotenv';
-import {RestfulConversationModerationManager} from "../../../src/impl/conversation/REST/RestfulConversationModerationManager";
+import {RestfulCommentModerationService} from "../../../src/impl/conversation/REST/RestfulCommentModerationService";
 import {Conversation} from "../../../src/models/ConversationModels";
+import {DEFAULT_CONFIG} from "../../../src/impl/constants/api";
 
 
 dotenv.config();
@@ -30,7 +31,7 @@ describe('Conversation Operations', function() {
         }
     }));
 
-    let ModerationClient: RestfulConversationModerationManager;
+    let moderationClient: RestfulCommentModerationService;
 
     const conversation = {
         "conversationid": "TEST_ITEM",
@@ -59,8 +60,21 @@ describe('Conversation Operations', function() {
         "udf2" : "/sample/userdefined2/äöüÄÖÜß"
     }
     describe("Moderation Manager", function() {
-        it("Can configure with constructor", ()=>{
+        it("Can configure with constructor", async()=>{
+            const moderationClient = new RestfulCommentModerationService();
+            const config = moderationClient.getConfig()
+            expect(config.endpoint).to.equal(DEFAULT_CONFIG.endpoint);
+        });
 
+        it("Can configure with method", async() =>{
+            const moderationClient = new RestfulCommentModerationService({
+                endpoint: "https://www.google.com",
+                appId: "test",
+                apiToken: "SomeToken"
+            });
+            const config = moderationClient.getConfig();
+            expect(config.apiToken).to.be.equal("SomeToken");
+            expect(config.appId).to.be.equal("test");
         })
     })
 

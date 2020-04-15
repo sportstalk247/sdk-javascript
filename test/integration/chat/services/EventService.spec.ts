@@ -1,23 +1,24 @@
-import { ChatClient } from '../../../src/impl/ChatClient';
-import {RestfulChatModerationManager} from "../../../src/impl/chat/REST/RestfulChatModerationManager";
+import { ChatClient } from '../../../../src/impl/ChatClient';
+import {EventHandlerConfig} from "../../../../src/models/ChatModels";
 import * as chai from 'chai';
 import * as sinon from 'sinon';
 import * as dotenv from 'dotenv';
-import {SportsTalkConfig} from "../../../src/models/CommonModels";
+import {Reaction, SportsTalkConfig} from "../../../../src/models/CommonModels";
 dotenv.config();
 
+
 const { expect } = chai;
-const config: SportsTalkConfig = {apiToken:process.env.TEST_KEY, appId: process.env.TEST_APP_ID, endpoint: process.env.TEST_ENDPOINT};
+const config: SportsTalkConfig = {apiToken:process.env.TEST_KEY, appId: process.env.TEST_APP_ID || "", endpoint: process.env.TEST_ENDPOINT};
 const delay = function(timer) {
     return new Promise(function(accept, reject){
         const timeout = setTimeout(accept, timer)
     })
 }
 
-describe("Moderation Manager", ()=>{
+describe("Event Manager", ()=>{
 
-    const client = ChatClient.create(config)
-    const MM = new RestfulChatModerationManager(config);
+    // @ts-ignore
+    const client = <ChatClient> ChatClient.create(config)
     const EM = client.getEventManager();
     const RM = client.getRoomManager();
     const onChatStart = sinon.fake();
@@ -26,7 +27,7 @@ describe("Moderation Manager", ()=>{
     const onPurgeEvent = sinon.fake();
     const onReply = sinon.fake();
 
-    EM.setEventHandlers({
+    client.setEventHandlers({
         onChatStart,
         onChatEvent,
         onAdminCommand,

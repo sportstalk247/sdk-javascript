@@ -16,9 +16,9 @@ import {
     ConversationListResponse
 } from "../models/ConversationModels";
 
-import {Reaction, SportsTalkConfig, ReportType, ApiResult} from "../models/CommonModels";
+import {Reaction, SportsTalkConfig, ReportType, RestApiResult} from "../models/CommonModels";
 
-export interface ICommentManager extends ISportsTalkConfigurable {
+export interface ICommentService extends ISportsTalkConfigurable {
     setConversation(conversation: Conversation | string): Conversation;
     create(comment: Comment | string, user: User, replyto?: Comment | string): Promise<Comment>;
     getComment(comment: Comment | string): Promise<Comment | null>;
@@ -32,14 +32,14 @@ export interface ICommentManager extends ISportsTalkConfigurable {
     getConversation(): Conversation | null
 }
 
-export interface IConversationManager extends IConfigurable {
+export interface IConversationService extends IConfigurable {
     createConversation(settings: Conversation): Promise<ConversationResponse>;
     getConversation(conversation: Conversation | string): Promise<ConversationResponse>;
     listConversations(filter?: ConversationRequest):Promise<ConversationListResponse>
     deleteConversation(conversation: Conversation | string): Promise<ConversationDeletionResponse>
 }
 
-export interface IConversationModerationManager extends IConfigurable {
+export interface ICommentModerationService extends IConfigurable {
     getModerationQueue(): Promise<Array<Comment>>
     rejectComment(comment: Comment): Promise<Comment>
     approveComment(comment: Comment): Promise<Comment>
@@ -47,11 +47,11 @@ export interface IConversationModerationManager extends IConfigurable {
 
 export interface IConversationClient extends ISportsTalkConfigurable, IUserConfigurable   {
     getConfig(): SportsTalkConfig;
-    setConfig(config: SportsTalkConfig, commentManager?: ICommentManager, conversationManager?: IConversationManager)
+    setConfig(config: SportsTalkConfig, commentManager?: ICommentService, conversationManager?: IConversationService)
     createConversation (conversation: Conversation, setDefault: boolean): Promise<Conversation>;
-    setConversation(conversation: Conversation | string): Conversation;
+    setDefaultConversation(conversation: Conversation | string): Conversation;
+    getDefaultConversation(): Conversation | null | undefined;
     getConversation(conversation: Conversation | string): Promise<Conversation>;
-    getConversationsByProperty(property: string): Promise<Array<Conversation>>;
     deleteConversation(conversation: Conversation | string);
     makeComment(comment: string, replyto?: Comment | string): Promise<Comment>;
     getComment(comment: Comment | string): Promise<Comment | null>;

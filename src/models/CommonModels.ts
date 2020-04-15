@@ -56,17 +56,18 @@ export enum SearchType {
 export interface SportsTalkConfig extends ClientConfig {
     user?: User,
 }
-
+export interface MessageResult<T> {
+    message: string, // "Success"
+    errors: object,
+    data: [T]
+}
 /**
  * All API responses take the form of an ApiResult.  This includes ApiResult<null>.
  * For instance, the 200 response to a chat command is of the type ApiResult<null>
  */
-export interface ApiResult<T> {
+export interface RestApiResult<T> extends MessageResult<T> {
     kind: Kind.api,
-    message: string, // "Success"
-    errors: object,
     code: number,  //e.g. 200, 400
-    data: [T]
 }
 
 export enum Reaction {
