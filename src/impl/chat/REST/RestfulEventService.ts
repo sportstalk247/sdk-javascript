@@ -77,6 +77,7 @@ export class RestfulEventService implements IEventService{
     }
 
     setCurrentRoom = (room: RoomResult): Room | null => {
+        const oldRoom = this._currentRoom;
         if(!room || !room.id) {
             throw new SettingsError(REQUIRE_ROOM_ID);
         }
@@ -86,6 +87,9 @@ export class RestfulEventService implements IEventService{
             this.firstMessageId = undefined;
             this.firstMessageTime = undefined;
             this._currentRoom = room;
+            if(this.eventHandlers.onRoomChange) {
+                this.eventHandlers.onRoomChange(this._currentRoom, oldRoom);
+            }
             if (this._currentRoom) {
                 this._roomApi = buildAPI(this._config, `chat/rooms/${this._currentRoom.id}`);
             } else {
@@ -96,6 +100,7 @@ export class RestfulEventService implements IEventService{
         } else {
             this._currentRoom = room;
         }
+
         return room;
     }
 
