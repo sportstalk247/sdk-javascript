@@ -9,7 +9,7 @@ import {DEFAULT_CONFIG, DELETE, GET, POST} from "../../constants/api";
 import {IEventService} from "../../../API/ChatAPI";
 import {buildAPI, formify, getJSONHeaders, getUrlEncodedHeaders} from "../../utils";
 import {SettingsError} from "../../errors";
-import {NO_HANDLER_SET, NO_ROOM_SET} from "../../constants/messages";
+import {NO_HANDLER_SET, NO_ROOM_SET, REQUIRE_ROOM_ID} from "../../constants/messages";
 import axios, {AxiosRequestConfig} from "axios";
 import {RestApiResult, Reaction, ReportReason, SportsTalkConfig, User} from "../../../models/CommonModels";
 const INVALID_POLL_FREQUENCY = "Invalid poll _pollFrequency.  Must be between 250ms and 5000ms"
@@ -77,7 +77,10 @@ export class RestfulEventService implements IEventService{
     }
 
     setCurrentRoom = (room: RoomResult): Room | null => {
-        if(this._currentRoom.id !== room.id) {
+        if(!room || !room.id) {
+            throw new SettingsError(REQUIRE_ROOM_ID);
+        }
+        if(!this._currentRoom || (this._currentRoom.id !== room.id)) {
             this.lastCursor = undefined;
             this.lastMessageId = undefined;
             this.firstMessageId = undefined;

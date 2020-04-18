@@ -6,5 +6,6 @@ export const MUST_SPECIFY_CONVERSATION = "Must set a conversation in method call
 export const NO_CONVERSATION_SET = "Need to join a conversation first";
 export const NO_HANDLER_SET = "No event handler set";
 export const NO_ROOM_SET = 'No room set.  You must join a room before you can get updates!'
+export const REQUIRE_ROOM_ID = 'Room must have an id';
 export const USER_NEEDS_HANDLE = "User requires a handle";
 export const USER_NEEDS_ID = "User needs an ID";
