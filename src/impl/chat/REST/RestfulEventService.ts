@@ -202,12 +202,10 @@ export class RestfulEventService implements IEventService{
                 onHelp(response);
                 return response;
             }
-            if(command.startsWith("*purge") && this.eventHandlers.onPurgeEvent())
-                const adminCommand = this.eventHandlers.onAdminCommand;
-                if (adminCommand && adminCommand instanceof Function) {
-                    // @ts-ignore
-                    adminCommand(response);
-                }
+            const adminCommand = this.eventHandlers.onAdminCommand;
+            if (adminCommand && adminCommand instanceof Function) {
+                // @ts-ignore
+                adminCommand(response);
             }
         }
         return response;

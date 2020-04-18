@@ -1,16 +1,16 @@
-// @ts-ignore
+// @Sportstalk Client 3.6.x
 const chatClient = require('./impl/ChatClient');
 const conversationClient = require('./impl/ConversationClient');
 const chatModels = require('./models/ChatModels');
 const commonModels = require('./models/CommonModels');
 const conversationModels = require('./models/ConversationModels');
 // @ts-ignore
-var SportsTalkClient = window.SportsTalkClient || chatClient.default || chatClient.ChatClient || chatClient;
+var ChatClient = window.ChatClient || chatClient.default || chatClient.ChatClient || chatClient;
 var ConversationClient = window.ConversationClient || conversationClient.default || conversationClient.ConversationClient || conversationClient;
 
 if(window) {
     // @ts-ignore
-    window.ChatClient = SportsTalkClient;
+    window.ChatClient = ChatClient;
     // @ts-ignore
     window.ConversationClient = ConversationClient;
     // @ts-ignore
@@ -30,3 +30,4 @@ if(window) {
     // @ts-ignore
     window.SportsTalk.conversation.Models = conversationModels
 }
+console.log("Chat and commenting powered by Sportstalk247")

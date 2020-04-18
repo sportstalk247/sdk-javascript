@@ -18,10 +18,10 @@ export class ConversationClient implements IConversationClient {
     private _commentService: ICommentService;
     private _user: User;
 
-    static create(config: SportsTalkConfig, initialConversation?:Conversation | string, commentManager?: IConversationService, conversationManager?: IConversationService): ConversationClient {
+    static create(config: SportsTalkConfig, initialConversation?:Conversation | string, commentService?: IConversationService, conversationService?: IConversationService): ConversationClient {
         const commentClient = new ConversationClient();
         // @ts-ignore
-        commentClient.setConfig(config, commentManager, conversationManager)
+        commentClient.setConfig(config, commentService, conversationService)
         if(initialConversation) {
             commentClient.setDefaultConversation(initialConversation)
         }

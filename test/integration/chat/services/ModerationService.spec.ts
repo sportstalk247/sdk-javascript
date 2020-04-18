@@ -56,7 +56,7 @@ describe("Moderation Service", ()=>{
                 const response = await client.sendCommand("This is a chat event command");
                 await delay(1000);
                 expect(onChatEvent.callCount).to.be.greaterThan(0);
-                chatMessage = onChatEvent.getCall(0).args[0];
+                chatMessage = onChatEvent.getCalls()[0].lastArg;
             });
         });
         describe("onReply", ()=>{
