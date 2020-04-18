@@ -129,8 +129,9 @@ export class ChatClient implements IChatClient {
         return this._roomService.listParticipants(this._currentRoom, cursor, maxresults);
     }
 
-    setUser = (user:User) => {
+    setUser = (user:User):User => {
        this._user = user;
+       return this._user;
     }
 
     getUser = (): User | undefined => {

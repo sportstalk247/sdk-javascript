@@ -77,19 +77,23 @@ export class RestfulEventService implements IEventService{
     }
 
     setCurrentRoom = (room: RoomResult): Room | null => {
-        this.lastCursor = undefined;
-        this.lastMessageId = undefined;
-        this.firstMessageId = undefined;
-        this.firstMessageTime = undefined;
-        this._currentRoom = room;
-        if(this._currentRoom) {
-            this._roomApi = buildAPI(this._config, `chat/rooms/${this._currentRoom.id}`);
-        }else {
-            this._roomApi = null;
+        if(this._currentRoom.id !== room.id) {
+            this.lastCursor = undefined;
+            this.lastMessageId = undefined;
+            this.firstMessageId = undefined;
+            this.firstMessageTime = undefined;
+            this._currentRoom = room;
+            if (this._currentRoom) {
+                this._roomApi = buildAPI(this._config, `chat/rooms/${this._currentRoom.id}`);
+            } else {
+                this._roomApi = null;
+            }
+            this._commandApi = `${this._roomApi}/command`;
+            this._updatesApi = `${this._roomApi}/updates`;
+        } else {
+            this._currentRoom = room;
         }
-        this._commandApi = `${this._roomApi}/command`;
-        this._updatesApi = `${this._roomApi}/updates`;
-        return room
+        return room;
     }
 
     setPollFrequency = (frequency:number) => {

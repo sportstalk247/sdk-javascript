@@ -30,7 +30,7 @@ export function getUrlEncodedHeaders(apiKey?: string): ApiHeaders {
       'Content-Type':FORM_ENCODED,
     }
     if(apiKey) {
-        headers['x-api-token'] = apiKey
+        headers[API_TOKEN_HEADER] = apiKey
     }
     return headers;
 }
