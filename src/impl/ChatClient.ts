@@ -179,7 +179,6 @@ export class ChatClient implements IChatClient {
             throw new SettingsError("Cannot exit if not in a room!");
         }
         return this._roomService.exitRoom(this._user, this._currentRoom).then(response=>{
-            this._eventService.setCurrentRoom(null);
             return response;
         });
     }

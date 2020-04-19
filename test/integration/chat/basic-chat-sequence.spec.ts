@@ -42,7 +42,8 @@ describe('BASIC Chat Sequence', function() {
             }).then(room => {
                 theRoom = room;
                 return client.joinRoom(room)
-            }).then(() => {
+            }).then((resp) => {
+                expect(resp.room.id).to.be.not.null;
                 done()
             }).catch(done)
         })
@@ -51,6 +52,7 @@ describe('BASIC Chat Sequence', function() {
         it('Joins room', function (done) {
             client2.joinRoom(theRoom)
                 .then((resp) => {
+                    expect(resp.room.id).to.be.not.null;
                     done()
                 }).catch(done)
         })

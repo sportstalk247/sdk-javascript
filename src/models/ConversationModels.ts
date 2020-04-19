@@ -48,11 +48,13 @@ export interface CommentDeletionResponse {
     deletedComments: number
 }
 
-export enum CommentSortMethod {
-    oldest      = "oldest",
-    newest      = "newest",
-    mostreplies = "mostreplies",
-    votes       = "votes"
+export class CommentSortMethod {
+    public static oldest: "oldest"
+    public static newest: "newest"
+    public static mostreplies: "mostreplies"
+    public static votescroe: "votescore"
+    public static votes: "votes"
+    public static reaction(type:string) {return `reaction-${type}`}
 }
 
 export enum ListSortDirection {
@@ -64,9 +66,10 @@ export interface ListRequest {
     cursor?: string,
     limit?: number
 }
-export interface CommentRequest extends ListRequest{
+export interface CommentRequest extends ListRequest {
     sort?: CommentSortMethod | string,
     includechilden?: boolean
+    includeinactive?: boolean
     direction?: ListSortDirection
 }
 
@@ -91,7 +94,7 @@ export enum CommentModeration {
 }
 
 export interface Comment extends User {
-    id: string;
+    id?: string;
     conversationid?: string
     body: string,
     appid?: string,

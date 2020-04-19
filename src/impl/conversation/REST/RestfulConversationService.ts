@@ -18,6 +18,11 @@ export class RestfulConversationService implements IConversationService {
     _jsonHeaders: ApiHeaders;
     _apiExt:string = 'comment/conversations'
 
+    constructor(config?:ClientConfig) {
+        if(config) {
+            this.setConfig(config);
+        }
+    }
     public setConfig = (config: ClientConfig) => {
         this._config = config;
         this._apiHeaders = getUrlEncodedHeaders(this._config.apiToken);

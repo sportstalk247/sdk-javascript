@@ -86,7 +86,7 @@ export class ConversationClient implements IConversationClient {
      * @param comment The comment string.
      * @param replyto either the comment object to reply to or the ID as a string
      */
-    public makeComment = (comment: string, replyto?: Comment | string) => {
+    public makeComment = (comment: string, replyto?: Comment | string): Promise<Comment> => {
         return this._commentService.create(comment, this._user, replyto);
     }
 

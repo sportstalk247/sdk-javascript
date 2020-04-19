@@ -61,7 +61,7 @@ export class RestfulCommentService implements ICommentService {
         }
     }
 
-    private _buildUserComment = (comment: Comment | string, user: User): Comment => {
+    private _buildUserComment = (comment: Comment | string, user?: User): Comment => {
         let final:any = comment;
         if(typeof comment === 'string') {
             final = {body: comment}
@@ -89,14 +89,16 @@ export class RestfulCommentService implements ICommentService {
         return this._conversation;
     }
 
-    public create = (comment: Comment | string, user: User, replyto?: Comment | string): Promise<Comment> => {
-        this._requireUser(user);
+    public create = (comment: Comment | string, user?: User, replyto?: Comment | string): Promise<Comment> => {
+        // @ts-ignore
+        const replyid: Comment | string = replyto || comment.replyto;
+        this._requireUser(user || comment );
         this._requireConversation();
         const finalComment = this._buildUserComment(comment, user);
-        if(!replyto) {
+        if(!replyid) {
             return this._makeComment(finalComment);
         }
-        return this._makeReply(finalComment, replyto);
+        return this._makeReply(finalComment, replyid);
     }
 
     private _makeComment = (comment: Comment): Promise<Comment> => {
@@ -128,6 +130,8 @@ export class RestfulCommentService implements ICommentService {
         }
         return axios(config).then(result=>{
             return result.data;
+        }).catch(e=>{
+            throw e;
         });
     }
 
@@ -178,7 +182,7 @@ export class RestfulCommentService implements ICommentService {
             const response: CommentDeletionResponse = {
                 kind: Kind.deletedcomment,
                 conversationid: comment.conversationid,
-                commentid: comment.id,
+                commentid: <string>comment.id,
                 deletedComments: 1
             }
             return response;

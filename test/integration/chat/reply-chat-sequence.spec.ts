@@ -74,9 +74,9 @@ describe('REPLY Chat Sequence', function() {
                 }).catch(done)
         })
     });
-    describe('GetUpdates reply and delete', function () {
+    describe('GetUpdates reply sequence', function () {
         let toDelete:EventResult;
-        it('Fires onReply', function (done) {
+        it('Shows reply', function (done) {
             Promise.all([em1.getUpdates(), em2.getUpdates()])
                 .then(chatHistories => {
                     expect(chatHistories[0]).to.have.lengthOf(3);
