@@ -88,7 +88,7 @@ export class RestfulEventService implements IEventService{
             this.firstMessageTime = undefined;
             this._currentRoom = room;
             if(this.eventHandlers.onRoomChange) {
-                this.eventHandlers.onRoomChange(oldRoom,this._currentRoom);
+                this.eventHandlers.onRoomChange(oldRoom, this._currentRoom);
             }
             if (this._currentRoom) {
                 this._roomApi = buildAPI(this._config, `chat/rooms/${this._currentRoom.id}`);
