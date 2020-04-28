@@ -1,4 +1,5 @@
-import axios, {AxiosRequestConfig} from "axios";
+import {AxiosRequestConfig} from "axios";
+import {stRequest} from "../../network";
 import {DELETE, POST} from "../../constants/api";
 import {buildAPI, getJSONHeaders, getUrlEncodedHeaders} from "../../utils";
 import {RestApiResult, SearchType, SportsTalkConfig, User, UserResult} from "../../../models/CommonModels";
@@ -39,7 +40,7 @@ export class RestfulUserManager implements IUserService {
                 profileurl: user.profileurl
             }
         };
-        return axios(config).then(response=>response.data.data);
+        return stRequest(config).then(response=>response.data.data);
     }
 
     /**
@@ -51,7 +52,7 @@ export class RestfulUserManager implements IUserService {
         // @ts-ignore
         const userid = user.userid || user;
         const url = buildAPI(this._config,`${this._apiExt}/${userid}/ban`);
-        return axios({
+        return stRequest({
             method: POST,
             url: url,
             headers: this._jsonHeaders,
@@ -79,7 +80,7 @@ export class RestfulUserManager implements IUserService {
             headers: this._jsonHeaders,
             data
         }
-        return axios(config)
+        return stRequest(config)
             .then(response=>{
                 return response.data.data.users;
             });
@@ -93,6 +94,6 @@ export class RestfulUserManager implements IUserService {
             url: buildAPI(this._config,`${this._apiExt}/${id}`),
             headers: this._jsonHeaders,
         };
-        return axios(config).then(response=>response.data.data.user);
+        return stRequest(config).then(response=>response.data.data.user);
     }
 }
