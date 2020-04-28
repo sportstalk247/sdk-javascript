@@ -7,10 +7,11 @@ import {
     DeletedRoomResponse,
     RoomExitResult
 } from "../../../models/ChatModels";
-import axios, {AxiosRequestConfig} from "axios";
+import {stRequest} from '../../network';
 import {GET, DELETE, POST, API_SUCCESS_MESSAGE} from "../../constants/api";
 import {buildAPI, forceObjKeyOrString, getJSONHeaders, getUrlEncodedHeaders} from "../../utils";
 import { SportsTalkConfig, User, UserResult} from "../../../models/CommonModels";
+import {AxiosRequestConfig} from "axios";
 
 export class RestfulRoomService implements IRoomService {
     private _config: SportsTalkConfig;
@@ -39,8 +40,8 @@ export class RestfulRoomService implements IRoomService {
             url: buildAPI(this._config, this._apiExt),
             headers: this._apiHeaders,
         };
-        return axios(config).then(result=>{
-            this._knownRooms = result.data.data;
+        return stRequest(config).then(result=>{
+            this._knownRooms = result.data;
             return this._knownRooms;
         });
     }
@@ -63,8 +64,8 @@ export class RestfulRoomService implements IRoomService {
             headers: this._jsonHeaders
         };
         // @ts-ignore
-        return axios(config).then(result=>{
-            return result.data.data
+        return stRequest(config).then(result=>{
+            return result.data;
         });
     }
 
@@ -77,8 +78,8 @@ export class RestfulRoomService implements IRoomService {
             headers: this._jsonHeaders,
             data: room
         };
-        return axios(config).then(result=>{
-            return result.data.data;
+        return stRequest(config).then(result=>{
+            return result.data;
         });
     }
 
@@ -88,12 +89,12 @@ export class RestfulRoomService implements IRoomService {
         const roomid = forceObjKeyOrString(room);
         const userid = forceObjKeyOrString(user, 'userid');
         const url = buildAPI(this._config,`${this._apiExt}/${roomid}/messagesbyuser/${userid}/?limit=${limit}&cursor=${cursor}`);
-        return axios({
+        return stRequest({
             method: GET,
             url: url,
             headers: this._jsonHeaders
         }).then(result=>{
-            return result.data.data.events
+            return result.data.events
         });
     }
 
@@ -108,7 +109,7 @@ export class RestfulRoomService implements IRoomService {
             url: buildAPI(this._config,`${this._apiExt}/${room.id}/participants?cursor=${cursor}&maxresults=${maxresults}`),
             headers: this._apiHeaders
         };
-        return axios(config).then(result=>result.data.data);
+        return stRequest(config).then(result=>result.data);
     }
 
 
@@ -127,8 +128,8 @@ export class RestfulRoomService implements IRoomService {
                 profileurl: user.profileurl || "",
             }
         }
-        return axios(config).then(response => {
-            return response.data.data;
+        return stRequest(config).then(response => {
+            return response.data;
         })
     }
 
@@ -143,8 +144,8 @@ export class RestfulRoomService implements IRoomService {
                 userid: userId
             }
         };
-        return axios(config).then(response => {
-            return <RoomExitResult> response.data.message
+        return stRequest(config).then(response => {
+            return <RoomExitResult> response.message
         })
     }
 }

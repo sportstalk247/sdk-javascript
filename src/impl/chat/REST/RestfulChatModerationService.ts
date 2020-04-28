@@ -1,5 +1,5 @@
 import {EventResult} from "../../../models/ChatModels";
-import axios, {AxiosRequestConfig} from "axios";
+import {stRequest} from '../../network';
 import {buildAPI, formify, getUrlEncodedHeaders} from "../../utils";
 import {DEFAULT_CONFIG, POST, } from "../../constants/api";
 import {IChatModerationService} from "../../../API/ChatAPI";
@@ -20,23 +20,23 @@ export class RestfulChatModerationService implements IChatModerationService {
     }
 
     getModerationQueue = (): Promise<Array<EventResult>> => {
-        return axios({
+        return stRequest({
             method: 'GET',
             url: buildAPI(this._config, this._apiExt),
             headers: this._apiHeaders
         }).then(result => {
-            return result.data.data.events;
+            return result.data.events;
         });
     }
 
     rejectEvent = (event: EventResult): Promise<RestApiResult<null>> => {
-        return axios({
+        return stRequest({
             method: 'POST',
             url: buildAPI(this._config, `${this._apiExt}/${event.id}/applydecision`),
             headers: this._apiHeaders,
             data: {approve: false}
         }).then(result => {
-            return result.data;
+            return result
         }).catch(result => {
             return {}
         })
@@ -45,11 +45,11 @@ export class RestfulChatModerationService implements IChatModerationService {
     approveEvent = (event: EventResult): Promise<RestApiResult<null>> => {
         // @ts-ignore
         const id = event.id | event;
-        return axios({
+        return stRequest({
             method: POST,
             url: buildAPI(this._config, `${this._apiExt}/${event.id}/applydecision`),
             headers: this._apiHeaders,
             data: {approve: true}
-        }).then(result => result.data)
+        })
     }
 }

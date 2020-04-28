@@ -37,7 +37,7 @@ export function getUrlEncodedHeaders(apiKey?: string): ApiHeaders {
 
 export function getJSONHeaders(apiKey?: string): ApiHeaders {
     const headers  = {
-        'Content-Type': APPLICATION_JSON
+        // 'Content-Type': APPLICATION_JSON
     }
     if(apiKey) {
         headers[API_TOKEN_HEADER] = apiKey

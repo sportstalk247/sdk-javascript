@@ -172,7 +172,7 @@ export class RestfulCommentService implements ICommentService {
         /* istanbul ignore next */
         const config:AxiosRequestConfig = {
             method: PUT,
-            url: buildAPI(this._config, `${this._apiExt}/${this._conversationId}/comments/${id}/setdeleted?userid=${user.userid}&deleted=true`),
+            url: buildAPI(this._config, `${this._apiExt}/${this._conversationId}/comments/${id}/setdeleted?userid=${user.userid}&deleted=true&permanentifnoreplies=false`),
             headers: this._jsonHeaders,
         }
 
