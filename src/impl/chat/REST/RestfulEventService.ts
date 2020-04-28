@@ -7,7 +7,7 @@ import {
 } from "../../../models/ChatModels";
 import {DEFAULT_CONFIG, DELETE, GET, POST} from "../../constants/api";
 import {IEventService} from "../../../API/ChatAPI";
-import {buildAPI, formify, getJSONHeaders, getUrlEncodedHeaders} from "../../utils";
+import {buildAPI, getJSONHeaders, getUrlEncodedHeaders} from "../../utils";
 import {SettingsError} from "../../errors";
 import {NO_HANDLER_SET, NO_ROOM_SET, REQUIRE_ROOM_ID} from "../../constants/messages";
 import {stRequest} from '../../network'
@@ -257,7 +257,7 @@ export class RestfulEventService implements IEventService{
             method: POST,
             url: this._commandApi,
             headers:this._apiHeaders,
-            data: formify(data)
+            data: data
         }
         return stRequest(config);
     }
@@ -290,7 +290,7 @@ export class RestfulEventService implements IEventService{
             method: POST,
             url:`${this._roomApi}/events/${source}/react`,
             headers: this._apiHeaders,
-            data: formify(data)
+            data: data
         }
         return stRequest(config);
     }
@@ -330,7 +330,7 @@ export class RestfulEventService implements IEventService{
             method: POST,
             url: this._commandApi,
             headers: this._apiHeaders,
-            data: formify(data)
+            data: data
         });
     }
 
