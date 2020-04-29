@@ -38,7 +38,7 @@ export class RestfulRoomService implements IRoomService {
         const config:AxiosRequestConfig = {
             method: GET,
             url: buildAPI(this._config, this._apiExt),
-            headers: this._apiHeaders,
+            headers: this._jsonHeaders,
         };
         return stRequest(config).then(result=>{
             this._knownRooms = result.data;
@@ -107,7 +107,7 @@ export class RestfulRoomService implements IRoomService {
         const config:AxiosRequestConfig = {
             method: GET,
             url: buildAPI(this._config,`${this._apiExt}/${room.id}/participants?cursor=${cursor}&maxresults=${maxresults}`),
-            headers: this._apiHeaders
+            headers: this._jsonHeaders
         };
         return stRequest(config).then(result=>result.data);
     }

@@ -30,11 +30,11 @@ export interface IEventService extends ISportsTalkConfigurable, IUserConfigurabl
     getCurrentRoom(): RoomResult | null,
     getUpdates(): Promise<EventResult[]>,
     reportEvent(event: EventResult | string, reason: ReportReason): Promise<MessageResult<null>>,
-    sendCommand(user:User, command: string, options?: CommandOptions):  Promise<MessageResult<null | CommandResponse>>
-    sendReply(user: User, message: string, replyto: string | Event, options?: CommandOptions): Promise<MessageResult<null | CommandResponse>>
-    sendReaction(user: User,  reaction: Reaction, reactToMessageId: Event | string, options?: CommandOptions): Promise<MessageResult<null | CommandResponse>>
-    sendAdvertisement(user: User, options: AdvertisementOptions): Promise<MessageResult<null | CommandResponse>>
-    sendGoal(user: User, img: string, message?:string, options?: GoalOptions): Promise<MessageResult<null | CommandResponse>>
+    sendCommand(user:User, command: string, options?: CommandOptions):  Promise<MessageResult<CommandResponse>>
+    sendReply(user: User, message: string, replyto: string | Event, options?: CommandOptions): Promise<MessageResult<CommandResponse>>
+    sendReaction(user: User,  reaction: Reaction, reactToMessageId: Event | string, options?: CommandOptions): Promise<MessageResult<CommandResponse>>
+    sendAdvertisement(user: User, options: AdvertisementOptions): Promise<MessageResult<CommandResponse>>
+    sendGoal(user: User, img: string, message?:string, options?: GoalOptions): Promise<MessageResult<CommandResponse>>
     getEventHandlers(): EventHandlerConfig
     deleteEvent(event: EventResult | string): Promise<MessageResult<null>>
 }

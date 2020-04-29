@@ -28,7 +28,7 @@ export class RestfulWebhookManager implements IWebhookService {
             method: GET,
             headers: this._apiHeaders
         }).then(hooks=>{
-           return (hooks && hooks.data && hooks.data.data && hooks.data.data.webhooks) ? hooks.data.data.webhooks : []
+           return (hooks && hooks.data && hooks.data.webhooks) ? hooks.data.webhooks : []
         })
     }
 
@@ -39,7 +39,7 @@ export class RestfulWebhookManager implements IWebhookService {
             headers: this._apiHeaders,
             data: hook
         }).then(response=>{
-            return response.data.data;
+            return response.data
         })
     }
 
@@ -53,7 +53,7 @@ export class RestfulWebhookManager implements IWebhookService {
             headers: this._apiHeaders,
             data: hook
         }).then(response=>{
-            return <WebHook>response.data.data
+            return <WebHook>response.data
         })
     }
 
@@ -69,7 +69,7 @@ export class RestfulWebhookManager implements IWebhookService {
             headers: this._apiHeaders
         }
         return stRequest(config).then(response=>{
-            return response.data.data;
+            return response.data
         })
     }
 

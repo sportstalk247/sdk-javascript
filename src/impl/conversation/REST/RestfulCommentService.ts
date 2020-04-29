@@ -28,6 +28,7 @@ import {
 } from "../../constants/messages";
 
 import axios, {AxiosRequestConfig} from "axios";
+import {stRequest} from "../../network";
 
 export class RestfulCommentService implements ICommentService {
     private _config: SportsTalkConfig;
@@ -108,8 +109,8 @@ export class RestfulCommentService implements ICommentService {
             headers: this._jsonHeaders,
             data: comment
         }
-        return axios(config).then(result=>{
-            return result.data.data;
+        return stRequest(config).then(result=>{
+            return result.data;
         });
     }
 
@@ -128,7 +129,7 @@ export class RestfulCommentService implements ICommentService {
                 userid: comment.userid
             }
         }
-        return axios(config).then(result=>{
+        return stRequest(config).then(result=>{
             return result.data;
         }).catch(e=>{
             throw e;
@@ -144,8 +145,8 @@ export class RestfulCommentService implements ICommentService {
             url: buildAPI(this._config, `${this._apiExt}/${this._conversationId}/comments/${id}`),
             headers: this._jsonHeaders,
         }
-        return axios(config).then(result=>{
-            return result.data.data;
+        return stRequest(config).then(result=>{
+            return result.data;
         }).catch(e=>{
             if(e.response.status === 404) {
                 return null;
@@ -162,8 +163,8 @@ export class RestfulCommentService implements ICommentService {
             url: buildAPI(this._config, `${this._apiExt}/${this._conversationId}/comments/${id}`),
             headers: this._jsonHeaders,
         }
-        const result = await axios(config);
-        return result.data.data;
+        const result = await stRequest(config);
+        return result.data;
     }
 
     private _markDeleted = async (comment: Comment | string, user:User): Promise<CommentDeletionResponse> => {
@@ -176,8 +177,8 @@ export class RestfulCommentService implements ICommentService {
             headers: this._jsonHeaders,
         }
 
-        return axios(config).then(result => {
-            const comment:Comment = result.data.data;
+        return stRequest(config).then(result => {
+            const comment:Comment = result.data;
             // @ts-ignore
             const response: CommentDeletionResponse = {
                 kind: Kind.deletedcomment,
@@ -199,7 +200,7 @@ export class RestfulCommentService implements ICommentService {
     public update = (comment: Comment): Promise<Comment> => {
         this._requireConversation();
         const id = getUrlCommentId(comment);
-        return axios({
+        return stRequest({
             method: PUT,
             url: buildAPI(this._config,`${this._apiExt}/${this._conversationId}/comments/${id}`),
             headers: this._jsonHeaders,
@@ -208,7 +209,7 @@ export class RestfulCommentService implements ICommentService {
                 userid: comment.userid
             }
         }).then(result=>{
-            return result.data.data;
+            return result.data;
         });
     }
     /**
@@ -232,8 +233,8 @@ export class RestfulCommentService implements ICommentService {
             headers: this._jsonHeaders,
             data
         }
-        return axios(config).then(result=>{
-            return result.data.data
+        return stRequest(config).then(result=>{
+            return result.data;
         });
     }
 
@@ -241,7 +242,7 @@ export class RestfulCommentService implements ICommentService {
         this._requireConversation();
         this._requireUser(user);
         const id = getUrlCommentId(comment);
-        return axios({
+        return stRequest({
             method: POST,
             url: buildAPI(this._config, `${this._apiExt}/${this._conversationId}/comments/${id}/vote`),
             headers: this._jsonHeaders,
@@ -250,7 +251,7 @@ export class RestfulCommentService implements ICommentService {
                 userid: user.userid
             }
         }).then(result=>{
-            return result.data.data;
+            return result.data;
         });
     }
 
@@ -258,7 +259,7 @@ export class RestfulCommentService implements ICommentService {
         this._requireConversation();
         this._requireUser(user)
         const id = getUrlCommentId(comment);
-        return axios({
+        return stRequest({
             method: POST,
             url: buildAPI(this._config, `${this._apiExt}/${this._conversationId}/comments/${id}/report`),
             headers: this._jsonHeaders,
@@ -275,15 +276,15 @@ export class RestfulCommentService implements ICommentService {
         this._requireConversation();
         const id = getUrlCommentId(comment);
         const requestString = formify(request);
-        return axios({
+        return stRequest({
             method: GET,
             url: buildAPI(this._config, `${this._apiExt}/${this._conversationId}/comments/${id}/replies/?${requestString}`),
             headers: this._jsonHeaders,
             data: request
         }).then(result=>{
             return {
-                conversation: result.data.data.conversation,
-                comments: result.data.data.comments
+                conversation: result.data.conversation,
+                comments: result.data.comments
             }
         });
     }
@@ -301,8 +302,8 @@ export class RestfulCommentService implements ICommentService {
             url: buildAPI(this._config, `${this._apiExt}/${id}/comments`, request),
             headers: this._jsonHeaders,
         }
-        return axios(config).then(result => {
-            const {conversation, comments, cursor} = result.data.data;
+        return stRequest(config).then(result => {
+            const {conversation, comments, cursor} = result.data;
             return {
                 conversation,
                 comments,

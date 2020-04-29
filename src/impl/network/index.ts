@@ -1,6 +1,5 @@
 import axios, {AxiosRequestConfig} from "axios";
 
-
 const makeRequest = async function makeRequest(config:Request | AxiosRequestConfig) {
     // @ts-ignore
     if(config.data) {
@@ -14,7 +13,11 @@ const makeRequest = async function makeRequest(config:Request | AxiosRequestConf
         if(response.ok) {
             return response.json()
         } else {
-            throw new Error(response.statusText)
+            const error = new Error(response.statusText);
+            // @ts-ignore
+            error.response = {
+                status: response.status
+            }
         }
     })
 
@@ -25,7 +28,7 @@ const makeAxiosRequest = async function makeAxiosRequest(config:AxiosRequestConf
 }
 
 function getRequestLibrary() {
-    if (window && window.fetch) {
+    if (typeof window !== "undefined" && window.fetch) {
         return makeRequest;
     }
     return makeAxiosRequest

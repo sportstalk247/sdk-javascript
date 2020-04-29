@@ -10,6 +10,7 @@ import {GET, POST, DELETE} from "../../constants/api";
 import {getUrlEncodedHeaders, getJSONHeaders, buildAPI, formify} from "../../utils";
 import {IConversationService} from "../../../API/ConversationAPI";
 import {getUrlConversationId} from "../ConversationUtils";
+import {stRequest} from "../../network";
 
 export class RestfulConversationService implements IConversationService {
 
@@ -36,20 +37,20 @@ export class RestfulConversationService implements IConversationService {
             headers: this._jsonHeaders,
             data: settings,
         };
-        return axios(config).then(result=>{
-           return result.data.data;
+        return stRequest(config).then(result=>{
+           return result.data
         });
     }
 
     public getConversation = (conversation: Conversation | string): Promise<ConversationResponse> => {
         // @ts-ignore
         const id = getUrlConversationId(conversation);
-        return axios({
+        return stRequest({
             method: GET,
             url: buildAPI(this._config, `${this._apiExt}/${id}`),
             headers: this._jsonHeaders,
         }).then(result=>{
-            return result.data.data;
+            return result.data
         });
     }
 
@@ -63,9 +64,7 @@ export class RestfulConversationService implements IConversationService {
             url: buildAPI(this._config, `${this._apiExt}/${id}`),
             headers: this._jsonHeaders,
         }
-        return axios(config).then(result=>{
-            return result.data;
-        });
+        return stRequest(config);
     }
 
     public listConversations = (filter?: ConversationRequest): Promise<ConversationListResponse> => {
@@ -78,10 +77,10 @@ export class RestfulConversationService implements IConversationService {
             url: buildAPI(this._config, `${this._apiExt}/${query}`),
             headers: this._jsonHeaders,
         }
-        return axios(config).then(result=>{
+        return stRequest(config).then(result=>{
             return {
-                cursor: result.data.data.cursor,
-                conversations: result.data.data.conversations
+                cursor: result.data.cursor,
+                conversations: result.data.conversations
             };
         });
     }

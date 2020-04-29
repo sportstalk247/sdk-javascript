@@ -70,23 +70,31 @@ describe('Comment Operations', function() {
     });
     describe("Responses", function() {
         let commentary: CommentListResponse;
-        it("Reply", async ()=>{
+        let resp;
+        it("React", async ()=>{
             try {
                 const conv = await client2.createConversation(conversation, true)
-                const resp = await client2.makeComment("This is my comment")
+                resp = await client2.makeComment("This is my comment")
                 expect(resp.body).to.be.equal("This is my comment");
                 // @ts-ignore
                 const response:CommentResponse = await client.reactToComment(resp, Reaction.like);
                 expect(response.kind).to.be.equal(Kind.comment);
-                const reply = await client.makeComment("I'm replying", resp);
-                commentary = await client.getComments();
-                expect(commentary.comments.length).to.be.greaterThan(0);
-                const replylist:CommentListResponse = await client.getCommentReplies(resp);
-                expect(replylist.comments.length).to.be.greaterThan(0);
+
             } catch (e) {
                 throw e;
             }
         });
+        it("Reply", async()=>{
+            try {
+                const reply = await client.makeComment("I'm replying", resp);
+                commentary = await client.getComments();
+                expect(commentary.comments.length).to.be.greaterThan(0);
+                const replylist: CommentListResponse = await client.getCommentReplies(resp);
+                expect(replylist.comments.length).to.be.greaterThan(0);
+            }catch(e) {
+                throw e;
+            }
+        })
         it("Lets you retrieve specific comments", async ()=>{
             const firstComment:Comment = commentary.comments[0];
             let comment = await client.getComment(firstComment);

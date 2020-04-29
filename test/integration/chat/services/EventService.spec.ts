@@ -4,6 +4,7 @@ import * as chai from 'chai';
 import * as sinon from 'sinon';
 import * as dotenv from 'dotenv';
 import {Reaction, SportsTalkConfig} from "../../../../src/models/CommonModels";
+import {RestfulEventService} from "../../../../src/impl/chat/REST/RestfulEventService";
 dotenv.config();
 
 
@@ -14,6 +15,7 @@ const delay = function(timer) {
         const timeout = setTimeout(accept, timer)
     })
 }
+let chatMessage;
 
 describe("Event Service", ()=>{
 
@@ -38,7 +40,7 @@ describe("Event Service", ()=>{
 
     describe("Triggers callbacks", function() {
         this.timeout(5000);
-        let chatMessage;
+
         describe("onChatStart", () => {
             it("will trigger onChatStart", async () => {
                 room = await RM.createRoom({name: "CallbackTest", slug: "callback-test"});
@@ -53,18 +55,25 @@ describe("Event Service", ()=>{
                 client.setUser(user);
                 const join = await client.joinRoom(room);
                 const response = await client.sendCommand("This is a chat event command");
+                const updates = await client.getEventService().getUpdates();
                 await delay(1000);
                 expect(onChatEvent.callCount).to.be.greaterThan(0);
-                chatMessage = onChatEvent.getCall(0).args[0];
+                // @ts-ignore
+                chatMessage = response.data.speech;
             });
         });
         describe("onReply", ()=>{
-            it("Will trigger onReaction", async()=>{
+            it("Will trigger onReply", async()=>{
                 const id = chatMessage.id;
                 const reaction = await client.sendReply("This is my reply", id)
-                await delay(3000);
-                expect(onReply.callCount).to.be.greaterThan(0);
-                expect(onChatEvent.callCount).to.be.greaterThan(0);
+                const updates = <RestfulEventService> await client.getEventService()
+                await updates._fetchUpdatesAndTriggerCallbacks();
+                await delay(100);
+                const handlers = client.getEventService().getEventHandlers()
+                // @ts-ignore
+                expect(handlers.onReply.callCount).to.be.greaterThan(0);
+                // @ts-ignore
+                expect(handlers.onChatEvent.callCount).to.be.greaterThan(0);
             })
         })
         describe("onAdmin", ()=>{

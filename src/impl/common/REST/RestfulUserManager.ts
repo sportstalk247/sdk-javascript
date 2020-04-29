@@ -40,7 +40,7 @@ export class RestfulUserManager implements IUserService {
                 profileurl: user.profileurl
             }
         };
-        return stRequest(config).then(response=>response.data.data);
+        return stRequest(config).then(response=>response.data);
     }
 
     /**
@@ -57,7 +57,7 @@ export class RestfulUserManager implements IUserService {
             url: url,
             headers: this._jsonHeaders,
             data: {banned: ""+isBanned}
-        }).then(response=>response.data);
+        });
     }
 
     searchUsers = (search:string, type: SearchType): Promise<Array<UserResult>> => {
@@ -82,7 +82,7 @@ export class RestfulUserManager implements IUserService {
         }
         return stRequest(config)
             .then(response=>{
-                return response.data.data.users;
+                return response.data.users;
             });
     }
 
@@ -94,6 +94,6 @@ export class RestfulUserManager implements IUserService {
             url: buildAPI(this._config,`${this._apiExt}/${id}`),
             headers: this._jsonHeaders,
         };
-        return stRequest(config).then(response=>response.data.data.user);
+        return stRequest(config).then(response=>response.data.user);
     }
 }

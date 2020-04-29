@@ -11,7 +11,14 @@ import {buildAPI, getJSONHeaders, getUrlEncodedHeaders} from "../../utils";
 import {SettingsError} from "../../errors";
 import {NO_HANDLER_SET, NO_ROOM_SET, REQUIRE_ROOM_ID} from "../../constants/messages";
 import {stRequest} from '../../network'
-import {RestApiResult, Reaction, ReportReason, SportsTalkConfig, User} from "../../../models/CommonModels";
+import {
+    RestApiResult,
+    Reaction,
+    ReportReason,
+    SportsTalkConfig,
+    User,
+    MessageResult
+} from "../../../models/CommonModels";
 import {AxiosRequestConfig} from "axios";
 const INVALID_POLL_FREQUENCY = "Invalid poll _pollFrequency.  Must be between 250ms and 5000ms"
 
@@ -131,17 +138,19 @@ export class RestfulEventService implements IEventService{
         ) {
             throw new SettingsError(INVALID_POLL_FREQUENCY);
         }
-        this._polling = setInterval(()=>{
-            this.getUpdates().then(apiResult=>{
-                this._handleUpdates(apiResult);
-            }).catch(error=> {
-                if(this.eventHandlers && this.eventHandlers.onNetworkError) {
-                    this.eventHandlers.onNetworkError(error)
-                } else {
-                    console.log(error);
-                }
-            });
-        }, this._pollFrequency || 800);
+        this._polling = setInterval(this._fetchUpdatesAndTriggerCallbacks, this._pollFrequency || 800);
+    }
+
+    public _fetchUpdatesAndTriggerCallbacks = () =>{
+        this.getUpdates().then(apiResult=>{
+            this._handleUpdates(apiResult);
+        }).catch(error=> {
+            if(this.eventHandlers && this.eventHandlers.onNetworkError) {
+                this.eventHandlers.onNetworkError(error)
+            } else {
+                console.log(error);
+            }
+        });
     }
 
     public stopTalk = () => {
@@ -208,7 +217,7 @@ export class RestfulEventService implements IEventService{
      * ROOM COMMANDS SECTION
      */
 
-    private _evaluateCommandResponse = (command: string, response: RestApiResult<null | CommandResponse> ): RestApiResult<null | CommandResponse> => {
+    private _evaluateCommandResponse = (command: string, response: RestApiResult<CommandResponse> ): RestApiResult<CommandResponse> => {
         if(command.startsWith('*')) {
             const onHelp = this.eventHandlers.onHelp;
             if( command.startsWith('*help') && onHelp  && onHelp instanceof Function ) {
@@ -228,7 +237,7 @@ export class RestfulEventService implements IEventService{
      * @param command
      * @param options
      */
-    sendCommand = (user: User, command: string, options?: CommandOptions): Promise<RestApiResult<null | CommandResponse>> => {
+    sendCommand = (user: User, command: string, options?: CommandOptions): Promise<MessageResult<CommandResponse>> => {
         const data = Object.assign({
             command,
             userid: user.userid
@@ -245,7 +254,7 @@ export class RestfulEventService implements IEventService{
         });
     }
 
-    sendReply = (user: User, message: string, replyto: Event |string, options?: CommandOptions): Promise<RestApiResult<null | CommandResponse>> => {
+    sendReply = (user: User, message: string, replyto: Event |string, options?: CommandOptions): Promise<MessageResult<CommandResponse>> => {
         // @ts-ignore
         const id = replyto.id || replyto;
         const data = Object.assign({
@@ -256,10 +265,12 @@ export class RestfulEventService implements IEventService{
         const config:AxiosRequestConfig = {
             method: POST,
             url: this._commandApi,
-            headers:this._apiHeaders,
+            headers:this._jsonHeaders,
             data: data
         }
-        return stRequest(config);
+        return stRequest(config).catch(e=>{
+            throw e;
+        });
     }
 
     reportEvent = (event: EventResult | string, reason: ReportReason): Promise<RestApiResult<null>> => {
@@ -277,7 +288,7 @@ export class RestfulEventService implements IEventService{
         })
     }
 
-    sendReaction = (user: User, reaction: Reaction, reactToMessage: Event | string, options?: CommandOptions): Promise<RestApiResult<null>> => {
+    sendReaction = (user: User,  reaction: Reaction, reactToMessageId: Event | string, options?: CommandOptions): Promise<MessageResult<CommandResponse>> => {
         // @ts-ignore
         const source = reactToMessage.id || reactToMessage;
         const data = Object.assign({
@@ -289,13 +300,15 @@ export class RestfulEventService implements IEventService{
         const config: AxiosRequestConfig = {
             method: POST,
             url:`${this._roomApi}/events/${source}/react`,
-            headers: this._apiHeaders,
+            headers: this._jsonHeaders,
             data: data
         }
-        return stRequest(config);
+        return stRequest(config).then((response)=>{
+            return response.data
+        });
     }
 
-    sendAdvertisement = (user: User, options: AdvertisementOptions): Promise<RestApiResult<null>> => {
+    sendAdvertisement = (user: User, options: AdvertisementOptions): Promise<MessageResult<CommandResponse>> => {
         const data = Object.assign({
             command: 'advertisement',
             customtype: 'advertisement',
@@ -311,7 +324,7 @@ export class RestfulEventService implements IEventService{
         return stRequest(config).then(response=>response.data);
     }
 
-    sendGoal = (user: User, img: string, message?:string, options?: GoalOptions): Promise<RestApiResult<null | CommandResponse>> => {
+    sendGoal = (user: User, img: string, message?:string, options?: GoalOptions): Promise<MessageResult<CommandResponse>> => {
         const defaultOptions = {
             "img": img,
             "link":""
@@ -329,9 +342,11 @@ export class RestfulEventService implements IEventService{
         return stRequest({
             method: POST,
             url: this._commandApi,
-            headers: this._apiHeaders,
+            headers: this._jsonHeaders,
             data: data
-        });
+        }).then(response=>{
+            return response;
+        })
     }
 
     deleteEvent = (event: EventResult | string): Promise<RestApiResult<null>> => {
@@ -343,6 +358,8 @@ export class RestfulEventService implements IEventService{
             headers: this._jsonHeaders,
         };
         // @ts-ignore
-        return stRequest(config);
+        return stRequest(config).catch(e=>{
+            throw e;
+        });
     }
 }
