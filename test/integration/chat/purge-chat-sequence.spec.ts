@@ -4,6 +4,7 @@ import * as sinon from 'sinon';
 import {RestfulRoomService} from "../../../src/impl/chat/REST/RestfulRoomService";
 import * as dotenv from 'dotenv';
 import {SportsTalkConfig} from "../../../src/models/CommonModels";
+import {RestfulEventService} from "../../../src/impl/chat/REST/RestfulEventService";
 dotenv.config();
 
 const onPurgeEvent = sinon.fake();
@@ -33,16 +34,17 @@ describe('PURGE Chat Sequence', function() {
         }
     });
     const rm = new RestfulRoomService(config);
-    const em1 = client.getEventService();
-    em1.setEventHandlers({
+    client.setEventHandlers({
         onPurgeEvent,
         onChatEvent,
-    })
-    const em2 = client2.getEventService();
-    em2.setEventHandlers({
+    });
+    const em1 = client.getEventService();
+    client2.setEventHandlers({
         onPurgeEvent,
         onChatEvent
-    })
+    });
+    const em2 = client2.getEventService();
+
 
     let theRoom;
     describe('User 1', function () {
@@ -93,19 +95,19 @@ describe('PURGE Chat Sequence', function() {
                 }).catch(done)
         })
     });
-    describe('PURGE user 1', function () {
-        it('Sends a purge command for Handl2', function(done){
-          client.sendCommand("*purge zola handle2").then(async (result)=>{
-              done();
-          })
-        })
-    })
+
     describe('GetUpdates shows purge', function () {
-        it('Fires onPurge', function (done) {
-            delay(3000).then(()=>{
-                    expect(onPurgeEvent.callCount).to.be.greaterThan(0);
-                    done();
-                }).catch(done)
+        it('Fires onPurge',  async function () {
+            await delay(500);
+            const purge =  await client.sendCommand("*purge zola handle2");
+
+            await delay(100);
+            const updates:RestfulEventService = <RestfulEventService>client.getEventService();
+            await updates._fetchUpdatesAndTriggerCallbacks();
+            await delay(100);
+            const handlers = updates.getEventHandlers();
+            // @ts-ignore
+            expect(handlers.onPurgeEvent.callCount).to.be.greaterThan(0);
         })
     });
     describe('Kill test room', function () {

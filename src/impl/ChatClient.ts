@@ -203,7 +203,7 @@ export class ChatClient implements IChatClient {
      * @param command
      * @param options
      */
-    sendCommand = (command: string, options?: CommandOptions): Promise<MessageResult<null | CommandResponse>> => {
+    sendCommand = (command: string, options?: CommandOptions): Promise<MessageResult<CommandResponse>> => {
         return this._eventService.sendCommand(this._user, command, options);
     }
 
@@ -211,16 +211,15 @@ export class ChatClient implements IChatClient {
         return this._eventService.sendReply(this._user, message, replyto, options);
     }
 
-    sendReaction = (reaction: Reaction, reactToMessage: Event | string, options?: CommandOptions): Promise<MessageResult<null | CommandResponse>> => {
+    sendReaction = (reaction: Reaction, reactToMessage: Event | string, options?: CommandOptions): Promise<MessageResult<CommandResponse>> => {
         return this._eventService.sendReaction(this._user, reaction, reactToMessage, options);
     }
 
-    /* istanbul ignore next */
     sendAdvertisement = (options: AdvertisementOptions): Promise<MessageResult<null | CommandResponse>> => {
         return this._eventService.sendAdvertisement(this._user, options);
     }
-    /* istanbul ignore next */
-    sendGoal = (message?:string, img?: string, options?: GoalOptions): Promise<MessageResult<null | CommandResponse>> => {
+
+    sendGoal = (message?:string, img?: string, options?: GoalOptions): Promise<MessageResult<CommandResponse>> => {
        return this._eventService.sendGoal(this._user,img || this._defaultGoalImage || '', message, options)
     }
     deleteEvent = (event: EventResult | string) =>{

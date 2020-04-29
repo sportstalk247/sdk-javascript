@@ -1,5 +1,6 @@
 import {ApiHeaders, RestApiResult, ClientConfig} from "../../../models/CommonModels";
-import axios, {AxiosRequestConfig} from "axios";
+import {AxiosRequestConfig} from "axios";
+import {stRequest} from '../../network';
 import {Comment} from "../../../models/ConversationModels";
 import {DEFAULT_CONFIG, GET, POST} from "../../constants/api";
 import {getUrlEncodedHeaders, getJSONHeaders, buildAPI, formify} from "../../utils";
@@ -41,8 +42,8 @@ export class RestfulCommentModerationService implements ICommentModerationServic
             url: buildAPI(this._config, this._apiExt),
             headers: this._jsonHeaders,
         }
-        return axios(config).then(result=>{
-            return result.data.data.comments;
+        return stRequest(config).then(result=>{
+            return result.data.comments;
         });
     }
 
@@ -53,8 +54,8 @@ export class RestfulCommentModerationService implements ICommentModerationServic
             headers: this._apiHeaders,
             data: formify({approve: false})
         }
-        return axios(config).then(result => {
-            return result.data.data;
+        return stRequest(config).then(result => {
+            return result.data
         })
     }
 
@@ -65,8 +66,8 @@ export class RestfulCommentModerationService implements ICommentModerationServic
             headers: this._apiHeaders,
             data: formify({approve: true})
         };
-        return axios(config).then(result => {
-            return result.data.data
+        return stRequest(config).then(result => {
+            return result.data
         })
     }
 }

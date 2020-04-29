@@ -92,8 +92,11 @@ describe('GOAL Chat Sequence', function() {
                 client.sendGoal("GOAL!!"),
                 client2.sendCommand("That was amazing!")
             ]).then(results => {
+                expect(results.length).to.be.equal(2);
                 done()
-            }).catch(done);
+            }).catch(e=>{
+                done(e)
+            });
         })
     })
     describe('GetUpdates fires', function () {
