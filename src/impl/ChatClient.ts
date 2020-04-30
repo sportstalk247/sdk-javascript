@@ -5,7 +5,7 @@ import {
     EventHandlerConfig,
     RoomResult,
     Room,
-    RoomUserResult, EventResult, DeletedRoomResponse, CommandResponse, RoomExitResult
+    RoomUserResult, EventResult, DeletedRoomResponse, CommandResponse, RoomExitResult, ChatUpdatesResult
 } from "../models/ChatModels";
 import {DEFAULT_CONFIG} from "./constants/api";
 import {IRoomService, IEventService, IChatClient} from "../API/ChatAPI";
@@ -151,7 +151,7 @@ export class ChatClient implements IChatClient {
         })
     }
 
-    public getLatestEvents = (): Promise<EventResult[]> => {
+    public getLatestEvents = (): Promise<ChatUpdatesResult> => {
         return this._eventService.getUpdates()
     }
 

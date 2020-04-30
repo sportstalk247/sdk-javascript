@@ -1,7 +1,7 @@
 /* istanbul ignore file */
 
 import {
-    AdvertisementOptions,
+    AdvertisementOptions, ChatUpdatesResult,
     CommandOptions, CommandResponse, DeletedRoomResponse,
     EventHandlerConfig,
     EventResult,
@@ -28,7 +28,7 @@ export interface IEventService extends ISportsTalkConfigurable, IUserConfigurabl
     setCurrentRoom(room: RoomResult | null): Room | null,
     setEventHandlers(eventHandlers: EventHandlerConfig),
     getCurrentRoom(): RoomResult | null,
-    getUpdates(): Promise<EventResult[]>,
+    getUpdates(): Promise<ChatUpdatesResult>,
     reportEvent(event: EventResult | string, reason: ReportReason): Promise<MessageResult<null>>,
     sendCommand(user:User, command: string, options?: CommandOptions):  Promise<MessageResult<CommandResponse>>
     sendReply(user: User, message: string, replyto: string | Event, options?: CommandOptions): Promise<MessageResult<CommandResponse>>
@@ -65,7 +65,7 @@ export interface IChatClient extends IUserConfigurable, ISportsTalkConfigurable{
     setEventHandlers(eventHandlers: EventHandlerConfig);
     getEventHandlers():EventHandlerConfig;
     createOrUpdateUser(user: User, setDefault?:boolean): Promise<User>
-    getLatestEvents(): Promise<EventResult[]>
+    getLatestEvents(): Promise<ChatUpdatesResult>,
     startTalk();
     stopTalk();
 }

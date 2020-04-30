@@ -106,9 +106,9 @@ export interface RoomResult extends Room {
     whenmodified?:string
 }
 
-export interface EventResult extends Event {
+export interface EventResult {
     kind: Kind.chat,
-    id: string,
+    id?: string,
     roomid: string,
     added: number,
     body: string,
@@ -122,3 +122,11 @@ export interface EventResult extends Event {
     reactions?:Array<EventResult>
 }
 
+export interface ChatUpdatesResult {
+    kind: Kind.chatlist,
+    cursor: string
+    more: boolean
+    itemcount: number
+    room: RoomResult,
+    events: [EventResult]
+}
