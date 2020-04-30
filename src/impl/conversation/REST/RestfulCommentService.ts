@@ -365,6 +365,11 @@ export class RestfulCommentService implements ICommentService {
         });
     }
 
+    /**
+     * Gets the replies for a specific comment
+     * @param comment
+     * @param request
+     */
     public getReplies = (comment: Comment, request?: CommentRequest): Promise<CommentListResponse> =>{
         this._requireConversation();
         const id = getUrlCommentId(comment);
