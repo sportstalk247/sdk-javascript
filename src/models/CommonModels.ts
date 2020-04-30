@@ -37,6 +37,7 @@ export enum Kind {
     deletedroom = "deleted.room",
     deleteduser = "deleted.appuser",
     conversationlist = "list.commentconversations",
+    chatlist = "list.chatevents"
 }
 
 export interface UserResult extends User {

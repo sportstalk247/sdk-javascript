@@ -1,5 +1,5 @@
 import {
-    AdvertisementOptions,
+    AdvertisementOptions, ChatUpdatesResult,
     CommandOptions, CommandResponse,
     EventHandlerConfig,
     EventResult,
@@ -159,7 +159,7 @@ export class RestfulEventService implements IEventService{
         }
     }
 
-    public getUpdates = (): Promise<EventResult[]> => {
+    public getUpdates = (): Promise<ChatUpdatesResult> => {
         if(!this._roomApi) {
             throw new SettingsError("No room selected");
         }
@@ -176,8 +176,8 @@ export class RestfulEventService implements IEventService{
         });
     }
 
-    private _handleUpdates = (update: EventResult[]) => {
-        const events: Array<EventResult> = update;
+    private _handleUpdates = (update: ChatUpdatesResult) => {
+        const events: Array<EventResult> = update.events;
         if(events && events.length) {
             for (var i = 0; i < events.length; i++) {
                 const event: EventResult = events[i];
