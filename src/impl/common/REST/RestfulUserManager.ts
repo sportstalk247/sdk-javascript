@@ -5,7 +5,12 @@ import {buildAPI, getJSONHeaders, getUrlEncodedHeaders} from "../../utils";
 import {RestApiResult, SearchType, SportsTalkConfig, User, UserResult} from "../../../models/CommonModels";
 import {IUserService} from "../../../API/CommonAPI";
 
-
+/**
+ * Class for handling user management via REST.
+ *
+ * NOTE: All operations can throw errors if there are network or server issues.
+ * You should ensure that ALL operations that return promises have a catch block or handle errors in some way.
+ */
 export class RestfulUserManager implements IUserService {
     private _config: SportsTalkConfig;
     private _jsonHeaders: {};
@@ -15,6 +20,10 @@ export class RestfulUserManager implements IUserService {
         this.setConfig(config);
     }
 
+    /**
+     * Sets the config
+     * @param config
+     */
     setConfig = (config: SportsTalkConfig) => {
         this._config = config;
         this._jsonHeaders = getJSONHeaders(this._config.apiToken);
@@ -60,6 +69,11 @@ export class RestfulUserManager implements IUserService {
         });
     }
 
+    /**
+     * Search users for this application
+     * @param search
+     * @param type
+     */
     searchUsers = (search:string, type: SearchType): Promise<Array<UserResult>> => {
         const url = buildAPI(this._config,`user/search`);
         const data:any = {
@@ -86,6 +100,10 @@ export class RestfulUserManager implements IUserService {
             });
     }
 
+    /**
+     * Delete a user
+     * @param user
+     */
     deleteUser = (user:User | string):Promise<UserResult> => {
         // @ts-ignore
         const id = user.userid || user;

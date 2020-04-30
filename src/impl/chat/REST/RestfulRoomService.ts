@@ -15,6 +15,9 @@ import {AxiosRequestConfig} from "axios";
 
 /**
  * This room uses REST to manage sportstalk chat rooms.
+ *
+ * NOTE: All operations can throw errors if there are network or server issues.
+ * You should ensure that ALL operations that return promises have a catch block or handle errors in some way.
  */
 export class RestfulRoomService implements IRoomService {
     private _config: SportsTalkConfig;

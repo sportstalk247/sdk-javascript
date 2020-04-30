@@ -8,6 +8,12 @@ import {stRequest} from "../../network";
 
 const MISSING_ID = "Missing webhook or webhook missing ID";
 
+/**
+ * This class uses REST operations to manage webhooks. Most clients will not need it unless you are building a custom admin UI.
+ *
+ * NOTE: All operations can throw errors if there are network or server issues.
+ * You should ensure that ALL operations that return promises have a catch block or handle errors in some way.
+ */
 export class RestfulWebhookManager implements IWebhookService {
     private _config: SportsTalkConfig = {appId: ""};
     private _apiHeaders;
@@ -17,11 +23,18 @@ export class RestfulWebhookManager implements IWebhookService {
         this.setConfig(config);
     }
 
+    /**
+     * Set config
+     * @param config
+     */
     public setConfig(config: SportsTalkConfig) {
         this._config = Object.assign(DEFAULT_CONFIG, config);
         this._apiHeaders = getJSONHeaders(this._config.apiToken);
     }
 
+    /**
+     * List all webhooks
+     */
     listWebhooks = (): Promise<WebHook[]> => {
         return stRequest({
             url: buildAPI(this._config, this._apiExt),
@@ -32,6 +45,10 @@ export class RestfulWebhookManager implements IWebhookService {
         })
     }
 
+    /**
+     * Create a webhook
+     * @param hook
+     */
     createWebhook = (hook: WebHook): Promise<WebHook> =>{
         return stRequest({
             url: buildAPI(this._config, this._apiExt),
@@ -43,6 +60,10 @@ export class RestfulWebhookManager implements IWebhookService {
         })
     }
 
+    /**
+     * Update an existing hook
+     * @param hook
+     */
     updateWebhook = (hook: WebHook): Promise<WebHook> => {
         if(!hook || !hook.id) {
             throw new ValidationError(MISSING_ID);
@@ -57,6 +78,10 @@ export class RestfulWebhookManager implements IWebhookService {
         })
     }
 
+    /**
+     * Delete a webhook
+     * @param hook
+     */
     deleteWebhook = (hook: WebHook | string): Promise<WebHook> => {
         if(!hook) {
             throw new ValidationError(MISSING_ID);

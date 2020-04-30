@@ -14,6 +14,9 @@ import {IConversationService, ICommentService, IConversationClient} from "../API
 /**
  * This is the API client for the Conversations feature.
  * For most implementations, this is the main class you will be using.
+ *
+ * NOTE: All operations can throw errors if there are network or server issues.
+ * You should ensure that ALL operations that return promises have a catch block or handle errors in some way.
  */
 export class ConversationClient implements IConversationClient {
     private _config: SportsTalkConfig;

@@ -10,6 +10,9 @@ import {MUST_SET_APPID} from "../../constants/messages";
 
 /**
  * Primary REST class for moderating comments.
+ *
+ * NOTE: All operations can throw errors if there are network or server issues.
+ * You should ensure that ALL operations that return promises have a catch block or handle errors in some way.
  */
 export class RestfulCommentModerationService implements ICommentModerationService {
 

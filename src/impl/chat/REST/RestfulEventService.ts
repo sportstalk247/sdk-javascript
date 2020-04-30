@@ -22,6 +22,13 @@ import {
 import {AxiosRequestConfig} from "axios";
 const INVALID_POLL_FREQUENCY = "Invalid poll _pollFrequency.  Must be between 250ms and 5000ms"
 
+/**
+ * This class manages polling for chat events and routing those events to the appropriate callbacks.
+ * You probably do not want this class, you want the ChatClient.
+ *
+ * NOTE: All operations can throw errors if there are network or server issues.
+ * You should ensure that ALL operations that return promises have a catch block or handle errors in some way.
+ */
 export class RestfulEventService implements IEventService{
     private _config: SportsTalkConfig = {appId: ""};
     private _polling: any; // set interval id;
@@ -56,23 +63,41 @@ export class RestfulEventService implements IEventService{
         }
     }
 
+    /**
+     * Set event handler callbacks
+     * @param eventHandlers
+     */
     setEventHandlers = (eventHandlers: EventHandlerConfig) => {
         this.eventHandlers = eventHandlers;
     }
 
+    /**
+     * Get current event handler callback functions
+     */
     getEventHandlers(): EventHandlerConfig {
         return this.eventHandlers || {};
     }
 
+    /**
+     * Set the user
+     * @param user
+     */
     setUser = (user: User) => {
         this._config.user = Object.assign(this._user, user);
         this._user = this._config.user;
     }
 
+    /**
+     * Get the user
+     */
     getUser = () => {
         return this._user;
     }
 
+    /**
+     * Set the config
+     * @param config
+     */
     setConfig = (config:SportsTalkConfig) => {
         this._config = Object.assign(DEFAULT_CONFIG, config);
         this._user = Object.assign(this._user, this._config.user);
@@ -80,10 +105,18 @@ export class RestfulEventService implements IEventService{
         this._jsonHeaders = getJSONHeaders(this._config.apiToken);
     }
 
+    /**
+     * Get current room, if set.
+     */
     getCurrentRoom = (): RoomResult | null => {
         return this._currentRoom;
     }
 
+    /**
+     * Set current room, reset chat polling if a new room.
+     * Will trigger onRoomChange() if new and old rooms are different
+     * @param room
+     */
     setCurrentRoom = (room: RoomResult): Room | null => {
         const oldRoom = this._currentRoom;
         if(!room || !room.id) {
@@ -112,10 +145,17 @@ export class RestfulEventService implements IEventService{
         return room;
     }
 
+    /**
+     * Set how often we poll for events, defaults to 800ms
+     * @param frequency
+     */
     setPollFrequency = (frequency:number) => {
         this._pollFrequency = frequency;
     }
 
+    /**
+     * Start the chat polling
+     */
     startChat = () => {
         if(this._polling) {
             console.warn("ALREADY CONNECTED TO TALK");
@@ -141,6 +181,11 @@ export class RestfulEventService implements IEventService{
         this._polling = setInterval(this._fetchUpdatesAndTriggerCallbacks, this._pollFrequency || 800);
     }
 
+    /**
+     * Fetch updates and trigger callbacks.  Exposed as public for debug and forced manual re-polling, if needed.
+     * However, marked with a starting underscore to emphasize that you are probably doing something wrong if you need this for
+     * non-debug reasons.
+     */
     public _fetchUpdatesAndTriggerCallbacks = () =>{
         this.getUpdates().then(apiResult=>{
             this._handleUpdates(apiResult);
@@ -153,12 +198,18 @@ export class RestfulEventService implements IEventService{
         });
     }
 
+    /**
+     * Stop event polling
+     */
     public stopChat = () => {
         if(this._polling) {
             clearInterval(this._polling);
         }
     }
 
+    /**
+     * Get the latest events.
+     */
     public getUpdates = (): Promise<ChatUpdatesResult> => {
         if(!this._roomApi) {
             throw new SettingsError("No room selected");
@@ -176,6 +227,11 @@ export class RestfulEventService implements IEventService{
         });
     }
 
+    /**
+     * Route the updates to appropriate handers.
+     * @param update
+     * @private
+     */
     private _handleUpdates = (update: ChatUpdatesResult) => {
         const events: Array<EventResult> = update.events;
         if(events && events.length) {
@@ -217,6 +273,12 @@ export class RestfulEventService implements IEventService{
      * ROOM COMMANDS SECTION
      */
 
+    /**
+     * Evaluate admin commands
+     * @param command
+     * @param response
+     * @private
+     */
     private _evaluateCommandResponse = (command: string, response: RestApiResult<CommandResponse> ): RestApiResult<CommandResponse> => {
         if(command.startsWith('*')) {
             const onHelp = this.eventHandlers.onHelp;
@@ -233,7 +295,7 @@ export class RestfulEventService implements IEventService{
         return response;
     }
     /**
-     *
+     * Send a chat command
      * @param command
      * @param options
      */
@@ -254,6 +316,13 @@ export class RestfulEventService implements IEventService{
         });
     }
 
+    /**
+     * Send a reply to a chat event.
+     * @param user
+     * @param message
+     * @param replyto
+     * @param options
+     */
     sendReply = (user: User, message: string, replyto: EventResult |string, options?: CommandOptions): Promise<MessageResult<CommandResponse>> => {
         // @ts-ignore
         const id = replyto.id || replyto;
@@ -273,6 +342,11 @@ export class RestfulEventService implements IEventService{
         });
     }
 
+    /**
+     * Report an event for breaking community rules
+     * @param event
+     * @param reason
+     */
     reportEvent = (event: EventResult | string, reason: ReportReason): Promise<RestApiResult<null>> => {
         // @ts-ignore
         const id = event.id || event;
@@ -288,6 +362,13 @@ export class RestfulEventService implements IEventService{
         })
     }
 
+    /**
+     * Send a reaction
+     * @param user
+     * @param reaction
+     * @param reactToMessage
+     * @param options
+     */
     sendReaction = (user: User,  reaction: Reaction, reactToMessage: EventResult | string, options?: CommandOptions): Promise<MessageResult<CommandResponse>> => {
         // @ts-ignore
         const source = reactToMessage.id || reactToMessage;
@@ -308,6 +389,11 @@ export class RestfulEventService implements IEventService{
         });
     }
 
+    /**
+     * Send an advertisement event, using SportsTalk custom events.
+     * @param user
+     * @param options
+     */
     sendAdvertisement = (user: User, options: AdvertisementOptions): Promise<MessageResult<CommandResponse>> => {
         const data = Object.assign({
             command: 'advertisement',
@@ -324,6 +410,13 @@ export class RestfulEventService implements IEventService{
         return stRequest(config).then(response=>response.data);
     }
 
+    /**
+     * Send a goal event.
+     * @param user
+     * @param img
+     * @param message
+     * @param options
+     */
     sendGoal = (user: User, img: string, message?:string, options?: GoalOptions): Promise<MessageResult<CommandResponse>> => {
         const defaultOptions = {
             "img": img,
@@ -349,6 +442,10 @@ export class RestfulEventService implements IEventService{
         })
     }
 
+    /**
+     * Delete an event on the server.  Will not clear it from clients that have already displayed it.
+     * @param event
+     */
     deleteEvent = (event: EventResult | string): Promise<RestApiResult<null>> => {
         if(!event) {
             throw new Error("Cannot delete a null or undefined event")

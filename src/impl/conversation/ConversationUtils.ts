@@ -1,5 +1,9 @@
 import {Comment, Conversation} from "../../models/ConversationModels";
 
+/**
+ * Helper for finding the id of a comment
+ * @param comment
+ */
 export function getUrlCommentId(comment: Comment | string): string {
     // @ts-ignore
     const id = comment.id || comment;
@@ -9,7 +13,10 @@ export function getUrlCommentId(comment: Comment | string): string {
     return encodeURIComponent(id);
 }
 
-
+/**
+ * Helper for finding the id of a conversation
+ * @param conversation
+ */
 export function getUrlConversationId(conversation: Conversation | string): string {
     // @ts-ignore
     const id = conversation.conversationid || conversation;
