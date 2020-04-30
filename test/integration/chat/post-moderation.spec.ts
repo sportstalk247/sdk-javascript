@@ -35,7 +35,7 @@ describe('Post moderation Sequence', function() {
        rm.createRoom({
            enableprofanityfilter: false,
            name: "post moderation test room",
-           slug: "post-test-room",
+           slug: "post-test-room"+new Date().getTime(),
            maxreports: 0,
            moderation: ModerationType.post
        }).then(room=>{
@@ -71,9 +71,9 @@ describe('Post moderation Sequence', function() {
            expect(events.length).to.be.equal(0);
        }).then(()=>{
            return client.getEventService().getUpdates()
-       }).then((events)=>{
+       }).then((result)=>{
         //   console.log("GOT EVENTS");
-           const list: Array<EventResult> =  events || [];
+           const list: Array<EventResult> =  result.events || [];
            eventlength = list.length;
            return Promise.all(list.map(async function(event) {
                await client.report(event, ReportType.abuse);

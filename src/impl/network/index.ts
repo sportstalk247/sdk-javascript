@@ -1,5 +1,10 @@
 import axios, {AxiosRequestConfig} from "axios";
 
+/**
+ * Make request with fetch. Originally axios was used everywhere for compatibility but this caused more errors with modern browsers as
+ * Axios default cors handling was not as flexible.
+ * @param config
+ */
 const makeRequest = async function makeRequest(config:Request | AxiosRequestConfig) {
     // @ts-ignore
     if(config.data) {
@@ -22,7 +27,10 @@ const makeRequest = async function makeRequest(config:Request | AxiosRequestConf
     })
 
 }
-
+/**
+ * Make request with axios on server
+ * @param config
+ */
 const makeAxiosRequest = async function makeAxiosRequest(config:AxiosRequestConfig) {
     return axios(config).then(result=>result.data);
 }

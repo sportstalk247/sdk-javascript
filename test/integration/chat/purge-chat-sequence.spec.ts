@@ -44,15 +44,15 @@ describe('PURGE Chat Sequence', function() {
         onChatEvent
     });
     const em2 = client2.getEventService();
-
+    const roomDef = {
+        name: "Test room",
+        slug: "chat-test-room"+new Date().getTime(),
+    }
 
     let theRoom;
     describe('User 1', function () {
         it('Joins room', function (done) {
-            rm.createRoom({
-                name: "Test room",
-                slug: "chat-test-room",
-            }).then(room => {
+            rm.createRoom(roomDef).then(room => {
                 theRoom = room;
                 return client.joinRoom(room)
             }).then(() => {
@@ -62,14 +62,11 @@ describe('PURGE Chat Sequence', function() {
     });
     describe('User 2', function () {
         it('Joins room', function (done) {
-            rm.createRoom({
-                name: "Test room",
-                slug: "chat-test-room",
-            }).then(room => {
+            rm.createRoom(roomDef).then(room => {
                 return client2.joinRoom(room)
             }).then(() => {
-                client.startTalk()
-                client2.startTalk()
+                client.startChat()
+                client2.startChat()
                 done()
             }).catch(done)
         })
@@ -88,9 +85,9 @@ describe('PURGE Chat Sequence', function() {
         it('Shows the same to users, sends reply', function (done) {
             Promise.all([em1.getUpdates(), em2.getUpdates()])
                 .then(async chatHistories => {
-                    expect(chatHistories[0]).to.have.lengthOf(2);
-                    expect(chatHistories[1]).to.have.lengthOf(2);
-                    await client2.sendReply("This is my reply", chatHistories[0][0].id);
+                    expect(chatHistories[0].events).to.have.lengthOf(2);
+                    expect(chatHistories[1].events).to.have.lengthOf(2);
+                    await client2.sendReply("This is my reply", chatHistories[0].events[0]);
                     done();
                 }).catch(done)
         })
@@ -99,8 +96,8 @@ describe('PURGE Chat Sequence', function() {
     describe('GetUpdates shows purge', function () {
         it('Fires onPurge',  async function () {
             await delay(500);
-            const purge =  await client.sendCommand("*purge zola handle2");
-
+            const purge =  await client.sendCommand("*purge "+process.env.PURGE+" handle2");
+            await client.getLatestEvents();
             await delay(100);
             const updates:RestfulEventService = <RestfulEventService>client.getEventService();
             await updates._fetchUpdatesAndTriggerCallbacks();
@@ -114,8 +111,8 @@ describe('PURGE Chat Sequence', function() {
         it('can be deleted', function (done) {
             rm.deleteRoom(theRoom)
                 .then(success => {
-                    client.stopTalk();
-                    client2.stopTalk();
+                    client.stopChat();
+                    client2.stopChat();
                     done()
                 }).catch(done);
         })

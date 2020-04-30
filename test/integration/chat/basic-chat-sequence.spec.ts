@@ -38,7 +38,7 @@ describe('BASIC Chat Sequence', function() {
         it('Joins room', function (done) {
             rm.createRoom({
                 name: "Test room",
-                slug: "chat-test-room",
+                slug: "chat-test-room"+new Date().getTime(),
             }).then(room => {
                 theRoom = room;
                 return client.joinRoom(room)
@@ -71,8 +71,8 @@ describe('BASIC Chat Sequence', function() {
         it('Shows the same to users', function (done) {
             Promise.all([em1.getUpdates(), em2.getUpdates()])
                 .then(chatHistories => {
-                    expect(chatHistories[0]).to.have.lengthOf(2);
-                    expect(chatHistories[1]).to.have.lengthOf(2);
+                    expect(chatHistories[0].events).to.have.lengthOf(2);
+                    expect(chatHistories[1].events).to.have.lengthOf(2);
                     done();
                 }).catch(done)
         })

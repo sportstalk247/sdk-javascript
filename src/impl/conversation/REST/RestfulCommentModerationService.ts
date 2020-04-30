@@ -8,6 +8,9 @@ import {ICommentModerationService} from "../../../API/ConversationAPI";
 import {SettingsError} from "../../errors";
 import {MUST_SET_APPID} from "../../constants/messages";
 
+/**
+ * Primary REST class for moderating comments.
+ */
 export class RestfulCommentModerationService implements ICommentModerationService {
 
     private _config: ClientConfig;
@@ -19,22 +22,36 @@ export class RestfulCommentModerationService implements ICommentModerationServic
        this.setConfig(config);
     }
 
+    /**
+     * Used to ensure we have an appID for operations
+     * @private
+     */
     private _requireAppId = () =>{
         if(!this._config || !this._config.appId) {
             throw new SettingsError(MUST_SET_APPID);
         }
     }
 
+    /**
+     * Get current config.
+     */
     public getConfig = () => {
         return this._config;
     }
 
+    /**
+     * Set configuration
+     * @param config
+     */
     public setConfig = (config: ClientConfig = {}) => {
         this._config = Object.assign({}, DEFAULT_CONFIG, config);
         this._apiHeaders = getUrlEncodedHeaders(this._config.apiToken);
         this._jsonHeaders = getJSONHeaders(this._config.apiToken);
     }
 
+    /**
+     * Get the moderation queue
+     */
     public getModerationQueue = (): Promise<Array<Comment>> => {
         this._requireAppId();
         const config: AxiosRequestConfig = {
@@ -47,6 +64,10 @@ export class RestfulCommentModerationService implements ICommentModerationServic
         });
     }
 
+    /**
+     * Reject a comment, removing it from the conversation
+     * @param comment
+     */
     rejectComment = (comment: Comment): Promise<Comment> => {
         const config:AxiosRequestConfig = {
             method: 'POST',
@@ -59,6 +80,10 @@ export class RestfulCommentModerationService implements ICommentModerationServic
         })
     }
 
+    /**
+     * Approve a comment, allowing it to show in a conversation.
+     * @param comment
+     */
     approveComment = (comment: Comment): Promise<Comment> => {
         const config: AxiosRequestConfig = {
             method: POST,

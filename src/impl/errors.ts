@@ -1,3 +1,6 @@
+/**
+ * A validation error is used when input is wrong.
+ */
 export class ValidationError extends Error {
     constructor(message:string) {
         super(message);
@@ -6,6 +9,9 @@ export class ValidationError extends Error {
     }
 }
 
+/**
+ * SettingsError is used when settings are missing, such as no appId
+ */
 export class SettingsError extends Error {
     constructor(message:string) {
         super(message);
@@ -14,6 +20,9 @@ export class SettingsError extends Error {
     }
 }
 
+/**
+ * Require user error is thrown to specify that a User MUST be set for some operations.
+ */
 export class RequireUserError extends Error {
     constructor(m: string) {
         super(m);

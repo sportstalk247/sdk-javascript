@@ -13,6 +13,9 @@ import {buildAPI, forceObjKeyOrString, getJSONHeaders, getUrlEncodedHeaders} fro
 import { SportsTalkConfig, User, UserResult} from "../../../models/CommonModels";
 import {AxiosRequestConfig} from "axios";
 
+/**
+ * This room uses REST to manage sportstalk chat rooms.
+ */
 export class RestfulRoomService implements IRoomService {
     private _config: SportsTalkConfig;
     private _knownRooms: Room[] = [];
@@ -24,6 +27,10 @@ export class RestfulRoomService implements IRoomService {
         this.setConfig(config);
     }
 
+    /**
+     * Set config
+     * @param config
+     */
     setConfig = (config: SportsTalkConfig) => {
         this._config = config;
         this._knownRooms = []
@@ -46,6 +53,10 @@ export class RestfulRoomService implements IRoomService {
         });
     }
 
+    /**
+     * Get the list of known rooms.  Used as a cache after first query to speed up UI.
+     * use listRooms() to get a fresh set.
+     */
     getKnownRooms = async (): Promise<Array<Room>> => {
         if(!this._knownRooms) {
             const rooms = await this.listRooms();
@@ -55,6 +66,10 @@ export class RestfulRoomService implements IRoomService {
         return this._knownRooms;
     }
 
+    /**
+     * Delete a room.
+     * @param room
+     */
     deleteRoom = (room: Room | string): Promise<DeletedRoomResponse> => {
         // @ts-ignore
         const id =  forceObjKeyOrString(room);
@@ -69,8 +84,10 @@ export class RestfulRoomService implements IRoomService {
         });
     }
 
-
-
+    /**
+     * Create a new room
+     * @param room
+     */
     createRoom = (room: Room): Promise<RoomResult> => {
         const config:AxiosRequestConfig = {
             method: POST,
@@ -100,6 +117,7 @@ export class RestfulRoomService implements IRoomService {
 
 
     /*
+    * List the participants in a room
     * @param cursor
     * @param maxresults
     */
@@ -112,7 +130,11 @@ export class RestfulRoomService implements IRoomService {
         return stRequest(config).then(result=>result.data);
     }
 
-
+    /**
+     * Join a room
+     * @param user
+     * @param room
+     */
     joinRoom = (user: User, room: RoomResult | string): Promise<RoomUserResult> => {
         // @ts-ignore
         const roomId = forceObjKeyOrString(room);
@@ -133,6 +155,11 @@ export class RestfulRoomService implements IRoomService {
         })
     }
 
+    /**
+     * Exit a room.
+     * @param user
+     * @param room
+     */
     exitRoom = (user: User | string, room: Room | string): Promise<RoomExitResult> => {
         const roomId = forceObjKeyOrString(room);
         const userId = forceObjKeyOrString(user, 'userid');
