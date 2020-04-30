@@ -1,4 +1,4 @@
-// @Sportstalk Client 3.6.x
+// @Sportstalk Client 3.7.x
 const chatClient = require('./impl/ChatClient');
 const conversationClient = require('./impl/ConversationClient');
 const chatModels = require('./models/ChatModels');

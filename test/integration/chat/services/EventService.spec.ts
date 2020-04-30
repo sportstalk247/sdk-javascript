@@ -45,7 +45,7 @@ describe("Event Service", ()=>{
             it("will trigger onChatStart", async () => {
                 room = await RM.createRoom({name: "CallbackTest", slug: "callback-test"});
                 await EM.setCurrentRoom(room);
-                await EM.startTalk();
+                await EM.startChat();
                 expect(onChatStart.calledOnce)
             });
         });
@@ -91,7 +91,7 @@ describe("Event Service", ()=>{
         describe("Kill chat room", ()=>{
             it("closes chat", done=>{
                 RM.deleteRoom(room).then(()=>{
-                    EM.stopTalk();
+                    EM.stopChat();
                     done();
                 }).catch(done);
             })

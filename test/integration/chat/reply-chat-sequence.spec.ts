@@ -36,7 +36,7 @@ describe('REPLY Chat Sequence', function() {
         it('Joins room', function (done) {
             rm.createRoom({
                 name: "Test room",
-                slug: "chat-test-room",
+                slug: "chat-test-room" + new Date().getTime(),
             }).then(room => {
                 theRoom = room;
                 return client.joinRoom(room)
@@ -67,9 +67,9 @@ describe('REPLY Chat Sequence', function() {
         it('Shows the same to users, sends reply', function (done) {
             Promise.all([em1.getUpdates(), em2.getUpdates()])
                 .then(async chatHistories => {
-                    expect(chatHistories[0]).to.have.lengthOf(2);
-                    expect(chatHistories[1]).to.have.lengthOf(2);
-                    const reply = await client2.sendReply("This is my reply", chatHistories[0][0].id);
+                    expect(chatHistories[0].events).to.have.lengthOf(2);
+                    expect(chatHistories[1].events).to.have.lengthOf(2);
+                    const reply = await client2.sendReply("This is my reply", chatHistories[0].events[0]);
                     done();
                 }).catch(done)
         })
@@ -79,14 +79,14 @@ describe('REPLY Chat Sequence', function() {
         it('Shows reply', function (done) {
             Promise.all([em1.getUpdates(), em2.getUpdates()])
                 .then(chatHistories => {
-                    expect(chatHistories[0]).to.have.lengthOf(3);
-                    expect(chatHistories[1]).to.have.lengthOf(3);
-                    expect(chatHistories[0][chatHistories[0].length-1].eventtype).to.equal("reply");
-                    expect(chatHistories[0][chatHistories[0].length-1].replyto).to.haveOwnProperty('userid');
-                    expect(chatHistories[0][chatHistories[0].length-1].body).to.equal('This is my reply')
+                    expect(chatHistories[0].events).to.have.lengthOf(3);
+                    expect(chatHistories[1].events).to.have.lengthOf(3);
+                    expect(chatHistories[0].events[chatHistories[0].events.length-1].eventtype).to.equal("reply");
+                    expect(chatHistories[0].events[chatHistories[0].events.length-1].replyto).to.haveOwnProperty('userid');
+                    expect(chatHistories[0].events[chatHistories[0].events.length-1].body).to.equal('This is my reply')
                     return chatHistories[0];
-                }).then(events=>{
-                    toDelete = events[0];
+                }).then(chat=>{
+                    toDelete = chat.events[0];
                     done();
                 })
                 .catch(done)

@@ -27,9 +27,12 @@ import {
     USER_NEEDS_ID
 } from "../../constants/messages";
 
-import axios, {AxiosRequestConfig} from "axios";
+import {AxiosRequestConfig} from "axios";
 import {stRequest} from "../../network";
 
+/**
+ * This is the primary comment service, which handles posting and responding to comments.
+ */
 export class RestfulCommentService implements ICommentService {
     private _config: SportsTalkConfig;
     private _conversation: Conversation;
@@ -38,6 +41,11 @@ export class RestfulCommentService implements ICommentService {
     private _conversationId: string;
     private _apiExt:string = 'comment/conversations';
 
+    /**
+     * Create a new CommentService
+     * @param config
+     * @param conversation
+     */
     constructor(config?: ClientConfig, conversation?: Conversation) {
         if(conversation) {
             this.setConversation(conversation);
@@ -47,33 +55,11 @@ export class RestfulCommentService implements ICommentService {
         }
     }
 
-    private _requireUser = (user) => {
-        if(!user) {
-            throw new RequireUserError(MUST_SET_USER);
-        }
-        if(!user.userid) {
-            throw new RequireUserError(USER_NEEDS_ID);
-        }
-    }
-    private _requireConversation = (message?:string) => {
-        if(!this._conversationId) {
-            /* istanbul ignore next */
-            throw new SettingsError(message || NO_CONVERSATION_SET);
-        }
-    }
-
-    private _buildUserComment = (comment: Comment | string, user?: User): Comment => {
-        let final:any = comment;
-        if(typeof comment === 'string') {
-            final = {body: comment}
-        }
-        return <Comment>Object.assign({}, final, user);
-    }
-
-    public getConversation = (): Conversation | null => {
-        return this._conversation;
-    }
-
+    /**
+     * Set config
+     * @param config
+     * @param conversation
+     */
     public setConfig = (config: SportsTalkConfig, conversation?: Conversation): SportsTalkConfig => {
         this._config = config;
         this._apiHeaders = getUrlEncodedHeaders(this._config.apiToken)
@@ -84,12 +70,68 @@ export class RestfulCommentService implements ICommentService {
         return config;
     }
 
+    /**
+     * Set the conversation we will be joining.
+     * @param conversation
+     */
     public setConversation = (conversation: Conversation): Conversation => {
         this._conversation = conversation;
         this._conversationId = getUrlConversationId(conversation);
         return this._conversation;
     }
 
+    /**
+     * Used to ensure we have a user or throw a helpful error.
+     * @param user
+     * @private
+     */
+    private _requireUser = (user) => {
+        if(!user) {
+            throw new RequireUserError(MUST_SET_USER);
+        }
+        if(!user.userid) {
+            throw new RequireUserError(USER_NEEDS_ID);
+        }
+    }
+
+    /**
+     * Ensure we've joined a conversation before we allow operations
+     * @param message
+     * @private
+     */
+    private _requireConversation = (message?:string) => {
+        if(!this._conversationId) {
+            /* istanbul ignore next */
+            throw new SettingsError(message || NO_CONVERSATION_SET);
+        }
+    }
+
+    /**
+     * build a non-reply comment.
+     * @param comment
+     * @param user
+     * @private
+     */
+    private _buildUserComment = (comment: Comment | string, user?: User): Comment => {
+        let final:any = comment;
+        if(typeof comment === 'string') {
+            final = {body: comment}
+        }
+        return <Comment>Object.assign({}, final, user);
+    }
+
+    /**
+     * Get the current conversation. May be null.
+     */
+    public getConversation = (): Conversation | null => {
+        return this._conversation;
+    }
+    /**
+     * Create a comment
+     * @param comment
+     * @param user
+     * @param replyto
+     */
     public create = (comment: Comment | string, user?: User, replyto?: Comment | string): Promise<Comment> => {
         // @ts-ignore
         const replyid: Comment | string = replyto || comment.replyto;
@@ -102,6 +144,11 @@ export class RestfulCommentService implements ICommentService {
         return this._makeReply(finalComment, replyid);
     }
 
+    /**
+     * Make a non-reply comment
+     * @param comment
+     * @private
+     */
     private _makeComment = (comment: Comment): Promise<Comment> => {
         const config:AxiosRequestConfig = {
             method: POST,
@@ -114,6 +161,12 @@ export class RestfulCommentService implements ICommentService {
         });
     }
 
+    /**
+     * Create a replyto comment
+     * @param comment
+     * @param replyTo
+     * @private
+     */
     private _makeReply = (comment: Comment, replyTo: Comment | string): Promise<Comment> => {
         // @ts-ignore
         const replyId = replyTo.id || replyTo || comment.replyto;
@@ -136,6 +189,10 @@ export class RestfulCommentService implements ICommentService {
         });
     }
 
+    /**
+     * Get a specific comment.
+     * @param comment
+     */
     public getComment = (comment: Comment | string): Promise<Comment | null> => {
         // @ts-ignore
         this._requireConversation();
@@ -155,6 +212,12 @@ export class RestfulCommentService implements ICommentService {
         })
     }
 
+    /**
+     * Delete a comment, irrevocable.
+     * @param comment
+     * @param user
+     * @private
+     */
     private _finalDelete = async (comment: Comment | string, user:User): Promise<CommentDeletionResponse> => {
         this._requireConversation();
         const id = getUrlCommentId(comment);
@@ -167,6 +230,12 @@ export class RestfulCommentService implements ICommentService {
         return result.data;
     }
 
+    /**
+     * Mark a comment as deleted. This can be recovered by admins later.
+     * @param comment
+     * @param user
+     * @private
+     */
     private _markDeleted = async (comment: Comment | string, user:User): Promise<CommentDeletionResponse> => {
         this._requireUser(user);
         const id = getUrlCommentId(comment);
@@ -190,6 +259,12 @@ export class RestfulCommentService implements ICommentService {
         });
     }
 
+    /**
+     * Delete a comment
+     * @param comment
+     * @param user
+     * @param final
+     */
     public delete = (comment: Comment | string, user: User, final?: boolean): Promise<CommentDeletionResponse> => {
         if(final) {
             return this._finalDelete(comment, user);
@@ -197,6 +272,10 @@ export class RestfulCommentService implements ICommentService {
         return this._markDeleted(comment, user);
     }
 
+    /**
+     * Update a comment
+     * @param comment
+     */
     public update = (comment: Comment): Promise<Comment> => {
         this._requireConversation();
         const id = getUrlCommentId(comment);
@@ -238,6 +317,12 @@ export class RestfulCommentService implements ICommentService {
         });
     }
 
+    /**
+     * Vote on a comment
+     * @param comment
+     * @param user
+     * @param vote
+     */
     public vote = (comment: Comment, user:User, vote:Vote): Promise<Comment> => {
         this._requireConversation();
         this._requireUser(user);
@@ -255,6 +340,12 @@ export class RestfulCommentService implements ICommentService {
         });
     }
 
+    /**
+     * Report a comment to admins for moderation
+     * @param comment
+     * @param user
+     * @param reporttype
+     */
     public report = (comment: Comment, user:User, reporttype: ReportType): Promise<Comment> => {
         this._requireConversation();
         this._requireUser(user)
@@ -289,6 +380,11 @@ export class RestfulCommentService implements ICommentService {
         });
     }
 
+    /**
+     * Get comments for a conversation.
+     * @param request
+     * @param conversation
+     */
     public getComments = (request?: CommentRequest, conversation?: Conversation): Promise<CommentListResponse>=> {
         if(!conversation) {
             this._requireConversation(MUST_SPECIFY_CONVERSATION);

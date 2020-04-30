@@ -25,7 +25,7 @@ describe('Pre Moderation sequences', function() {
         it('Can create a room, join the room, deny messages, kill room', (done) => {
             rm.createRoom({
                 name: "Pre-moderation test Room",
-                slug: "pre-test-room",
+                slug: "pre-test-room"+new Date().getTime(),
                 moderation: ModerationType.pre,
             }).then(room => {
                 roomid = room.id;
@@ -108,8 +108,8 @@ describe('Pre Moderation sequences', function() {
                 return delay(1000);
             }).then(()=>{
                 return client.getEventService().getUpdates()
-            }).then((events) => {
-               // expect(events).to.have.lengthOf(1)
+            }).then((result) => {
+                expect(result.events).to.have.lengthOf(1)
                 rm.deleteRoom(roomid);
                 done();
             }).catch(async e=>{

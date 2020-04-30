@@ -116,7 +116,7 @@ export class RestfulEventService implements IEventService{
         this._pollFrequency = frequency;
     }
 
-    startTalk = () => {
+    startChat = () => {
         if(this._polling) {
             console.warn("ALREADY CONNECTED TO TALK");
             return;
@@ -153,7 +153,7 @@ export class RestfulEventService implements IEventService{
         });
     }
 
-    public stopTalk = () => {
+    public stopChat = () => {
         if(this._polling) {
             clearInterval(this._polling);
         }
@@ -254,13 +254,13 @@ export class RestfulEventService implements IEventService{
         });
     }
 
-    sendReply = (user: User, message: string, replyto: Event |string, options?: CommandOptions): Promise<MessageResult<CommandResponse>> => {
+    sendReply = (user: User, message: string, replyto: EventResult |string, options?: CommandOptions): Promise<MessageResult<CommandResponse>> => {
         // @ts-ignore
         const id = replyto.id || replyto;
         const data = Object.assign({
             command: message,
             userid: user.userid,
-            replyto,
+            replyto: id,
         }, options);
         const config:AxiosRequestConfig = {
             method: POST,
@@ -288,7 +288,7 @@ export class RestfulEventService implements IEventService{
         })
     }
 
-    sendReaction = (user: User,  reaction: Reaction, reactToMessageId: Event | string, options?: CommandOptions): Promise<MessageResult<CommandResponse>> => {
+    sendReaction = (user: User,  reaction: Reaction, reactToMessage: EventResult | string, options?: CommandOptions): Promise<MessageResult<CommandResponse>> => {
         // @ts-ignore
         const source = reactToMessage.id || reactToMessage;
         const data = Object.assign({
@@ -350,8 +350,14 @@ export class RestfulEventService implements IEventService{
     }
 
     deleteEvent = (event: EventResult | string): Promise<RestApiResult<null>> => {
+        if(!event) {
+            throw new Error("Cannot delete a null or undefined event")
+        }
         // @ts-ignore
         const id = event.id || event;
+        if(!id) {
+            throw new Error("Cannot delete an event without an id")
+        }
         const config:AxiosRequestConfig =  {
             method: DELETE,
             url: buildAPI(this._config, `chat/rooms/${this._currentRoom.id}/events/${id}`),
