@@ -5,10 +5,10 @@ import {
     ConversationResponse,
     ConversationDeletionResponse,
     ConversationRequest, ConversationListResponse
-} from "../../../models/ConversationModels";
+} from "../../../models/CommentsModels";
 import {GET, POST, DELETE} from "../../constants/api";
 import {getUrlEncodedHeaders, getJSONHeaders, buildAPI, formify} from "../../utils";
-import {IConversationService} from "../../../API/ConversationAPI";
+import {IConversationService} from "../../../API/CommentsAPI";
 import {getUrlConversationId} from "../ConversationUtils";
 import {stRequest} from "../../network";
 
@@ -26,7 +26,7 @@ export class RestfulConversationService implements IConversationService {
     _apiExt:string = 'comment/conversations'
 
     /**
-     * Create a new conversation service
+     * Create a new comments service
      * @param config
      */
     constructor(config?:ClientConfig) {
@@ -46,7 +46,7 @@ export class RestfulConversationService implements IConversationService {
     }
 
     /**
-     * Create a conversation
+     * Create a comments
      * @param settings
      */
     public createConversation = (settings: Conversation): Promise<ConversationResponse> => {
@@ -62,7 +62,7 @@ export class RestfulConversationService implements IConversationService {
     }
 
     /**
-     * Get a conversation
+     * Get a comments
      * @param conversation
      */
     public getConversation = (conversation: Conversation | string): Promise<ConversationResponse> => {
@@ -78,7 +78,7 @@ export class RestfulConversationService implements IConversationService {
     }
 
     /**
-     * Deletes a conversation.
+     * Deletes a comments.
      */
     public deleteConversation = (conversation: Conversation | string): Promise<ConversationDeletionResponse> => {
         // @ts-ignore

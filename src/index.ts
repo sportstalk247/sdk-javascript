@@ -1,18 +1,18 @@
 import * as API from "./API/ChatAPI";
 import {ChatClient} from './impl/ChatClient';
-import {ConversationClient} from './impl/ConversationClient';
+import {CommentClient} from './impl/CommentClient';
 import {RestfulChatModerationService} from "./impl/chat/REST/RestfulChatModerationService";
 import {RestfulEventService} from "./impl/chat/REST/RestfulEventService";
 import {RestfulRoomService} from "./impl/chat/REST/RestfulRoomService";
 import {RestfulUserManager} from "./impl/common/REST/RestfulUserManager";
 import * as ChatModels from './models/ChatModels';
-import * as ConversationModels from './models/ConversationModels';
+import * as ConversationModels from './models/CommentsModels';
 import * as CommonModels from './models/CommonModels';
 import * as Constants from './impl/constants/api';
 import * as Messages from './impl/constants/messages';
 import * as Errors from './impl/errors';
-import {RestfulConversationService} from "./impl/conversation/REST/RestfulConversationService";
-import {RestfulCommentService} from './impl/conversation/REST/RestfulCommentService'
+import {RestfulConversationService} from "./impl/comments/REST/RestfulConversationService";
+import {RestfulCommentService} from './impl/comments/REST/RestfulCommentService'
 import {RestfulWebhookManager} from "./impl/common/REST/RestfulWebhookManager";
 
 const Chat = {
@@ -42,7 +42,7 @@ const impl = {
 
 export {
     ChatClient,
-    ConversationClient,
+    CommentClient,
     impl,
     ChatModels,
     ConversationModels,

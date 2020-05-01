@@ -12,12 +12,12 @@ import {
     CommentRequest,
     Conversation,
     Vote
-} from "../../../models/ConversationModels";
+} from "../../../models/CommentsModels";
 import {DELETE, GET, POST, PUT} from "../../constants/api";
 import {getUrlEncodedHeaders, getJSONHeaders, buildAPI, formify} from "../../utils";
 import {getUrlCommentId, getUrlConversationId} from "../ConversationUtils";
 import {RequireUserError, SettingsError, ValidationError} from "../../errors";
-import {ICommentService} from "../../../API/ConversationAPI";
+import {ICommentService} from "../../../API/CommentsAPI";
 import {
     MISSING_REPLYTO_ID,
     MUST_SET_USER,
@@ -73,7 +73,7 @@ export class RestfulCommentService implements ICommentService {
     }
 
     /**
-     * Set the conversation we will be joining.
+     * Set the comments we will be joining.
      * @param conversation
      */
     public setConversation = (conversation: Conversation): Conversation => {
@@ -97,7 +97,7 @@ export class RestfulCommentService implements ICommentService {
     }
 
     /**
-     * Ensure we've joined a conversation before we allow operations
+     * Ensure we've joined a comments before we allow operations
      * @param message
      * @private
      */
@@ -123,7 +123,7 @@ export class RestfulCommentService implements ICommentService {
     }
 
     /**
-     * Get the current conversation. May be null.
+     * Get the current comments. May be null.
      */
     public getConversation = (): Conversation | null => {
         return this._conversation;
@@ -388,7 +388,7 @@ export class RestfulCommentService implements ICommentService {
     }
 
     /**
-     * Get comments for a conversation.
+     * Get comments for a comments.
      * @param request
      * @param conversation
      */

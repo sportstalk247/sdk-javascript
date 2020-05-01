@@ -14,7 +14,7 @@ import {
     CommentResponse,
     ConversationRequest,
     ConversationListResponse
-} from "../models/ConversationModels";
+} from "../models/CommentsModels";
 
 import {Reaction, SportsTalkConfig, ReportType, RestApiResult} from "../models/CommonModels";
 

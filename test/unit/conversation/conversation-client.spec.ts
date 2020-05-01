@@ -1,9 +1,9 @@
-import {ConversationClient} from '../../../src/impl/ConversationClient';
+import {CommentClient} from '../../../src/impl/CommentClient';
 import {Kind, ModerationType, Reaction, ReportType, SportsTalkConfig} from '../../../src/models/CommonModels';
 import * as chai from 'chai';
 import * as dotenv from 'dotenv';
-import {RestfulCommentModerationService} from "../../../src/impl/conversation/REST/RestfulCommentModerationService";
-import {Conversation} from "../../../src/models/ConversationModels";
+import {RestfulCommentModerationService} from "../../../src/impl/comments/REST/RestfulCommentModerationService";
+import {Conversation} from "../../../src/models/CommentsModels";
 import {DEFAULT_CONFIG} from "../../../src/impl/constants/api";
 import {User} from "../../../dist/models/CommonModels";
 dotenv.config();
@@ -13,7 +13,7 @@ const { expect } = chai;
 describe("Conversation Client", function(){
     describe("Sportstalk Configuration", function(){
         it("is built with factory function", ()=>{
-            const client = ConversationClient.create(DEFAULT_CONFIG);
+            const client = CommentClient.create(DEFAULT_CONFIG);
             const config: SportsTalkConfig = client.getConfig();
             expect(config.endpoint).to.be.equal(DEFAULT_CONFIG.endpoint);
         })
@@ -22,7 +22,7 @@ describe("Conversation Client", function(){
         it("Can set user aftr creation", ()=>{
             const userid = "TestID";
             const handle = "handle";
-            const client = ConversationClient.create(DEFAULT_CONFIG);
+            const client = CommentClient.create(DEFAULT_CONFIG);
             client.setUser({userid, handle});
             const user:User = client.getUser();
             expect(user.handle).to.be.equal(handle);
@@ -30,11 +30,11 @@ describe("Conversation Client", function(){
         })
     });
     describe("Conversation Configuration", function(){
-        it("Can set conversation as part of creation", function(){
+        it("Can set comments as part of creation", function(){
             const conversationid = "TestId";
             const property = "propertytest";
             const moderation = ModerationType.post;
-            const client = ConversationClient.create(DEFAULT_CONFIG,
+            const client = CommentClient.create(DEFAULT_CONFIG,
                 { conversationid,
                 property,
                 moderation
@@ -47,11 +47,11 @@ describe("Conversation Client", function(){
             // @ts-ignore
             expect(conversation.moderation).to.be.equal(moderation)
         })
-        it("Can set conversation after creation", function(){
+        it("Can set comments after creation", function(){
             const conversationid = "TestId";
             const property = "propertytest";
             const moderation = ModerationType.post;
-            const client = ConversationClient.create(DEFAULT_CONFIG);
+            const client = CommentClient.create(DEFAULT_CONFIG);
             client.setDefaultConversation({
                 conversationid,
                 property,

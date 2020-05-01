@@ -1,4 +1,4 @@
-import {ConversationClient} from '../../../src/impl/ConversationClient';
+import {CommentClient} from '../../../src/impl/CommentClient';
 import {Kind} from '../../../src/models/CommonModels';
 import * as chai from 'chai';
 import * as dotenv from 'dotenv';
@@ -11,7 +11,7 @@ let mod;
 const { expect } = chai;
 
 describe('BASIC Conversation Sequence', function() {
-    const client = ConversationClient.create({
+    const client = CommentClient.create({
         apiToken:process.env.TEST_KEY,
         appId: process.env.TEST_APP_ID,
         endpoint: process.env.TEST_ENDPOINT,
@@ -20,7 +20,7 @@ describe('BASIC Conversation Sequence', function() {
             handle: 'handle1'
         }
     });
-    const client2 = ConversationClient.create({
+    const client2 = CommentClient.create({
         apiToken:process.env.TEST_KEY,
         appId: process.env.TEST_APP_ID,
         endpoint: process.env.TEST_ENDPOINT,

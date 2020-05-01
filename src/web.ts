@@ -1,18 +1,18 @@
 // @Sportstalk Client 3.7.x
 const chatClient = require('./impl/ChatClient');
-const conversationClient = require('./impl/ConversationClient');
+const commentClient = require('./impl/CommentClient');
 const chatModels = require('./models/ChatModels');
 const commonModels = require('./models/CommonModels');
-const conversationModels = require('./models/ConversationModels');
+const conversationModels = require('./models/CommentsModels');
 // @ts-ignore
 var ChatClient = window.ChatClient || chatClient.default || chatClient.ChatClient || chatClient;
-var ConversationClient = window.ConversationClient || conversationClient.default || conversationClient.ConversationClient || conversationClient;
+var CommentClient = window.CommentClient || commentClient.default || commentClient.CommentClient || commentClient;
 
 if(window) {
     // @ts-ignore
     window.ChatClient = ChatClient;
     // @ts-ignore
-    window.ConversationClient = ConversationClient;
+    window.CommentClient = CommentClient;
     // @ts-ignore
     window.SportsTalk = {};
     // @ts-ignore
@@ -22,12 +22,12 @@ if(window) {
     // @ts-ignore
     window.SportsTalk.chat.Models = chatModels;
     // @ts-ignore
-    window.SportsTalk.conversation = {};
+    window.SportsTalk.comments = {};
     // @ts-ignore
     window.SportsTalk.common = {};
     // @ts-ignore
     window.SportsTalk.common.Models = commonModels;
     // @ts-ignore
-    window.SportsTalk.conversation.Models = conversationModels
+    window.SportsTalk.comments.Models = conversationModels
 }
 console.log("Chat and commenting powered by Sportstalk247")

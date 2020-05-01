@@ -6,10 +6,10 @@ import {
     CommentRequest,
     ConversationDeletionResponse,
     ConversationResponse, CommentListResponse, CommentDeletionResponse, ConversationRequest, ConversationListResponse
-} from "../models/ConversationModels";
-import {RestfulCommentService} from "./conversation/REST/RestfulCommentService";
-import {RestfulConversationService} from "./conversation/REST/RestfulConversationService";
-import {IConversationService, ICommentService, IConversationClient} from "../API/ConversationAPI";
+} from "../models/CommentsModels";
+import {RestfulCommentService} from "./comments/REST/RestfulCommentService";
+import {RestfulConversationService} from "./comments/REST/RestfulConversationService";
+import {IConversationService, ICommentService, IConversationClient} from "../API/CommentsAPI";
 import {DEFAULT_CONFIG} from "./constants/api";
 
 /**
@@ -19,7 +19,7 @@ import {DEFAULT_CONFIG} from "./constants/api";
  * NOTE: All operations can throw errors if there are network or server issues.
  * You should ensure that ALL operations that return promises have a catch block or handle errors in some way.
  */
-export class ConversationClient implements IConversationClient {
+export class CommentClient implements IConversationClient {
     private _config: SportsTalkConfig
     private _conversationService: IConversationService;
     private _commentService: ICommentService;
@@ -28,12 +28,12 @@ export class ConversationClient implements IConversationClient {
     /**
      * Creates a new Conversation Client
      * @param config
-     * @param initialConversation Either a conversation object or a conversation id
+     * @param initialConversation Either a comments object or a comments id
      * @param commentService optional and here for future extension for custom implementations of the comment service.
-     * @param conversationService optional and here for future extension for cusstom implementations of the conversation service.
+     * @param conversationService optional and here for future extension for cusstom implementations of the comments service.
      */
-    static create(config: SportsTalkConfig, initialConversation?:Conversation | string, commentService?: IConversationService, conversationService?: IConversationService): ConversationClient {
-        const commentClient = new ConversationClient();
+    static create(config: SportsTalkConfig, initialConversation?:Conversation | string, commentService?: IConversationService, conversationService?: IConversationService): CommentClient {
+        const commentClient = new CommentClient();
         // @ts-ignore
         commentClient.setConfig(config, commentService, conversationService)
         if(initialConversation) {
@@ -87,9 +87,9 @@ export class ConversationClient implements IConversationClient {
     }
 
     /**
-     * Create a new conversation.
-     * @param conversation the conversation to create
-     * @param setDefault if set to true (default) will set this conversation as the current conversation used by other API calls.
+     * Create a new comments.
+     * @param conversation the comments to create
+     * @param setDefault if set to true (default) will set this comments as the current comments used by other API calls.
      */
     public createConversation = async (conversation: Conversation, setDefault: boolean = true): Promise<ConversationResponse> => {
         const created:ConversationResponse = await this._conversationService.createConversation(conversation);
@@ -100,7 +100,7 @@ export class ConversationClient implements IConversationClient {
     }
 
     /**
-     * Get the default conversation
+     * Get the default comments
      * @param conversation
      */
     public setDefaultConversation = (conversation: Conversation | string): Conversation => {
@@ -108,14 +108,14 @@ export class ConversationClient implements IConversationClient {
         return <Conversation>this._commentService.getConversation();
     }
     /**
-     * Returns the current default conversation
+     * Returns the current default comments
      */
     public getDefaultConversation = (): Conversation | null => {
         return this._commentService.getConversation();
     }
 
     /**
-     * Retrieves a conversation from the server
+     * Retrieves a comments from the server
      * @param conversation
      */
     public getConversation = (conversation: Conversation | string): Promise<Conversation> => {
@@ -123,7 +123,7 @@ export class ConversationClient implements IConversationClient {
     }
 
     /**
-     * Deletes a conversation. Be careful. Cannot be reversed
+     * Deletes a comments. Be careful. Cannot be reversed
      * @param conversation
      */
     public deleteConversation = (conversation: Conversation | string): Promise<ConversationDeletionResponse> => {
@@ -204,7 +204,7 @@ export class ConversationClient implements IConversationClient {
     /**
      * Retrieves comments
      * @param request how to sort/filter the comments.  See CommentRequest
-     * @param conversation optional, if removed will retrieve the comments for the conversation set with `setConversation()`
+     * @param conversation optional, if removed will retrieve the comments for the comments set with `setConversation()`
      */
     public getComments = (request?: CommentRequest, conversation?: Conversation): Promise<CommentListResponse> => {
         // @ts-ignore

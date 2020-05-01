@@ -10,9 +10,72 @@ The set of SDKs and source (iOS, Android, and JS) is here: https://gitlab.com/sp
 $ npm install sportstalk-sdk
 ```
 
+## Using the SDK in Node.js
+
+### Using Typescript (recommended)
+If you are using typescript, we provide typescript definitions for all objects.  It's as simple as:
+ ```
+ import { CommentClient } from 'sportstalk-sdk'
+ const commentClient = CommentClient.create({appId: ... , apiToken: ....}); 
+```
+ or
+ ```
+import { ChatClient } from 'sportstalk-sdk'
+const chatClient = ChatClient.create({appId: ... , apiToken: ....}); 
+ ```
+ 
+ 
+### Using require
+Using require is also simple.  
+
+```
+const sdk = require('sportstalk-sdk');
+const commentClient = sdk.CommentClient.create({appId..., apiToken...});
+const chatClient = sdk.ChatClient.create(({appId..., apiToken...});
+```
 
 You will need to register with SportsTalk and get an API Key in order to use sportstalk functions.
 
+# Comments API
+
+## Getting Started
+If you are looking to build a custom conversation, you will the need the `CommentClient`, which you can get by:
+
+#### Typescript
+ ```
+import { CommentClient } from 'sportstalk-sdk'
+const commentClient = CommentClient.create({appId:..., apiToken:...});
+ ```
+
+#### Require
+ ```
+const sdk =  require('sportstalk-sdk')
+const commentClient = sdk.CommentClient.create({appId:..., apiToken:...});
+ ```
+
+#### Web
+Look inside the Sportstalk package at `/dist/web-sdk.js` or use the minified version at `/dist/web-sdk.min.js`
+
+## Finding and joining a conversation
+Most users will want to just find and join a conversation created by an admin in the sportstalk dashboard.
+
+To list conversations, use the `listConversations()` method of the CommentsClient, like so:
+```
+    const response = commentClient.listsConversations();
+    const conversations = response.conversations; // Array of Conversation objects
+    const cursor = response.cursor; // used for scrolling through long lists of conversations.
+```
+
+Powering your UI with this data is up to you, but you might do something like so (in pug template format):
+```
+h3 Conversations
+ul
+  each conversation in conversations
+    li= conversation.title
+      span.id= conversation.id 
+```
+
+# Chat
 ## GETTING STARTED: How to use the SDK
 This Sportstalk SDK is meant to power custom chat applications.  Sportstalk does not enforce any restricitons on your UI design, but instead empowers your developers to focus on the user experience without worrying about the underlying chat behavior.
 
@@ -24,7 +87,7 @@ At minimum, you will want to set 5 callbacks:
 * onReaction
 * onAdminCommand
 
-See a simple example below:
+See a simple WEB example below.  To use this, you will need to get the web sdk under `/dist/web-sdk.js` or `/dist/web-sdk.min.js`
 
 ```
 // first create a client
@@ -142,6 +205,7 @@ The easiest way to see how these event works is to see the demo page: https://ww
     * Timestamp
 * Use the promises from sendCommand, sendReply, etc, to show/hide some sort of indication that the message is being sent.
 * Make sure you handle errors for sending messages in case of network disruption.   For instance, `client.sendCommand('message').catch(handleErrorInUiFn)`
+
 
 # Copyright & License
 

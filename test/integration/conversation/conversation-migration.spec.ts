@@ -1,9 +1,9 @@
 import * as chai from 'chai';
 import * as dotenv from 'dotenv';
 import {ModerationType, SportsTalkConfig, User} from "../../../src/models/CommonModels";
-import {Conversation, Comment} from "../../../src/models/ConversationModels";
-import {RestfulConversationService} from "../../../src/impl/conversation/REST/RestfulConversationService";
-import {RestfulCommentService} from "../../../src/impl/conversation/REST/RestfulCommentService";
+import {Conversation, Comment} from "../../../src/models/CommentsModels";
+import {RestfulConversationService} from "../../../src/impl/comments/REST/RestfulConversationService";
+import {RestfulCommentService} from "../../../src/impl/comments/REST/RestfulCommentService";
 
 dotenv.config();
 const { expect } = chai;
@@ -52,7 +52,7 @@ const ID_DICTIONARY = {
 }
 
 function conversationFormatAdapter(conversationToMigrate): Conversation {
-    // Add code here to migrate a conversation and return the Conversation object.
+    // Add code here to migrate a comments and return the Conversation object.
     return conversationToMigrate;
 }
 
@@ -61,7 +61,7 @@ function commentFormatAdapter(commentToMigrate):Comment {
     return commentToMigrate;
 }
 
-describe('conversation Migration', function() {
+describe('comments Migration', function() {
     const config:SportsTalkConfig = {
         apiToken:process.env.TEST_KEY,
         appId: process.env.TEST_APP_ID,
@@ -69,13 +69,13 @@ describe('conversation Migration', function() {
     }
     const conversationService = new RestfulConversationService(config);
     const commentService = new RestfulCommentService(config)
-    // Will be set with created conversation data;
+    // Will be set with created comments data;
     let createdConversation:Conversation;
 
     describe('Create Conversation', function () {
-        it('Uses the REST service to create a new conversation', async ()  => {
+        it('Uses the REST service to create a new comments', async ()  => {
             const conversation = conversationFormatAdapter(testconversation)
-            // creates the conversation and sets the client to aim at this by default.
+            // creates the comments and sets the client to aim at this by default.
             createdConversation = await conversationService.createConversation(conversation)
             commentService.setConversation(conversation);
         })
@@ -92,7 +92,7 @@ describe('conversation Migration', function() {
     })
 
     describe('Cleanup', function () {
-        it('Use the REST client to delete conversation', async () => {
+        it('Use the REST client to delete comments', async () => {
             await conversationService.deleteConversation(testconversation);
         })
     });

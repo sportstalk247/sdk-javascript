@@ -1,7 +1,7 @@
 import {buildAPI, forceObjKeyOrString, getJSONHeaders} from '../../src/impl/utils'
 import {SportsTalkConfig} from "../../src/models/CommonModels";
 import * as chai from 'chai';
-import {CommentRequest, ListSortDirection} from "../../src/models/ConversationModels";
+import {CommentRequest, ListSortDirection} from "../../src/models/CommentsModels";
 import {API_TOKEN_HEADER, APPLICATION_JSON} from "../../src/impl/constants/api";
 import {ValidationError} from "../../src/impl/errors";
 

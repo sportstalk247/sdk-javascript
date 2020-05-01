@@ -1,9 +1,9 @@
-import {ConversationClient} from '../../../src/impl/ConversationClient';
+import {CommentClient} from '../../../src/impl/CommentClient';
 import {Kind, ModerationType, Reaction, ReportType} from '../../../src/models/CommonModels';
 import * as chai from 'chai';
 import * as dotenv from 'dotenv';
-import {RestfulCommentModerationService} from "../../../src/impl/conversation/REST/RestfulCommentModerationService";
-import {Conversation} from "../../../src/models/ConversationModels";
+import {RestfulCommentModerationService} from "../../../src/impl/comments/REST/RestfulCommentModerationService";
+import {Conversation} from "../../../src/models/CommentsModels";
 import {DEFAULT_CONFIG} from "../../../src/impl/constants/api";
 
 
@@ -18,13 +18,13 @@ describe('Conversation Operations', function() {
         appId: process.env.TEST_APP_ID,
         endpoint: process.env.TEST_ENDPOINT,
     };
-    const client = ConversationClient.create(Object.assign(config, {
+    const client = CommentClient.create(Object.assign(config, {
         user: {
             userid: 'testuser1',
             handle: 'handle1'
         }
     }));
-    const client2 = ConversationClient.create(Object.assign(config, {
+    const client2 = CommentClient.create(Object.assign(config, {
         user: {
             userid: 'testuser2',
             handle: 'handle2'
@@ -99,11 +99,11 @@ describe('Conversation Operations', function() {
             const response = await client.listConversations({propertyid: "UNIQUE_PROPERTY_KEY"});
             expect(response.conversations.length).to.be.equal(1);
         })
-        it("Can get conversation by conversation", async()=>{
+        it("Can get comments by comments", async()=>{
             const requestedConversation = await client.getConversation(conversation);
             expect(requestedConversation.conversationid).to.be.equal(conversation.conversationid);
         })
-        it("Can get conversation by conversationid string", async()=>{
+        it("Can get comments by conversationid string", async()=>{
             const requestedConversation = await client.getConversation(conversation.conversationid);
             expect(requestedConversation.conversationid).to.be.equal(conversation.conversationid);
         })

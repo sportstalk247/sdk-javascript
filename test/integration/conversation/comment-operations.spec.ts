@@ -1,16 +1,16 @@
-import {ConversationClient} from '../../../src/impl/ConversationClient';
+import {CommentClient} from '../../../src/impl/CommentClient';
 import {Kind, ModerationType, Reaction, ReportType} from '../../../src/models/CommonModels';
 import * as chai from 'chai';
 import * as dotenv from 'dotenv';
-import {RestfulCommentModerationService} from "../../../src/impl/conversation/REST/RestfulCommentModerationService";
+import {RestfulCommentModerationService} from "../../../src/impl/comments/REST/RestfulCommentModerationService";
 import {
     Comment,
     CommentListResponse,
     CommentModeration,
     CommentResponse,
     Vote
-} from "../../../src/models/ConversationModels";
-import {RestfulCommentService} from "../../../src/impl/conversation/REST/RestfulCommentService";
+} from "../../../src/models/CommentsModels";
+import {RestfulCommentService} from "../../../src/impl/comments/REST/RestfulCommentService";
 import {RequireUserError, SettingsError, ValidationError} from "../../../src/impl/errors";
 import {MISSING_REPLYTO_ID, NO_CONVERSATION_SET, USER_NEEDS_ID} from "../../../src/impl/constants/messages";
 
@@ -27,13 +27,13 @@ const config = {
 
 describe('Comment Operations', function() {
 
-    const client = ConversationClient.create(Object.assign(config, {
+    const client = CommentClient.create(Object.assign(config, {
         user: {
             userid: 'testuser1',
             handle: 'handle1'
         }
     }));
-    const client2 = ConversationClient.create(Object.assign(config, {
+    const client2 = CommentClient.create(Object.assign(config, {
         user: {
             userid: 'testuser2',
             handle: 'handle2'
@@ -211,7 +211,7 @@ describe('Comment Operations', function() {
                expect(e.message).to.be.equal(NO_CONVERSATION_SET)
            }
        })
-       it("Throws error on getComment if no conversation set", ()=>{
+       it("Throws error on getComment if no comments set", ()=>{
            const commentManager = new RestfulCommentService();
            try {
                const comment = commentManager.getComment("someID");
@@ -221,7 +221,7 @@ describe('Comment Operations', function() {
                expect(e.message).to.be.equal(NO_CONVERSATION_SET)
            }
        })
-       it("Throws error on getComment if no conversation set", ()=>{
+       it("Throws error on getComment if no comments set", ()=>{
            const commentManager = new RestfulCommentService();
            try {
                const comment = commentManager.create("some comment body", {userid: "fake", handle:"fake"});
@@ -231,7 +231,7 @@ describe('Comment Operations', function() {
                expect(e.message).to.be.equal(NO_CONVERSATION_SET)
            }
        })
-       it("Throws error on getComment if no conversation set", ()=>{
+       it("Throws error on getComment if no comments set", ()=>{
            const commentManager = new RestfulCommentService();
            try {
                const comment = commentManager.update({userid: "fake", handle:"fake", body: "some body", id:"fakeid"});
@@ -275,7 +275,7 @@ describe('Comment Operations', function() {
             // @ts-ignore
             expect(conversation.conversationid).to.be.equal("TEST");
         })
-        it("Can set a conversation in constructor",()=>{
+        it("Can set a comments in constructor",()=>{
             const conversation = {conversationid: "TEST", property: "testing", moderation: ModerationType.post};
             const commentManager = new RestfulCommentService({apiToken:"",}, conversation);
             const setconversation = commentManager.getConversation();

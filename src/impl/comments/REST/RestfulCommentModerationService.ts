@@ -1,10 +1,10 @@
 import {ApiHeaders, RestApiResult, ClientConfig} from "../../../models/CommonModels";
 import {AxiosRequestConfig} from "axios";
 import {stRequest} from '../../network';
-import {Comment} from "../../../models/ConversationModels";
+import {Comment} from "../../../models/CommentsModels";
 import {DEFAULT_CONFIG, GET, POST} from "../../constants/api";
 import {getUrlEncodedHeaders, getJSONHeaders, buildAPI, formify} from "../../utils";
-import {ICommentModerationService} from "../../../API/ConversationAPI";
+import {ICommentModerationService} from "../../../API/CommentsAPI";
 import {SettingsError} from "../../errors";
 import {MUST_SET_APPID} from "../../constants/messages";
 
@@ -68,7 +68,7 @@ export class RestfulCommentModerationService implements ICommentModerationServic
     }
 
     /**
-     * Reject a comment, removing it from the conversation
+     * Reject a comment, removing it from the comments
      * @param comment
      */
     rejectComment = (comment: Comment): Promise<Comment> => {
@@ -84,7 +84,7 @@ export class RestfulCommentModerationService implements ICommentModerationServic
     }
 
     /**
-     * Approve a comment, allowing it to show in a conversation.
+     * Approve a comment, allowing it to show in a comments.
      * @param comment
      */
     approveComment = (comment: Comment): Promise<Comment> => {
