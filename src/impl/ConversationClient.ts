@@ -10,6 +10,7 @@ import {
 import {RestfulCommentService} from "./conversation/REST/RestfulCommentService";
 import {RestfulConversationService} from "./conversation/REST/RestfulConversationService";
 import {IConversationService, ICommentService, IConversationClient} from "../API/ConversationAPI";
+import {DEFAULT_CONFIG} from "./constants/api";
 
 /**
  * This is the API client for the Conversations feature.
@@ -19,7 +20,7 @@ import {IConversationService, ICommentService, IConversationClient} from "../API
  * You should ensure that ALL operations that return promises have a catch block or handle errors in some way.
  */
 export class ConversationClient implements IConversationClient {
-    private _config: SportsTalkConfig;
+    private _config: SportsTalkConfig
     private _conversationService: IConversationService;
     private _commentService: ICommentService;
     private _user: User;
@@ -76,7 +77,7 @@ export class ConversationClient implements IConversationClient {
         if(!this._conversationService || conversationManager) {
             this._conversationService = conversationManager || new RestfulConversationService();
         }
-        this._config = config;
+        this._config = Object.assign({}, DEFAULT_CONFIG, config);
         this._conversationService.setConfig(this._config);
         this._commentService.setConfig(this._config);
         if(config.user) {
