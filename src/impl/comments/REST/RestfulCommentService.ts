@@ -406,11 +406,12 @@ export class RestfulCommentService implements ICommentService {
             headers: this._jsonHeaders,
         }
         return stRequest(config).then(result => {
-            const {conversation, comments, cursor} = result.data;
+            const {conversation, comments, cursor, more} = result.data;
             return {
                 conversation,
                 comments,
-                cursor
+                cursor,
+                more
             };
         });
     }

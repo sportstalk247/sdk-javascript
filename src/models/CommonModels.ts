@@ -118,6 +118,6 @@ export interface WebHook {
 
 export interface ListResponse {
     cursor?: string,
-    more: boolean
+    more?: boolean
     itemcount?: number
 }

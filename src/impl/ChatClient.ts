@@ -5,7 +5,13 @@ import {
     EventHandlerConfig,
     RoomResult,
     Room,
-    RoomUserResult, EventResult, DeletedRoomResponse, CommandResponse, RoomExitResult, ChatUpdatesResult
+    RoomUserResult,
+    EventResult,
+    DeletedRoomResponse,
+    CommandResponse,
+    RoomExitResult,
+    ChatUpdatesResult,
+    RoomListResponse
 } from "../models/ChatModels";
 import {DEFAULT_CONFIG} from "./constants/api";
 import {IRoomService, IEventService, IChatClient} from "../API/ChatAPI";
@@ -151,7 +157,7 @@ export class ChatClient implements IChatClient {
     /**
      * Retrieve available rooms for this chat app.
      */
-    listRooms = (): Promise<Array<Room>> => {
+    listRooms = (): Promise<RoomListResponse> => {
         return this._roomService.listRooms();
     }
     /**

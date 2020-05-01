@@ -66,7 +66,7 @@ export interface IChatClient extends IUserConfigurable, ISportsTalkConfigurable{
     sendGoal(message?:string, img?: string, options?: GoalOptions): Promise<MessageResult<null | CommandResponse>>
     setDefaultGoalImage(url: string);
     report(event: EventResult | string, reason: ReportType):  Promise<MessageResult<null>>,
-    listRooms(): Promise<Array<Room>>;
+    listRooms(): Promise<RoomListResponse>
     joinRoom(room: RoomResult | string): Promise<RoomUserResult>;
     getCurrentRoom(): Room | null;
     setCurrentRoom(room:RoomResult);
