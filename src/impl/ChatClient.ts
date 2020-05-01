@@ -12,7 +12,7 @@ import {IRoomService, IEventService, IChatClient} from "../API/ChatAPI";
 import {SettingsError} from "./errors";
 import {RestfulEventService} from "./chat/REST/RestfulEventService"
 import {RestfulRoomService} from "./chat/REST/RestfulRoomService";
-import {RestfulUserManager} from "./common/REST/RestfulUserManager";
+import {RestfulUserService} from "./common/REST/RestfulUserService";
 import {
     Reaction,
     ReportReason,
@@ -90,7 +90,7 @@ export class ChatClient implements IChatClient {
 
         this._eventService = this._eventService || new RestfulEventService(this._config);
         this._roomService = this._roomService || new RestfulRoomService(this._config);
-        this._userService = this._userService || new RestfulUserManager(this._config);
+        this._userService = this._userService || new RestfulUserService(this._config);
 
         if(this._config.user){
             Object.assign(this._user, this._config.user);

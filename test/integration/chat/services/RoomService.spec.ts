@@ -84,17 +84,17 @@ describe("RoomService", function(){
             roomlist = rooms;
             expect(rooms).to.have.lengthOf(3);
             return RM.listRooms();
-        }).then(rooms=>{
+        }).then(roomReply=>{
             // Other rooms might hang around because of other tests. But we should for sure have at least 3 now.
-            expect(rooms.length).to.be.greaterThan(2);
-            return Promise.all(roomlist.map(room => {
+            expect(roomReply.rooms.length).to.be.greaterThan(2);
+            return Promise.all(roomReply.rooms.map(room => {
                 return RM.deleteRoom(room);
             }))
         }).then(results=>{
             done();
         }).catch(e=>{
             RM.listRooms().then(roomlist=>{
-                return Promise.all(roomlist.map(room => {
+                return Promise.all(roomlist.rooms.map(room => {
                     return RM.deleteRoom(room);
                 })).then(()=>{
                     done(e)

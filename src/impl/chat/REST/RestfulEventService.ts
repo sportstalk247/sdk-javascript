@@ -233,6 +233,9 @@ export class RestfulEventService implements IEventService{
      * @private
      */
     private _handleUpdates = (update: ChatUpdatesResult) => {
+        if(!update) {
+            return;
+        }
         const events: Array<EventResult> = update.events;
         if(events && events.length) {
             for (var i = 0; i < events.length; i++) {

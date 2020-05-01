@@ -5,7 +5,7 @@ import {
     RoomResult,
     RoomUserResult,
     DeletedRoomResponse,
-    RoomExitResult
+    RoomExitResult, RoomListResponse
 } from "../../../models/ChatModels";
 import {stRequest} from '../../network';
 import {GET, DELETE, POST, API_SUCCESS_MESSAGE} from "../../constants/api";
@@ -44,15 +44,15 @@ export class RestfulRoomService implements IRoomService {
     /**
      * RoomResult Handling
      */
-    listRooms = (): Promise<Array<Room>> => {
+    listRooms = (): Promise<RoomListResponse> => {
         const config:AxiosRequestConfig = {
             method: GET,
             url: buildAPI(this._config, this._apiExt),
             headers: this._jsonHeaders,
         };
         return stRequest(config).then(result=>{
-            this._knownRooms = result.data;
-            return this._knownRooms;
+            this._knownRooms = result.data.rooms
+            return result.data;
         });
     }
 
@@ -62,8 +62,8 @@ export class RestfulRoomService implements IRoomService {
      */
     getKnownRooms = async (): Promise<Array<Room>> => {
         if(!this._knownRooms) {
-            const rooms = await this.listRooms();
-            this._knownRooms = rooms;
+            const response = await this.listRooms();
+            this._knownRooms = response.rooms;
             return this._knownRooms
         }
         return this._knownRooms;

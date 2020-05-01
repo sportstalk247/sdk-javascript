@@ -11,7 +11,7 @@ import {IUserService} from "../../../API/CommonAPI";
  * NOTE: All operations can throw errors if there are network or server issues.
  * You should ensure that ALL operations that return promises have a catch block or handle errors in some way.
  */
-export class RestfulUserManager implements IUserService {
+export class RestfulUserService implements IUserService {
     private _config: SportsTalkConfig;
     private _jsonHeaders: {};
     private _apiExt = 'user/users';

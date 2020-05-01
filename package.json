@@ -1,6 +1,6 @@
 {
   "name": "sportstalk-sdk",
-  "version": "3.7.6",
+  "version": "3.7.8",
   "description": "Javascript SDK for SportsTalk",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -8,7 +8,8 @@
     "test": "nyc mocha --recursive --require ts-node/register 'test/**/*.spec.ts'  --timeout 10000",
     "build": "tsc --declaration",
     "web": "tsc --declaration && browserify ./dist/web.js -o ./dist/web-sdk.js",
-    "web:prod": "npm run web && tsc --declaration && browserify ./dist/web.js -p tinyify -o ./dist/web-sdk.min.js"
+    "web:prod": "npm run web && tsc --declaration && browserify ./dist/web.js -p tinyify -o ./dist/web-sdk.min.js",
+    "deploy": "npm run build && npm run web && npm run web:prod && npm publish"
   },
   "author": "Sportstalk24/7",
   "license": "LicenseRef-LICENSE",

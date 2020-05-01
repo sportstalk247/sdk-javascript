@@ -36,6 +36,14 @@ const chatClient = sdk.ChatClient.create(({appId..., apiToken...});
 
 You will need to register with SportsTalk and get an API Key in order to use sportstalk functions.
 
+
+## Using the SDK on the Web
+To use directly, we host the web SDK on our website.
+* Latest version: https://www.sportstalk247.com/dist/sdk/latest/web-sdk.js
+* Latest minified version: https://www.sportstalk247.com/dist/sdk/latest/web-sdk.min.js
+ 
+You can also look inside the Sportstalk package at `/dist/web-sdk.js` or use the minified version at `/dist/web-sdk.min.js`
+
 # Comments API
 
 ## Getting Started
@@ -53,8 +61,45 @@ const sdk =  require('sportstalk-sdk')
 const commentClient = sdk.CommentClient.create({appId:..., apiToken:...});
  ```
 
-#### Web
-Look inside the Sportstalk package at `/dist/web-sdk.js` or use the minified version at `/dist/web-sdk.min.js`
+## Creating a user
+One of the first things you might need to do in Sportstalk is create a user. Users are shared between chat and commenting in the same application.
+To create a user, you can use either the chat or comment clients, or a UserService (advanced). 
+
+```javascript
+const commentClient = sdk.CommentClient.create({...});
+commentClient.createUser({userid: "definedByYourSystem-MustBeUnique", handle: "Must-Be-Unique-String"})
+    .then(function(user) {
+        // user has been created.
+    }).catch(function(error) {
+        // make sure to catch and handle errors.  
+        // It is possible to have network or settings errors. 
+        // For instance if you do not set a unique handle you will get an error. 
+    })
+```
+## A Note on Promises
+Almost all SDK functions require communication with a server.  Therefore, most methods will return a Promise.  Promises are very common but you need to be familiar with them to use the SportStalk SDK.
+
+Here are some ways that you can use promises.
+
+```javascript
+commentsClient.listConversations()
+    .then(function(response) {
+      const conversations = response.conversations;
+      // handle UI functions here.
+    }).catch(function(e){
+      // catch an error and handle it here.
+    })
+```
+
+You can also use comments in async/await blocks (preferred).  
+
+```javascript
+async function yourFunction() {
+    const response = await commentsClient.listConversations();
+    const conversations = response.conversations;
+    // handle ui using conversations here.
+}
+```
 
 ## Finding and joining a conversation
 Most users will want to just find and join a conversation created by an admin in the sportstalk dashboard.
@@ -75,6 +120,94 @@ ul
       span.id= conversation.id 
 ```
 
+To join a conversation, you will need a user, please see the section above about creating a user first.
+Once you have a user, joining a conversation is simple:
+
+```javascript
+async function showJoinConversation() {
+
+    const user = await commentClient.createOrUpdateUsercreateUser({userid: "definedByYourSystem-MustBeUnique", handle: "Must-Be-Unique-String"})
+    // this will automatically set the user, but you can also set the user manually
+    commentClient.setUser(user);
+
+    const list = await commentClient.listConversations();
+    const conversations =  list.conversations;
+
+    // Let's join the first conversation in the list
+    commentClient.setCurrentConversation(conversations[0]); // you should ensure there are conversations first to avoid a null error
+
+    // You are now able to get a list of recent comments
+    let comments =  await commentClient.getComments();
+    
+    // let's make our own comment!
+    const mycomment = await commentClient.comment("This is my comment on this conversation!");
+
+    // let's see the comment in the list
+    comments = await commentClient.getComments(); // my comment will be included unlesss there was an error
+}
+
+```
+
+## CommentClient API
+#### getConfig(): SportsTalkConfig;
+Returns the current configuration object
+
+#### setConfig(config: SportsTalkConfig)
+Updates the client configuration. Usually you should just create a new client.
+
+#### createConversation (conversation: Conversation, setDefault: boolean): Promise<Conversation>
+Create a new conversation that others can join and add comments.
+
+
+#### createOrUpdateUser (user: User, setDefault?:boolean): Promise<User>;
+Create a new user or update an existing one.   You need a user to be set for some operations.
+By default, setDefault is TRUE, meaning that if you create or update a user, that will be the user used for commenting.
+
+
+#### setCurrentConversation(conversation: Conversation | string): Conversation;
+Set the current conversation for commenting.
+
+
+#### getCurrentConversation(): Conversation | null | undefined;
+Gets the current conversation.  Will be null or undefined if there is no current conversation.
+
+#### getConversation(conversation: Conversation | string): Promise<Conversation>
+Retrieves data about a specific conversation from the server.
+
+#### deleteConversation(conversation: Conversation | string);
+Deletes a conversation
+
+#### makeComment(comment: string, replyto?: Comment | string)
+Make a comment on the current conversation. Will throw an error if a conversation is not set.
+
+#### getComment(comment: Comment | string): Promise<Comment | null>;
+Retrieves a specific comment. The param can either be a comment object with an id or just the id.
+
+#### deleteComment(comment:Comment | string, final: boolean): Promise<CommentDeletionResponse>
+Deletes a comment
+
+#### updateComment(comment:Comment)
+Updates a comment
+
+#### reactToComment(comment:Comment | string, reaction:Reaction)
+Reacts to a comment
+
+#### voteOnComment(comment:Comment | string, vote:Vote)
+Vote a comment up or down
+
+#### reportComment(comment:Comment | string, reportType: ReportType)
+Report a comment for violating community rules.
+
+#### getCommentReplies(comment:Comment, request?: CommentRequest)
+Get replies to a comment
+
+#### getComments(request?: CommentRequest, conversation?: Conversation)
+Gets the latest comments for the default conversation.
+
+#### listConversations(filter?: ConversationRequest)
+List conversations that are available to comment.
+
+
 # Chat
 ## GETTING STARTED: How to use the SDK
 This Sportstalk SDK is meant to power custom chat applications.  Sportstalk does not enforce any restricitons on your UI design, but instead empowers your developers to focus on the user experience without worrying about the underlying chat behavior.
@@ -89,7 +222,7 @@ At minimum, you will want to set 5 callbacks:
 
 See a simple WEB example below.  To use this, you will need to get the web sdk under `/dist/web-sdk.js` or `/dist/web-sdk.min.js`
 
-```
+```javascript
 // first create a client
 const client = ChatClient.create({apiKey:'YourApiKeyHere'},  {...EventHandlerConfig});
 
@@ -123,7 +256,7 @@ For use of these events in action, see the demo page: https://www.sportstalk247.
 
 You can also use the client in node.
 
-```
+```javascript
 import { ChatClient } from 'sportstalk-js'
 const client = ChatClient.create({apiKey:'YourApiKeyHere', appId: 'yourAppId'}, {...EventHandlerConfig});
 ```
@@ -131,8 +264,8 @@ const client = ChatClient.create({apiKey:'YourApiKeyHere', appId: 'yourAppId'}, 
 ## Events Callbacks
 Sportstalk uses callback functions to handle events.  These callbacks are specified with the `EventHandlerConfig`:
 
-```
-export interface EventHandlerConfig {
+```typescript
+interface EventHandlerConfig {
     onChatStart?: Function;
     onNetworkResponse?(response: EventResult[]);
     onChatEvent?(event: EventResult),
@@ -209,4 +342,4 @@ The easiest way to see how these event works is to see the demo page: https://ww
 
 # Copyright & License
 
-Copyright (c) 2019 Sportstalk247
+Copyright (c) 2020 Sportstalk247

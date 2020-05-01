@@ -4,7 +4,7 @@ import {CommentClient} from './impl/CommentClient';
 import {RestfulChatModerationService} from "./impl/chat/REST/RestfulChatModerationService";
 import {RestfulEventService} from "./impl/chat/REST/RestfulEventService";
 import {RestfulRoomService} from "./impl/chat/REST/RestfulRoomService";
-import {RestfulUserManager} from "./impl/common/REST/RestfulUserManager";
+import {RestfulUserService} from "./impl/common/REST/RestfulUserService";
 import * as ChatModels from './models/ChatModels';
 import * as ConversationModels from './models/CommentsModels';
 import * as CommonModels from './models/CommonModels';
@@ -26,7 +26,7 @@ const Conversation = {
     RestfulCommentManager: RestfulCommentService
 }
 const Common = {
-    RestfulUserManager,
+    RestfulUserManager: RestfulUserService,
     RestfulWebhookManager
 }
 

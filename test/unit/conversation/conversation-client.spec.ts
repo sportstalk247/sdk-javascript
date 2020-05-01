@@ -39,7 +39,7 @@ describe("Conversation Client", function(){
                 property,
                 moderation
             });
-            const conversation  = client.getDefaultConversation();
+            const conversation  = client.getCurrentConversation();
             // @ts-ignore
             expect(conversation.conversationid).to.be.equal(conversationid);
             // @ts-ignore
@@ -52,12 +52,12 @@ describe("Conversation Client", function(){
             const property = "propertytest";
             const moderation = ModerationType.post;
             const client = CommentClient.create(DEFAULT_CONFIG);
-            client.setDefaultConversation({
+            client.setCurrentConversation({
                 conversationid,
                 property,
                 moderation
             })
-            const conversation  = client.getDefaultConversation();
+            const conversation  = client.getCurrentConversation();
             // @ts-ignore
             expect(conversation.conversationid).to.be.equal(conversationid);
             // @ts-ignore

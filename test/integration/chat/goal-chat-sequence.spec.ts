@@ -39,14 +39,14 @@ describe('GOAL Chat Sequence', function() {
     });
     const em1 = client.getEventService();
     const em2 = client2.getEventService();
-
+    const roomDef = {
+        name: "Test room",
+        slug: "chat-test-room" + new Date().toString(),
+    };
     let theRoom;
     describe('User 1', function () {
         it('Joins room', function (done) {
-            rm.createRoom({
-                name: "Test room",
-                slug: "chat-test-room" + new Date().toString(),
-            }).then(room => {
+            rm.createRoom(roomDef).then(room => {
                 theRoom = room;
                 return client.joinRoom(room)
             }).then(() => {
@@ -58,10 +58,7 @@ describe('GOAL Chat Sequence', function() {
     });
     describe('User 2', function () {
         it('Joins room', function (done) {
-            rm.createRoom({
-                name: "Test room",
-                slug: "chat-test-room"+new Date().toString(),
-            }).then(room => {
+            rm.createRoom(roomDef).then(room => {
                 return client2.joinRoom(room)
             }).then(() => {
                 done()

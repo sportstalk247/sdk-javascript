@@ -11,6 +11,8 @@ import {RestfulCommentService} from "./comments/REST/RestfulCommentService";
 import {RestfulConversationService} from "./comments/REST/RestfulConversationService";
 import {IConversationService, ICommentService, IConversationClient} from "../API/CommentsAPI";
 import {DEFAULT_CONFIG} from "./constants/api";
+import {RestfulUserService} from "./common/REST/RestfulUserService";
+import {IUserService} from "../API/CommonAPI";
 
 /**
  * This is the API client for the Conversations feature.
@@ -23,6 +25,7 @@ export class CommentClient implements IConversationClient {
     private _config: SportsTalkConfig
     private _conversationService: IConversationService;
     private _commentService: ICommentService;
+    private _userService: IUserService
     private _user: User;
 
     /**
@@ -37,7 +40,7 @@ export class CommentClient implements IConversationClient {
         // @ts-ignore
         commentClient.setConfig(config, commentService, conversationService)
         if(initialConversation) {
-            commentClient.setDefaultConversation(initialConversation)
+            commentClient.setCurrentConversation(initialConversation)
         }
         return commentClient;
     }
@@ -71,13 +74,16 @@ export class CommentClient implements IConversationClient {
      * @param conversationManager optional, for future extension by custom implementation.
      */
     public setConfig = (config: SportsTalkConfig, commentManager?: ICommentService, conversationManager?: IConversationService) => {
+        this._config = Object.assign({}, DEFAULT_CONFIG, config);
         if(!this._commentService || commentManager) {
             this._commentService = commentManager || new RestfulCommentService()
         }
         if(!this._conversationService || conversationManager) {
             this._conversationService = conversationManager || new RestfulConversationService();
         }
-        this._config = Object.assign({}, DEFAULT_CONFIG, config);
+        if(!this._userService) {
+            this._userService = new RestfulUserService(this._config);
+        }
         this._conversationService.setConfig(this._config);
         this._commentService.setConfig(this._config);
         if(config.user) {
@@ -103,14 +109,14 @@ export class CommentClient implements IConversationClient {
      * Get the default comments
      * @param conversation
      */
-    public setDefaultConversation = (conversation: Conversation | string): Conversation => {
+    public setCurrentConversation = (conversation: Conversation | string): Conversation => {
         this._commentService.setConversation(conversation);
         return <Conversation>this._commentService.getConversation();
     }
     /**
      * Returns the current default comments
      */
-    public getDefaultConversation = (): Conversation | null => {
+    public getCurrentConversation = (): Conversation | null => {
         return this._commentService.getConversation();
     }
 
@@ -146,6 +152,20 @@ export class CommentClient implements IConversationClient {
     public getComment = (comment: Comment | string) => {
         return this._commentService.getComment(comment);
     }
+
+    /**
+     * If the user exists, updates the user. Otherwise creates a new user.
+     * @param user a User model.  The values of 'banned', 'handlelowercase' and 'kind' are ignored.
+     */
+    createOrUpdateUser = (user: User, setDefault:boolean = true): Promise<User> => {
+        return this._userService.createOrUpdateUser(user).then(user=>{
+            if(setDefault) {
+                this._user = user;
+            }
+            return user;
+        })
+    }
+
 
     /**
      * Deletes a comment

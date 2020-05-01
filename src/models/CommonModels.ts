@@ -37,7 +37,8 @@ export enum Kind {
     deletedroom = "deleted.room",
     deleteduser = "deleted.appuser",
     conversationlist = "list.commentconversations",
-    chatlist = "list.chatevents"
+    chatlist = "list.chatevents",
+    roomlist = "list.chatrooms"
 }
 
 export interface UserResult extends User {
@@ -117,4 +118,6 @@ export interface WebHook {
 
 export interface ListResponse {
     cursor?: string,
+    more: boolean
+    itemcount?: number
 }

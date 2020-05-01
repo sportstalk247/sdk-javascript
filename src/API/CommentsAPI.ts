@@ -49,8 +49,9 @@ export interface IConversationClient extends ISportsTalkConfigurable, IUserConfi
     getConfig(): SportsTalkConfig;
     setConfig(config: SportsTalkConfig, commentManager?: ICommentService, conversationManager?: IConversationService)
     createConversation (conversation: Conversation, setDefault: boolean): Promise<Conversation>;
-    setDefaultConversation(conversation: Conversation | string): Conversation;
-    getDefaultConversation(): Conversation | null | undefined;
+    createOrUpdateUser (user: User, setDefault?:boolean): Promise<User>;
+    setCurrentConversation(conversation: Conversation | string): Conversation;
+    getCurrentConversation(): Conversation | null | undefined;
     getConversation(conversation: Conversation | string): Promise<Conversation>;
     deleteConversation(conversation: Conversation | string);
     makeComment(comment: string, replyto?: Comment | string): Promise<Comment>;

@@ -6,7 +6,7 @@ import {
     EventHandlerConfig,
     EventResult,
     GoalOptions,
-    Room, RoomExitResult,
+    Room, RoomExitResult, RoomListResponse,
     RoomResult,
     RoomUserResult
 } from "../models/ChatModels";
@@ -46,7 +46,7 @@ export interface IEventService extends ISportsTalkConfigurable, IUserConfigurabl
  * Interface for room management
  */
 export interface IRoomService extends ISportsTalkConfigurable {
-    listRooms(): Promise<Array<Room>>
+    listRooms(): Promise<RoomListResponse>;
     deleteRoom(id: string | Room): Promise<DeletedRoomResponse>
     createRoom(room: Room): Promise<RoomResult>
     listParticipants(room: Room, cursor?: string, maxresults?: number): Promise<Array<UserResult>>

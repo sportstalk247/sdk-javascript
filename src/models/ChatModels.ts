@@ -1,7 +1,7 @@
 /**
  * Models used by API Result Models.
  */
-import {RestApiResult, Kind, User, UserResult, MessageResult} from "./CommonModels";
+import {RestApiResult, Kind, User, UserResult, MessageResult, ListResponse} from "./CommonModels";
 
 export enum EventType {
     speech = "speech",
@@ -104,6 +104,11 @@ export interface RoomResult extends Room {
     ownerid?:string,
     inroom?:number,
     whenmodified?:string
+}
+
+export interface RoomListResponse extends ListResponse {
+    kind: Kind.roomlist,
+    rooms: Array<RoomResult>,
 }
 
 export interface EventResult {
