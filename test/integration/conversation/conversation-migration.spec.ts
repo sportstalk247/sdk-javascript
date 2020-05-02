@@ -16,10 +16,10 @@ const testconversation:Conversation = {
     "maxreports" : 3,
     "title": "Test Conversation",
     "maxcommentlen": 512,
-    "conversationisopen" : true,
-    "tags" : ["taga", "tagb"],
-    "udf1" : "/sample/userdefined1",
-    "udf2" : "/sample/userdefined2/äöüÄÖÜß"
+    "open" : true,
+    "customtags" : ["taga", "tagb"],
+    "customfield1" : "/sample/userdefined1",
+    "customfield2" : "/sample/userdefined2/äöüÄÖÜß"
 }
 
 const sampleUser:User = {

@@ -18,10 +18,12 @@ export interface Conversation extends HasConversationID {
     maxreports? : number,
     title?: string,
     maxcommentlen?: number,
-    conversationisopen?: boolean
-    tags? : string[]
-    udf1?: string,
-    udf2?: string
+    open?: boolean
+    customtags? : string[]
+    customtype?: string,
+    custompayload?: string
+    customfield1?: string,
+    customfield2?: string
 }
 
 export interface CommentListResponse extends ListResponse {
