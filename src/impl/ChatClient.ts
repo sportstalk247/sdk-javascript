@@ -224,18 +224,7 @@ export class ChatClient implements IChatClient {
         })
     }
 
-    /**
-     * Report a chat event for violating community policy.
-     * @param event
-     * @param type
-     */
-    report = (event: EventResult | string, type: ReportType) => {
-        const reason: ReportReason = {
-            reporttype: type,
-            userid: this._user.userid
-        }
-        return this._eventService.reportEvent(event, reason);
-    }
+
 
     /**
      * Exit a room.
@@ -277,6 +266,7 @@ export class ChatClient implements IChatClient {
     sendCommand = (command: string, options?: CommandOptions): Promise<MessageResult<CommandResponse>> => {
         return this._eventService.sendCommand(this._user, command, options);
     }
+
 
     /**
      * Reply to an event
@@ -325,6 +315,19 @@ export class ChatClient implements IChatClient {
      */
     deleteEvent = (event: EventResult | string) =>{
         return this._eventService.deleteEvent(event);
+    }
+
+    /**
+     * Report a chat event for violating community policy.
+     * @param event
+     * @param type
+     */
+    report = (event: EventResult | string, type: ReportType) => {
+        const reason: ReportReason = {
+            reporttype: type,
+            userid: this._user.userid
+        }
+        return this._eventService.reportEvent(event, reason);
     }
 
     /**

@@ -240,13 +240,13 @@ export class RestfulChatEventService implements IChatEventService {
         if(events && events.length) {
             for (var i = 0; i < events.length; i++) {
                 const event: EventResult = events[i];
-                const date = event.added;
-                if (!this.lastCursor || date > this.lastCursor) {
-                    this.lastCursor = date;
+                const ts = event.ts;
+                if (!this.lastCursor || ts > this.lastCursor) {
+                    this.lastCursor = ts;
                     this.lastMessageId = event.id;
                 } else {
-                    if (!this.firstMessageTime || date < this.firstMessageTime) {
-                        this.firstMessageTime = date;
+                    if (!this.firstMessageTime || ts < this.firstMessageTime) {
+                        this.firstMessageTime = ts;
                         this.firstMessageId = event.id;
                     }
                     continue;
@@ -399,8 +399,8 @@ export class RestfulChatEventService implements IChatEventService {
      */
     sendAdvertisement = (user: User, options: AdvertisementOptions): Promise<MessageResult<CommandResponse>> => {
         const data = Object.assign({
-            command: 'advertisement',
-            customtype: 'advertisement',
+            command: options.message || EventType.advertisement,
+            customtype: EventType.advertisement,
             userid: user.userid,
             custompayload: JSON.stringify(options)
         });
@@ -431,7 +431,7 @@ export class RestfulChatEventService implements IChatEventService {
         }
         const data = Object.assign({
             command: message || 'GOAL!',
-            customtype: 'goal',
+            customtype: EventType.goal,
             userid: user.userid,
             custompayload: JSON.stringify(Object.assign(defaultOptions, options))
         });

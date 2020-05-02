@@ -59,7 +59,9 @@ export interface IRoomService extends ISportsTalkConfigurable {
 }
 
 /**
- * Interface for primary chat client.
+ * Interface for ChatClient.
+ *
+ * For most user-facing chat implementations, this is the only class you need.
  */
 export interface IChatClient extends IUserConfigurable, ISportsTalkConfigurable{
     sendCommand(command: string, options?: CommandOptions):  Promise<MessageResult<null | CommandResponse>>
@@ -71,6 +73,7 @@ export interface IChatClient extends IUserConfigurable, ISportsTalkConfigurable{
     report(event: EventResult | string, reason: ReportType):  Promise<MessageResult<null>>,
     listRooms(): Promise<RoomListResponse>
     joinRoom(room: RoomResult | string): Promise<RoomUserResult>;
+    createRoom(room): Promise<RoomResult>;
     getCurrentRoom(): Room | null;
     setCurrentRoom(room:RoomResult);
     listParticipants(cursor?: string, maxresults?: number): Promise<Array<User>>;
@@ -84,7 +87,7 @@ export interface IChatClient extends IUserConfigurable, ISportsTalkConfigurable{
 }
 
 /**
- * Interface for chat moderation.
+ * Interface for Chat Moderation Services.
  */
 export interface IChatModerationService extends ISportsTalkConfigurable {
     getModerationQueue(): Promise<EventListResponse>

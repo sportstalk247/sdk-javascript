@@ -6,9 +6,22 @@ The Sportstalk SDK is a helpful wrapper around the [Sportstalk API](https://apir
 
 The set of SDKs and source (iOS, Android, and JS) is here: https://gitlab.com/sportstalk247/
 
+#### Install via NPM
 ```
-$ npm install sportstalk-sdk
+npm install sportstalk-sdk --save
 ```
+
+## App Id and api Tokens
+Clients and services require a SportsTalkConfig object, which looks like so: 
+```javascript
+{
+    appId: 'yourappID-from-the-dashboard',
+    apiToken: 'yourApiToken-from-the-dashboard', // NOTE: you should use a proxy to hide your token and restrict behavior to specific domains on the web.
+    endpoint: 'custom-endpoint' // Use this to set a proxy on the web, or if you have an on-prem install of sportstalk at a custom location.
+}
+```
+
+If you are using a proxy, the only mandatory data for a SportstalkConfig object is the `appId` and `endpoint`. Otherwise you will need to provide the `appId` and `apiToken`
 
 ## Using the SDK in Node.js
 
@@ -70,14 +83,36 @@ async function yourFunction() {
 }
 ```
 
+For more reading, please see this article: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise
+
+## A note on Typescript
+The SDK is written in Typescript which provides type checking and the ability to declare and describe objects similar to typed languages such as Java.
+This is very helpful when describing parameters or models because you can reference all the possible members of an object ahead of time.
+
+You **do not** need to write your project in typescript to use this SDK.  This SDK provides full JS compatibility and most examples are shown in standard JS (Node).
+However, understanding basic typescript notation is still helpful for understanding the data models returned by the API.
+
+There is a 5 min primer on typescript and you can get started with typescript here: https://www.typescriptlang.org/docs/home.html
+
 # Understanding the SDK
-The SDK is broken up into 2 Clients and a set of backing services
-For most user-facing operations you'll want one of the simple clients:
 
-* Chat Client -  `const chatClient = require('sportstalk-sdk').ChatClient.create({});`
-* Commenting Client  `const commentClient = require('sportstalk-sdk').CommentClient.create({});`
+## Key concepts
+CHAT: This is a real-time experience designed to make a user feel like other people are present with that person.  The state of a chat room updates in real time, and you receive notifications that update the state.  In general, chat content is disposable: It is enjoyed in the moment but in the future its rare for people to go back and look at past conversation information. Chat messages are also often short and don’t necessarily add a thought to the conversation. Chat drives engagement in the moment by keeping your attention and is best used with live events because its no fun to be in a chat room by yourself. 
 
-These clients handle most common operation while hiding th backing APIs and simplifying some operations and will manage state for you.
+COMMENTS: A comment is something you post on an article or video or other context.  Unlike chat, comments are often read long after they are posted, and are more likely to be longer messages that contain a more thoughtful point. They are intended to add to the value of the thing on which the comment appears. Use comments when you don’t real time responses, people will see your comment later.
+
+CONVERSATION: This is a commenting context, such as an article or video that people are commenting on. Comments are created within the context of a conversation.
+
+ROOM: A chat “room” is a virtual space in which people can chat.  Events occur in the room, such as a person entering the room, saying something, or exiting the room.  If a user reacts to something by liking it, this also generates an event.  The SDK listens for new events, processes events, raises call backs for you, and updates the state of the room in memory, so it’s less work for the developer.
+
+## Client Objects
+The SDK is broken up into 2 Clients and a set of backing services.
+For most user-facing operations you'll want one of the clients:
+
+* Chat Client -  `const chatClient = require('sportstalk-sdk').ChatClient.create({appId, apiToken});`
+* Commenting Client  `const commentClient = require('sportstalk-sdk').CommentClient.create({appId, apiToken});`
+
+These clients handle most common operation while hiding the backing APIs and simplifying some operations and will manage state for you.
 
 However, you may want to use the APIs directly, in which case there are a set of backing REST services that you can use:
 
@@ -91,6 +126,46 @@ However, you may want to use the APIs directly, in which case there are a set of
 - Chat Moderation Service
 
 You can  see the details for each under **'Backing Services'** section
+
+## Data Models
+Models are broken up into 3 groups:
+* Chat specific models (https://gitlab.com/sportstalk247/sdk-javascript/-/blob/master/src/models/ChatModels.ts)
+* Commenting specific models (https://gitlab.com/sportstalk247/sdk-javascript/-/blob/master/src/models/CommentsModels.ts)
+* Common Models such as users or webhooks (https://gitlab.com/sportstalk247/sdk-javascript/-/blob/master/src/models/CommonModels.ts)
+
+The models are defined using typescript notation (https://www.typescriptlang.org/).
+You don't have to be an expert on Typescript to use these models, as they just describe JSON objects.
+
+For instance:
+```typescript
+export interface Example {
+    id?: string
+}
+```
+This describes a type `Example` with a single property `id` which may or may not be present.
+The following are all valid `Example` objects:
+```javascript
+const example1 = {} // id is optional, and undefined.
+const example2 = {id:null} // id property is present but null
+const example3 = {id: "123412351235"} // id is a string
+```
+However this is not a valid `Example` object:
+```javascript
+const badExample = {
+    id:{
+        members: []
+    }
+}
+```
+Nor is this:
+```javascript
+const badExample2 = {
+    id:1231 // id property is there but is a number and not a string. This is not allowed.
+}
+```
+
+These typescript definitions help you be certain about the data you will get from the API and allow you to write code with confidence about the data you will or will not receive.
+
        
 # Comments API
 
@@ -173,7 +248,7 @@ async function showJoinConversation() {
 ```
 
 ## CommentClient API
-#### setConfig(config: SportsTalkConfig)
+#### setConfig() 
 Updates the client configuration. Usually you should just create a new client.
 ```javascript
 
@@ -238,8 +313,12 @@ async function createOrUpdateUserExampleFunction() {
 }
 ```
 
-#### setCurrentConversation(conversation: Conversation | string): Conversation;
+#### setCurrentConversation(conversation)
 Set the current conversation for commenting.
+The parameter can either be a conversation object or just a conversation ID.
+
+You can see the Conversation and Comments models in this file: 
+https://gitlab.com/sportstalk247/sdk-javascript/-/blob/master/src/models/CommentsModels.ts
 
 ```javascript
 async function setCurrentConversationExampleFunction() {
@@ -448,8 +527,8 @@ For use of these events in action, see the demo page: https://www.sportstalk247.
 
 You can also use the client in node.
 
-```javascript
-import { ChatClient } from 'sportstalk-js'
+```typescript
+import { ChatClient } from 'sportstalk-sdk'
 const client = ChatClient.create({apiKey:'YourApiKeyHere', appId: 'yourAppId'}, {...EventHandlerConfig});
 ```
 
@@ -593,6 +672,23 @@ async function updateWebhookExample() {
 
 If successful your hook was updated.  The new settings will replace the old ones, so be sure to configure anything you want to differ from the defaults.
 
+## Chat Event Service
+The chat event service encapsulates event management inside a room. 
+It's duties include receiving and filtering new events, and then deciding which callbacks should be triggered based on each event.
+To create a ChatEventService:
+
+```javascript
+const sdk = require('sportstalk-sdk');
+const service = new sdk.services.ChatEventService({appId, apiToken});
+async function eventServiceExample() {
+    // Argument is a Room object with an ID that has been created.  See the RoomService
+    const eventService =  await service.setCurrentRoom({...});
+    // This will start the chat, but without callbacks nothing will happen.  See the ChatClient documentation.
+    eventService.startChat(); // will begin receiving events from the room.
+}
+```
+
+
 ## Chat Room Service
 The chat room service can be used for Chat Room creation and managment for an app.  In most cases, you do not need to use this service as the ChatClient interface provides the same functionality.
 
@@ -672,18 +768,27 @@ async function moderationExample() {
 }
 ```
 
-### Approving a Chat Event
+### Approving a Chat Event - allow in chat.
 ```javascript
 const sdk = require('sportstalk-sdk');
 const service = new sdk.services.ChatModerationService({appId, apiToken});
 async function moderationApproveExample() {
     const queue =  await service.getModerationQueue();
-    
-    // queue has events awaiting moderation
+    const event = queue.events[0]; // this assumes there is at least one event.
+    const result = service.approveEvent(event);
 }
 ```
 
-
+### Reject a Chat Event - remove from chat 
+```javascript
+const sdk = require('sportstalk-sdk');
+const service = new sdk.services.ChatModerationService({appId, apiToken});
+async function moderationApproveExample() {
+    const queue =  await service.getModerationQueue();
+    const event = queue.events[0]; // this assumes there is at least one event.
+    const result = service.rejectEvent(event);
+}
+```
 
 # Copyright & License
 
