@@ -82,7 +82,7 @@ export class RestfulUserService implements IUserService {
      * @param search
      * @param type
      */
-    searchUsers = (search:string, type: SearchType): Promise<Array<UserResult>> => {
+    searchUsers = (search:string, type: SearchType): Promise<UserListResponse> => {
         const url = buildAPI(this._config,`user/search`);
         const data:any = {
             type: type,
@@ -104,7 +104,7 @@ export class RestfulUserService implements IUserService {
         }
         return stRequest(config)
             .then(response=>{
-                return response.data.users;
+                return response.data
             });
     }
 

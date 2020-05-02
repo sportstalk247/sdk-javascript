@@ -60,27 +60,27 @@ describe("UserManager", function(){
     describe("Search", function() {
         it("Can search by userid", async()=>{
            const results = await UM.searchUsers("testuserid", SearchType.userid)
-           expect(results.length).to.be.equal(1);
+           expect(results.users.length).to.be.equal(1);
         })
         it("Can search by name", async()=>{
             const results = await UM.searchUsers("someuser", SearchType.name)
-            expect(results.length).to.be.equal(1);
+            expect(results.users.length).to.be.equal(1);
         })
         it("Can search by handle", async()=>{
             const results = await UM.searchUsers("testuserhandle", SearchType.handle)
-            expect(results.length).to.be.equal(1);
+            expect(results.users.length).to.be.equal(1);
         })
         it("Won't find by bad handle", async()=>{
             const results = await UM.searchUsers("doesntexisthandle", SearchType.handle)
-            expect(results.length).to.be.equal(0);
+            expect(results.users.length).to.be.equal(0);
         })
         it("Won't find by bad name", async()=>{
             const results = await UM.searchUsers("doesntexistname", SearchType.name)
-            expect(results.length).to.be.equal(0);
+            expect(results.users.length).to.be.equal(0);
         })
         it("Won't find by bad userid", async()=>{
             const results = await UM.searchUsers("doesntexistuserid", SearchType.userid)
-            expect(results.length).to.be.equal(0);
+            expect(results.users.length).to.be.equal(0);
         })
     })
 
@@ -89,10 +89,11 @@ describe("UserManager", function(){
             const response = await UM.listUsers();
             expect(response.users.length).to.be.greaterThan(0);
         })
-        it("Can limit list", async()=>{
+        it("Can ", async()=>{
             await UM.createOrUpdateUser({userid:"fakeforTesting", handle:"fakefortesting"});
             const response = await UM.listUsers({limit:1});
             expect(response.users.length).to.be.equal(1);
+
         })
     })
 
@@ -104,8 +105,8 @@ describe("UserManager", function(){
             });
            const response = await UM.deleteUser(user);
            expect(response.kind).to.be.equal(Kind.user);
-           const users = await UM.searchUsers("testuserid", SearchType.userid);
-           expect(users.length).to.be.equal(0);
+           const resp = await UM.searchUsers("testuserid", SearchType.userid);
+           expect(resp.users.length).to.be.equal(0);
         })
         it("Can delete a user by id", async() => {
             const user = await UM.createOrUpdateUser({
@@ -115,7 +116,7 @@ describe("UserManager", function(){
             const response = await UM.deleteUser("testuserid2");
             expect(response.kind).to.be.equal(Kind.user);
             const users = await UM.searchUsers("testuserid2", SearchType.userid);
-            expect(users.length).to.be.equal(0);
+            expect(users.users.length).to.be.equal(0);
             //cleanup from prior test
             try {
                 UM.deleteUser({userid:"fakeforTesting", handle:"fakefortesting"});
