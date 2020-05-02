@@ -39,9 +39,23 @@ describe('BASIC Conversation Sequence', function() {
         "title": "Test Conversation",
         "maxcommentlen": 512,
         "open" : true,
-        "tags" : ["taga", "tagb"],
-        "udf1" : "/sample/userdefined1",
-        "udf2" : "/sample/userdefined2/äöüÄÖÜß"
+        "customtags" : ["taga", "tagb"],
+        "customfield1" : "/sample/userdefined1",
+        "customfield2" : "/sample/userdefined2/äöüÄÖÜß"
+    }
+
+    const closedconversation = {
+        "conversationid": "TEST_ITEM_CLOSED",
+        "owneruserid" : 'testuser1',
+        "property" : "testing",
+        "moderation" : ModerationType.post,
+        "maxreports" : 3,
+        "title": "Test Conversation",
+        "maxcommentlen": 512,
+        "open" : false,
+        "customtags" : ["taga", "tagb"],
+        "customfield1" : "/sample/userdefined1",
+        "customfield2" : "/sample/userdefined2/äöüÄÖÜß"
     }
 
     describe('Setup Conversation', function () {
@@ -50,6 +64,20 @@ describe('BASIC Conversation Sequence', function() {
                 expect(results.kind).to.be.equal(Kind.conversation)
                 expect(results.owneruserid).to.be.equal('testuser1');
                 expect(results.conversationid).to.be.equal('TEST_ITEM');
+                done()
+            }).catch(res=>{
+                done(res);
+            });
+        })
+    });
+
+    describe('Setup Closed Conversation', function () {
+        it('User Creates Conversation', function (done) {
+            client.createConversation(closedconversation, true).then(results => {
+                expect(results.kind).to.be.equal(Kind.conversation)
+                expect(results.owneruserid).to.be.equal('testuser1');
+                expect(results.conversationid).to.be.equal('TEST_ITEM_CLOSED');
+                expect(results.open).to.be.false;
                 done()
             }).catch(res=>{
                 done(res);
@@ -82,12 +110,9 @@ describe('BASIC Conversation Sequence', function() {
        })
    });
    describe('Delete Conversation', function () {
-       it('Deletes Conversation', function (done) {
-           client.deleteConversation(	 "TEST_ITEM").then(results => {
-               done()
-           }).catch(res=>{
-               done(res);
-           });
+       it('Deletes Conversation', async function (done) {
+           await client.deleteConversation(	 "TEST_ITEM");
+           await client.deleteConversation('TEST_ITEM_CLOSED');
        })
    });
 });
