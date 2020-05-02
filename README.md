@@ -523,11 +523,9 @@ client.setUser({
 });
 
 // List rooms, join a room, and then start talking!
-client.listRooms().then(function(rooms){
-  return client.joinRoom(rooms[0]);
-}).then(client.startTalk);
- 
-...
+client.listRooms().then(function(list){
+  return client.joinRoom(lisy.rooms[0]);
+}).then(client.startChat);
 
 ```
 For use of these events in action, see the demo page: https://www.sportstalk247.com/demo.html
