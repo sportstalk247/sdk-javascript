@@ -41,7 +41,7 @@ describe('Conversation Operations', function() {
         "maxreports" : 0,
         "title": "Test Conversation",
         "maxcommentlen": 512,
-        "conversationisopen" : true,
+        "open" : true,
         "tags" : ["taga", "tagb"],
         "udf1" : "/sample/userdefined1",
         "udf2" : "/sample/userdefined2/äöüÄÖÜß"
@@ -54,7 +54,7 @@ describe('Conversation Operations', function() {
         "maxreports" : 0,
         "title": "Test Conversation",
         "maxcommentlen": 512,
-        "conversationisopen" : true,
+        "open" : true,
         "tags" : ["taga", "tagb"],
         "udf1" : "/sample/userdefined1",
         "udf2" : "/sample/userdefined2/äöüÄÖÜß"

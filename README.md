@@ -290,7 +290,7 @@ async function createConversation() {
                 property: "Optional-property-string", 
                 moderation: "pre", // can also be 'post
                 maxreports: 3, // can be as low as 0.
-                conversationisopen: true, //set to false if you don't want comments until a future point.
+                open: true, //set to false if you don't want comments until a future point.
             });
         } catch(e) {
             // Network error, permissions error, etc.  The error message will tell you what is wrong.
@@ -336,7 +336,7 @@ async function setCurrentConversationExampleFunction() {
         moderation: 'pre',
         maxreports: 3,
         title: 'Demo conversation',
-        conversationisopen: true,
+        open: true,
     }, false);
     // can also do it this way.
     

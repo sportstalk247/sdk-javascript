@@ -38,7 +38,7 @@ describe('BASIC Conversation Sequence', function() {
         "maxreports" : 3,
         "title": "Test Conversation",
         "maxcommentlen": 512,
-        "conversationisopen" : true,
+        "open" : true,
         "tags" : ["taga", "tagb"],
         "udf1" : "/sample/userdefined1",
         "udf2" : "/sample/userdefined2/äöüÄÖÜß"
