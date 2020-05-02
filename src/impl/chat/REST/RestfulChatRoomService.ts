@@ -19,7 +19,7 @@ import {AxiosRequestConfig} from "axios";
  * NOTE: All operations can throw errors if there are network or server issues.
  * You should ensure that ALL operations that return promises have a catch block or handle errors in some way.
  */
-export class RestfulRoomService implements IRoomService {
+export class RestfulChatRoomService implements IRoomService {
     private _config: SportsTalkConfig;
     private _knownRooms: Room[] = [];
     private _apiHeaders = {};
@@ -176,6 +176,32 @@ export class RestfulRoomService implements IRoomService {
         };
         return stRequest(config).then(response => {
             return <RoomExitResult> response.message
+        })
+    }
+
+    closeRoom = (room:RoomResult | string): Promise<RoomResult> => {
+        const roomId = forceObjKeyOrString(room);
+        const config:AxiosRequestConfig = {
+            method: POST,
+            url: buildAPI(this._config,`${this._apiExt}/${roomId}`),
+            headers: this._jsonHeaders,
+            data: {roomisopen: false}
+        };
+        return stRequest(config).then(response => {
+            return <RoomResult> response.message
+        })
+    }
+
+    openRoom = (room:RoomResult | string): Promise<RoomResult> => {
+        const roomId = forceObjKeyOrString(room);
+        const config:AxiosRequestConfig = {
+            method: POST,
+            url: buildAPI(this._config,`${this._apiExt}/${roomId}`),
+            headers: this._jsonHeaders,
+            data: {roomisopen: true}
+        };
+        return stRequest(config).then(response => {
+            return <RoomResult> response.message
         })
     }
 

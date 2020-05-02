@@ -1,6 +1,6 @@
 import { ChatClient } from '../../../src/impl/ChatClient';
 import * as chai from 'chai';
-import {RestfulRoomService} from "../../../src/impl/chat/REST/RestfulRoomService";
+import {RestfulChatRoomService} from "../../../src/impl/chat/REST/RestfulChatRoomService";
 import * as dotenv from 'dotenv';
 import {Kind, SportsTalkConfig} from "../../../src/models/CommonModels";
 import {EventResult} from "../../../src/models/ChatModels";
@@ -27,7 +27,7 @@ describe('REPLY Chat Sequence', function() {
             handle: 'handle2'
         }
     });
-    const rm = new RestfulRoomService(config);
+    const rm = new RestfulChatRoomService(config);
     const em1 = client.getEventService();
     const em2 = client2.getEventService();
 

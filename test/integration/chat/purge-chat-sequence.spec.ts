@@ -1,10 +1,10 @@
 import { ChatClient } from '../../../src/impl/ChatClient';
 import * as chai from 'chai';
 import * as sinon from 'sinon';
-import {RestfulRoomService} from "../../../src/impl/chat/REST/RestfulRoomService";
+import {RestfulChatRoomService} from "../../../src/impl/chat/REST/RestfulChatRoomService";
 import * as dotenv from 'dotenv';
 import {SportsTalkConfig} from "../../../src/models/CommonModels";
-import {RestfulEventService} from "../../../src/impl/chat/REST/RestfulEventService";
+import {RestfulChatEventService} from "../../../src/impl/chat/REST/RestfulChatEventService";
 dotenv.config();
 
 const onPurgeEvent = sinon.fake();
@@ -33,7 +33,7 @@ describe('PURGE Chat Sequence', function() {
             handle: 'handle2'
         }
     });
-    const rm = new RestfulRoomService(config);
+    const rm = new RestfulChatRoomService(config);
     client.setEventHandlers({
         onPurgeEvent,
         onChatEvent,
@@ -99,7 +99,7 @@ describe('PURGE Chat Sequence', function() {
             const purge =  await client.sendCommand("*purge "+process.env.PURGE+" handle2");
             await client.getLatestEvents();
             await delay(100);
-            const updates:RestfulEventService = <RestfulEventService>client.getEventService();
+            const updates:RestfulChatEventService = <RestfulChatEventService>client.getEventService();
             await updates._fetchUpdatesAndTriggerCallbacks();
             await delay(100);
             const handlers = updates.getEventHandlers();

@@ -14,7 +14,7 @@ const MISSING_ID = "Missing webhook or webhook missing ID";
  * NOTE: All operations can throw errors if there are network or server issues.
  * You should ensure that ALL operations that return promises have a catch block or handle errors in some way.
  */
-export class RestfulWebhookManager implements IWebhookService {
+export class RestfulWebhookService implements IWebhookService {
     private _config: SportsTalkConfig = {appId: ""};
     private _apiHeaders;
     private _apiExt = 'webhook/hooks';

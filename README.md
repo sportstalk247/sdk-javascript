@@ -70,6 +70,28 @@ async function yourFunction() {
 }
 ```
 
+# Understanding the SDK
+The SDK is broken up into 2 Clients and a set of backing services
+For most user-facing operations you'll want one of the simple clients:
+
+* Chat Client -  `const chatClient = require('sportstalk-sdk').ChatClient.create({});`
+* Commenting Client  `const commentClient = require('sportstalk-sdk').CommentClient.create({});`
+
+These clients handle most common operation while hiding th backing APIs and simplifying some operations and will manage state for you.
+
+However, you may want to use the APIs directly, in which case there are a set of backing REST services that you can use:
+
+- UserService
+- WebhookService
+- ChatEventService
+- ChatRoomService
+- CommentService
+- Conversation Service
+- Comment Moderation Service
+- Chat Moderation Service
+
+You can  see the details for each under **'Backing Services'** section
+       
 # Comments API
 
 ## Getting Started
@@ -508,6 +530,159 @@ The easiest way to see how these event works is to see the demo page: https://ww
     * Timestamp
 * Use the promises from sendCommand, sendReply, etc, to show/hide some sort of indication that the message is being sent.
 * Make sure you handle errors for sending messages in case of network disruption.   For instance, `client.sendCommand('message').catch(handleErrorInUiFn)`
+
+# Backing Services
+## User Service
+The user service handles user creation and management including banning users.
+
+To instantiate a User Service:
+```javascript
+const sdk = require('sportstalk-sdk');
+const userService = new sdk.services.UserService({appId, apiToken});
+const list = userService.listUsers();
+```
+
+## Webhook Service
+The webhook service governs the creation and management of webhooks.  The Chat and Comment clients do not provide access to this functionality.
+To instantiate the Webhook service:
+
+```javascript
+const sdk = require('sportstalk-sdk');
+const service = new sdk.services.WebhookService({appId, apiToken});
+const hooks =  await service.listWebhooks()
+```
+
+### Create a new webhook
+
+```javascript
+const sdk = require('sportstalk-sdk');
+const service = new sdk.services.WebhookService({appId, apiToken});
+const newHook = await service.createWebhook({
+    label: 'A user friendly label',
+    url: 'http://www.your-hook-endpoint.com/endpoint',
+    enabled: true,
+    type: 'post', //can also be pre
+    events: ['chatspeech','chatreply']
+});
+// if successful your hook was created.  
+```
+
+### Delete a webhook
+```javascript
+const sdk = require('sportstalk-sdk');
+const service = new sdk.services.WebhookService({appid, apitoken});
+const newHook = await service.deleteWebhook('id-of-previously-created-webhook');
+// if successful your hook was created.  
+```
+
+### Update a webhook
+```javascript
+const sdk = require('sportstalk-sdk');
+const service = new sdk.services.WebhookService({appId, apiToken});
+async function updateWebhookExample() {
+    const newHook = await service.updateWebhook({
+            id: 'id-of-previously-crated-hook', 
+            label: 'A user friendly label',
+            url: 'http://www.your-hook-endpoint.com/endpoint',
+            enabled: true,
+            type: 'post', //can also be pre
+            events: ['chatspeech','chatreply']
+        });
+}
+```
+
+If successful your hook was updated.  The new settings will replace the old ones, so be sure to configure anything you want to differ from the defaults.
+
+## Chat Room Service
+The chat room service can be used for Chat Room creation and managment for an app.  In most cases, you do not need to use this service as the ChatClient interface provides the same functionality.
+
+To create a RoomService:
+
+```javascript
+const sdk = require('sportstalk-sdk');
+const service = new sdk.services.ChatRoomService({appId, apiToken});
+async function listRoomsExample() {
+    const chatRooms =  await service.listRooms()
+}
+```
+
+### Creating a chat room
+```javascript
+const sdk = require('sportstalk-sdk');
+const service = new sdk.services.ChatRoomService({appId, apiToken});
+async function createRoomExample() {
+    const chatRoom =  await service.createRoom({
+        name: "Room name",
+        description: "Optional description",
+        moderation: "post", // can be 'pre' as well
+        slug: "readable-slug",
+        enableprofanityfilter: true, //optional
+        delaymessageseconds:0, // optional, should usually be zero
+        enableactions: false, //disable action commands.
+        roomisopen: true, // allows people to chat inside the room.
+        maxreports: 1, // defaults to 3. The number of flags it takes to add a comment to the moderation queue.
+        enableenterAndexit: true, // allows people to join room
+    })
+}
+```
+
+
+### Closing a chat room
+You can close a room by ID.
+```javascript
+const sdk = require('sportstalk-sdk');
+const service = new sdk.services.ChatRoomService({appId, apiToken});
+async function closeRoomExample() {
+    const chatRoom =  await service.closeRoom('roomid');
+}
+```
+
+### Opening a chat room
+You can close a room by ID.
+```javascript
+const sdk = require('sportstalk-sdk');
+const service = new sdk.services.ChatRoomService({appId, apiToken});
+async function openRoomExample() {
+    const chatRoom =  await service.openRoom('roomid');
+}
+```
+
+### Deleting a chat room
+If you are done with a room, you can delete it.
+
+**WARNING:** this cannot be undone. All messages in the room will be destroyed as well.
+
+```javascript
+const sdk = require('sportstalk-sdk');
+const service = new sdk.services.ChatRoomService({appId, apiToken});
+async function deleteRoomExample() {
+    const chatRoom =  await service.deleteRoom('roomid');
+}
+``` 
+
+## Chat Moderation Service
+If you are creating a moderation UI for chat, this is the class you need.
+To instantiate the Chat Moderation service and get the moderation queue:
+```javascript
+const sdk = require('sportstalk-sdk');
+const service = new sdk.services.ChatModerationService({appId, apiToken});
+async function moderationExample() {
+    const queue =  await service.getModerationQueue();
+    // queue has events awaiting moderation
+}
+```
+
+### Approving a Chat Event
+```javascript
+const sdk = require('sportstalk-sdk');
+const service = new sdk.services.ChatModerationService({appId, apiToken});
+async function moderationApproveExample() {
+    const queue =  await service.getModerationQueue();
+    
+    // queue has events awaiting moderation
+}
+```
+
 
 
 # Copyright & License

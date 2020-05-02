@@ -3,7 +3,7 @@
 import {
     AdvertisementOptions, ChatUpdatesResult,
     CommandOptions, CommandResponse, DeletedRoomResponse,
-    EventHandlerConfig,
+    EventHandlerConfig, EventListResponse,
     EventResult,
     GoalOptions,
     Room, RoomExitResult, RoomListResponse,
@@ -25,7 +25,7 @@ import {
 /**
  * Interface for the EventService, which handles chat events and any polling.
  */
-export interface IEventService extends ISportsTalkConfigurable, IUserConfigurable  {
+export interface IChatEventService extends ISportsTalkConfigurable, IUserConfigurable  {
     startChat(),
     stopChat(),
     setCurrentRoom(room: RoomResult | null): Room | null,
@@ -50,6 +50,8 @@ export interface IRoomService extends ISportsTalkConfigurable {
     deleteRoom(id: string | Room): Promise<DeletedRoomResponse>
     createRoom(room: Room): Promise<RoomResult>
     updateRoom(room:RoomResult): Promise<RoomResult>
+    closeRoom(room:RoomResult | string): Promise<RoomResult>
+    openRoom(room:RoomResult | string): Promise<RoomResult>
     listParticipants(room: Room, cursor?: string, maxresults?: number): Promise<Array<UserResult>>
     listUserMessages(user: User | string, Room: Room | String, cursor?: string, limit?: number): Promise<Array<EventResult>>
     joinRoom(user: User, room: Room | string): Promise<RoomUserResult>
@@ -85,7 +87,7 @@ export interface IChatClient extends IUserConfigurable, ISportsTalkConfigurable{
  * Interface for chat moderation.
  */
 export interface IChatModerationService extends ISportsTalkConfigurable {
-    getModerationQueue(): Promise<Array<EventResult>>
+    getModerationQueue(): Promise<EventListResponse>
     rejectEvent(event: EventResult): Promise<MessageResult<null>>
     approveEvent(event: EventResult): Promise<MessageResult<null>>
 }

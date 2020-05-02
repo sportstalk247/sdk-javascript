@@ -14,10 +14,10 @@ import {
     RoomListResponse
 } from "../models/ChatModels";
 import {DEFAULT_CONFIG} from "./constants/api";
-import {IRoomService, IEventService, IChatClient} from "../API/ChatAPI";
+import {IRoomService, IChatEventService, IChatClient} from "../API/ChatAPI";
 import {SettingsError} from "./errors";
-import {RestfulEventService} from "./chat/REST/RestfulEventService"
-import {RestfulRoomService} from "./chat/REST/RestfulRoomService";
+import {RestfulChatEventService} from "./chat/REST/RestfulChatEventService"
+import {RestfulChatRoomService} from "./chat/REST/RestfulChatRoomService";
 import {RestfulUserService} from "./common/REST/RestfulUserService";
 import {
     Reaction,
@@ -51,7 +51,7 @@ export class ChatClient implements IChatClient {
     private _defaultGoalImage: string | undefined;
 
     // These hold the services that APIs are delegated through
-    private _eventService: IEventService;
+    private _eventService: IChatEventService;
     private _roomService: IRoomService;
     private _userService: IUserService;
 
@@ -94,8 +94,8 @@ export class ChatClient implements IChatClient {
             this._userService.setConfig(this._config);
         }
 
-        this._eventService = this._eventService || new RestfulEventService(this._config);
-        this._roomService = this._roomService || new RestfulRoomService(this._config);
+        this._eventService = this._eventService || new RestfulChatEventService(this._config);
+        this._roomService = this._roomService || new RestfulChatRoomService(this._config);
         this._userService = this._userService || new RestfulUserService(this._config);
 
         if(this._config.user){
@@ -130,7 +130,7 @@ export class ChatClient implements IChatClient {
     /**
      * Get the current event service
      */
-    getEventService = ():IEventService => {
+    getEventService = ():IChatEventService => {
         return this._eventService;
     }
 

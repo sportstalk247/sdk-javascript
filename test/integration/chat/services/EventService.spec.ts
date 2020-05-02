@@ -4,7 +4,7 @@ import * as chai from 'chai';
 import * as sinon from 'sinon';
 import * as dotenv from 'dotenv';
 import {Reaction, SportsTalkConfig} from "../../../../src/models/CommonModels";
-import {RestfulEventService} from "../../../../src/impl/chat/REST/RestfulEventService";
+import {RestfulChatEventService} from "../../../../src/impl/chat/REST/RestfulChatEventService";
 dotenv.config();
 
 
@@ -66,7 +66,7 @@ describe("Event Service", ()=>{
             it("Will trigger onReply", async()=>{
                 const id = chatMessage.id;
                 const reaction = await client.sendReply("This is my reply", id)
-                const updates = <RestfulEventService> await client.getEventService()
+                const updates = <RestfulChatEventService> await client.getEventService()
                 await updates._fetchUpdatesAndTriggerCallbacks();
                 await delay(100);
                 const handlers = client.getEventService().getEventHandlers()

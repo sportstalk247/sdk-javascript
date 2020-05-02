@@ -1,5 +1,5 @@
 import * as chai from 'chai';
-import {RestfulWebhookManager} from "../../../src/impl/common/REST/RestfulWebhookManager";
+import {RestfulWebhookService} from "../../../src/impl/common/REST/RestfulWebhookService";
 import * as dotenv from 'dotenv';
 import {Kind, SportsTalkConfig, WebHook, WebhookEvent, WebhookType} from "../../../src/models/CommonModels";
 dotenv.config();
@@ -10,7 +10,7 @@ let prehook:WebHook;
 // @ts-ignore
 const config: SportsTalkConfig = {apiToken:process.env.TEST_KEY, appId: process.env.TEST_APP_ID, endpoint: process.env.TEST_ENDPOINT};
 describe("Webhook Manager", function(){
-    const HookManager = new RestfulWebhookManager(  config);
+    const HookManager = new RestfulWebhookService(  config);
 
     describe("Creation", function() {
         it("Can create a post publish webhook", done => {

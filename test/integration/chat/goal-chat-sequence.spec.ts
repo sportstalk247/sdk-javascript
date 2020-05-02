@@ -1,6 +1,6 @@
 import { ChatClient } from '../../../src/impl/ChatClient';
 import * as chai from 'chai';
-import {RestfulRoomService} from "../../../src/impl/chat/REST/RestfulRoomService";
+import {RestfulChatRoomService} from "../../../src/impl/chat/REST/RestfulChatRoomService";
 import * as dotenv from 'dotenv';
 dotenv.config();
 
@@ -32,7 +32,7 @@ describe('GOAL Chat Sequence', function() {
         }
     });
     // @ts-ignore
-    const rm = new RestfulRoomService({
+    const rm = new RestfulChatRoomService({
         apiToken:process.env.TEST_KEY,
         endpoint: process.env.TEST_ENDPOINT,
         appId: process.env.TEST_APP_ID,

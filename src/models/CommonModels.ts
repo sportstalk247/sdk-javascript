@@ -38,6 +38,7 @@ export enum Kind {
     deleteduser = "deleted.appuser",
     conversationlist = "list.commentconversations",
     chatlist = "list.chatevents",
+    eventlist = "list.events",
     roomlist = "list.chatrooms",
     userlist = "list.users"
 }

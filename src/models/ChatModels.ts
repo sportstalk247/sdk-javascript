@@ -111,6 +111,11 @@ export interface RoomListResponse extends ListResponse {
     rooms: Array<RoomResult>,
 }
 
+export interface EventListResponse extends ListResponse {
+    kind: Kind.eventlist,
+    events: Array<EventResult>
+}
+
 export interface EventResult {
     kind: Kind.chat,
     id?: string,

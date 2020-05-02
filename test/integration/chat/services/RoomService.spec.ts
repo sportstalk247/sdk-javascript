@@ -1,4 +1,4 @@
-import {RestfulRoomService} from "../../../../src/impl/chat/REST/RestfulRoomService";
+import {RestfulChatRoomService} from "../../../../src/impl/chat/REST/RestfulChatRoomService";
 import * as chai from 'chai';
 import * as dotenv from 'dotenv';
 import {ModerationType, SportsTalkConfig} from "../../../../src/models/CommonModels";
@@ -9,7 +9,7 @@ const { expect } = chai;
 const config: SportsTalkConfig = {apiToken:process.env.TEST_KEY, appId: process.env.TEST_APP_ID, endpoint: process.env.TEST_ENDPOINT};
 let roomlist;
 describe("RoomService", function(){
-    const RM = new RestfulRoomService(  config);
+    const RM = new RestfulChatRoomService(  config);
     it("Can create a room without moderation", done=>{
         const name = "ROOMService Test Room"
         const slug = "RM-test-room"

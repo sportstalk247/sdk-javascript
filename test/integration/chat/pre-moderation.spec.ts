@@ -4,7 +4,7 @@ import * as chai from 'chai';
 import {RestfulChatModerationService} from "../../../src/impl/chat/REST/RestfulChatModerationService";
 import * as dotenv from 'dotenv';
 import {ModerationType, SportsTalkConfig} from "../../../src/models/CommonModels";
-import {RestfulRoomService} from "../../../src/impl/chat/REST/RestfulRoomService";
+import {RestfulChatRoomService} from "../../../src/impl/chat/REST/RestfulChatRoomService";
 dotenv.config();
 
 const { expect } = chai;
@@ -20,7 +20,7 @@ describe('Pre Moderation sequences', function() {
 
         let roomid;
         const client = <ChatClient> ChatClient.create(config);
-        const rm = new RestfulRoomService(config);
+        const rm = new RestfulChatRoomService(config);
         const mod = new RestfulChatModerationService(config);
         it('Can create a room, join the room, deny messages, kill room', (done) => {
             rm.createRoom({
@@ -44,15 +44,15 @@ describe('Pre Moderation sequences', function() {
             }).then(() => {
                 return mod.getModerationQueue()
             }).then(events => {
-                expect(events.length).to.be.greaterThan(0);
-                const list: Array<EventResult> = events || [];
+                expect(events.events.length).to.be.greaterThan(0);
+                const list: Array<EventResult> = events.events || [];
                 return Promise.all(list.map(function (event) {
                     return mod.rejectEvent(event)
                 }))
             }).then(events => {
                 return mod.getModerationQueue()
             }).then(events => {
-                expect(events).to.have.lengthOf(0);
+                expect(events.events).to.have.lengthOf(0);
             }).then(() => {
                 rm.deleteRoom(roomid);
                 done();
@@ -72,7 +72,7 @@ describe('Pre Moderation sequences', function() {
         this.timeout(20000);
         let roomid;
         const client = <ChatClient>ChatClient.create(config);
-        const rm = new RestfulRoomService(config);
+        const rm = new RestfulChatRoomService(config);
         const mod = new RestfulChatModerationService(config);
         it('Can create a room, join the room, approve messages, kill room', (done) => {
             rm.createRoom({
@@ -96,15 +96,15 @@ describe('Pre Moderation sequences', function() {
             }).then(() => {
                 return mod.getModerationQueue()
             }).then(events => {
-                expect(events.length).to.be.greaterThan(0);
-                const list: Array<EventResult> = events || [];
+                expect(events.events.length).to.be.greaterThan(0);
+                const list: Array<EventResult> = events.events || [];
                 return Promise.all(list.map(function (event) {
                     return mod.approveEvent(event)
                 }))
             }).then(events => {
                 return mod.getModerationQueue()
             }).then(events => {
-                expect(events).to.have.lengthOf(0);
+                expect(events.events).to.have.lengthOf(0);
                 return delay(1000);
             }).then(()=>{
                 return client.getEventService().getUpdates()

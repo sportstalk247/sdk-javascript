@@ -6,7 +6,7 @@ import {
     EventType, GoalOptions, Room, RoomResult
 } from "../../../models/ChatModels";
 import {DEFAULT_CONFIG, DELETE, GET, POST} from "../../constants/api";
-import {IEventService} from "../../../API/ChatAPI";
+import {IChatEventService} from "../../../API/ChatAPI";
 import {buildAPI, getJSONHeaders, getUrlEncodedHeaders} from "../../utils";
 import {SettingsError} from "../../errors";
 import {NO_HANDLER_SET, NO_ROOM_SET, REQUIRE_ROOM_ID} from "../../constants/messages";
@@ -29,7 +29,7 @@ const INVALID_POLL_FREQUENCY = "Invalid poll _pollFrequency.  Must be between 25
  * NOTE: All operations can throw errors if there are network or server issues.
  * You should ensure that ALL operations that return promises have a catch block or handle errors in some way.
  */
-export class RestfulEventService implements IEventService{
+export class RestfulChatEventService implements IChatEventService {
     private _config: SportsTalkConfig = {appId: ""};
     private _polling: any; // set interval id;
     private _apiHeaders = {}

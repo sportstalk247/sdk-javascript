@@ -1,4 +1,4 @@
-import {EventResult} from "../../../models/ChatModels";
+import {EventListResponse, EventResult} from "../../../models/ChatModels";
 import {stRequest} from '../../network';
 import {buildAPI, formify, getUrlEncodedHeaders} from "../../utils";
 import {DEFAULT_CONFIG, POST, } from "../../constants/api";
@@ -29,13 +29,13 @@ export class RestfulChatModerationService implements IChatModerationService {
     /**
      * Get the moderation queue of events.
      */
-    getModerationQueue = (): Promise<Array<EventResult>> => {
+    getModerationQueue = (): Promise<EventListResponse> => {
         return stRequest({
             method: 'GET',
             url: buildAPI(this._config, this._apiExt),
             headers: this._apiHeaders
         }).then(result => {
-            return result.data.events;
+            return result.data
         });
     }
 
