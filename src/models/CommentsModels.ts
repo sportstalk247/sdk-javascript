@@ -17,6 +17,7 @@ export interface Conversation extends HasConversationID {
     owneruserid?: string,
     maxreports? : number,
     title?: string,
+    added?: string,
     maxcommentlen?: number,
     open?: boolean
     customtags? : string[]
@@ -105,7 +106,7 @@ export interface Comment extends User {
     replycount?: number,
     reactions?: Array<any>,
     active?: boolean,
-    added?: number,
+    added: string,
     modified?: number,
     deleted?: boolean,
     commenttype?: CommentType,

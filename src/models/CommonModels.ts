@@ -130,6 +130,6 @@ export interface UserListResponse extends ListResponse {
 }
 
 export interface ListRequest {
-    cursor?: string,
-    limit?: number
+    cursor?: string, // should be a cursor value supplied by API.
+    limit?: number // must be an integer
 }
