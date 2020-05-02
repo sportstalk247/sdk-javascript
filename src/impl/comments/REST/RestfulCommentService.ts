@@ -134,7 +134,7 @@ export class RestfulCommentService implements ICommentService {
      * @param user
      * @param replyto
      */
-    public create = (comment: Comment | string, user?: User, replyto?: Comment | string): Promise<Comment> => {
+    public createComment = (comment: Comment | string, user?: User, replyto?: Comment | string): Promise<Comment> => {
         // @ts-ignore
         const replyid: Comment | string = replyto || comment.replyto;
         this._requireUser(user || comment );
@@ -267,7 +267,7 @@ export class RestfulCommentService implements ICommentService {
      * @param user
      * @param final
      */
-    public delete = (comment: Comment | string, user: User, final?: boolean): Promise<CommentDeletionResponse> => {
+    public deleteComment = (comment: Comment | string, user: User, final?: boolean): Promise<CommentDeletionResponse> => {
         if(final) {
             return this._finalDelete(comment, user);
         }
@@ -278,7 +278,7 @@ export class RestfulCommentService implements ICommentService {
      * Update a comment
      * @param comment
      */
-    public update = (comment: Comment): Promise<Comment> => {
+    public updateComment = (comment: Comment): Promise<Comment> => {
         this._requireConversation();
         const id = getUrlCommentId(comment);
         return stRequest({

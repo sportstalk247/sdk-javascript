@@ -1,7 +1,7 @@
 import {ApiHeaders, RestApiResult, ClientConfig} from "../../../models/CommonModels";
 import {AxiosRequestConfig} from "axios";
 import {stRequest} from '../../network';
-import {Comment} from "../../../models/CommentsModels";
+import {Comment, CommentListResponse} from "../../../models/CommentsModels";
 import {DEFAULT_CONFIG, GET, POST} from "../../constants/api";
 import {getUrlEncodedHeaders, getJSONHeaders, buildAPI, formify} from "../../utils";
 import {ICommentModerationService} from "../../../API/CommentsAPI";
@@ -55,7 +55,7 @@ export class RestfulCommentModerationService implements ICommentModerationServic
     /**
      * Get the moderation queue
      */
-    public getModerationQueue = (): Promise<Array<Comment>> => {
+    public getModerationQueue = (): Promise<CommentListResponse> => {
         this._requireAppId();
         const config: AxiosRequestConfig = {
             method: GET,
@@ -63,7 +63,7 @@ export class RestfulCommentModerationService implements ICommentModerationServic
             headers: this._jsonHeaders,
         }
         return stRequest(config).then(result=>{
-            return result.data.comments;
+            return result.data
         });
     }
 

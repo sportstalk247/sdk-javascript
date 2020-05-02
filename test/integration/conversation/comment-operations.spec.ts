@@ -132,13 +132,13 @@ describe('Comment Operations', function() {
        })
        it('Shows that comment is flagged', async () => {
             const queue = await ModerationClient.getModerationQueue();
-            expect(queue.length).to.be.greaterThan(0);
-            expect(queue[0].moderation).to.be.equal(CommentModeration.flagged);
+            expect(queue.comments.length).to.be.greaterThan(0);
+            expect(queue.comments[0].moderation).to.be.equal(CommentModeration.flagged);
        })
    });
 
     describe("User updates comment", function() {
-        let queue: Comment[]
+        let queue: CommentListResponse
         let rejectcomment;
         let acceptcomment;
         it("Let's User2 flag User1's comment", async ()=> {
@@ -152,18 +152,18 @@ describe('Comment Operations', function() {
 
         it('Shows that comment is flagged', async () => {
             queue = await ModerationClient.getModerationQueue();
-            expect(queue.length).to.be.greaterThan(0);
-            expect(queue[0].active).to.be.false;
+            expect(queue.comments.length).to.be.greaterThan(0);
+            expect(queue.comments[0].active).to.be.false;
         })
         it('Lets the moderator reject a comment', async()=>{
-            const moderated = await ModerationClient.rejectComment(queue[0]);
+            const moderated = await ModerationClient.rejectComment(queue.comments[0]);
             expect(moderated.moderation).to.be.equal(CommentModeration.rejected);
         })
         it('Can create a comment that gets accepted', async()=>{
             acceptcomment = await client.makeComment("This is user1 comment to update");
             await client2.reportComment(acceptcomment, ReportType.abuse);
             const newqueue = await ModerationClient.getModerationQueue();
-            expect(newqueue.length).to.be.greaterThan(0);
+            expect(newqueue.comments.length).to.be.greaterThan(0);
             const approved = await ModerationClient.approveComment(acceptcomment)
             expect(approved.moderation).to.be.equal(CommentModeration.approved);
         })
@@ -229,7 +229,7 @@ describe('Comment Operations', function() {
        it("Throws error on getComment if no comments set", ()=>{
            const commentManager = new RestfulCommentService();
            try {
-               const comment = commentManager.create("some comment body", {userid: "fake", handle:"fake"});
+               const comment = commentManager.createComment("some comment body", {userid: "fake", handle:"fake"});
                throw new Error("should have failed")
            }catch(e) {
                expect(e instanceof SettingsError).to.be.true;
@@ -239,7 +239,7 @@ describe('Comment Operations', function() {
        it("Throws error on getComment if no comments set", ()=>{
            const commentManager = new RestfulCommentService();
            try {
-               const comment = commentManager.update({userid: "fake", handle:"fake", body: "some body", id:"fakeid"});
+               const comment = commentManager.updateComment({userid: "fake", handle:"fake", body: "some body", id:"fakeid"});
                throw new Error("should have failed")
            }catch(e) {
                expect(e instanceof SettingsError).to.be.true;
@@ -250,7 +250,7 @@ describe('Comment Operations', function() {
            const commentManager = new RestfulCommentService( config,{property: 'test', moderation: ModerationType.post, conversationid: '12342'});
            try {
                // @ts-ignore
-               const comment = await commentManager.create("some comment body", {userid: "fake", handle:"fake"}, {});
+               const comment = await commentManager.createComment("some comment body", {userid: "fake", handle:"fake"}, {});
                throw new Error("should have failed")
            } catch(e) {
                expect(e instanceof ValidationError).to.be.true;
@@ -261,7 +261,7 @@ describe('Comment Operations', function() {
            const commentManager = new RestfulCommentService(config,{property: 'test', moderation: ModerationType.post, conversationid: '12342'});
            try {
                // @ts-ignore
-               const comment = await commentManager.create("some comment body", {userid: "", handle:"fake"}, {});
+               const comment = await commentManager.createComment("some comment body", {userid: "", handle:"fake"}, {});
                throw new Error("should have failed")
            } catch(e) {
                expect(e instanceof RequireUserError).to.be.true;

@@ -62,23 +62,24 @@ export class RestfulConversationService implements IConversationService {
     }
 
     /**
-     * Get a comments
+     * Get a conversation object
      * @param conversation
      */
     public getConversation = (conversation: Conversation | string): Promise<ConversationResponse> => {
         // @ts-ignore
         const id = getUrlConversationId(conversation);
-        return stRequest({
+        const config: AxiosRequestConfig = {
             method: GET,
             url: buildAPI(this._config, `${this._apiExt}/${id}`),
             headers: this._jsonHeaders,
-        }).then(result=>{
+        }
+        return stRequest(config).then(result=>{
             return result.data
         });
     }
 
     /**
-     * Deletes a comments.
+     * Deletes a conversation and all the comments in it.
      */
     public deleteConversation = (conversation: Conversation | string): Promise<ConversationDeletionResponse> => {
         // @ts-ignore
@@ -106,11 +107,6 @@ export class RestfulConversationService implements IConversationService {
             url: buildAPI(this._config, `${this._apiExt}/${query}`),
             headers: this._jsonHeaders,
         }
-        return stRequest(config).then(result=>{
-            return {
-                cursor: result.data.cursor,
-                conversations: result.data.conversations
-            };
-        });
+        return stRequest(config).then(result=>result.data)
     }
 }

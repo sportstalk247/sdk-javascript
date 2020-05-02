@@ -147,7 +147,7 @@ export class CommentClient implements ICommentingClient {
      * @param replyto either the comment object to reply to or the ID as a string
      */
     public makeComment = (comment: string | SimpleComment, replyto?: Comment | string): Promise<Comment> => {
-        return this._commentService.create(comment, this._user, replyto);
+        return this._commentService.createComment(comment, this._user, replyto);
     }
 
     /**
@@ -178,7 +178,7 @@ export class CommentClient implements ICommentingClient {
      * @param final
      */
     public deleteComment = (comment:Comment | string, final: boolean): Promise<CommentDeletionResponse> => {
-        return this._commentService.delete(comment, this._user, final);
+        return this._commentService.deleteComment(comment, this._user, final);
     }
 
     /**
@@ -187,7 +187,7 @@ export class CommentClient implements ICommentingClient {
      */
     public updateComment = (comment:Comment): Promise<Comment> => {
         // @ts-ignore
-        return this._commentService.update(comment, this._user);
+        return this._commentService.updateComment(comment, this._user);
     }
 
     /**

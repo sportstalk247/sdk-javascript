@@ -20,10 +20,10 @@ import {Reaction, SportsTalkConfig, ReportType, RestApiResult} from "../models/C
 
 export interface ICommentService extends ISportsTalkConfigurable {
     setConversation(conversation: Conversation | string): Conversation;
-    create(comment: Comment | SimpleComment | string, user: User, replyto?: Comment | string): Promise<Comment>;
+    createComment(comment: Comment | SimpleComment | string, user: User, replyto?: Comment | string): Promise<Comment>;
     getComment(comment: Comment | string): Promise<Comment | null>;
-    delete(comment: Comment | string, user: User, final?: boolean): Promise<CommentDeletionResponse>
-    update(comment: Comment, user: User): Promise<Comment>;
+    deleteComment(comment: Comment | string, user: User, final?: boolean): Promise<CommentDeletionResponse>
+    updateComment(comment: Comment, user: User): Promise<Comment>;
     vote(comment: Comment, user: User, vote:Vote): Promise<Comment>
     report(comment: Comment, user:User, reporttype: ReportType): Promise<Comment>
     react(comment:Comment | string, user: User, reaction:Reaction, enable?: boolean): Promise<Comment>;
@@ -40,7 +40,7 @@ export interface IConversationService extends IConfigurable {
 }
 
 export interface ICommentModerationService extends IConfigurable {
-    getModerationQueue(): Promise<Array<Comment>>
+    getModerationQueue():  Promise<CommentListResponse>
     rejectComment(comment: Comment): Promise<Comment>
     approveComment(comment: Comment): Promise<Comment>
 }
