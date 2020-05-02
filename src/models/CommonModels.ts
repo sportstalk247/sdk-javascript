@@ -38,7 +38,8 @@ export enum Kind {
     deleteduser = "deleted.appuser",
     conversationlist = "list.commentconversations",
     chatlist = "list.chatevents",
-    roomlist = "list.chatrooms"
+    roomlist = "list.chatrooms",
+    userlist = "list.users"
 }
 
 export interface UserResult extends User {
@@ -120,6 +121,11 @@ export interface ListResponse {
     cursor?: string,
     more?: boolean
     itemcount?: number
+}
+
+export interface UserListResponse extends ListResponse {
+    kind: Kind.userlist
+    users: UserResult[]
 }
 
 export interface ListRequest {

@@ -2,7 +2,15 @@ import {AxiosRequestConfig} from "axios";
 import {stRequest} from "../../network";
 import {DELETE, GET, POST} from "../../constants/api";
 import {buildAPI, forceObjKeyOrString, formify, getJSONHeaders, getUrlEncodedHeaders} from "../../utils";
-import {RestApiResult, SearchType, SportsTalkConfig, User, UserResult, ListRequest} from "../../../models/CommonModels";
+import {
+    RestApiResult,
+    SearchType,
+    SportsTalkConfig,
+    User,
+    UserResult,
+    ListRequest,
+    ListResponse, UserListResponse
+} from "../../../models/CommonModels";
 import {IUserService} from "../../../API/CommonAPI";
 
 /**
@@ -115,7 +123,7 @@ export class RestfulUserService implements IUserService {
         return stRequest(config).then(response=>response.data.user);
     }
 
-    listUsers = (request?: ListRequest): Promise<UserResult> => {
+    listUsers = (request?: ListRequest): Promise<UserListResponse> => {
         let query = "?";
         if(request) {
             query = query+ formify(request);

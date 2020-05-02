@@ -8,7 +8,7 @@ import {
     User,
     UserResult,
     WebHook,
-    ListRequest
+    ListRequest, UserListResponse
 } from "../models/CommonModels";
 
 export interface ISportsTalkConfigurable {
@@ -28,7 +28,7 @@ export interface IUserService extends ISportsTalkConfigurable {
     setBanStatus(user: User | string, isBanned: boolean): Promise<RestApiResult<UserResult>>
     createOrUpdateUser(user: User): Promise<UserResult>
     searchUsers(search: string, type: SearchType, limit?:number): Promise<Array<UserResult>>
-    listUsers(request?: ListRequest): Promise<UserResult>
+    listUsers(request?: ListRequest): Promise<UserListResponse>
     getUserDetails(user: User | string): Promise<UserResult>
 }
 

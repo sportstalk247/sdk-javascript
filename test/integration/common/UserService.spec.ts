@@ -84,8 +84,20 @@ describe("UserManager", function(){
         })
     })
 
+    describe("List", function(){
+        it("Can list users", async()=>{
+            const response = await UM.listUsers();
+            expect(response.users.length).to.be.greaterThan(0);
+        })
+        it("Can limit list", async()=>{
+            await UM.createOrUpdateUser({userid:"fakeforTesting", handle:"fakefortesting"});
+            const response = await UM.listUsers({limit:1});
+            expect(response.users.length).to.be.equal(1);
+        })
+    })
+
     describe("Deletion", function() {
-        it("Can delete a user by user", async() => {
+        it("Can delete a user by User object", async() => {
            const user = await UM.createOrUpdateUser({
                 userid: "testuserid",
                 handle: "testuserhandle"
@@ -104,6 +116,12 @@ describe("UserManager", function(){
             expect(response.kind).to.be.equal(Kind.user);
             const users = await UM.searchUsers("testuserid2", SearchType.userid);
             expect(users.length).to.be.equal(0);
+            //cleanup from prior test
+            try {
+                UM.deleteUser({userid:"fakeforTesting", handle:"fakefortesting"});
+            } catch(e) {
+                console.log(e);
+            }
         })
     });
 
