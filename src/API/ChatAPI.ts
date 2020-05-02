@@ -49,6 +49,7 @@ export interface IRoomService extends ISportsTalkConfigurable {
     listRooms(): Promise<RoomListResponse>;
     deleteRoom(id: string | Room): Promise<DeletedRoomResponse>
     createRoom(room: Room): Promise<RoomResult>
+    updateRoom(room:RoomResult): Promise<RoomResult>
     listParticipants(room: Room, cursor?: string, maxresults?: number): Promise<Array<UserResult>>
     listUserMessages(user: User | string, Room: Room | String, cursor?: string, limit?: number): Promise<Array<EventResult>>
     joinRoom(user: User, room: Room | string): Promise<RoomUserResult>
@@ -75,6 +76,7 @@ export interface IChatClient extends IUserConfigurable, ISportsTalkConfigurable{
     getEventHandlers():EventHandlerConfig;
     createOrUpdateUser(user: User, setDefault?:boolean): Promise<User>
     getLatestEvents(): Promise<ChatUpdatesResult>,
+    updateRoom(room:RoomResult): Promise<RoomResult>
     startChat();
     stopChat();
 }

@@ -1,5 +1,5 @@
 /**
- * Models used by API Result Models.
+ * Models used by Chat API and API Responses
  */
 import {RestApiResult, Kind, User, UserResult, MessageResult, ListResponse} from "./CommonModels";
 
@@ -91,11 +91,11 @@ export interface Room {
     slug?: string,
     enableprofanityfilter?: boolean,
     delaymessageseconds?: number,
-    maxreports?: number,
     enableactions?: boolean,
-    roomisopen?: boolean,
+    roomisopen?: boolean, // allows chat
+    maxreports?: number, // defaults to 3. The number of flags it takes to add a comment to the moderation queue.
     enableenterAndexit?: boolean,
-    iframeurl?:string
+    throttle?: number //(optional) Defaults to 0. This is the number of seconds to delay new incomming messags so that the chat room doesn't scroll messages too fast.
 }
 
 export interface RoomResult extends Room {

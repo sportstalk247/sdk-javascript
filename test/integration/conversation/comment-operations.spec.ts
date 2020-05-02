@@ -167,6 +167,11 @@ describe('Comment Operations', function() {
             const approved = await ModerationClient.approveComment(acceptcomment)
             expect(approved.moderation).to.be.equal(CommentModeration.approved);
         })
+        it('can create a comment with a preset timestamp', async()=>{
+            const time =  new Date().getTime();
+            const timedcomment = await client.makeComment({body:'commentbody', added: time-10000000})
+            expect(timedcomment.added).to.be.lessThan(time);
+        })
     });
 
    describe("Comment Deletion", function(){

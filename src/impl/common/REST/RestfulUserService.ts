@@ -1,8 +1,8 @@
 import {AxiosRequestConfig} from "axios";
 import {stRequest} from "../../network";
-import {DELETE, POST} from "../../constants/api";
-import {buildAPI, getJSONHeaders, getUrlEncodedHeaders} from "../../utils";
-import {RestApiResult, SearchType, SportsTalkConfig, User, UserResult} from "../../../models/CommonModels";
+import {DELETE, GET, POST} from "../../constants/api";
+import {buildAPI, forceObjKeyOrString, formify, getJSONHeaders, getUrlEncodedHeaders} from "../../utils";
+import {RestApiResult, SearchType, SportsTalkConfig, User, UserResult, ListRequest} from "../../../models/CommonModels";
 import {IUserService} from "../../../API/CommonAPI";
 
 /**
@@ -113,5 +113,32 @@ export class RestfulUserService implements IUserService {
             headers: this._jsonHeaders,
         };
         return stRequest(config).then(response=>response.data.user);
+    }
+
+    listUsers = (request?: ListRequest): Promise<UserResult> => {
+        let query = "?";
+        if(request) {
+            query = query+ formify(request);
+        }
+        const config:AxiosRequestConfig = {
+            method: GET,
+            url: buildAPI(this._config,`${this._apiExt}/${query}`),
+            headers: this._jsonHeaders,
+        };
+        return stRequest(config).then(response=>{
+            return response.data;
+        });
+    }
+
+    getUserDetails(user: User | string): Promise<UserResult> {
+        const id = forceObjKeyOrString(user, 'userid');
+        const config:AxiosRequestConfig = {
+            method: GET,
+            url: buildAPI(this._config,`${this._apiExt}/${id}`),
+            headers: this._jsonHeaders,
+        };
+        return stRequest(config).then(response=>{
+            return response.data;
+        });
     }
 }

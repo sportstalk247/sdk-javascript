@@ -1,4 +1,4 @@
-import {Kind, ListResponse, ModerationType, ReportReason, User} from "./CommonModels";
+import {Kind, ListRequest, ListResponse, ModerationType, ReportReason, User} from "./CommonModels";
 
 export {
     Kind,
@@ -62,10 +62,6 @@ export enum ListSortDirection {
     backward    = "backward"
 }
 
-export interface ListRequest {
-    cursor?: string,
-    limit?: number
-}
 export interface CommentRequest extends ListRequest {
     sort?: CommentSortMethod | string,
     includechilden?: boolean
@@ -93,6 +89,11 @@ export enum CommentModeration {
     approved = "approved"
 }
 
+export interface SimpleComment  {
+    body: string,
+    added?: number,
+    replyto?: string
+}
 export interface Comment extends User {
     id?: string;
     conversationid?: string

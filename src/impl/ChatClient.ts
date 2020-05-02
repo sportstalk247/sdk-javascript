@@ -323,6 +323,14 @@ export class ChatClient implements IChatClient {
         return this._eventService.deleteEvent(event);
     }
 
+    createRoom = (room: Room): Promise<RoomResult> => {
+        return this._roomService.createRoom(room);
+    }
+
+    updateRoom = (room:RoomResult): Promise<RoomResult> => {
+        return this._roomService.updateRoom(room);
+    }
+
 }
 
 

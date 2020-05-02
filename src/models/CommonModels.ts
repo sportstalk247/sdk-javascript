@@ -121,3 +121,8 @@ export interface ListResponse {
     more?: boolean
     itemcount?: number
 }
+
+export interface ListRequest {
+    cursor?: string,
+    limit?: number
+}

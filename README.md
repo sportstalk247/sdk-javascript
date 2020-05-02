@@ -44,38 +44,7 @@ To use directly, we host the web SDK on our website.
  
 You can also look inside the Sportstalk package at `/dist/web-sdk.js` or use the minified version at `/dist/web-sdk.min.js`
 
-# Comments API
 
-## Getting Started
-If you are looking to build a custom conversation, you will the need the `CommentClient`, which you can get by:
-
-#### Typescript
- ```
-import { CommentClient } from 'sportstalk-sdk'
-const commentClient = CommentClient.create({appId:..., apiToken:...});
- ```
-
-#### Require
- ```
-const sdk =  require('sportstalk-sdk')
-const commentClient = sdk.CommentClient.create({appId:..., apiToken:...});
- ```
-
-## Creating a user
-One of the first things you might need to do in Sportstalk is create a user. Users are shared between chat and commenting in the same application.
-To create a user, you can use either the chat or comment clients, or a UserService (advanced). 
-
-```javascript
-const commentClient = sdk.CommentClient.create({...});
-commentClient.createUser({userid: "definedByYourSystem-MustBeUnique", handle: "Must-Be-Unique-String"})
-    .then(function(user) {
-        // user has been created.
-    }).catch(function(error) {
-        // make sure to catch and handle errors.  
-        // It is possible to have network or settings errors. 
-        // For instance if you do not set a unique handle you will get an error. 
-    })
-```
 ## A Note on Promises
 Almost all SDK functions require communication with a server.  Therefore, most methods will return a Promise.  Promises are very common but you need to be familiar with them to use the SportStalk SDK.
 
@@ -101,11 +70,44 @@ async function yourFunction() {
 }
 ```
 
+# Comments API
+
+## Getting Started
+If you are looking to build a custom conversation, you will the need the `CommentClient`, which you can get by:
+
+#### Typescript
+ ```typescript
+import { CommentClient } from 'sportstalk-sdk'
+const commentClient = CommentClient.create({appId:..., apiToken:...});
+ ```
+
+#### Require
+ ```javascript
+const sdk =  require('sportstalk-sdk')
+const commentClient = sdk.CommentClient.create({appId:..., apiToken:...});
+ ```
+
+## Creating a user
+One of the first things you might need to do in Sportstalk is create a user. Users are shared between chat and commenting in the same application.
+To create a user, you can use either the chat or comment clients, or a UserService (advanced). 
+
+```javascript
+const commentClient = sdk.CommentClient.create({...});
+commentClient.createUser({userid: "definedByYourSystem-MustBeUnique", handle: "Must-Be-Unique-String"})
+    .then(function(user) {
+        // user has been created.
+    }).catch(function(error) {
+        // make sure to catch and handle errors.  
+        // It is possible to have network or settings errors. 
+        // For instance if you do not set a unique handle you will get an error. 
+    })
+```
+
 ## Finding and joining a conversation
 Most users will want to just find and join a conversation created by an admin in the sportstalk dashboard.
 
 To list conversations, use the `listConversations()` method of the CommentsClient, like so:
-```
+```javascript
     const response = commentClient.listsConversations();
     const conversations = response.conversations; // Array of Conversation objects
     const cursor = response.cursor; // used for scrolling through long lists of conversations.
@@ -149,39 +151,207 @@ async function showJoinConversation() {
 ```
 
 ## CommentClient API
-#### getConfig(): SportsTalkConfig;
-Returns the current configuration object
-
 #### setConfig(config: SportsTalkConfig)
 Updates the client configuration. Usually you should just create a new client.
+```javascript
 
-#### createConversation (conversation: Conversation, setDefault: boolean): Promise<Conversation>
+const sdk = require('sportstalk-sdk');
+const client = sdk.CommentClient.create({ appId: 'yourappid', apiToken: token});
+client.setConfig({appId: 'newAppId', apiToken: 'newApiToken', endpoint: 'https://www.yourproxy.server'});
+
+```
+
+
+#### getConfig(): SportsTalkConfig;
+Returns the current configuration object
+```javascript
+
+const sdk = require('sportstalk-sdk');
+const client = sdk.CommentClient.create({ appId: 'yourappid', apiToken: token});
+const config = client.getConfig();
+// config will hold { appId: 'yourappid', apiToken: token, endpoint: 'https://api.sportstalk247.com/api/v3' }
+
+```
+
+#### createConversation (conversation: Conversation, setDefault: boolean)
+
+```javascript
+const sdk = require('sportstalk-sdk');
+const client = sdk.CommentClient.create({ appId, apiToken: token});
+async function createConversation() {
+      
+        try {
+            const conversation = await client.createConversation({
+                title: "My conversation",
+                property: "Optional-property-string", 
+                moderation: "pre", // can also be 'post
+                maxreports: 3, // can be as low as 0.
+                conversationisopen: true, //set to false if you don't want comments until a future point.
+            });
+        } catch(e) {
+            // Network error, permissions error, etc.  The error message will tell you what is wrong.
+        }
+        // conversation will be created or an error will be thrown.
+}
+```
+
 Create a new conversation that others can join and add comments.
 
 
-#### createOrUpdateUser (user: User, setDefault?:boolean): Promise<User>;
+#### createOrUpdateUser (user: User, setDefault?:boolean): Promise(User)
 Create a new user or update an existing one.   You need a user to be set for some operations.
 By default, setDefault is TRUE, meaning that if you create or update a user, that will be the user used for commenting.
 
+```javascript
+async function createOrUpdateUserExampleFunction() {
+    const client = sdk.CommentClient.create({ appId, apiToken: token });
+    const user = await client.createOrUpdateUser({
+            userid: "UniqueStringId", 
+            handle:"UniqueButReadable",
+            displayname: "A pretty string purely for display.",
+            pictureurl: "A full url to an image to be used by chat applications for an avatar, e.g. https://...."
+            profileurl: "A full url to a user's profile or webpage"
+    });
+    // user will be created.  if the userid already exists that user will be updated.
+}
+```
 
 #### setCurrentConversation(conversation: Conversation | string): Conversation;
 Set the current conversation for commenting.
 
+```javascript
+async function setCurrentConversationExampleFunction() {
+    const client = sdk.CommentClient.create({ appId, apiToken: token });
+    const conversation = await client.createConversation({
+        conversationid: 'my-conversation-id',
+        property: 'TEST',
+        moderation: 'pre',
+        maxreports: 3,
+        title: 'Demo conversation',
+        conversationisopen: true,
+    }, false);
+    // can also do it this way.
+    
+   let currentConversation = client.getCurrentConversation();
+   // currentConversation is Null
+   client.setCurrentConversation(conversation);
+   currentConversation = client.getCurrentConversation();
+     
+   if(currentConversation === conversation) {
+     console.log("They are the same!") // this will print.
+   }
+}
+```
 
 #### getCurrentConversation(): Conversation | null | undefined;
 Gets the current conversation.  Will be null or undefined if there is no current conversation.
 
+```javascript
+async function getCurrentConversationExampleFunction() {
+    const client = sdk.CommentClient.create({ appId, apiToken: token });
+    const conversation = await client.createConversation({
+        conversationid: 'my-conversation-id',
+        property: 'TEST',
+        moderation: 'pre',
+        maxreports: 3,
+        title: 'Demo conversation',
+        conversationisopen: true,
+    }, true);
+    // can also do it this way.
+    
+   const theSameConversation = client.getCurrentConversation();
+   if(theSameConversation === conversation) {
+     console.log("They are the same!") // this will print.
+   }
+}
+```
+
+
 #### getConversation(conversation: Conversation | string): Promise<Conversation>
 Retrieves data about a specific conversation from the server.
+
+```javascript
+async function getConversationExampleFunction() {
+    const client = sdk.CommentClient.create({ appId, apiToken: token });
+    const conversation = await client.createConversation({
+        conversationid: 'my-conversation-id',
+        property: 'TEST',
+        moderation: 'pre',
+        maxreports: 3,
+        title: 'Demo conversation',
+        conversationisopen: true,
+    }, false);
+    // can also do it this way.
+    
+   const conversationFromServer = client.getConversation('my-conversation-id');
+}
+```
 
 #### deleteConversation(conversation: Conversation | string);
 Deletes a conversation
 
+```javascript
+const sdk = require('sportstalk-sdk');
+
+async function deleteConversationExampleFunction() {
+    const client = sdk.CommentClient.create({ appId, apiToken: token });
+    const conversation = await client.createConversation({
+        conversationid: 'my-conversation-id',
+        property: 'TEST',
+        moderation: 'pre',
+        maxreports: 3,
+        title: 'Demo conversation',
+        conversationisopen: true,
+    }, false);
+    // can also do it this way.
+    
+    const deletionResponse = await client.deleteConversation(conversation);
+}
+```
+
 #### makeComment(comment: string, replyto?: Comment | string)
 Make a comment on the current conversation. Will throw an error if a conversation is not set.
+```javascript
+const sdk = require('sportstalk-sdk');
+
+async function createCommentExampleFunction() {
+    const client = sdk.CommentClient.create({ appId, apiToken: token });
+    const conversation = await client.createConversation({
+        conversationid: 'my-conversation-id',
+        property: 'TEST',
+        moderation: 'pre',
+        maxreports: 3,
+        title: 'Demo conversation',
+        conversationisopen: true,
+    }, true); // second parameter sets this as default
+    // can also do it this way.
+    client.setCurrentConversation(conversation);
+    const user = await client.createOrUpdateUser({ userid: 'someuserid', handle: 'testuser' });
+    const comment = client.makeComment('This is a comment');
+}
+```
 
 #### getComment(comment: Comment | string): Promise<Comment | null>;
 Retrieves a specific comment. The param can either be a comment object with an id or just the id.
+```javascript
+const sdk = require('sportstalk-sdk');
+
+async function getCommentExampleFunction() {
+    const client = sdk.CommentClient.create({ appId: 'yourappId', apiToken: 'your-api-token' });
+    const conversation = await client.createConversation({
+        conversationid: 'my-conversation-id',
+        property: 'TEST',
+        moderation: 'pre',
+        maxreports: 3,
+        title: 'Demo conversation',
+        conversationisopen: true,
+    }, true); // second parameter sets this as default
+    // can also do it this way.
+    client.setCurrentConversation(conversation);
+    const user = await client.createOrUpdateUser({ userid: 'someuserid', handle: 'testuser' });
+    const comment = client.makeComment('This is a comment');
+}
+```
 
 #### deleteComment(comment:Comment | string, final: boolean): Promise<CommentDeletionResponse>
 Deletes a comment

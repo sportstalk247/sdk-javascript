@@ -178,4 +178,17 @@ export class RestfulRoomService implements IRoomService {
             return <RoomExitResult> response.message
         })
     }
+
+    updateRoom = (room:RoomResult): Promise<RoomResult> => {
+        const roomId = forceObjKeyOrString(room);
+        const config:AxiosRequestConfig = {
+            method: POST,
+            url: buildAPI(this._config,`${this._apiExt}/${roomId}`),
+            headers: this._jsonHeaders,
+            data: room,
+        };
+        return stRequest(config).then(response => {
+            return <RoomResult> response.message
+        })
+    }
 }

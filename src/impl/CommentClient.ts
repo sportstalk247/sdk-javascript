@@ -5,11 +5,16 @@ import {
     Comment,
     CommentRequest,
     ConversationDeletionResponse,
-    ConversationResponse, CommentListResponse, CommentDeletionResponse, ConversationRequest, ConversationListResponse
+    ConversationResponse,
+    CommentListResponse,
+    CommentDeletionResponse,
+    ConversationRequest,
+    ConversationListResponse,
+    SimpleComment
 } from "../models/CommentsModels";
 import {RestfulCommentService} from "./comments/REST/RestfulCommentService";
 import {RestfulConversationService} from "./comments/REST/RestfulConversationService";
-import {IConversationService, ICommentService, IConversationClient} from "../API/CommentsAPI";
+import {IConversationService, ICommentService, ICommentingClient} from "../API/CommentsAPI";
 import {DEFAULT_CONFIG} from "./constants/api";
 import {RestfulUserService} from "./common/REST/RestfulUserService";
 import {IUserService} from "../API/CommonAPI";
@@ -21,7 +26,7 @@ import {IUserService} from "../API/CommonAPI";
  * NOTE: All operations can throw errors if there are network or server issues.
  * You should ensure that ALL operations that return promises have a catch block or handle errors in some way.
  */
-export class CommentClient implements IConversationClient {
+export class CommentClient implements ICommentingClient {
     private _config: SportsTalkConfig
     private _conversationService: IConversationService;
     private _commentService: ICommentService;
@@ -141,7 +146,7 @@ export class CommentClient implements IConversationClient {
      * @param comment The comment string.
      * @param replyto either the comment object to reply to or the ID as a string
      */
-    public makeComment = (comment: string, replyto?: Comment | string): Promise<Comment> => {
+    public makeComment = (comment: string | SimpleComment, replyto?: Comment | string): Promise<Comment> => {
         return this._commentService.create(comment, this._user, replyto);
     }
 

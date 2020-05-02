@@ -1,6 +1,15 @@
 /* istanbul ignore file */
 
-import {RestApiResult, ClientConfig, SearchType, SportsTalkConfig, User, UserResult, WebHook} from "../models/CommonModels";
+import {
+    RestApiResult,
+    ClientConfig,
+    SearchType,
+    SportsTalkConfig,
+    User,
+    UserResult,
+    WebHook,
+    ListRequest
+} from "../models/CommonModels";
 
 export interface ISportsTalkConfigurable {
     setConfig(config: SportsTalkConfig)
@@ -19,6 +28,8 @@ export interface IUserService extends ISportsTalkConfigurable {
     setBanStatus(user: User | string, isBanned: boolean): Promise<RestApiResult<UserResult>>
     createOrUpdateUser(user: User): Promise<UserResult>
     searchUsers(search: string, type: SearchType, limit?:number): Promise<Array<UserResult>>
+    listUsers(request?: ListRequest): Promise<UserResult>
+    getUserDetails(user: User | string): Promise<UserResult>
 }
 
 export interface IWebhookService extends ISportsTalkConfigurable {

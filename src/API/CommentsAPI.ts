@@ -13,14 +13,14 @@ import {
     User,
     CommentResponse,
     ConversationRequest,
-    ConversationListResponse
+    ConversationListResponse, SimpleComment
 } from "../models/CommentsModels";
 
 import {Reaction, SportsTalkConfig, ReportType, RestApiResult} from "../models/CommonModels";
 
 export interface ICommentService extends ISportsTalkConfigurable {
     setConversation(conversation: Conversation | string): Conversation;
-    create(comment: Comment | string, user: User, replyto?: Comment | string): Promise<Comment>;
+    create(comment: Comment | SimpleComment | string, user: User, replyto?: Comment | string): Promise<Comment>;
     getComment(comment: Comment | string): Promise<Comment | null>;
     delete(comment: Comment | string, user: User, final?: boolean): Promise<CommentDeletionResponse>
     update(comment: Comment, user: User): Promise<Comment>;
@@ -45,7 +45,7 @@ export interface ICommentModerationService extends IConfigurable {
     approveComment(comment: Comment): Promise<Comment>
 }
 
-export interface IConversationClient extends ISportsTalkConfigurable, IUserConfigurable   {
+export interface ICommentingClient extends ISportsTalkConfigurable, IUserConfigurable   {
     getConfig(): SportsTalkConfig;
     setConfig(config: SportsTalkConfig, commentManager?: ICommentService, conversationManager?: IConversationService)
     createConversation (conversation: Conversation, setDefault: boolean): Promise<Conversation>;
@@ -54,7 +54,7 @@ export interface IConversationClient extends ISportsTalkConfigurable, IUserConfi
     getCurrentConversation(): Conversation | null | undefined;
     getConversation(conversation: Conversation | string): Promise<Conversation>;
     deleteConversation(conversation: Conversation | string);
-    makeComment(comment: string, replyto?: Comment | string): Promise<Comment>;
+    makeComment(comment: string | SimpleComment | Comment, replyto?: Comment | string): Promise<Comment>;
     getComment(comment: Comment | string): Promise<Comment | null>;
     deleteComment(comment:Comment | string, final: boolean): Promise<CommentDeletionResponse>;
     updateComment(comment:Comment): Promise<Comment>;
