@@ -268,10 +268,11 @@ export class ChatClient implements IChatClient {
     /**
      * ROOM COMMANDS SECTION
      */
+
     /**
      * Send a chat command.  Usually only the first param is needed.
-     * @param command
-     * @param options
+     * @param command the chat string, which can also include admin or action commands by starting with `/` or `*`
+     * @param options the custom parameters.  See CommandOptions interface for details.
      */
     sendCommand = (command: string, options?: CommandOptions): Promise<MessageResult<CommandResponse>> => {
         return this._eventService.sendCommand(this._user, command, options);
@@ -279,9 +280,9 @@ export class ChatClient implements IChatClient {
 
     /**
      * Reply to an event
-     * @param message
-     * @param replyto
-     * @param options
+     * @param message the text that will make up the reply
+     * @param replyto the Event that is being replied to or the event ID as a string
+     * @param options custom options, will depend on your chat implementation
      */
     sendReply = (message: string, replyto: EventResult | string, options?: CommandOptions): Promise<MessageResult<CommandResponse | null>> => {
         return this._eventService.sendReply(this._user, message, replyto, options);
@@ -307,9 +308,11 @@ export class ChatClient implements IChatClient {
 
     /**
      * Send a goal event.
-     * @param message
-     * @param img
-     * @param options
+     * This is a convenience wrapper around custom messagings, if a default image is set, no further parameters are needed.
+     *
+     * @param message The message to be sent with the goal.  Defaults to GOAL!!!
+     * @param img The full url of the image to send as part of the goal, e.g. https://....
+     * @param options other custom options to send.
      */
     sendGoal = (message?:string, img?: string, options?: GoalOptions): Promise<MessageResult<CommandResponse>> => {
        return this._eventService.sendGoal(this._user,img || this._defaultGoalImage || '', message, options)
@@ -317,16 +320,27 @@ export class ChatClient implements IChatClient {
 
     /**
      * Delete an event
-     * @param event
+     * @param event the event to be deleted.
+     * @return the result of the API call.
      */
     deleteEvent = (event: EventResult | string) =>{
         return this._eventService.deleteEvent(event);
     }
 
+    /**
+     * Create a new chatroom
+     * @param room the Room object describing the room
+     * @return the Room created on the server, with a roomID.
+     */
     createRoom = (room: Room): Promise<RoomResult> => {
         return this._roomService.createRoom(room);
     }
 
+    /**
+     * Update a room that's been created.
+     * @param room An already created room with a roomId.
+     * @return the updated room information.
+     */
     updateRoom = (room:RoomResult): Promise<RoomResult> => {
         return this._roomService.updateRoom(room);
     }
