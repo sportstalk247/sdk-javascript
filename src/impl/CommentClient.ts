@@ -18,6 +18,7 @@ import {IConversationService, ICommentService, ICommentingClient} from "../API/C
 import {DEFAULT_CONFIG} from "./constants/api";
 import {RestfulUserService} from "./common/REST/RestfulUserService";
 import {IUserService} from "../API/CommonAPI";
+import {forceObjKeyOrString} from "./utils";
 
 /**
  * This is the API client for the Conversations feature.
@@ -32,6 +33,7 @@ export class CommentClient implements ICommentingClient {
     private _commentService: ICommentService;
     private _userService: IUserService
     private _user: User;
+    private _currentConversation: Conversation | string;
 
     /**
      * Creates a new Conversation Client
@@ -75,16 +77,16 @@ export class CommentClient implements ICommentingClient {
     /**
      * Set configuration.
      * @param config
-     * @param commentManager optional, for future extension by custom implementation.
-     * @param conversationManager optional, for future extension by custom implementation.
+     * @param commentService optional, for future extension by custom implementation.
+     * @param conversationService optional, for future extension by custom implementation.
      */
-    public setConfig = (config: SportsTalkConfig, commentManager?: ICommentService, conversationManager?: IConversationService) => {
+    public setConfig = (config: SportsTalkConfig, commentService?: ICommentService, conversationService?: IConversationService) => {
         this._config = Object.assign({}, DEFAULT_CONFIG, config);
-        if(!this._commentService || commentManager) {
-            this._commentService = commentManager || new RestfulCommentService()
+        if(!this._commentService || commentService) {
+            this._commentService = commentService || new RestfulCommentService()
         }
-        if(!this._conversationService || conversationManager) {
-            this._conversationService = conversationManager || new RestfulConversationService();
+        if(!this._conversationService || conversationService) {
+            this._conversationService = conversationService || new RestfulConversationService();
         }
         if(!this._userService) {
             this._userService = new RestfulUserService(this._config);
@@ -104,8 +106,9 @@ export class CommentClient implements ICommentingClient {
      */
     public createConversation = async (conversation: Conversation, setDefault: boolean = true): Promise<ConversationResponse> => {
         const created:ConversationResponse = await this._conversationService.createConversation(conversation);
+
         if(setDefault) {
-            this._commentService.setConversation(created);
+            this._currentConversation = created;
         }
         return created;
     }
@@ -114,15 +117,15 @@ export class CommentClient implements ICommentingClient {
      * Get the default comments
      * @param conversation
      */
-    public setCurrentConversation = (conversation: Conversation | string): Conversation => {
-        this._commentService.setConversation(conversation);
-        return <Conversation>this._commentService.getConversation();
+    public setCurrentConversation = (conversation: Conversation | string): Conversation | string => {
+        this._currentConversation = conversation;
+        return this._currentConversation
     }
     /**
      * Returns the current default comments
      */
-    public getCurrentConversation = (): Conversation | null => {
-        return this._commentService.getConversation();
+    public getCurrentConversation = (): Conversation | string | null => {
+       return this._currentConversation;
     }
 
     /**
@@ -147,7 +150,8 @@ export class CommentClient implements ICommentingClient {
      * @param replyto either the comment object to reply to or the ID as a string
      */
     public publishComment = (comment: string | SimpleComment, replyto?: Comment | string): Promise<Comment> => {
-        return this._commentService.createComment(comment, this._user, replyto);
+        const conversationid = forceObjKeyOrString(this._currentConversation, 'conversationid')
+        return this._commentService.createComment(conversationid, comment, this._user, replyto);
     }
 
     /**
@@ -155,7 +159,8 @@ export class CommentClient implements ICommentingClient {
      * @param comment
      */
     public getComment = (comment: Comment | string) => {
-        return this._commentService.getComment(comment);
+        const conversationid = forceObjKeyOrString(this._currentConversation, 'conversationid')
+        return this._commentService.getComment(conversationid, comment);
     }
 
     /**
@@ -178,7 +183,8 @@ export class CommentClient implements ICommentingClient {
      * @param final
      */
     public deleteComment = (comment:Comment | string, final: boolean): Promise<CommentDeletionResponse> => {
-        return this._commentService.deleteComment(comment, this._user, final);
+        const conversationid = forceObjKeyOrString(this._currentConversation, 'conversationid')
+        return this._commentService.deleteComment(conversationid, comment, this._user, final);
     }
 
     /**
@@ -187,7 +193,8 @@ export class CommentClient implements ICommentingClient {
      */
     public updateComment = (comment:Comment): Promise<Comment> => {
         // @ts-ignore
-        return this._commentService.updateComment(comment, this._user);
+        const conversationid = forceObjKeyOrString(this._currentConversation, 'conversationid')
+        return this._commentService.updateComment(conversationid, comment, this._user);
     }
 
     /**
@@ -196,7 +203,8 @@ export class CommentClient implements ICommentingClient {
      * @param reaction
      */
     public reactToComment = (comment:Comment, reaction:Reaction): Promise<Comment> => {
-        return this._commentService.react(comment, this._user, reaction);
+        const conversationid = forceObjKeyOrString(this._currentConversation, 'conversationid')
+        return this._commentService.react(conversationid, comment, this._user, reaction);
     }
 
     /**
@@ -205,7 +213,8 @@ export class CommentClient implements ICommentingClient {
      * @param vote
      */
     public voteOnComment = (comment:Comment, vote:Vote): Promise<Comment> => {
-        return this._commentService.vote(comment, this._user, vote);
+        const conversationid = forceObjKeyOrString(this._currentConversation, 'conversationid')
+        return this._commentService.vote(conversationid, comment, this._user, vote);
     }
 
     /**
@@ -214,7 +223,8 @@ export class CommentClient implements ICommentingClient {
      * @param reportType
      */
     public reportComment = (comment:Comment, reportType: ReportType): Promise<Comment> => {
-        return this._commentService.report(comment, this._user, reportType);
+        const conversationid = forceObjKeyOrString(this._currentConversation, 'conversationid')
+        return this._commentService.report(conversationid, comment, this._user, reportType);
     }
 
     /**
@@ -223,7 +233,8 @@ export class CommentClient implements ICommentingClient {
      * @param request
      */
     public getCommentReplies = (comment:Comment, request?: CommentRequest): Promise<CommentListResponse> => {
-        return this._commentService.getReplies(comment, request);
+        const conversationid = forceObjKeyOrString(this._currentConversation, 'conversationid')
+        return this._commentService.getReplies(conversationid, comment, request);
     }
 
     /**
@@ -232,8 +243,9 @@ export class CommentClient implements ICommentingClient {
      * @param conversation optional, if removed will retrieve the comments for the comments set with `setConversation()`
      */
     public getComments = (request?: CommentRequest, conversation?: Conversation): Promise<CommentListResponse> => {
+        const conversationid = forceObjKeyOrString(conversation || this._currentConversation, 'conversationid')
         // @ts-ignore
-        return this._commentService.getComments(request, conversation);
+        return this._commentService.getComments(conversationid, request);
     }
 
     /**

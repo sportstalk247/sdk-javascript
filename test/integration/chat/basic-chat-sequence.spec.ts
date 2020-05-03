@@ -2,7 +2,7 @@ import { ChatClient } from '../../../src/impl/ChatClient';
 import * as chai from 'chai';
 import {RestfulChatRoomService} from "../../../src/impl/chat/REST/RestfulChatRoomService";
 import * as dotenv from 'dotenv';
-import {SportsTalkConfig} from "../../../src/models/CommonModels";
+import {Kind, SportsTalkConfig} from "../../../src/models/CommonModels";
 import {API_SUCCESS_MESSAGE} from "../../../src/impl/constants/api";
 dotenv.config();
 
@@ -109,9 +109,10 @@ describe('BASIC Chat Sequence', function() {
         })
     })
     describe('Kill test room', function () {
-        it('can be deleted', function (done) {
+        it('Test room can be deleted', function (done) {
             rm.deleteRoom(theRoom)
                 .then(success => {
+                    expect(success.kind).to.be.equal(Kind.deletedroom);
                     done()
                 }).catch(done);
         })

@@ -60,14 +60,15 @@ describe("Event Service", ()=>{
                 expect(onChatEvent.callCount).to.be.greaterThan(0);
                 // @ts-ignore
                 chatMessage = response.data.speech;
+                await EM.stopChat();
             });
         });
         describe("onReply", ()=>{
             it("Will trigger onReply", async()=>{
                 const id = chatMessage.id;
-                const reaction = await client.sendReply("This is my reply", id)
-                const updates = <RestfulChatEventService> await client.getEventService()
-                await updates._fetchUpdatesAndTriggerCallbacks();
+                const reply = await client.sendReply("This is my reply", id)
+                const eventService = <RestfulChatEventService> await client.getEventService()
+                await eventService._fetchUpdatesAndTriggerCallbacks();
                 await delay(100);
                 const handlers = client.getEventService().getEventHandlers()
                 // @ts-ignore
@@ -79,12 +80,15 @@ describe("Event Service", ()=>{
         describe("onAdmin", ()=>{
             it("Will trigger onAdminCommand", async()=>{
                 const purge = await client.sendCommand("*purge zola chatEventUser");
-                await delay(3000);
+                const eventService = <RestfulChatEventService> await client.getEventService()
+                await eventService._fetchUpdatesAndTriggerCallbacks();
                 expect(onAdminCommand.callCount).to.be.greaterThan(0);
             })
         })
         describe('onPurge', ()=>{
             it("Will trigger onPurgeEvent", async()=>{
+                const eventService = <RestfulChatEventService> await client.getEventService()
+                await eventService._fetchUpdatesAndTriggerCallbacks();
                 expect(onPurgeEvent.callCount).to.be.greaterThan(0);
             })
         })
