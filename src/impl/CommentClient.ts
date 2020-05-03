@@ -146,7 +146,7 @@ export class CommentClient implements ICommentingClient {
      * @param comment The comment string.
      * @param replyto either the comment object to reply to or the ID as a string
      */
-    public makeComment = (comment: string | SimpleComment, replyto?: Comment | string): Promise<Comment> => {
+    public publishComment = (comment: string | SimpleComment, replyto?: Comment | string): Promise<Comment> => {
         return this._commentService.createComment(comment, this._user, replyto);
     }
 

@@ -10,7 +10,7 @@ export interface HasConversationID {
     conversationid: string,
 }
 
-export interface Conversation extends HasConversationID {
+export interface Conversation {
     conversationid: string,
     property: string,
     moderation: ModerationType,
@@ -19,6 +19,7 @@ export interface Conversation extends HasConversationID {
     title?: string,
     added?: string,
     maxcommentlen?: number,
+    enableprofanityfilter?: boolean,
     open?: boolean
     customtags? : string[]
     customtype?: string,

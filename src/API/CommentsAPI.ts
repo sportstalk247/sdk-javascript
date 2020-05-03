@@ -54,7 +54,7 @@ export interface ICommentingClient extends ISportsTalkConfigurable, IUserConfigu
     getCurrentConversation(): Conversation | null | undefined;
     getConversation(conversation: Conversation | string): Promise<Conversation>;
     deleteConversation(conversation: Conversation | string);
-    makeComment(comment: string | SimpleComment | Comment, replyto?: Comment | string): Promise<Comment>;
+    publishComment(comment: string | SimpleComment | Comment, replyto?: Comment | string): Promise<Comment>;
     getComment(comment: Comment | string): Promise<Comment | null>;
     deleteComment(comment:Comment | string, final: boolean): Promise<CommentDeletionResponse>;
     updateComment(comment:Comment): Promise<Comment>;

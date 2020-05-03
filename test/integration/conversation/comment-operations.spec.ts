@@ -74,7 +74,7 @@ describe('Comment Operations', function() {
         it("React", async ()=>{
             try {
                 const conv = await client2.createConversation(conversation, true)
-                resp = await client2.makeComment("This is my comment")
+                resp = await client2.publishComment("This is my comment")
                 expect(resp.body).to.be.equal("This is my comment");
                 // @ts-ignore
                 const response:CommentResponse = await client.reactToComment(resp, Reaction.like);
@@ -86,7 +86,7 @@ describe('Comment Operations', function() {
         });
         it("Reply", async()=>{
             try {
-                const reply = await client.makeComment("I'm replying", resp);
+                const reply = await client.publishComment("I'm replying", resp);
                 commentary = await client.getComments();
                 expect(commentary.comments.length).to.be.greaterThan(0);
                 const replylist: CommentListResponse = await client.getCommentReplies(resp);
@@ -124,7 +124,7 @@ describe('Comment Operations', function() {
 
    describe("User flags comment", function() {
        it("Let's User2 flag User1's comment", async ()=> {
-           await client.makeComment("This is user1 comment");
+           await client.publishComment("This is user1 comment");
            const commentary = await client2.getComments();
            expect(commentary.comments.length).to.be.greaterThan(0);
            await client2.reportComment(commentary.comments[0], ReportType.abuse)
@@ -142,7 +142,7 @@ describe('Comment Operations', function() {
         let rejectcomment;
         let acceptcomment;
         it("Let's User2 flag User1's comment", async ()=> {
-            rejectcomment = await client.makeComment("This is user1 comment to update");
+            rejectcomment = await client.publishComment("This is user1 comment to update");
             const newComment = Object.assign({}, rejectcomment, {body: "UPDATED"});
             const updated = await client.updateComment(newComment);
             expect(updated.body).to.be.equal("UPDATED");
@@ -160,7 +160,7 @@ describe('Comment Operations', function() {
             expect(moderated.moderation).to.be.equal(CommentModeration.rejected);
         })
         it('Can create a comment that gets accepted', async()=>{
-            acceptcomment = await client.makeComment("This is user1 comment to update");
+            acceptcomment = await client.publishComment("This is user1 comment to update");
             await client2.reportComment(acceptcomment, ReportType.abuse);
             const newqueue = await ModerationClient.getModerationQueue();
             expect(newqueue.comments.length).to.be.greaterThan(0);
@@ -169,21 +169,21 @@ describe('Comment Operations', function() {
         })
         it('can create a comment with a preset timestamp', async()=>{
             const time =  new Date().getTime();
-            const timedcomment = await client.makeComment({body:'commentbody', added: time-10000000})
+            const timedcomment = await client.publishComment({body:'commentbody', added: time-10000000})
             expect(timedcomment.added).to.be.lessThan(time);
         })
     });
 
    describe("Comment Deletion", function(){
        it("Lets a user delete their comment", async ()=>{
-           const comment = await client.makeComment("Delete me");
+           const comment = await client.publishComment("Delete me");
            const deleted =  await client.deleteComment(comment, true);
            expect(deleted.kind).to.be.equal(Kind.deletedcomment);
            const exists = await client.getComment(comment);
            expect(exists).to.be.null;
        })
        it("Lets a user mark their comment for deletion", async ()=>{
-           const comment = await client.makeComment("Delete me v2");
+           const comment = await client.publishComment("Delete me v2");
            const deleted =  await client.deleteComment(comment, false);
            expect(deleted.kind).to.be.equal(Kind.deletedcomment);
            // @ts-ignore

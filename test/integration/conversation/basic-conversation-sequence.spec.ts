@@ -87,7 +87,7 @@ describe('BASIC Conversation Sequence', function() {
     describe("User joins Conversation", function() {
         it("Lets user 2 join", function(done){
             client2.setCurrentConversation(conversation);
-            return client2.makeComment("This is my comment")
+            return client2.publishComment("This is my comment")
                 .then(resp=>{
                     expect(resp.body).to.be.equal("This is my comment");
                     done();
@@ -100,7 +100,7 @@ describe('BASIC Conversation Sequence', function() {
 
    describe("User Interaction", function() {
        it("Let's User1 comment", function(done){
-           client.makeComment("This is user1 comment")
+           client.publishComment("This is user1 comment")
                .then(()=>client2.getComments())
                .then((commentary)=>{
                    expect(commentary.comments.length).to.be.greaterThan(0);
