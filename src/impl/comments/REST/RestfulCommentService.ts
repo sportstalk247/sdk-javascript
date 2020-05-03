@@ -40,7 +40,6 @@ export class RestfulCommentService implements ICommentService {
     private _conversation: Conversation;
     private _apiHeaders: ApiHeaders;
     private _jsonHeaders: ApiHeaders;
-    private _conversationId: string;
     private _apiExt:string = 'comment/conversations';
 
     /**
@@ -48,10 +47,7 @@ export class RestfulCommentService implements ICommentService {
      * @param config
      * @param conversation
      */
-    constructor(config?: ClientConfig, conversation?: Conversation) {
-        if(conversation) {
-            this.setConversation(conversation);
-        }
+    constructor(config?: ClientConfig) {
         if(config) {
             this.setConfig(config);
         }
@@ -62,24 +58,11 @@ export class RestfulCommentService implements ICommentService {
      * @param config
      * @param conversation
      */
-    public setConfig = (config: SportsTalkConfig, conversation?: Conversation): SportsTalkConfig => {
+    public setConfig = (config: SportsTalkConfig): SportsTalkConfig => {
         this._config = config;
         this._apiHeaders = getUrlEncodedHeaders(this._config.apiToken)
         this._jsonHeaders = getJSONHeaders(this._config.apiToken);
-        if(conversation) {
-            this.setConversation(conversation);
-        }
         return config;
-    }
-
-    /**
-     * Set the comments we will be joining.
-     * @param conversation
-     */
-    public setConversation = (conversation: Conversation): Conversation => {
-        this._conversation = conversation;
-        this._conversationId = getUrlConversationId(conversation);
-        return this._conversation;
     }
 
     /**
@@ -96,15 +79,9 @@ export class RestfulCommentService implements ICommentService {
         }
     }
 
-    /**
-     * Ensure we've joined a comments before we allow operations
-     * @param message
-     * @private
-     */
-    private _requireConversation = (message?:string) => {
-        if(!this._conversationId) {
-            /* istanbul ignore next */
-            throw new SettingsError(message || NO_CONVERSATION_SET);
+    private _requireConversationId = (id:string) => {
+        if(!id) {
+            throw new ValidationError(NO_CONVERSATION_SET);
         }
     }
 
@@ -134,16 +111,16 @@ export class RestfulCommentService implements ICommentService {
      * @param user
      * @param replyto
      */
-    public createComment = (comment: Comment | string, user?: User, replyto?: Comment | string): Promise<Comment> => {
+    public createComment = (conversationId:string , comment: Comment | string, user?: User, replyto?: Comment | string): Promise<Comment> => {
+        this._requireConversationId(conversationId);
         // @ts-ignore
         const replyid: Comment | string = replyto || comment.replyto;
         this._requireUser(user || comment );
-        this._requireConversation();
         const finalComment = this._buildUserComment(comment, user);
         if(!replyid) {
-            return this._makeComment(finalComment);
+            return this._makeComment(conversationId, finalComment);
         }
-        return this._makeReply(finalComment, replyid);
+        return this._makeReply(conversationId, finalComment, replyid);
     }
 
     /**
@@ -151,10 +128,10 @@ export class RestfulCommentService implements ICommentService {
      * @param comment
      * @private
      */
-    private _makeComment = (comment: Comment): Promise<Comment> => {
+    private _makeComment = (conversationId:string, comment: Comment): Promise<Comment> => {
         const config:AxiosRequestConfig = {
             method: POST,
-            url: buildAPI(this._config, `${this._apiExt}/${this._conversationId}/comments`),
+            url: buildAPI(this._config, `${this._apiExt}/${conversationId}/comments`),
             headers: this._jsonHeaders,
             data: comment
         }
@@ -169,7 +146,7 @@ export class RestfulCommentService implements ICommentService {
      * @param replyTo
      * @private
      */
-    private _makeReply = (comment: Comment, replyTo: Comment | string): Promise<Comment> => {
+    private _makeReply = (conversationId: string, comment: Comment, replyTo: Comment | string): Promise<Comment> => {
         // @ts-ignore
         const replyId = replyTo.id || replyTo || comment.replyto;
         if(!replyId || !(typeof replyId === 'string')) {
@@ -177,13 +154,11 @@ export class RestfulCommentService implements ICommentService {
         }
         const config: AxiosRequestConfig = {
             method: POST,
-            url: buildAPI(this._config, `${this._apiExt}/${this._conversationId}/comments/${replyId}`),
+            url: buildAPI(this._config, `${this._apiExt}/${conversationId}/comments/${replyId}`),
             headers: this._jsonHeaders,
-            data: {
-                body: comment.body,
-                userid: comment.userid
-            }
+            data: comment
         }
+
         return stRequest(config).then(result=>{
             return result.data;
         }).catch(e=>{
@@ -195,13 +170,12 @@ export class RestfulCommentService implements ICommentService {
      * Get a specific comment.
      * @param comment
      */
-    public getComment = (comment: Comment | string): Promise<Comment | null> => {
-        // @ts-ignore
-        this._requireConversation();
+    public getComment = ( conversationId: string, comment: Comment | string,): Promise<Comment | null> => {
+        this._requireConversationId(conversationId);
         const id = getUrlCommentId(comment);
         const config: AxiosRequestConfig = {
             method: GET,
-            url: buildAPI(this._config, `${this._apiExt}/${this._conversationId}/comments/${id}`),
+            url: buildAPI(this._config, `${this._apiExt}/${conversationId}/comments/${id}`),
             headers: this._jsonHeaders,
         }
         return stRequest(config).then(result=>{
@@ -220,12 +194,11 @@ export class RestfulCommentService implements ICommentService {
      * @param user
      * @private
      */
-    private _finalDelete = async (comment: Comment | string, user:User): Promise<CommentDeletionResponse> => {
-        this._requireConversation();
+    private _finalDelete = async (conversationId: string,comment: Comment | string, user:User): Promise<CommentDeletionResponse> => {
         const id = getUrlCommentId(comment);
         const config:AxiosRequestConfig = {
             method: DELETE,
-            url: buildAPI(this._config, `${this._apiExt}/${this._conversationId}/comments/${id}`),
+            url: buildAPI(this._config, `${this._apiExt}/${conversationId}/comments/${id}`),
             headers: this._jsonHeaders,
         }
         const result = await stRequest(config);
@@ -238,13 +211,13 @@ export class RestfulCommentService implements ICommentService {
      * @param user
      * @private
      */
-    private _markDeleted = async (comment: Comment | string, user:User): Promise<CommentDeletionResponse> => {
+    private _markDeleted = async (conversationId: string, comment: Comment | string, user:User,): Promise<CommentDeletionResponse> => {
         this._requireUser(user);
         const id = getUrlCommentId(comment);
         /* istanbul ignore next */
         const config:AxiosRequestConfig = {
             method: PUT,
-            url: buildAPI(this._config, `${this._apiExt}/${this._conversationId}/comments/${id}/setdeleted?userid=${user.userid}&deleted=true&permanentifnoreplies=false`),
+            url: buildAPI(this._config, `${this._apiExt}/${conversationId}/comments/${id}/setdeleted?userid=${user.userid}&deleted=true&permanentifnoreplies=false`),
             headers: this._jsonHeaders,
         }
 
@@ -267,23 +240,24 @@ export class RestfulCommentService implements ICommentService {
      * @param user
      * @param final
      */
-    public deleteComment = (comment: Comment | string, user: User, final?: boolean): Promise<CommentDeletionResponse> => {
+    public deleteComment = (conversationId: string, comment: Comment | string, user: User, final?: boolean): Promise<CommentDeletionResponse> => {
+        this._requireConversationId(conversationId);
         if(final) {
-            return this._finalDelete(comment, user);
+            return this._finalDelete( conversationId, comment, user);
         }
-        return this._markDeleted(comment, user);
+        return this._markDeleted(conversationId, comment, user);
     }
 
     /**
      * Update a comment
      * @param comment
      */
-    public updateComment = (comment: Comment): Promise<Comment> => {
-        this._requireConversation();
+    public updateComment = ( conversationId: string, comment: Comment): Promise<Comment> => {
+        this._requireConversationId(conversationId);
         const id = getUrlCommentId(comment);
         return stRequest({
             method: PUT,
-            url: buildAPI(this._config,`${this._apiExt}/${this._conversationId}/comments/${id}`),
+            url: buildAPI(this._config,`${this._apiExt}/${conversationId}/comments/${id}`),
             headers: this._jsonHeaders,
             data: {
                 body: comment.body,
@@ -299,8 +273,8 @@ export class RestfulCommentService implements ICommentService {
      * @param reaction The reaction type.  Currently only "like" is supported and built-in.
      * @param enable Whether the reaction should be toggled on or off, defaults to true.
      */
-    public react = (comment:Comment | string, user:User, reaction:Reaction, enable = true): Promise<Comment> => {
-        this._requireConversation();
+    public react = (conversationId: string, comment:Comment | string, user:User, reaction:Reaction,enable = true): Promise<Comment> => {
+        this._requireConversationId(conversationId);
         this._requireUser(user);
         const id = getUrlCommentId(comment);
         const data = {
@@ -310,7 +284,7 @@ export class RestfulCommentService implements ICommentService {
         }
         const config:AxiosRequestConfig = {
             method: POST,
-            url: buildAPI(this._config, `${this._apiExt}/${this._conversationId}/comments/${id}/react`),
+            url: buildAPI(this._config, `${this._apiExt}/${conversationId}/comments/${id}/react`),
             headers: this._jsonHeaders,
             data
         }
@@ -325,13 +299,13 @@ export class RestfulCommentService implements ICommentService {
      * @param user
      * @param vote
      */
-    public vote = (comment: Comment, user:User, vote:Vote): Promise<Comment> => {
-        this._requireConversation();
+    public vote = ( conversationId: string, comment: Comment, user:User, vote:Vote): Promise<Comment> => {
+        this._requireConversationId(conversationId);
         this._requireUser(user);
         const id = getUrlCommentId(comment);
         return stRequest({
             method: POST,
-            url: buildAPI(this._config, `${this._apiExt}/${this._conversationId}/comments/${id}/vote`),
+            url: buildAPI(this._config, `${this._apiExt}/${conversationId}/comments/${id}/vote`),
             headers: this._jsonHeaders,
             data: {
                 vote: vote,
@@ -348,13 +322,13 @@ export class RestfulCommentService implements ICommentService {
      * @param user
      * @param reporttype
      */
-    public report = (comment: Comment, user:User, reporttype: ReportType): Promise<Comment> => {
-        this._requireConversation();
+    public report = ( conversationId: string, comment: Comment, user:User, reporttype: ReportType): Promise<Comment> => {
+        this._requireConversationId(conversationId);
         this._requireUser(user)
         const id = getUrlCommentId(comment);
         return stRequest({
             method: POST,
-            url: buildAPI(this._config, `${this._apiExt}/${this._conversationId}/comments/${id}/report`),
+            url: buildAPI(this._config, `${this._apiExt}/${conversationId}/comments/${id}/report`),
             headers: this._jsonHeaders,
             data: {
                 reporttype: reporttype,
@@ -370,13 +344,13 @@ export class RestfulCommentService implements ICommentService {
      * @param comment
      * @param request
      */
-    public getReplies = (comment: Comment, request?: CommentRequest): Promise<CommentListResponse> =>{
-        this._requireConversation();
+    public getReplies = (conversationId: string, comment: Comment, request?: CommentRequest): Promise<CommentListResponse> =>{
+        this._requireConversationId(conversationId);
         const id = getUrlCommentId(comment);
         const requestString = formify(request);
         return stRequest({
             method: GET,
-            url: buildAPI(this._config, `${this._apiExt}/${this._conversationId}/comments/${id}/replies/?${requestString}`),
+            url: buildAPI(this._config, `${this._apiExt}/${conversationId}/comments/${id}/replies/?${requestString}`),
             headers: this._jsonHeaders,
             data: request
         }).then(result=>{
@@ -392,14 +366,12 @@ export class RestfulCommentService implements ICommentService {
      * @param request
      * @param conversation
      */
-    public getComments = (request?: CommentRequest, conversation?: Conversation): Promise<CommentListResponse>=> {
+    public getComments = (conversation: Conversation | string, request?: CommentRequest): Promise<CommentListResponse>=> {
         if(!conversation) {
-            this._requireConversation(MUST_SPECIFY_CONVERSATION);
+            throw new ValidationError(MUST_SPECIFY_CONVERSATION);
         }
-        const id = conversation ? getUrlConversationId(conversation) : this._conversationId;
-        if(!id) {
-           throw new SettingsError(NO_CONVERSATION_SET);
-        }
+        const id = getUrlConversationId(conversation);
+        this._requireConversationId(id);
         const config: AxiosRequestConfig = {
             method: GET,
             url: buildAPI(this._config, `${this._apiExt}/${id}/comments`, request),

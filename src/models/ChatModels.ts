@@ -52,6 +52,9 @@ export interface DeletedRoomResponse {
 }
 
 export interface CommandResponse {
+    kind: Kind.chatcommand,
+    op: string,
+    room?: RoomResult,
     speech?: Event
 }
 
@@ -141,6 +144,10 @@ export interface EventListResponse extends ListResponse {
     events: Array<EventResult>
 }
 
+
+export enum EventModerationState {
+    na = "na"
+}
 /**
  * An EventResult is created whenever a chat event is accepted by a server, and represents the event model returned by the API.
  */
@@ -150,7 +157,9 @@ export interface EventResult {
     roomid: string, // The ID of the room to which the event was sent.
     added: number, // Unix timestamp for when event was added.
     ts: number, // a millisecond level timestamp. Used for evaluating relative times between events. Do not rely on this as a true time value, use added.
-    body: string, //
+    body: string, // Chat text
+    active?: boolean,
+    moderation?: EventModerationState,
     eventtype: EventType, // speech, purge, etc. Can hold custom types beyond those in the enum. The enum contains only system types.
     userid:string // the ID of the user who created the event.
     user: UserResult // the User object who created the event

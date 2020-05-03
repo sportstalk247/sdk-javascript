@@ -87,7 +87,7 @@ describe('BASIC Conversation Sequence', function() {
     describe("User joins Conversation", function() {
         it("Lets user 2 join", function(done){
             client2.setCurrentConversation(conversation);
-            return client2.publishComment("This is my comment")
+            client2.publishComment("This is my comment")
                 .then(resp=>{
                     expect(resp.body).to.be.equal("This is my comment");
                     done();
@@ -110,9 +110,14 @@ describe('BASIC Conversation Sequence', function() {
        })
    });
    describe('Delete Conversation', function () {
-       it('Deletes Conversation', async function (done) {
-           await client.deleteConversation(	 "TEST_ITEM");
-           await client.deleteConversation('TEST_ITEM_CLOSED');
+       it('Deletes Conversation by id', async function () {
+           // test by id
+           return await client.deleteConversation(	 "TEST_ITEM");
+
+       })
+       it('Deletes Conversation by object', async function () {
+           // test by object
+           return await client.deleteConversation(closedconversation);
        })
    });
 });

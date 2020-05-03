@@ -31,36 +31,37 @@ describe('Post moderation Sequence', function() {
     mod = new RestfulChatModerationService(config);
     const rm = new RestfulChatRoomService(config);
 
-    it('Can create a room, join the room, moderate messages, kill room', (done) => {
-       rm.createRoom({
-           enableprofanityfilter: false,
-           name: "post moderation test room",
-           slug: "post-test-room"+new Date().getTime(),
-           maxreports: 0,
-           moderation: ModerationType.post
-       }).then(room=>{
-        //  console.log('POST Created room');
-           roomid = room.id;
-           expect(room.moderation).to.be.equal(ModerationType.post)
-           return room;
-       }).then(async(room)=> {
-           const user1  = await client.createOrUpdateUser({
-               userid: 'testsequence',
-               handle: 'test'
-           });
-           await client.setUser(user1);
-           const user2 = await client2.createOrUpdateUser({
-               userid:"testsequence2", handle:"tester"
-           });
-           client2.setUser(user2);
-           const user3 = await client3.createOrUpdateUser({
-               userid:"testsequence3", handle:"tester3"
-           });
-           client3.setUser(user3);
-       }).then(async (resp)=>{
-         //  console.log("POST created user")
-           return Promise.all([client.joinRoom(roomid),client2.joinRoom(roomid), client3.joinRoom(roomid)])
-       }).then(()=>{
+    it('Can create a room, and users', (done) => {
+        rm.createRoom({
+            enableprofanityfilter: false,
+            name: "post moderation test room",
+            slug: "post-test-room" + new Date().getTime(),
+            maxreports: 0,
+            moderation: ModerationType.post
+        }).then(room => {
+            //  console.log('POST Created room');
+            roomid = room.id;
+            expect(room.moderation).to.be.equal(ModerationType.post)
+            return room;
+        }).then(async (room) => {
+            const user1 = await client.createOrUpdateUser({
+                userid: 'testsequence',
+                handle: 'test'
+            });
+            await client.setUser(user1);
+            const user2 = await client2.createOrUpdateUser({
+                userid: "testsequence2", handle: "tester"
+            });
+            client2.setUser(user2);
+            const user3 = await client3.createOrUpdateUser({
+                userid: "testsequence3", handle: "tester3"
+            });
+            client3.setUser(user3);
+            done();
+        })
+    });
+    it('Lets 3 clients join same room and chat', function(done) {
+       Promise.all([client.joinRoom(roomid),client2.joinRoom(roomid), client3.joinRoom(roomid)]).then((rooms)=>{
          //  console.log("JOINED room")
            return client.sendCommand('Test message')
        }).then((message)=>{

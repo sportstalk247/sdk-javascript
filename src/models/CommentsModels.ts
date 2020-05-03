@@ -95,7 +95,7 @@ export enum CommentModeration {
 
 export interface SimpleComment  {
     body: string,
-    added?: number,
+    added?: string, // ISO 8601 timestampe, e.g. 2020-03-02T00:00:00Z
     replyto?: string
 }
 export interface Comment extends User {
@@ -107,7 +107,7 @@ export interface Comment extends User {
     replycount?: number,
     reactions?: Array<any>,
     active?: boolean,
-    added: string,
+    added?: string,
     modified?: number,
     deleted?: boolean,
     commenttype?: CommentType,

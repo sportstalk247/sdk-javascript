@@ -51,6 +51,8 @@ const ID_DICTIONARY = {
 
 }
 
+let adapted:Conversation;
+
 function conversationFormatAdapter(conversationToMigrate): Conversation {
     // Add code here to migrate a comments and return the Conversation object.
     return conversationToMigrate;
@@ -73,18 +75,20 @@ describe('comments Migration', function() {
     let createdConversation:Conversation;
 
     describe('Create Conversation', function () {
-        it('Uses the REST service to create a new comments', async ()  => {
-            const conversation = conversationFormatAdapter(testconversation)
+        it('Uses the REST service to create a new conversation', async ()  => {
+            // @ts-ignore
+            adapted = conversationFormatAdapter(testconversation)
             // creates the comments and sets the client to aim at this by default.
-            createdConversation = await conversationService.createConversation(conversation)
-            commentService.setConversation(conversation);
+            // @ts-ignore
+            createdConversation = await conversationService.createConversation(adapted)
+            expect(createdConversation.conversationid).to.be.equal(testconversation.conversationid);
         })
     });
     describe("Migrate comments", function() {
         it("Lets us migrate comments", async () => {
             // This won't scale to thousands because it launches everything in parallel, but will show how to use the REST client.
             const uploads = commentList.map(comment=> {
-               return commentService.createComment(comment);
+               return commentService.createComment(testconversation.conversationid, comment);
             })
             const created = await Promise.all(uploads);
             expect(created.length).to.be.equal(commentList.length);
@@ -92,7 +96,7 @@ describe('comments Migration', function() {
     })
 
     describe('Cleanup', function () {
-        it('Use the REST client to delete comments', async () => {
+        it('Use the REST client to delete conversation', async () => {
             await conversationService.deleteConversation(testconversation);
         })
     });

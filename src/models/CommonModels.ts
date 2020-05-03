@@ -30,6 +30,7 @@ export enum Kind {
     user = "app.user",
     api = "api.result",
     webhook = "chat.webhook",
+    chatcommand = "chat.executecommand",
     conversation = "comment.conversation",
     deletedconversation = "delete.conversation",
     comment = "comment.comment",
@@ -83,7 +84,8 @@ export enum ReportType {
 }
 
 export interface ReportReason {
-    reporttype: ReportType,
+    reporttype?: ReportType
+    reason?: ReportType,
     userid: string
 }
 
