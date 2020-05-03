@@ -89,7 +89,7 @@ describe("UserManager", function(){
             const response = await UM.listUsers();
             expect(response.users.length).to.be.greaterThan(0);
         })
-        it("Can ", async()=>{
+        it("Can limit the list length", async()=>{
             await UM.createOrUpdateUser({userid:"fakeforTesting", handle:"fakefortesting"});
             const response = await UM.listUsers({limit:1});
             expect(response.users.length).to.be.equal(1);
