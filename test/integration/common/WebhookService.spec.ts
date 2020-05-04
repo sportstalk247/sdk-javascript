@@ -9,7 +9,7 @@ let posthook:WebHook;
 let prehook:WebHook;
 // @ts-ignore
 const config: SportsTalkConfig = {apiToken:process.env.TEST_KEY, appId: process.env.TEST_APP_ID, endpoint: process.env.TEST_ENDPOINT};
-describe("Webhook Manager", function(){
+describe("Webhook Service", function(){
     const HookManager = new RestfulWebhookService(  config);
 
     describe("Creation", function() {
@@ -48,7 +48,7 @@ describe("Webhook Manager", function(){
                 enabled: true,
                 type: WebhookType.prepublish,
                 events: [
-                    WebhookEvent.chatspeech,
+                    WebhookEvent.chatroomopened,
                 ]
             }).then(resp=>{
                 prehook = resp;
@@ -84,7 +84,8 @@ describe("Webhook Manager", function(){
     describe("List", function(){
         it("Can list hookss", done=>{
            HookManager.listWebhooks().then(resp=>{
-               expect(resp.length).to.be.greaterThan(0);
+               expect(resp.webhooks.length).to.be.greaterThan(0);
+               expect(resp)
                done();
            }).catch(e=>{
                done(e);
@@ -99,13 +100,13 @@ describe("Webhook Manager", function(){
                     hook = await HookManager.deleteWebhook(prehook);
                     expect(hook.kind).to.be.equal(Kind.webhook);
                     const listsofhooks = await HookManager.listWebhooks();
-                    const found = listsofhooks.find(webhook => webhook.id === hook.id);
+                    const found = listsofhooks.webhooks.find(webhook => webhook.id === hook.id);
                     expect(!found).to.be.true;
                 }
                 if (posthook) {
                     hook = await HookManager.deleteWebhook(posthook)
                     const listsofhooks = await HookManager.listWebhooks();
-                    const found = listsofhooks.find(webhook => webhook.id === hook.id);
+                    const found = listsofhooks.webhooks.find(webhook => webhook.id === hook.id);
                     expect(!found).to.be.true;
                 }
             }catch(e) {

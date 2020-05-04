@@ -141,6 +141,11 @@ export interface UserListResponse extends ListResponse {
     users: UserResult[]
 }
 
+export interface UserDeletionResponse {
+    user: UserResult,
+    kind: Kind.deleteduser
+}
+
 export interface WebhookListResponse extends ListResponse {
     webhooks: WebHook[]
 }

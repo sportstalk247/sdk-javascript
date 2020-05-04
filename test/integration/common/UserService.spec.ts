@@ -12,12 +12,12 @@ const config: SportsTalkConfig = {apiToken:process.env.TEST_KEY, appId: process.
 describe("UserManager", function(){
     const UM = new RestfulUserService(  config);
     const RM = new RestfulChatRoomService(  config);
-
+    const userid = "107AC57E-85ED-4E1D-BDAF-2533CD3872EB"
     let user;
     describe("Creation", function() {
         it("Can create a user", done => {
             UM.createOrUpdateUser({
-                userid: "testuserid",
+                userid: userid,
                 handle: "testuserhandle",
                 displayname: "someuser"
             }).then(u=>{
@@ -42,14 +42,14 @@ describe("UserManager", function(){
             }).catch(done)
         })
         it("Can ban the user with id", done=>{
-            UM.setBanStatus("testuserid", true).then(res=>{
+            UM.setBanStatus(userid, true).then(res=>{
                 user = res.data;
                 expect(user.banned).to.be.true;
                 done();
             }).catch(done);
         })
         it("Can unban the user with id", done=>{
-            UM.setBanStatus("testuserid", false).then(res=>{
+            UM.setBanStatus(userid, false).then(res=>{
                 user = res.data;
                 expect(user.banned).to.be.false;
                 done();
@@ -59,7 +59,7 @@ describe("UserManager", function(){
     })
     describe("Search", function() {
         it("Can search by userid", async()=>{
-           const results = await UM.searchUsers("testuserid", UserSearchType.userid)
+           const results = await UM.searchUsers(userid, UserSearchType.userid)
            expect(results.users.length).to.be.equal(1);
         })
         it("Can search by name", async()=>{
@@ -100,12 +100,12 @@ describe("UserManager", function(){
     describe("Deletion", function() {
         it("Can delete a user by User object", async() => {
            const user = await UM.createOrUpdateUser({
-                userid: "testuserid",
+                userid: userid,
                 handle: "testuserhandle"
             });
            const response = await UM.deleteUser(user);
-           expect(response.kind).to.be.equal(Kind.user);
-           const resp = await UM.searchUsers("testuserid", UserSearchType.userid);
+           expect(response.user.kind).to.be.equal(Kind.user);
+           const resp = await UM.searchUsers(userid, UserSearchType.userid);
            expect(resp.users.length).to.be.equal(0);
         })
         it("Can delete a user by id", async() => {
@@ -114,7 +114,7 @@ describe("UserManager", function(){
                 handle: "testuserhandle"
             });
             const response = await UM.deleteUser("testuserid2");
-            expect(response.kind).to.be.equal(Kind.user);
+            expect(response.user.kind).to.be.equal(Kind.user);
             const users = await UM.searchUsers("testuserid2", UserSearchType.userid);
             expect(users.users.length).to.be.equal(0);
             //cleanup from prior test

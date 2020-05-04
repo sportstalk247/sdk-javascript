@@ -9,7 +9,7 @@ import {
     User,
     UserResult,
     ListRequest,
-    ListResponse, UserListResponse
+    ListResponse, UserListResponse, UserDeletionResponse
 } from "../../../models/CommonModels";
 import {IUserService} from "../../../API/CommonAPI";
 
@@ -112,7 +112,7 @@ export class RestfulUserService implements IUserService {
      * Delete a user
      * @param user
      */
-    deleteUser = (user:User | string):Promise<UserResult> => {
+    deleteUser = (user:User | string):Promise<UserDeletionResponse> => {
         // @ts-ignore
         const id = user.userid || user;
         const config:AxiosRequestConfig = {
@@ -120,7 +120,7 @@ export class RestfulUserService implements IUserService {
             url: buildAPI(this._config,`${this._apiExt}/${id}`),
             headers: this._jsonHeaders,
         };
-        return stRequest(config).then(response=>response.data.user);
+        return stRequest(config).then(response=>response.data);
     }
 
     listUsers = (request?: ListRequest): Promise<UserListResponse> => {
