@@ -4,7 +4,7 @@ import {DELETE, GET, POST} from "../../constants/api";
 import {buildAPI, forceObjKeyOrString, formify, getJSONHeaders, getUrlEncodedHeaders} from "../../utils";
 import {
     RestApiResult,
-    SearchType,
+    UserSearchType,
     SportsTalkConfig,
     User,
     UserResult,
@@ -82,18 +82,18 @@ export class RestfulUserService implements IUserService {
      * @param search
      * @param type
      */
-    searchUsers = (search:string, type: SearchType): Promise<UserListResponse> => {
+    searchUsers = (search:string, type: UserSearchType): Promise<UserListResponse> => {
         const url = buildAPI(this._config,`user/search`);
         const data:any = {
             type: type,
         }
-        if(!type || type === SearchType.handle) {
+        if(!type || type === UserSearchType.handle) {
             data.handle = search;
         }
-        if(type=== SearchType.userid)  {
+        if(type=== UserSearchType.userid)  {
             data.userid = search;
         }
-        if(type === SearchType.name) {
+        if(type === UserSearchType.name) {
             data.name = search;
         }
         const config:AxiosRequestConfig = {

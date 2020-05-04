@@ -3,12 +3,12 @@
 import {
     RestApiResult,
     ClientConfig,
-    SearchType,
+    UserSearchType,
     SportsTalkConfig,
     User,
     UserResult,
     WebHook,
-    ListRequest, UserListResponse
+    ListRequest, UserListResponse, WebhookListResponse
 } from "../models/CommonModels";
 
 export interface ISportsTalkConfigurable {
@@ -27,13 +27,13 @@ export interface IUserConfigurable {
 export interface IUserService extends ISportsTalkConfigurable {
     setBanStatus(user: User | string, isBanned: boolean): Promise<RestApiResult<UserResult>>
     createOrUpdateUser(user: User): Promise<UserResult>
-    searchUsers(search: string, type: SearchType, limit?:number): Promise<UserListResponse>
+    searchUsers(search: string, type: UserSearchType, limit?:number): Promise<UserListResponse>
     listUsers(request?: ListRequest): Promise<UserListResponse>
     getUserDetails(user: User | string): Promise<UserResult>
 }
 
 export interface IWebhookService extends ISportsTalkConfigurable {
-    listWebhooks(): Promise<WebHook[]>;
+    listWebhooks(): Promise<WebhookListResponse>
     createWebhook(hook: WebHook): Promise<WebHook>;
     updateWebhook(hook: WebHook): Promise<WebHook>;
     deleteWebhook(hook: WebHook | string): Promise<WebHook>;

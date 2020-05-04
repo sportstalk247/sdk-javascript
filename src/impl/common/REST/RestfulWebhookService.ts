@@ -1,7 +1,7 @@
 import {AxiosRequestConfig} from "axios";
 import {buildAPI, getJSONHeaders} from "../../utils";
 import {DEFAULT_CONFIG, DELETE, GET, POST, PUT} from "../../constants/api";
-import {SportsTalkConfig, WebHook} from "../../../models/CommonModels";
+import {SportsTalkConfig, WebHook, WebhookListResponse} from "../../../models/CommonModels";
 import {IWebhookService} from "../../../API/CommonAPI";
 import {ValidationError} from "../../errors";
 import {stRequest} from "../../network";
@@ -35,13 +35,13 @@ export class RestfulWebhookService implements IWebhookService {
     /**
      * List all webhooks
      */
-    listWebhooks = (): Promise<WebHook[]> => {
+    listWebhooks = (): Promise<WebhookListResponse> => {
         return stRequest({
             url: buildAPI(this._config, this._apiExt),
             method: GET,
             headers: this._apiHeaders
-        }).then(hooks=>{
-           return (hooks && hooks.data && hooks.data.webhooks) ? hooks.data.webhooks : []
+        }).then(response=>{
+           return response.data;
         })
     }
 

@@ -98,8 +98,9 @@ describe('Pre Moderation sequences', function() {
             }).then(events => {
                 expect(events.events.length).to.be.greaterThan(0);
                 const list: Array<EventResult> = events.events || [];
-                return Promise.all(list.map(function (event) {
-                    return mod.approveEvent(event)
+                return Promise.all(list.map(async function (event) {
+                    const approval = await mod.approveEvent(event)
+                    return approval;
                 }))
             }).then(events => {
                 return mod.getModerationQueue()
@@ -108,9 +109,9 @@ describe('Pre Moderation sequences', function() {
                 return delay(1000);
             }).then(()=>{
                 return client.getEventService().getUpdates()
-            }).then((result) => {
+            }).then(async (result) => {
                 expect(result.events).to.have.lengthOf(1)
-                rm.deleteRoom(roomid);
+                const deleted = await rm.deleteRoom(roomid);
                 done();
             }).catch(async e=>{
                 try {

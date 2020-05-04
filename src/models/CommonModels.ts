@@ -14,14 +14,18 @@ export interface ApiHeaders {
     'x-api-token'?: string
 }
 
+/**
+ * A User is someone able to chat in chatrooms and make comments in conversations.
+ * Users must be created before they can make comments or chat, and they must choice a chat room before they can participate.
+ */
 export interface User {
-    userid: string,
-    handle: string,
-    handlelowercase?: string,
-    displayname?: string,
-    pictureurl?: string,
-    profileurl?: string,
-    banned?: boolean
+    userid: string, // Unique ID, defined by client application to use native IDs.
+    handle: string, // Allowed Characters:  "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890_"
+    handlelowercase?: string, // an all lowercase version of the handle
+    displayname?: string, // A friendly display name.  E.g. a user has a handle "jjsmithyperson" and their display name "John J. Smith"
+    pictureurl?: string, // a full URL to a profile photo.
+    profileurl?: string, // a full URL to a profile url or personal webpage.
+    banned?: boolean // Only set by the server.  If true the user is currently banned.
 }
 
 export enum Kind {
@@ -48,7 +52,10 @@ export interface UserResult extends User {
     kind?: Kind.user
 }
 
-export enum SearchType {
+/**
+ * Used only for searching users by API.  A sear
+ */
+export enum UserSearchType {
     handle = 'handle',
     name = 'name',
     userid = 'userid'
@@ -61,6 +68,10 @@ export enum SearchType {
 export interface SportsTalkConfig extends ClientConfig {
     user?: User,
 }
+
+/**
+ * General structure describing responses from the API server
+ */
 export interface MessageResult<T> {
     message: string, // "Success"
     errors: object,
@@ -68,7 +79,6 @@ export interface MessageResult<T> {
 }
 /**
  * All API responses take the form of an ApiResult.  This includes ApiResult<null>.
- * For instance, the 200 response to a chat command is of the type ApiResult<null>
  */
 export interface RestApiResult<T> extends MessageResult<T> {
     kind: Kind.api,
@@ -129,6 +139,10 @@ export interface ListResponse {
 export interface UserListResponse extends ListResponse {
     kind: Kind.userlist
     users: UserResult[]
+}
+
+export interface WebhookListResponse extends ListResponse {
+    webhooks: WebHook[]
 }
 
 export interface ListRequest {

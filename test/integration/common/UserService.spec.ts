@@ -1,7 +1,7 @@
 import * as chai from 'chai';
 import {RestfulUserService} from "../../../src/impl/common/REST/RestfulUserService";
 import * as dotenv from 'dotenv';
-import {Kind, SearchType, SportsTalkConfig} from "../../../src/models/CommonModels";
+import {Kind, UserSearchType, SportsTalkConfig} from "../../../src/models/CommonModels";
 import {RestfulChatRoomService} from "../../../src/impl/chat/REST/RestfulChatRoomService";
 
 dotenv.config();
@@ -59,27 +59,27 @@ describe("UserManager", function(){
     })
     describe("Search", function() {
         it("Can search by userid", async()=>{
-           const results = await UM.searchUsers("testuserid", SearchType.userid)
+           const results = await UM.searchUsers("testuserid", UserSearchType.userid)
            expect(results.users.length).to.be.equal(1);
         })
         it("Can search by name", async()=>{
-            const results = await UM.searchUsers("someuser", SearchType.name)
+            const results = await UM.searchUsers("someuser", UserSearchType.name)
             expect(results.users.length).to.be.equal(1);
         })
         it("Can search by handle", async()=>{
-            const results = await UM.searchUsers("testuserhandle", SearchType.handle)
+            const results = await UM.searchUsers("testuserhandle", UserSearchType.handle)
             expect(results.users.length).to.be.equal(1);
         })
         it("Won't find by bad handle", async()=>{
-            const results = await UM.searchUsers("doesntexisthandle", SearchType.handle)
+            const results = await UM.searchUsers("doesntexisthandle", UserSearchType.handle)
             expect(results.users.length).to.be.equal(0);
         })
         it("Won't find by bad name", async()=>{
-            const results = await UM.searchUsers("doesntexistname", SearchType.name)
+            const results = await UM.searchUsers("doesntexistname", UserSearchType.name)
             expect(results.users.length).to.be.equal(0);
         })
         it("Won't find by bad userid", async()=>{
-            const results = await UM.searchUsers("doesntexistuserid", SearchType.userid)
+            const results = await UM.searchUsers("doesntexistuserid", UserSearchType.userid)
             expect(results.users.length).to.be.equal(0);
         })
     })
@@ -105,7 +105,7 @@ describe("UserManager", function(){
             });
            const response = await UM.deleteUser(user);
            expect(response.kind).to.be.equal(Kind.user);
-           const resp = await UM.searchUsers("testuserid", SearchType.userid);
+           const resp = await UM.searchUsers("testuserid", UserSearchType.userid);
            expect(resp.users.length).to.be.equal(0);
         })
         it("Can delete a user by id", async() => {
@@ -115,7 +115,7 @@ describe("UserManager", function(){
             });
             const response = await UM.deleteUser("testuserid2");
             expect(response.kind).to.be.equal(Kind.user);
-            const users = await UM.searchUsers("testuserid2", SearchType.userid);
+            const users = await UM.searchUsers("testuserid2", UserSearchType.userid);
             expect(users.users.length).to.be.equal(0);
             //cleanup from prior test
             try {
