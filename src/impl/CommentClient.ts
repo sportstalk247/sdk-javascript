@@ -242,10 +242,10 @@ export class CommentClient implements ICommentingClient {
      * @param request how to sort/filter the comments.  See CommentRequest
      * @param conversation optional, if removed will retrieve the comments for the comments set with `setConversation()`
      */
-    public getComments = (request?: CommentRequest, conversation?: Conversation): Promise<CommentListResponse> => {
+    public listComments = (request?: CommentRequest, conversation?: Conversation): Promise<CommentListResponse> => {
         const conversationid = forceObjKeyOrString(conversation || this._currentConversation, 'conversationid')
         // @ts-ignore
-        return this._commentService.getComments(conversationid, request);
+        return this._commentService.listComments(conversationid, request);
     }
 
     /**

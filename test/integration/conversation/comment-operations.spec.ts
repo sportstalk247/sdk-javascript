@@ -87,7 +87,8 @@ describe('Comment Operations', function() {
         it("Reply to a comment", async()=>{
             try {
                 const reply = await client.publishComment("I'm replying", resp);
-                commentary = await client.getComments();
+                commentary = await client.listComments();
+                console.log(commentary);
                 expect(commentary.comments.length).to.be.greaterThan(0);
                 const replylist: CommentListResponse = await client.getCommentReplies(resp);
                 expect(replylist.comments.length).to.be.greaterThan(0);
@@ -97,6 +98,7 @@ describe('Comment Operations', function() {
         })
         it("Lets you retrieve specific comments", async ()=>{
             const firstComment:Comment = commentary.comments[0];
+            console.log(firstComment);
             let comment = await client.getComment(firstComment);
             if(comment) {
                 expect(comment.id).to.be.equal(firstComment.id)
@@ -125,7 +127,7 @@ describe('Comment Operations', function() {
    describe("User flags comment", function() {
        it("Let's User2 flag User1's comment", async ()=> {
            await client.publishComment("This is user1 comment");
-           const commentary = await client2.getComments();
+           const commentary = await client2.listComments();
            expect(commentary.comments.length).to.be.greaterThan(0);
            await client2.reportComment(commentary.comments[0], ReportType.abuse)
           // await client.reportComment(commentary.comments[0], ReportType.abuse)
@@ -228,7 +230,7 @@ describe('Comment Operations', function() {
            commentManager.setConfig(config);
            try {
                // @ts-ignore
-               commentManager.getComments({}, {});
+               commentManager.listComments({}, {});
                throw new Error("Shouldn't happen");
            } catch (e) {
                expect(e instanceof ValidationError).to.be.true;

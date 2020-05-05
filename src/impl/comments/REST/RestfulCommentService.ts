@@ -366,7 +366,7 @@ export class RestfulCommentService implements ICommentService {
      * @param request
      * @param conversation
      */
-    public getComments = (conversation: Conversation | string, request?: CommentRequest): Promise<CommentListResponse>=> {
+    public listComments = (conversation: Conversation | string, request?: CommentRequest): Promise<CommentListResponse>=> {
         if(!conversation) {
             throw new ValidationError(MUST_SPECIFY_CONVERSATION);
         }

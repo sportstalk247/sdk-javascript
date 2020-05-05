@@ -27,7 +27,7 @@ export interface ICommentService extends ISportsTalkConfigurable {
     report(convesationId: string, comment: Comment, user:User, reporttype: ReportType): Promise<Comment>
     react(convesationId: string, comment:Comment | string, user: User, reaction:Reaction, enable?: boolean): Promise<Comment>;
     getReplies(convesationId: string, comment: Comment, request?: CommentRequest): Promise<CommentListResponse>
-    getComments(convesationId: string, request?: CommentRequest): Promise<CommentListResponse>
+    listComments(convesationId: string, request?: CommentRequest): Promise<CommentListResponse>
 }
 
 export interface IConversationService extends IConfigurable {
@@ -60,6 +60,6 @@ export interface ICommentingClient extends ISportsTalkConfigurable, IUserConfigu
     voteOnComment(comment:Comment | string, vote:Vote);
     reportComment(comment:Comment | string, reportType: ReportType): Promise<Comment>;
     getCommentReplies(comment:Comment, request?: CommentRequest): Promise<CommentListResponse>
-    getComments(request?: CommentRequest, conversation?: Conversation): Promise<CommentListResponse>
+    listComments(request?: CommentRequest, conversation?: Conversation): Promise<CommentListResponse>
     listConversations(filter?: ConversationRequest): Promise<ConversationListResponse>
 }

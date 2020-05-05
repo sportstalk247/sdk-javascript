@@ -101,7 +101,7 @@ describe('BASIC Conversation Sequence', function() {
    describe("User Interaction", function() {
        it("Let's User1 comment", function(done){
            client.publishComment("This is user1 comment")
-               .then(()=>client2.getComments())
+               .then(()=>client2.listComments())
                .then((commentary)=>{
                    expect(commentary.comments.length).to.be.greaterThan(0);
                    done()
