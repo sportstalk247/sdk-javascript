@@ -344,7 +344,7 @@ export class RestfulCommentService implements ICommentService {
      * @param comment
      * @param request
      */
-    public getReplies = (conversationId: string, comment: Comment, request?: CommentRequest): Promise<CommentListResponse> =>{
+    public getReplies = (conversationId: string, comment: Comment | string, request?: CommentRequest): Promise<CommentListResponse> =>{
         this._requireConversationId(conversationId);
         const id = getUrlCommentId(comment);
         const requestString = formify(request);

@@ -24,7 +24,7 @@ describe("buildApi", function(){
         }
         let api = buildAPI(config, "test", request);
         expect(api).to.be.equal("http://www.endpoint/FakeAppId/test?sort=oldest")
-        request.includechilden = true;
+        request.includechildren = true;
         api = buildAPI(config, "test", request);
         expect(api).to.be.equal("http://www.endpoint/FakeAppId/test?sort=oldest&includechilden=true")
         request.direction = ListSortDirection.forward;

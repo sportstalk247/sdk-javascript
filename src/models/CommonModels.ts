@@ -1,3 +1,5 @@
+import {EventType} from "./ChatModels";
+
 export enum ModerationType {
     pre = "pre",
     post = "post"
@@ -34,6 +36,8 @@ export enum Kind {
     user = "app.user",
     api = "api.result",
     webhook = "chat.webhook",
+    webhooklogs = "list.webhook.logentries",
+    webhookcommentpayload = "webhook.payload.comment",
     chatcommand = "chat.executecommand",
     conversation = "comment.conversation",
     deletedconversation = "delete.conversation",
@@ -120,7 +124,7 @@ export enum WebhookEvent {
     commentreply = 'commentreply'
 }
 
-export interface WebHook {
+export interface Webhook {
     id?: string,
     kind?: Kind.webhook,
     label: string,
@@ -147,7 +151,50 @@ export interface UserDeletionResponse {
 }
 
 export interface WebhookListResponse extends ListResponse {
-    webhooks: WebHook[]
+    webhooks: Webhook[]
+}
+
+export interface ISO8601DATE {
+
+}
+
+export enum WebStatusCode {
+    OK = 200,
+    NOT_FOUND = 404,
+    SERVER_ERROR= 500
+}
+
+export enum WebStatusString {
+    OK = "OK",
+}
+
+export interface WebhookPayload {
+    "kind": Kind.webhookcommentpayload,
+    "appid": string,
+}
+
+export interface WebhookCommentPayload extends WebhookPayload {
+    conversationid: string,
+    commentid: string
+    comment: Comment
+}
+
+export interface WebhookLog {
+    id: string,
+    appid: string,
+    added: string,
+    ellapsedtimems: number,
+    type: WebhookType,
+    eventtype: WebhookEvent, // Move to common models
+    webhook: Webhook,
+    completedrequest: boolean,
+    statuscode: WebStatusCode,
+    status: WebStatusString,
+    payload: Comment
+}
+
+export interface WebhookLogResponse extends ListResponse {
+    logentries: Array<WebhookLog>
 }
 
 export interface ListRequest {

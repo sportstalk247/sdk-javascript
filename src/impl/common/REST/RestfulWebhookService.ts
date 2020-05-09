@@ -1,7 +1,13 @@
 import {AxiosRequestConfig} from "axios";
-import {buildAPI, getJSONHeaders} from "../../utils";
+import {buildAPI, forceObjKeyOrString, getJSONHeaders} from "../../utils";
 import {DEFAULT_CONFIG, DELETE, GET, POST, PUT} from "../../constants/api";
-import {SportsTalkConfig, WebHook, WebhookListResponse} from "../../../models/CommonModels";
+import {
+    ListRequest,
+    SportsTalkConfig,
+    Webhook,
+    WebhookListResponse,
+    WebhookLogResponse
+} from "../../../models/CommonModels";
 import {IWebhookService} from "../../../API/CommonAPI";
 import {ValidationError} from "../../errors";
 import {stRequest} from "../../network";
@@ -46,10 +52,24 @@ export class RestfulWebhookService implements IWebhookService {
     }
 
     /**
+     * Get Webhook Logs
+     */
+    listWebhookLogs = (webhook: Webhook | string, logRequest: ListRequest): Promise<WebhookLogResponse> => {
+        const id = forceObjKeyOrString(webhook)
+        return stRequest({
+            url: buildAPI(this._config, `${this._apiExt}/${id}/logentries`),
+            method: GET,
+            headers: this._apiHeaders
+        }).then(response=>{
+            return response.data;
+        })
+    }
+
+    /**
      * Create a webhook
      * @param hook
      */
-    createWebhook = (hook: WebHook): Promise<WebHook> =>{
+    createWebhook = (hook: Webhook): Promise<Webhook> =>{
         return stRequest({
             url: buildAPI(this._config, this._apiExt),
             method: POST,
@@ -64,7 +84,7 @@ export class RestfulWebhookService implements IWebhookService {
      * Update an existing hook
      * @param hook
      */
-    updateWebhook = (hook: WebHook): Promise<WebHook> => {
+    updateWebhook = (hook: Webhook): Promise<Webhook> => {
         if(!hook || !hook.id) {
             throw new ValidationError(MISSING_ID);
         }
@@ -74,7 +94,7 @@ export class RestfulWebhookService implements IWebhookService {
             headers: this._apiHeaders,
             data: hook
         }).then(response=>{
-            return <WebHook>response.data
+            return <Webhook>response.data
         })
     }
 
@@ -82,7 +102,7 @@ export class RestfulWebhookService implements IWebhookService {
      * Delete a webhook
      * @param hook
      */
-    deleteWebhook = (hook: WebHook | string): Promise<WebHook> => {
+    deleteWebhook = (hook: Webhook | string): Promise<Webhook> => {
         if(!hook) {
             throw new ValidationError(MISSING_ID);
         }

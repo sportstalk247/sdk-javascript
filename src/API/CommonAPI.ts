@@ -7,7 +7,7 @@ import {
     SportsTalkConfig,
     User,
     UserResult,
-    WebHook,
+    Webhook,
     ListRequest, UserListResponse, WebhookListResponse, UserDeletionResponse
 } from "../models/CommonModels";
 
@@ -35,7 +35,7 @@ export interface IUserService extends ISportsTalkConfigurable {
 
 export interface IWebhookService extends ISportsTalkConfigurable {
     listWebhooks(): Promise<WebhookListResponse>
-    createWebhook(hook: WebHook): Promise<WebHook>;
-    updateWebhook(hook: WebHook): Promise<WebHook>;
-    deleteWebhook(hook: WebHook | string): Promise<WebHook>;
+    createWebhook(hook: Webhook): Promise<Webhook>;
+    updateWebhook(hook: Webhook): Promise<Webhook>;
+    deleteWebhook(hook: Webhook | string): Promise<Webhook>;
 }

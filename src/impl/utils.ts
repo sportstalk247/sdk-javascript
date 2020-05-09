@@ -1,6 +1,5 @@
 import {API_TOKEN_HEADER, APPLICATION_JSON, DEFAULT_CONFIG, FORM_ENCODED} from "./constants/api";
-import {ApiHeaders, SportsTalkConfig} from "../models/CommonModels";
-import {CommentRequest} from "../models/CommentsModels";
+import {ApiHeaders, ListRequest, SportsTalkConfig} from "../models/CommonModels";
 import {ValidationError} from "./errors";
 
 export function formify(data) {
@@ -13,7 +12,7 @@ export function formify(data) {
     return formBody.join("&");
 }
 
-export function buildAPI(config: SportsTalkConfig, ext: string, request?: CommentRequest): string {
+export function buildAPI(config: SportsTalkConfig, ext: string, request?: ListRequest): string {
     let endpoint = `${config.endpoint || DEFAULT_CONFIG.endpoint}/${config.appId}/${ext}`;
     if(request && Object.keys(request).length > 0) {
         endpoint = `${endpoint}?${formify(request)}`;

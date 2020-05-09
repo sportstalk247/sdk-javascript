@@ -68,7 +68,7 @@ export enum ListSortDirection {
 
 export interface CommentRequest extends ListRequest {
     sort?: CommentSortMethod | string,
-    includechilden?: boolean
+    includechildren?: boolean
     includeinactive?: boolean
     direction?: ListSortDirection
 }

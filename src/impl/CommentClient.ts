@@ -35,6 +35,9 @@ export class CommentClient implements ICommentingClient {
     private _user: User;
     private _currentConversation: Conversation | string;
 
+    private _defaultCommentRequest: CommentRequest = {
+        includechildren: false
+    }
     /**
      * Creates a new Conversation Client
      * @param config
@@ -232,9 +235,10 @@ export class CommentClient implements ICommentingClient {
      * @param comment
      * @param request
      */
-    public getCommentReplies = (comment:Comment, request?: CommentRequest): Promise<CommentListResponse> => {
+    public getCommentReplies = (comment:Comment | string, request?: CommentRequest): Promise<CommentListResponse> => {
         const conversationid = forceObjKeyOrString(this._currentConversation, 'conversationid')
-        return this._commentService.getReplies(conversationid, comment, request);
+        const commentid =  forceObjKeyOrString(comment)
+        return this._commentService.getReplies(conversationid, commentid, request);
     }
 
     /**
@@ -244,8 +248,9 @@ export class CommentClient implements ICommentingClient {
      */
     public listComments = (request?: CommentRequest, conversation?: Conversation): Promise<CommentListResponse> => {
         const conversationid = forceObjKeyOrString(conversation || this._currentConversation, 'conversationid')
+        const finalRequest = Object.assign({}, this._defaultCommentRequest, request);
         // @ts-ignore
-        return this._commentService.listComments(conversationid, request);
+        return this._commentService.listComments(conversationid, finalRequest);
     }
 
     /**

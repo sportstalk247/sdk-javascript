@@ -3,7 +3,7 @@ import {stRequest} from '../../network';
 import {buildAPI, formify, getUrlEncodedHeaders} from "../../utils";
 import {DEFAULT_CONFIG, POST, } from "../../constants/api";
 import {IChatModerationService} from "../../../API/ChatAPI";
-import {RestApiResult, SportsTalkConfig, WebHook} from "../../../models/CommonModels";
+import {RestApiResult, SportsTalkConfig, Webhook} from "../../../models/CommonModels";
 
 /**
  * This class is for moderating chat events.  Most clients will not need this unless you are building a custom moderation UI.

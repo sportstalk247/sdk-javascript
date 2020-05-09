@@ -26,7 +26,7 @@ export interface ICommentService extends ISportsTalkConfigurable {
     vote(convesationId: string, comment: Comment, user: User, vote:Vote): Promise<Comment>
     report(convesationId: string, comment: Comment, user:User, reporttype: ReportType): Promise<Comment>
     react(convesationId: string, comment:Comment | string, user: User, reaction:Reaction, enable?: boolean): Promise<Comment>;
-    getReplies(convesationId: string, comment: Comment, request?: CommentRequest): Promise<CommentListResponse>
+    getReplies(convesationId: string, comment: Comment | string, request?: CommentRequest): Promise<CommentListResponse>
     listComments(convesationId: string, request?: CommentRequest): Promise<CommentListResponse>
 }
 

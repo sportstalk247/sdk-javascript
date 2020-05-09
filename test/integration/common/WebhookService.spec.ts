@@ -1,12 +1,12 @@
 import * as chai from 'chai';
 import {RestfulWebhookService} from "../../../src/impl/common/REST/RestfulWebhookService";
 import * as dotenv from 'dotenv';
-import {Kind, SportsTalkConfig, WebHook, WebhookEvent, WebhookType} from "../../../src/models/CommonModels";
+import {Kind, SportsTalkConfig, Webhook, WebhookEvent, WebhookType} from "../../../src/models/CommonModels";
 dotenv.config();
 
 const { expect } = chai;
-let posthook:WebHook;
-let prehook:WebHook;
+let posthook:Webhook;
+let prehook:Webhook;
 // @ts-ignore
 const config: SportsTalkConfig = {apiToken:process.env.TEST_KEY, appId: process.env.TEST_APP_ID, endpoint: process.env.TEST_ENDPOINT};
 describe("Webhook Service", function(){
