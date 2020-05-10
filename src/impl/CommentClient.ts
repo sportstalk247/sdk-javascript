@@ -118,6 +118,7 @@ export class CommentClient implements ICommentingClient {
 
     /**
      * Returns a conversation if it already exists, otherwise creates it and sets it as default.
+     * Does NOT update a conversation's settings if it already exists.  Settings should be primarily managed from the dashboard.
      * @param conversation
      */
     public ensureConversation = async(conversation: Conversation): Promise<Conversation> => {
