@@ -117,6 +117,21 @@ export class CommentClient implements ICommentingClient {
     }
 
     /**
+     * Returns a conversation if it already exists, otherwise creates it and sets it as default.
+     * @param conversation
+     */
+    public ensureConversation = async(conversation: Conversation): Promise<Conversation> => {
+        return this.getConversation(conversation)
+            .then(conversation => {
+                this.setCurrentConversation(conversation);
+                return conversation
+            })
+            .catch(error=>{
+                return this.createConversation(conversation, true);
+            })
+    }
+
+    /**
      * Get the default comments
      * @param conversation
      */
