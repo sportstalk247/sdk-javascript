@@ -11,7 +11,7 @@ let mod;
 const { expect } = chai;
 
 describe('BASIC Conversation Sequence', function() {
-    const client = CommentClient.create({
+    const client = CommentClient.init({
         apiToken:process.env.TEST_KEY,
         appId: process.env.TEST_APP_ID,
         endpoint: process.env.TEST_ENDPOINT,
@@ -20,7 +20,7 @@ describe('BASIC Conversation Sequence', function() {
             handle: 'handle1'
         }
     });
-    const client2 = CommentClient.create({
+    const client2 = CommentClient.init({
         apiToken:process.env.TEST_KEY,
         appId: process.env.TEST_APP_ID,
         endpoint: process.env.TEST_ENDPOINT,

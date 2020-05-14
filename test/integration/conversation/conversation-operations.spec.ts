@@ -18,13 +18,13 @@ describe('Conversation Operations', function() {
         appId: process.env.TEST_APP_ID,
         endpoint: process.env.TEST_ENDPOINT,
     };
-    const client = CommentClient.create(Object.assign(config, {
+    const client = CommentClient.init(Object.assign(config, {
         user: {
             userid: 'testuser1',
             handle: 'handle1'
         }
     }));
-    const client2 = CommentClient.create(Object.assign(config, {
+    const client2 = CommentClient.init(Object.assign(config, {
         user: {
             userid: 'testuser2',
             handle: 'handle2'

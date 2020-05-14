@@ -13,7 +13,7 @@ const { expect } = chai;
 describe("Conversation Client", function(){
     describe("Sportstalk Configuration", function(){
         it("is built with factory function", ()=>{
-            const client = CommentClient.create(DEFAULT_CONFIG);
+            const client = CommentClient.init(DEFAULT_CONFIG);
             const config: SportsTalkConfig = client.getConfig();
             expect(config.endpoint).to.be.equal(DEFAULT_CONFIG.endpoint);
         })
@@ -22,7 +22,7 @@ describe("Conversation Client", function(){
         it("Can set user aftr creation", ()=>{
             const userid = "TestID";
             const handle = "handle";
-            const client = CommentClient.create(DEFAULT_CONFIG);
+            const client = CommentClient.init(DEFAULT_CONFIG);
             client.setUser({userid, handle});
             const user:User = client.getUser();
             expect(user.handle).to.be.equal(handle);
@@ -34,7 +34,7 @@ describe("Conversation Client", function(){
             const conversationid = "TestId";
             const property = "propertytest";
             const moderation = ModerationType.post;
-            const client = CommentClient.create(DEFAULT_CONFIG,
+            const client = CommentClient.init(DEFAULT_CONFIG,
                 { conversationid,
                 property,
                 moderation
@@ -51,7 +51,7 @@ describe("Conversation Client", function(){
             const conversationid = "TestId";
             const property = "propertytest";
             const moderation = ModerationType.post;
-            const client = CommentClient.create(DEFAULT_CONFIG);
+            const client = CommentClient.init(DEFAULT_CONFIG);
             client.setCurrentConversation({
                 conversationid,
                 property,

@@ -45,7 +45,7 @@ export class CommentClient implements ICommentingClient {
      * @param commentService optional and here for future extension for custom implementations of the comment service.
      * @param conversationService optional and here for future extension for cusstom implementations of the comments service.
      */
-    static create(config: SportsTalkConfig, initialConversation?:Conversation | string, commentService?: IConversationService, conversationService?: IConversationService): CommentClient {
+    static init(config: SportsTalkConfig, initialConversation?:Conversation | string, commentService?: IConversationService, conversationService?: IConversationService): CommentClient {
         const commentClient = new CommentClient();
         // @ts-ignore
         commentClient.setConfig(config, commentService, conversationService)

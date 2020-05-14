@@ -27,13 +27,13 @@ const defaultconversation = {property: 'test', moderation: ModerationType.post, 
 
 describe('Comment Operations', function() {
 
-    const client = CommentClient.create(Object.assign(config, {
+    const client = CommentClient.init(Object.assign(config, {
         user: {
             userid: 'testuser1',
             handle: 'handle1'
         }
     }));
-    const client2 = CommentClient.create(Object.assign(config, {
+    const client2 = CommentClient.init(Object.assign(config, {
         user: {
             userid: 'testuser2',
             handle: 'handle2'
