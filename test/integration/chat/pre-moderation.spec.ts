@@ -19,7 +19,7 @@ describe('Pre Moderation sequences', function() {
         // @ts-ignore
 
         let roomid;
-        const client = <ChatClient> ChatClient.create(config);
+        const client = <ChatClient> ChatClient.init(config);
         const rm = new RestfulChatRoomService(config);
         const mod = new RestfulChatModerationService(config);
         it('Can create a room, join the room, deny messages, kill room', (done) => {
@@ -71,7 +71,7 @@ describe('Pre Moderation sequences', function() {
     describe('APPROVE', function () {
         this.timeout(20000);
         let roomid;
-        const client = <ChatClient>ChatClient.create(config);
+        const client = <ChatClient>ChatClient.init(config);
         const rm = new RestfulChatRoomService(config);
         const mod = new RestfulChatModerationService(config);
         it('Can create a room, join the room, approve messages, kill room', (done) => {

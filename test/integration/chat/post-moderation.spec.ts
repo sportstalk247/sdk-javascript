@@ -25,9 +25,9 @@ describe('Post moderation Sequence', function() {
     let roomid;
     let eventlength = 1;
 
-    client = ChatClient.create(config)
-    client2 = ChatClient.create(config)
-    client3 = ChatClient.create(config)
+    client = ChatClient.init(config)
+    client2 = ChatClient.init(config)
+    client3 = ChatClient.init(config)
     mod = new RestfulChatModerationService(config);
     const rm = new RestfulChatRoomService(config);
 

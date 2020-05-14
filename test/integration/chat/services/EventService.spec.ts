@@ -20,7 +20,7 @@ let chatMessage;
 describe("Event Service", ()=>{
 
     // @ts-ignore
-    const client = <ChatClient> ChatClient.create(config)
+    const client = <ChatClient> ChatClient.init(config)
     const EM = client.getEventService();
     const RM = client.getRoomService();
     const onChatStart = sinon.fake();

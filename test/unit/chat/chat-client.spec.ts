@@ -11,7 +11,7 @@ describe("Chat Client", function(){
     it("Can set current room state", function(){
         const id = "FAKE_ID";
         const name = "FAKE ROOM NAME";
-        const client = ChatClient.create(DEFAULT_CONFIG)
+        const client = ChatClient.init(DEFAULT_CONFIG)
         client.setCurrentRoom({id, name});
         const room = client.getCurrentRoom();
         // @ts-ignore
@@ -20,7 +20,7 @@ describe("Chat Client", function(){
         expect(room.name).to.be.equal(name);
     })
     it("Can be configured with handlers on construction", function(){
-        const client = ChatClient.create(DEFAULT_CONFIG, {
+        const client = ChatClient.init(DEFAULT_CONFIG, {
             onAdminCommand: function() {
             }
         })

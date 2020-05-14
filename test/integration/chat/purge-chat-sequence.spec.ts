@@ -19,14 +19,14 @@ const { expect } = chai;
 const config: SportsTalkConfig = {apiToken:process.env.TEST_KEY, appId: process.env.TEST_APP_ID, endpoint: process.env.TEST_ENDPOINT};
 
 describe('PURGE Chat Sequence', function() {
-    const client = <ChatClient> ChatClient.create({
+    const client = <ChatClient> ChatClient.init({
         ...config,
         user: {
             userid: 'testuser1',
             handle: 'handle1'
         }
     });
-    const client2 = <ChatClient> ChatClient.create({
+    const client2 = <ChatClient> ChatClient.init({
         ...config,
         user: {
             userid: 'testuser2',

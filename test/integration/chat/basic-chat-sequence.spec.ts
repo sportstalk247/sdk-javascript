@@ -25,8 +25,8 @@ describe('BASIC Chat Sequence', function() {
             handle: 'handle2'
         }
     }
-    const client:ChatClient = <ChatClient>ChatClient.create(user1config);
-    const client2:ChatClient = <ChatClient>ChatClient.create(user2config);
+    const client:ChatClient = <ChatClient>ChatClient.init(user1config);
+    const client2:ChatClient = <ChatClient>ChatClient.init(user2config);
     const rm = new RestfulChatRoomService({
        ...config
     });

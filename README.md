@@ -502,7 +502,7 @@ See a simple WEB example below.  To use this, you will need to get the web sdk u
 
 ```javascript
 // first create a client
-const client = ChatClient.create({apiKey:'YourApiKeyHere'},  {...EventHandlerConfig});
+const client = ChatClient.init({apiKey:'YourApiKeyHere'},  {...EventHandlerConfig});
 
 // You can set the event handlers as part of the factory or with the setEventhandlers method.
 client.setEventHandlers({

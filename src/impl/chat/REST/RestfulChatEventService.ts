@@ -178,7 +178,7 @@ export class RestfulChatEventService implements IChatEventService {
         ) {
             throw new SettingsError(INVALID_POLL_FREQUENCY);
         }
-        this._polling = setInterval(this._fetchUpdatesAndTriggerCallbacks, this._pollFrequency || 800);
+        this._polling = setInterval(this._fetchUpdatesAndTriggerCallbacks, this._pollFrequency || 500);
     }
 
     /**

@@ -66,7 +66,7 @@ export class ChatClient implements IChatClient {
      * @param eventHandlers
      * @return SportsTalkClient.  Currently only a REST based client is supported.  Future SDK versions will implement other options such as firebase messaging and websockets
      */
-    static create = (config: SportsTalkConfig = {appId: ""}, eventHandlers?: EventHandlerConfig): IChatClient => {
+    static init = (config: SportsTalkConfig = {appId: ""}, eventHandlers?: EventHandlerConfig): IChatClient => {
         const client = new ChatClient();
         client.setConfig(config);
         if(eventHandlers) {
