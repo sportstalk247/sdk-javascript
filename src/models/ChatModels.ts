@@ -107,7 +107,8 @@ export interface Room {
     name:string, //The name of the room
     description?: string, // optional room description
     moderation?: ModerationType, // 'pre' or 'post'
-    slug?: string, // The room slug
+    slug?:string,// The room slug, migrated to customid
+    customid?: string,
     enableprofanityfilter?: boolean, //Defaults to true, events in room will have profanity filtered (in English).
     delaymessageseconds?: number, // Delays messages, used for throttling. Defaults to zero and most of the time that's what you will want.
     enableactions?: boolean, // Whether or not users can utilize action commands.

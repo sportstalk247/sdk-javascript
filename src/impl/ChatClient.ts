@@ -224,6 +224,21 @@ export class ChatClient implements IChatClient {
         })
     }
 
+    /**
+     * Join a room by it's customid
+     * @param user
+     * @param room
+     */
+    joinRoomByCustomId(user: User, room: Room | string): Promise<RoomUserResult> {
+        if(!this._user || !this._user.userid) {
+            throw new SettingsError(MUST_SET_USER);
+        }
+        return this._roomService.joinRoomByCustomId(this._user, room).then(response => {
+            this._currentRoom = response.room;
+            this._eventService.setCurrentRoom(this._currentRoom);
+            return response;
+        })
+    }
 
 
     /**
