@@ -242,4 +242,14 @@ export class RestfulChatRoomService implements IRoomService {
             return <ChatRoomResult> response.message
         })
     }
+
+    getRoomDetails = (room:ChatRoomResult | string): Promise<ChatRoomResult> => {
+        const roomId = forceObjKeyOrString(room);
+        const config:AxiosRequestConfig = {
+            method: GET,
+            url: buildAPI(this._config,`${this._apiExt}/${roomId}`),
+            headers: this._jsonHeaders,
+        };
+        return stRequest(config)
+    }
 }

@@ -269,6 +269,10 @@ export class ChatClient implements IChatClient {
         this._eventService.setCurrentRoom(room);
     }
 
+    getRoomDetails = (room:ChatRoomResult | string): Promise<ChatRoomResult> => {
+       return this._roomService.getRoomDetails(room);
+    }
+
     /**
      * ROOM COMMANDS SECTION
      */
