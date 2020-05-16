@@ -15,7 +15,7 @@ import {
 } from "../../../models/CommentsModels";
 import {DELETE, GET, POST, PUT} from "../../constants/api";
 import {getUrlEncodedHeaders, getJSONHeaders, buildAPI, formify} from "../../utils";
-import {getUrlCommentId, getUrlConversationId} from "../ConversationUtils";
+import {getUrlCommentId, getUrlConversationId} from "./ConversationUtils";
 import {RequireUserError, SettingsError, ValidationError} from "../../errors";
 import {ICommentService} from "../../../API/CommentsAPI";
 import {

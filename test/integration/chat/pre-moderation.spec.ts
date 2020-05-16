@@ -1,10 +1,10 @@
 import { ChatClient } from '../../../src/impl/ChatClient';
 import {EventResult} from "../../../src/models/ChatModels";
 import * as chai from 'chai';
-import {RestfulChatModerationService} from "../../../src/impl/chat/REST/RestfulChatModerationService";
+import {RestfulChatModerationService} from "../../../src/impl/REST/chat/RestfulChatModerationService";
 import * as dotenv from 'dotenv';
 import {ModerationType, SportsTalkConfig} from "../../../src/models/CommonModels";
-import {RestfulChatRoomService} from "../../../src/impl/chat/REST/RestfulChatRoomService";
+import {RestfulChatRoomService} from "../../../src/impl/REST/chat/RestfulChatRoomService";
 dotenv.config();
 
 const { expect } = chai;

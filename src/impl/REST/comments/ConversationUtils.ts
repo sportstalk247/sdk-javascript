@@ -1,4 +1,4 @@
-import {Comment, Conversation} from "../../models/CommentsModels";
+import {Comment, Conversation} from "../../../models/CommentsModels";
 
 /**
  * Helper for finding the id of a comment

@@ -1,6 +1,6 @@
 import { ChatClient } from '../../../src/impl/ChatClient';
 import * as chai from 'chai';
-import {RestfulChatRoomService} from "../../../src/impl/chat/REST/RestfulChatRoomService";
+import {RestfulChatRoomService} from "../../../src/impl/REST/chat/RestfulChatRoomService";
 import * as dotenv from 'dotenv';
 dotenv.config();
 

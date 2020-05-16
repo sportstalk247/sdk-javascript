@@ -156,7 +156,7 @@ export class RestfulChatEventService implements IChatEventService {
     /**
      * Start the chat polling
      */
-    startChat = () => {
+    startEventUpdates = () => {
         if(this._polling) {
             console.warn("ALREADY CONNECTED TO TALK");
             return;
@@ -201,7 +201,7 @@ export class RestfulChatEventService implements IChatEventService {
     /**
      * Stop event polling
      */
-    public stopChat = () => {
+    public stopEventUpdates = () => {
         if(this._polling) {
             clearInterval(this._polling);
         }

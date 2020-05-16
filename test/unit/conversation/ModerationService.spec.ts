@@ -1,5 +1,4 @@
-import {RestfulCommentModerationService} from '../../../src/impl/comments/REST/RestfulCommentModerationService';
-import {Kind, ModerationType, Reaction, ReportType, SportsTalkConfig} from '../../../src/models/CommonModels';
+import {RestfulCommentModerationService} from '../../../src/impl/REST/comments/RestfulCommentModerationService';
 import * as chai from 'chai';
 import * as dotenv from 'dotenv';
 import {DEFAULT_CONFIG} from "../../../src/impl/constants/api";

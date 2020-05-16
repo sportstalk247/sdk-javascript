@@ -1,5 +1,5 @@
 import { ChatClient } from '../../../../src/impl/ChatClient';
-import {RestfulChatModerationService} from "../../../../src/impl/chat/REST/RestfulChatModerationService";
+import {RestfulChatModerationService} from "../../../../src/impl/REST/chat/RestfulChatModerationService";
 import * as chai from 'chai';
 import * as sinon from 'sinon';
 import * as dotenv from 'dotenv';

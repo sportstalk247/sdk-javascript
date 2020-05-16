@@ -12,11 +12,11 @@ import {
     ConversationListResponse,
     SimpleComment
 } from "../models/CommentsModels";
-import {RestfulCommentService} from "./comments/REST/RestfulCommentService";
-import {RestfulConversationService} from "./comments/REST/RestfulConversationService";
+import {RestfulCommentService} from "./REST/comments/RestfulCommentService";
+import {RestfulConversationService} from "./REST/comments/RestfulConversationService";
 import {IConversationService, ICommentService, ICommentingClient} from "../API/CommentsAPI";
 import {DEFAULT_CONFIG} from "./constants/api";
-import {RestfulUserService} from "./common/REST/RestfulUserService";
+import {RestfulUserService} from "./REST/users/RestfulUserService";
 import {IUserService} from "../API/CommonAPI";
 import {forceObjKeyOrString} from "./utils";
 

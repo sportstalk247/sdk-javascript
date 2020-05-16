@@ -1,8 +1,8 @@
 import * as chai from 'chai';
-import {RestfulUserService} from "../../../src/impl/common/REST/RestfulUserService";
+import {RestfulUserService} from "../../../src/impl/REST/users/RestfulUserService";
 import * as dotenv from 'dotenv';
 import {Kind, UserSearchType, SportsTalkConfig} from "../../../src/models/CommonModels";
-import {RestfulChatRoomService} from "../../../src/impl/chat/REST/RestfulChatRoomService";
+import {RestfulChatRoomService} from "../../../src/impl/REST/chat/RestfulChatRoomService";
 
 dotenv.config();
 

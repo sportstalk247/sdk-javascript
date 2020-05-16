@@ -1,10 +1,10 @@
 import { ChatClient } from '../../../src/impl/ChatClient';
 import * as chai from 'chai';
 import * as sinon from 'sinon';
-import {RestfulChatRoomService} from "../../../src/impl/chat/REST/RestfulChatRoomService";
+import {RestfulChatRoomService} from "../../../src/impl/REST/chat/RestfulChatRoomService";
 import * as dotenv from 'dotenv';
 import {SportsTalkConfig} from "../../../src/models/CommonModels";
-import {RestfulChatEventService} from "../../../src/impl/chat/REST/RestfulChatEventService";
+import {RestfulChatEventService} from "../../../src/impl/REST/chat/RestfulChatEventService";
 dotenv.config();
 
 const onPurgeEvent = sinon.fake();
@@ -65,8 +65,8 @@ describe('PURGE Chat Sequence', function() {
             rm.createRoom(roomDef).then(room => {
                 return client2.joinRoom(room)
             }).then(() => {
-                client.startChat()
-                client2.startChat()
+                client.startEventUpdates()
+                client2.startEventUpdates()
                 done()
             }).catch(done)
         })
@@ -111,8 +111,8 @@ describe('PURGE Chat Sequence', function() {
         it('can be deleted', function (done) {
             rm.deleteRoom(theRoom)
                 .then(success => {
-                    client.stopChat();
-                    client2.stopChat();
+                    client.stopEventUpdates();
+                    client2.stopEventUpdates();
                     done()
                 }).catch(done);
         })

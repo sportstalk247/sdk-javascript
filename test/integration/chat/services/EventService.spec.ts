@@ -4,7 +4,7 @@ import * as chai from 'chai';
 import * as sinon from 'sinon';
 import * as dotenv from 'dotenv';
 import {Reaction, SportsTalkConfig} from "../../../../src/models/CommonModels";
-import {RestfulChatEventService} from "../../../../src/impl/chat/REST/RestfulChatEventService";
+import {RestfulChatEventService} from "../../../../src/impl/REST/chat/RestfulChatEventService";
 dotenv.config();
 
 
@@ -45,7 +45,7 @@ describe("Event Service", ()=>{
             it("will trigger onChatStart", async () => {
                 room = await RM.createRoom({name: "CallbackTest", slug: "callback-test"});
                 await EM.setCurrentRoom(room);
-                await EM.startChat();
+                await EM.startEventUpdates();
                 expect(onChatStart.calledOnce)
             });
         });
@@ -60,7 +60,7 @@ describe("Event Service", ()=>{
                 expect(onChatEvent.callCount).to.be.greaterThan(0);
                 // @ts-ignore
                 chatMessage = response.data.speech;
-                await EM.stopChat();
+                await EM.stopEventUpdates();
             });
         });
         describe("onReply", ()=>{
@@ -95,7 +95,7 @@ describe("Event Service", ()=>{
         describe("Kill chat room", ()=>{
             it("closes chat", done=>{
                 RM.deleteRoom(room).then(()=>{
-                    EM.stopChat();
+                    EM.stopEventUpdates();
                     done();
                 }).catch(done);
             })

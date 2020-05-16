@@ -1,4 +1,4 @@
-import {RestfulChatRoomService} from "../../../../src/impl/chat/REST/RestfulChatRoomService";
+import {RestfulChatRoomService} from "../../../../src/impl/REST/chat/RestfulChatRoomService";
 import * as chai from 'chai';
 import * as dotenv from 'dotenv';
 import {ModerationType, SportsTalkConfig} from "../../../../src/models/CommonModels";

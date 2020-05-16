@@ -1,4 +1,4 @@
-import {getUrlConversationId} from "../../../src/impl/comments/ConversationUtils";
+import {getUrlConversationId} from "../../../src/impl/REST/comments/ConversationUtils";
 import {Conversation, ModerationType} from "../../../src/models/CommentsModels";
 import * as chai from 'chai';
 

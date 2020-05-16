@@ -16,9 +16,9 @@ import {
 import {DEFAULT_CONFIG} from "./constants/api";
 import {IRoomService, IChatEventService, IChatClient} from "../API/ChatAPI";
 import {SettingsError} from "./errors";
-import {RestfulChatEventService} from "./chat/REST/RestfulChatEventService"
-import {RestfulChatRoomService} from "./chat/REST/RestfulChatRoomService";
-import {RestfulUserService} from "./common/REST/RestfulUserService";
+import {RestfulChatEventService} from "./REST/chat/RestfulChatEventService"
+import {RestfulChatRoomService} from "./REST/chat/RestfulChatRoomService";
+import {RestfulUserService} from "./REST/users/RestfulUserService";
 import {
     Reaction,
     ReportReason,
@@ -144,15 +144,15 @@ export class ChatClient implements IChatClient {
     /**
      * Start the "talk".  This will being retrieving events from sportstalk servers.
      */
-    startChat = () => {
-        this._eventService.startChat();
+    startEventUpdates = () => {
+        this._eventService.startEventUpdates();
     }
 
     /**
      * Stop the talk.  No new events will be retrieved.  However, if there are events still in a queue that queue may continue until empty.
      */
-    stopChat = () => {
-        this._eventService.stopChat();
+    stopEventUpdates = () => {
+        this._eventService.stopEventUpdates();
     }
     /**
      * Retrieve available rooms for this chat app.

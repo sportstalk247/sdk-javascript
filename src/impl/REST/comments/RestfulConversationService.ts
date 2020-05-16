@@ -9,7 +9,7 @@ import {
 import {GET, POST, DELETE} from "../../constants/api";
 import {getUrlEncodedHeaders, getJSONHeaders, buildAPI, formify} from "../../utils";
 import {IConversationService} from "../../../API/CommentsAPI";
-import {getUrlConversationId} from "../ConversationUtils";
+import {getUrlConversationId} from "./ConversationUtils";
 import {stRequest} from "../../network";
 
 /**

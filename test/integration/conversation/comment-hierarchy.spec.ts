@@ -2,7 +2,7 @@ import {CommentClient} from '../../../src/impl/CommentClient';
 import {Kind, ModerationType, Reaction, ReportType} from '../../../src/models/CommonModels';
 import * as chai from 'chai';
 import * as dotenv from 'dotenv';
-import {RestfulCommentModerationService} from "../../../src/impl/comments/REST/RestfulCommentModerationService";
+import {RestfulCommentModerationService} from "../../../src/impl/REST/comments/RestfulCommentModerationService";
 import {
     Comment,
     CommentListResponse,
@@ -10,7 +10,7 @@ import {
     CommentResponse,
     Vote
 } from "../../../src/models/CommentsModels";
-import {RestfulCommentService} from "../../../src/impl/comments/REST/RestfulCommentService";
+import {RestfulCommentService} from "../../../src/impl/REST/comments/RestfulCommentService";
 import {RequireUserError, SettingsError, ValidationError} from "../../../src/impl/errors";
 import {MISSING_REPLYTO_ID, NO_CONVERSATION_SET, USER_NEEDS_ID} from "../../../src/impl/constants/messages";
 

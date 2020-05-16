@@ -26,8 +26,8 @@ import {
  * Interface for the EventService, which handles chat events and any polling.
  */
 export interface IChatEventService extends ISportsTalkConfigurable, IUserConfigurable  {
-    startChat(),
-    stopChat(),
+    startEventUpdates(),
+    stopEventUpdates(),
     setCurrentRoom(room: RoomResult | null): Room | null,
     setEventHandlers(eventHandlers: EventHandlerConfig),
     getCurrentRoom(): RoomResult | null,
@@ -84,8 +84,8 @@ export interface IChatClient extends IUserConfigurable, ISportsTalkConfigurable{
     createOrUpdateUser(user: User, setDefault?:boolean): Promise<User>
     getLatestEvents(): Promise<ChatUpdatesResult>,
     updateRoom(room:RoomResult): Promise<RoomResult>
-    startChat();
-    stopChat();
+    startEventUpdates();
+    stopEventUpdates();
 }
 
 /**
