@@ -1,6 +1,7 @@
 import * as API from "./API/ChatAPI";
 import {ChatClient} from './impl/ChatClient';
 import {CommentClient} from './impl/CommentClient';
+import {UserClient} from './impl/UserClient';
 import {RestfulChatModerationService} from "./impl/REST/chat/RestfulChatModerationService";
 import {RestfulChatEventService} from "./impl/REST/chat/RestfulChatEventService";
 import {RestfulChatRoomService} from "./impl/REST/chat/RestfulChatRoomService";
@@ -16,10 +17,11 @@ import {RestfulCommentModerationService} from "./impl/REST/comments/RestfulComme
 import {RestfulCommentService} from './impl/REST/comments/RestfulCommentService'
 import {RestfulWebhookService} from "./impl/REST/webhooks/RestfulWebhookService";
 
+
 const Chat = {
     RestfulChatModerationService,
     RestfulChatEventService,
-    RestfulRoomService: RestfulChatRoomService,
+    RestfulChatRoomService
 }
 
 const Conversation = {
@@ -56,6 +58,7 @@ const impl = {
 export {
     ChatClient,
     CommentClient,
+    UserClient,
     services,
     impl,
     ChatModels,
