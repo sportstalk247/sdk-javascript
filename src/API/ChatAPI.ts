@@ -49,6 +49,7 @@ export interface IChatEventService extends ISportsTalkConfigurable, IUserConfigu
 export interface IRoomService extends ISportsTalkConfigurable {
     listRooms(): Promise<ChatRoomListResponse>;
     getRoomDetails(room:ChatRoomResult | string): Promise<ChatRoomResult>
+    getRoomDetailsByCustomId(room:ChatRoomResult | string): Promise<ChatRoomResult>
     deleteRoom(id: string | ChatRoom): Promise<DeletedRoomResponse>
     createRoom(room: ChatRoom): Promise<ChatRoomResult>
     updateRoom(room:ChatRoomResult): Promise<ChatRoomResult>

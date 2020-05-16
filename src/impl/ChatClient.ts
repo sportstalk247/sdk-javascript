@@ -273,6 +273,10 @@ export class ChatClient implements IChatClient {
        return this._roomService.getRoomDetails(room);
     }
 
+    getRoomDetailsByCustomId = (room: ChatRoomResult | string): Promise<ChatRoomResult> => {
+        return this._roomService.getRoomDetailsByCustomId(room);
+    }
+
     /**
      * ROOM COMMANDS SECTION
      */
