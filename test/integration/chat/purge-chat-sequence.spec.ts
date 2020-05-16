@@ -97,7 +97,7 @@ describe('PURGE Chat Sequence', function() {
         it('Fires onPurge',  async function () {
             await delay(500);
             const purge =  await client.sendCommand("*purge "+process.env.PURGE+" handle2");
-            await client.getLatestEvents();
+            await client.getUpdates();
             await delay(100);
             const updates:RestfulChatEventService = <RestfulChatEventService>client.getEventService();
             await updates._fetchUpdatesAndTriggerCallbacks();

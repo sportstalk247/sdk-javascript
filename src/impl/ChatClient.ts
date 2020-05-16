@@ -5,9 +5,9 @@ import {
     EventHandlerConfig,
     ChatRoomResult,
     ChatRoom,
-    ChatRoomUserResult,
+    JoinChatRoomResponse,
     EventResult,
-    DeletedRoomResponse,
+    DeletedChatRoomResponse,
     CommandResponse,
     ChatRoomExitResult,
     ChatUpdatesResult,
@@ -205,7 +205,7 @@ export class ChatClient implements IChatClient {
      * Get the latest events from the server.  You probably want to use 'startTalk' instead.
      * This method will poll the server a single time for latest events.
      */
-    public getLatestEvents = (): Promise<ChatUpdatesResult> => {
+    public getUpdates = (): Promise<ChatUpdatesResult> => {
         return this._eventService.getUpdates()
     }
 
@@ -213,7 +213,7 @@ export class ChatClient implements IChatClient {
      * Join a chat room
      * @param room
      */
-    joinRoom = (room: ChatRoomResult | string): Promise<ChatRoomUserResult> => {
+    joinRoom = (room: ChatRoomResult | string): Promise<JoinChatRoomResponse> => {
         if(!this._user || !this._user.userid) {
             throw new SettingsError(MUST_SET_USER);
         }
@@ -229,7 +229,7 @@ export class ChatClient implements IChatClient {
      * @param user
      * @param room
      */
-    joinRoomByCustomId(user: User, room: ChatRoom | string): Promise<ChatRoomUserResult> {
+    joinRoomByCustomId(user: User, room: ChatRoom | string): Promise<JoinChatRoomResponse> {
         if(!this._user || !this._user.userid) {
             throw new SettingsError(MUST_SET_USER);
         }
@@ -239,7 +239,6 @@ export class ChatClient implements IChatClient {
             return response;
         })
     }
-
 
     /**
      * Exit a room.
@@ -307,7 +306,7 @@ export class ChatClient implements IChatClient {
      * @param reactToMessage
      * @param options
      */
-    sendReaction = (reaction: Reaction, reactToMessage: EventResult | string, options?: CommandOptions): Promise<MessageResult<CommandResponse>> => {
+    sendReaction = (reaction: Reaction | string, reactToMessage: EventResult | string, options?: CommandOptions): Promise<MessageResult<CommandResponse>> => {
         return this._eventService.sendReaction(this._user, reaction, reactToMessage, options);
     }
 
@@ -336,7 +335,7 @@ export class ChatClient implements IChatClient {
      * @param event the event to be deleted.
      * @return the result of the API call.
      */
-    deleteEvent = (event: EventResult | string) =>{
+    deleteEvent = (event: EventResult | string): Promise<MessageResult<null>> =>{
         return this._eventService.deleteEvent(event);
     }
 
@@ -345,7 +344,7 @@ export class ChatClient implements IChatClient {
      * @param event
      * @param type
      */
-    report = (event: EventResult | string, type: ReportType) => {
+    reportEvent = (event: EventResult | string, type: ReportType):Promise<MessageResult<null>> => {
         const reason: ReportReason = {
             reporttype: type,
             userid: this._user.userid
@@ -371,6 +370,10 @@ export class ChatClient implements IChatClient {
         return this._roomService.updateRoom(room);
     }
 
+    deleteRoom = (room: ChatRoomResult): Promise<DeletedChatRoomResponse> => {
+        return this._roomService.deleteRoom(room);
+    }
+
     setBanStatus = (user: User | string, isBanned: boolean): Promise<RestApiResult<UserResult>> => {
         return this._userService.setBanStatus(user, isBanned);
     }
@@ -382,6 +385,7 @@ export class ChatClient implements IChatClient {
     listUsers = (request?: ListRequest): Promise<UserListResponse> => {
         return this._userService.listUsers(request);
     }
+
     deleteUser = (user:User | string):Promise<UserDeletionResponse> => {
         return this._userService.deleteUser(user);
     }
@@ -389,6 +393,27 @@ export class ChatClient implements IChatClient {
     getUserDetails = (user: User | string): Promise<UserResult> => {
         return this._userService.getUserDetails(user);
     }
+
+
+    messageIsReported = async (event: EventResult): Promise<Boolean> => {
+        if(event && event.reports && event.reports.length) {
+            const isReported = event.reports.find(report=>report.userid == this._user.userid);
+            return !!isReported;
+        }
+        return false;
+    }
+
+    messageIsReactedTo = async (event: EventResult, reaction:Reaction | string): Promise<Boolean> => {
+        if(event && event.reactions && event.reactions.length) {
+            const reaction = event.reactions.find(report=>report.type === reaction);
+            if(reaction) {
+                const ourUser = reaction.users.find(user=>user.userid === this._user.userid)
+                return !!ourUser;
+            }
+        }
+        return false;
+    }
+
 
 }
 

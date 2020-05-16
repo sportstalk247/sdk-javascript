@@ -1,7 +1,16 @@
 /**
  * Models used by Chat API and API Responses
  */
-import {RestApiResult, Kind, User, UserResult, MessageResult, ListResponse, ModerationType} from "./CommonModels";
+import {
+    RestApiResult,
+    Kind,
+    User,
+    UserResult,
+    MessageResult,
+    ListResponse,
+    ModerationType,
+    ReportReason, Reaction
+} from "./CommonModels";
 
 export enum EventType {
     speech = "speech",
@@ -15,7 +24,7 @@ export enum EventType {
     advertisement = "advertisement" // custom type
 }
 
-export interface ChatRoomUserResult {
+export interface JoinChatRoomResponse {
     user: UserResult,
     room: ChatRoomResult
 }
@@ -45,7 +54,7 @@ export interface JoinRoomResponse {
     user: User
 }
 
-export interface DeletedRoomResponse {
+export interface DeletedChatRoomResponse {
     kind: Kind.deletedroom,
     deletedEventsCount: number,
     room: ChatRoom
@@ -172,7 +181,14 @@ export interface Event {
     customid?:string, // a custom id for the event, or empty string.
     custompayload?:object, // a custom payload added to the event, may be stringified JSON
     replyto?: EventResult | object, // the ID of the event that this event is a reply to
-    reactions?:Array<EventResult> // the reactions that have happened to this event.
+    reactions?:Array<EventReaction> // the reactions that have happened to this event.
+    reports?: Array<ReportReason>
+}
+
+export interface EventReaction {
+    type: Reaction | string,
+    count: number,
+    users: UserResult[]
 }
 
 /**

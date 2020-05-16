@@ -1,6 +1,6 @@
 import {EventListResponse, EventResult} from "../../../models/ChatModels";
 import {stRequest} from '../../network';
-import {buildAPI, formify, getUrlEncodedHeaders} from "../../utils";
+import {buildAPI, getUrlEncodedHeaders} from "../../utils";
 import {DEFAULT_CONFIG, POST, } from "../../constants/api";
 import {IChatModerationService} from "../../../API/ChatAPI";
 import {RestApiResult, SportsTalkConfig, Webhook} from "../../../models/CommonModels";
@@ -9,6 +9,7 @@ import {RestApiResult, SportsTalkConfig, Webhook} from "../../../models/CommonMo
  * This class is for moderating chat events.  Most clients will not need this unless you are building a custom moderation UI.
  */
 export class RestfulChatModerationService implements IChatModerationService {
+
     private _config: SportsTalkConfig = {appId: ""};
     private _apiHeaders;
     private _apiExt:string = 'chat/moderation/queues/events';

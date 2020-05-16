@@ -389,7 +389,9 @@ export class RestfulChatEventService implements IChatEventService {
         }
         return stRequest(config).then((response)=>{
             return response.data
-        });
+        }).catch((e)=>{
+            throw e;
+        })
     }
 
     /**

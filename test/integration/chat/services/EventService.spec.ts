@@ -28,13 +28,15 @@ describe("Event Service", ()=>{
     const onAdminCommand = sinon.fake();
     const onPurgeEvent = sinon.fake();
     const onReply = sinon.fake();
+    const onReaction = sinon.fake();
 
     client.setEventHandlers({
         onChatStart,
         onChatEvent,
         onAdminCommand,
         onPurgeEvent,
-        onReply
+        onReply,
+        onReaction
     });
     let room;
 
@@ -77,6 +79,21 @@ describe("Event Service", ()=>{
                 expect(handlers.onChatEvent.callCount).to.be.greaterThan(0);
             })
         })
+
+        describe("onReaction", ()=>{
+            it("Will trigger onReaction", async()=>{
+                const id = chatMessage.id;
+                const reaction = await client.sendReaction(Reaction.like, id);
+                const eventService = <RestfulChatEventService> await client.getEventService()
+                await eventService._fetchUpdatesAndTriggerCallbacks();
+                await delay(100);
+                const handlers = client.getEventService().getEventHandlers()
+                // @ts-ignore
+                expect(handlers.onReaction().callCount).to.be.greaterThan(0);
+            })
+        })
+
+
         describe("onAdmin", ()=>{
             it("Will trigger onAdminCommand", async()=>{
                 const purge = await client.sendCommand("*purge zola chatEventUser");

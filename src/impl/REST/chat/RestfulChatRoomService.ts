@@ -3,8 +3,8 @@ import {
     EventResult,
     ChatRoom,
     ChatRoomResult,
-    ChatRoomUserResult,
-    DeletedRoomResponse,
+    JoinChatRoomResponse,
+    DeletedChatRoomResponse,
     ChatRoomExitResult, ChatRoomListResponse
 } from "../../../models/ChatModels";
 import {stRequest} from '../../network';
@@ -73,7 +73,7 @@ export class RestfulChatRoomService implements IRoomService {
      * Delete a room.
      * @param room
      */
-    deleteRoom = (room: ChatRoom | string): Promise<DeletedRoomResponse> => {
+    deleteRoom = (room: ChatRoom | string): Promise<DeletedChatRoomResponse> => {
         // @ts-ignore
         const id =  forceObjKeyOrString(room);
         const config:AxiosRequestConfig = {
@@ -138,7 +138,7 @@ export class RestfulChatRoomService implements IRoomService {
      * @param user
      * @param room
      */
-    joinRoom = (user: User, room: ChatRoomResult | string): Promise<ChatRoomUserResult> => {
+    joinRoom = (user: User, room: ChatRoomResult | string): Promise<JoinChatRoomResponse> => {
         // @ts-ignore
         const roomId = forceObjKeyOrString(room);
         const config: AxiosRequestConfig = {
@@ -163,7 +163,7 @@ export class RestfulChatRoomService implements IRoomService {
      * @param user
      * @param room
      */
-    joinRoomByCustomId(user: User, room: ChatRoom | string): Promise<ChatRoomUserResult> {
+    joinRoomByCustomId(user: User, room: ChatRoom | string): Promise<JoinChatRoomResponse> {
         // @ts-ignore
         const customId = forceObjKeyOrString(room, customid);
         const config: AxiosRequestConfig = {

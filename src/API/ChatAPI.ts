@@ -2,13 +2,13 @@
 
 import {
     AdvertisementOptions, ChatUpdatesResult,
-    CommandOptions, CommandResponse, DeletedRoomResponse,
+    CommandOptions, CommandResponse, DeletedChatRoomResponse,
     EventHandlerConfig, EventListResponse,
     EventResult,
     GoalOptions,
     ChatRoom, ChatRoomExitResult, ChatRoomListResponse,
     ChatRoomResult,
-    ChatRoomUserResult
+    JoinChatRoomResponse
 } from "../models/ChatModels";
 
 import {ISportsTalkConfigurable, IUserConfigurable} from "./CommonAPI";
@@ -36,7 +36,7 @@ export interface IChatEventService extends ISportsTalkConfigurable, IUserConfigu
     reportEvent(event: EventResult | string, reason: ReportReason): Promise<MessageResult<null>>,
     sendCommand(user:User, command: string, options?: CommandOptions):  Promise<MessageResult<CommandResponse>>
     sendReply(user: User, message: string, replyto: string | EventResult, options?: CommandOptions): Promise<MessageResult<CommandResponse>>
-    sendReaction(user: User,  reaction: Reaction, reactToMessage: EventResult | string, options?: CommandOptions): Promise<MessageResult<CommandResponse>>
+    sendReaction(user: User,  reaction: Reaction | string, reactToMessage: EventResult | string, options?: CommandOptions): Promise<MessageResult<CommandResponse>>
     sendAdvertisement(user: User, options: AdvertisementOptions): Promise<MessageResult<CommandResponse>>
     sendGoal(user: User, img: string, message?:string, options?: GoalOptions): Promise<MessageResult<CommandResponse>>
     getEventHandlers(): EventHandlerConfig
@@ -50,15 +50,15 @@ export interface IRoomService extends ISportsTalkConfigurable {
     listRooms(): Promise<ChatRoomListResponse>;
     getRoomDetails(room:ChatRoomResult | string): Promise<ChatRoomResult>
     getRoomDetailsByCustomId(room:ChatRoomResult | string): Promise<ChatRoomResult>
-    deleteRoom(id: string | ChatRoom): Promise<DeletedRoomResponse>
+    deleteRoom(id: string | ChatRoom): Promise<DeletedChatRoomResponse>
     createRoom(room: ChatRoom): Promise<ChatRoomResult>
     updateRoom(room:ChatRoomResult): Promise<ChatRoomResult>
     closeRoom(room:ChatRoomResult | string): Promise<ChatRoomResult>
     openRoom(room:ChatRoomResult | string): Promise<ChatRoomResult>
     listParticipants(room: ChatRoom, cursor?: string, maxresults?: number): Promise<Array<UserResult>>
     listUserMessages(user: User | string, Room: ChatRoom | String, cursor?: string, limit?: number): Promise<Array<EventResult>>
-    joinRoom(user: User, room: ChatRoom | string): Promise<ChatRoomUserResult>
-    joinRoomByCustomId(user: User, room: ChatRoom | string): Promise<ChatRoomUserResult>
+    joinRoom(user: User, room: ChatRoom | string): Promise<JoinChatRoomResponse>
+    joinRoomByCustomId(user: User, room: ChatRoom | string): Promise<JoinChatRoomResponse>
     exitRoom(user: User | string, room: ChatRoom | string): Promise<ChatRoomExitResult>
 }
 
@@ -74,10 +74,10 @@ export interface IChatClient extends IUserConfigurable, ISportsTalkConfigurable{
     sendAdvertisement(options: AdvertisementOptions): Promise<MessageResult<null | CommandResponse>>
     sendGoal(message?:string, img?: string, options?: GoalOptions): Promise<MessageResult<null | CommandResponse>>
     setDefaultGoalImage(url: string);
-    report(event: EventResult | string, reason: ReportType):  Promise<MessageResult<null>>,
+    reportEvent(event: EventResult | string, reason: ReportType):  Promise<MessageResult<null>>,
     listRooms(): Promise<ChatRoomListResponse>
-    joinRoom(room: ChatRoomResult | string): Promise<ChatRoomUserResult>;
-    joinRoomByCustomId(user: User, room: ChatRoom | string): Promise<ChatRoomUserResult>;
+    joinRoom(room: ChatRoomResult | string): Promise<JoinChatRoomResponse>;
+    joinRoomByCustomId(user: User, room: ChatRoom | string): Promise<JoinChatRoomResponse>;
     createRoom(room): Promise<ChatRoomResult>;
     getCurrentRoom(): ChatRoom | null;
     setCurrentRoom(room:ChatRoomResult);
@@ -85,7 +85,7 @@ export interface IChatClient extends IUserConfigurable, ISportsTalkConfigurable{
     setEventHandlers(eventHandlers: EventHandlerConfig);
     getEventHandlers():EventHandlerConfig;
     createOrUpdateUser(user: User, setDefault?:boolean): Promise<User>
-    getLatestEvents(): Promise<ChatUpdatesResult>,
+    getUpdates(): Promise<ChatUpdatesResult>,
     updateRoom(room:ChatRoomResult): Promise<ChatRoomResult>
     startEventUpdates();
     stopEventUpdates();
