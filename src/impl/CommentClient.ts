@@ -1,4 +1,12 @@
-import {Reaction, SportsTalkConfig, User, ReportType} from "../models/CommonModels";
+import {
+    Reaction,
+    SportsTalkConfig,
+    User,
+    ReportType,
+    RestApiResult,
+    UserResult,
+    UserSearchType, UserListResponse, ListRequest, UserDeletionResponse
+} from "../models/CommonModels";
 import {
     Conversation,
     Vote,
@@ -275,6 +283,25 @@ export class CommentClient implements ICommentingClient {
      */
     public listConversations = (filter?: ConversationRequest): Promise<ConversationListResponse> => {
         return this._conversationService.listConversations( filter);
+    }
+
+    setBanStatus = (user: User | string, isBanned: boolean): Promise<RestApiResult<UserResult>> => {
+        return this._userService.setBanStatus(user, isBanned);
+    }
+
+    searchUsers = (search: string, type: UserSearchType, limit?:number): Promise<UserListResponse> => {
+        return this._userService.searchUsers(search, type, limit);
+    }
+
+    listUsers = (request?: ListRequest): Promise<UserListResponse> => {
+        return this._userService.listUsers(request);
+    }
+    deleteUser = (user:User | string):Promise<UserDeletionResponse> => {
+        return this._userService.deleteUser(user);
+    }
+
+    getUserDetails = (user: User | string): Promise<UserResult> => {
+        return this._userService.getUserDetails(user);
     }
 
 }

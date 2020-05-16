@@ -3,15 +3,15 @@ import {
     CommandOptions,
     GoalOptions,
     EventHandlerConfig,
-    RoomResult,
-    Room,
-    RoomUserResult,
+    ChatRoomResult,
+    ChatRoom,
+    ChatRoomUserResult,
     EventResult,
     DeletedRoomResponse,
     CommandResponse,
-    RoomExitResult,
+    ChatRoomExitResult,
     ChatUpdatesResult,
-    RoomListResponse
+    ChatRoomListResponse
 } from "../models/ChatModels";
 import {DEFAULT_CONFIG} from "./constants/api";
 import {IRoomService, IChatEventService, IChatClient} from "../API/ChatAPI";
@@ -25,7 +25,7 @@ import {
     ReportType,
     SportsTalkConfig,
     User,
-    UserResult, MessageResult
+    UserResult, MessageResult, RestApiResult, UserSearchType, UserListResponse, ListRequest, UserDeletionResponse
 } from "../models/CommonModels";
 import {MISSING_ROOM, MUST_SET_USER} from "./constants/messages";
 import {IUserService} from "../API/CommonAPI";
@@ -45,7 +45,7 @@ export class ChatClient implements IChatClient {
     private _user: User = {userid: "", handle: ""};
 
     // Room state tracking
-    private _currentRoom: RoomResult;
+    private _currentRoom: ChatRoomResult;
 
     // Default goal image URL for sending goal events
     private _defaultGoalImage: string | undefined;
@@ -157,7 +157,7 @@ export class ChatClient implements IChatClient {
     /**
      * Retrieve available rooms for this chat app.
      */
-    listRooms = (): Promise<RoomListResponse> => {
+    listRooms = (): Promise<ChatRoomListResponse> => {
         return this._roomService.listRooms();
     }
     /**
@@ -213,7 +213,7 @@ export class ChatClient implements IChatClient {
      * Join a chat room
      * @param room
      */
-    joinRoom = (room: RoomResult | string): Promise<RoomUserResult> => {
+    joinRoom = (room: ChatRoomResult | string): Promise<ChatRoomUserResult> => {
         if(!this._user || !this._user.userid) {
             throw new SettingsError(MUST_SET_USER);
         }
@@ -229,7 +229,7 @@ export class ChatClient implements IChatClient {
      * @param user
      * @param room
      */
-    joinRoomByCustomId(user: User, room: Room | string): Promise<RoomUserResult> {
+    joinRoomByCustomId(user: User, room: ChatRoom | string): Promise<ChatRoomUserResult> {
         if(!this._user || !this._user.userid) {
             throw new SettingsError(MUST_SET_USER);
         }
@@ -244,7 +244,7 @@ export class ChatClient implements IChatClient {
     /**
      * Exit a room.
      */
-    exitRoom = (): Promise<RoomExitResult> => {
+    exitRoom = (): Promise<ChatRoomExitResult> => {
         if(!this._eventService.getCurrentRoom()) {
             throw new SettingsError("Cannot exit if not in a room!");
         }
@@ -256,7 +256,7 @@ export class ChatClient implements IChatClient {
     /**
      * Gets currently set room.  Returns the current room or undefined if a room has not been joined.
      */
-    getCurrentRoom = (): RoomResult | null => {
+    getCurrentRoom = (): ChatRoomResult | null => {
         return this._eventService.getCurrentRoom();
     }
 
@@ -264,7 +264,7 @@ export class ChatClient implements IChatClient {
      * Set the current room state.
      * @param room
      */
-    setCurrentRoom = (room: RoomResult) => {
+    setCurrentRoom = (room: ChatRoomResult) => {
         this._currentRoom = room;
         this._eventService.setCurrentRoom(room);
     }
@@ -350,7 +350,7 @@ export class ChatClient implements IChatClient {
      * @param room the Room object describing the room
      * @return the Room created on the server, with a roomID.
      */
-    createRoom = (room: Room): Promise<RoomResult> => {
+    createRoom = (room: ChatRoom): Promise<ChatRoomResult> => {
         return this._roomService.createRoom(room);
     }
 
@@ -359,8 +359,27 @@ export class ChatClient implements IChatClient {
      * @param room An already created room with a roomId.
      * @return the updated room information.
      */
-    updateRoom = (room:RoomResult): Promise<RoomResult> => {
+    updateRoom = (room:ChatRoomResult): Promise<ChatRoomResult> => {
         return this._roomService.updateRoom(room);
+    }
+
+    setBanStatus = (user: User | string, isBanned: boolean): Promise<RestApiResult<UserResult>> => {
+        return this._userService.setBanStatus(user, isBanned);
+    }
+
+    searchUsers = (search: string, type: UserSearchType, limit?:number): Promise<UserListResponse> => {
+        return this._userService.searchUsers(search, type, limit);
+    }
+
+    listUsers = (request?: ListRequest): Promise<UserListResponse> => {
+        return this._userService.listUsers(request);
+    }
+    deleteUser = (user:User | string):Promise<UserDeletionResponse> => {
+        return this._userService.deleteUser(user);
+    }
+
+    getUserDetails = (user: User | string): Promise<UserResult> => {
+        return this._userService.getUserDetails(user);
     }
 
 }

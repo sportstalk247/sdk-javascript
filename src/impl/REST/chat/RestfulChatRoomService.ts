@@ -1,11 +1,11 @@
 import {IRoomService} from "../../../API/ChatAPI";
 import {
     EventResult,
-    Room,
-    RoomResult,
-    RoomUserResult,
+    ChatRoom,
+    ChatRoomResult,
+    ChatRoomUserResult,
     DeletedRoomResponse,
-    RoomExitResult, RoomListResponse
+    ChatRoomExitResult, ChatRoomListResponse
 } from "../../../models/ChatModels";
 import {stRequest} from '../../network';
 import {GET, DELETE, POST, API_SUCCESS_MESSAGE} from "../../constants/api";
@@ -21,7 +21,7 @@ import {AxiosRequestConfig} from "axios";
  */
 export class RestfulChatRoomService implements IRoomService {
     private _config: SportsTalkConfig;
-    private _knownRooms: Room[] = [];
+    private _knownRooms: ChatRoom[] = [];
     private _apiHeaders = {};
     private _jsonHeaders = {}
     private _apiExt = 'chat/rooms';
@@ -44,7 +44,7 @@ export class RestfulChatRoomService implements IRoomService {
     /**
      * RoomResult Handling
      */
-    listRooms = (): Promise<RoomListResponse> => {
+    listRooms = (): Promise<ChatRoomListResponse> => {
         const config:AxiosRequestConfig = {
             method: GET,
             url: buildAPI(this._config, this._apiExt),
@@ -60,7 +60,7 @@ export class RestfulChatRoomService implements IRoomService {
      * Get the list of known rooms.  Used as a cache after first query to speed up UI.
      * use listRooms() to get a fresh set.
      */
-    getKnownRooms = async (): Promise<Array<Room>> => {
+    getKnownRooms = async (): Promise<Array<ChatRoom>> => {
         if(!this._knownRooms) {
             const response = await this.listRooms();
             this._knownRooms = response.rooms;
@@ -73,7 +73,7 @@ export class RestfulChatRoomService implements IRoomService {
      * Delete a room.
      * @param room
      */
-    deleteRoom = (room: Room | string): Promise<DeletedRoomResponse> => {
+    deleteRoom = (room: ChatRoom | string): Promise<DeletedRoomResponse> => {
         // @ts-ignore
         const id =  forceObjKeyOrString(room);
         const config:AxiosRequestConfig = {
@@ -91,7 +91,7 @@ export class RestfulChatRoomService implements IRoomService {
      * Create a new room
      * @param room
      */
-    createRoom = (room: Room): Promise<RoomResult> => {
+    createRoom = (room: ChatRoom): Promise<ChatRoomResult> => {
         const config:AxiosRequestConfig = {
             method: POST,
             url: buildAPI(this._config, this._apiExt),
@@ -104,7 +104,7 @@ export class RestfulChatRoomService implements IRoomService {
     }
 
     // @ts-ignore
-    listUserMessages = (user:User | string, room: Room | string, cursor: string = "", limit: number = 100): Promise<Array<EventResult>> => {
+    listUserMessages = (user:User | string, room: ChatRoom | string, cursor: string = "", limit: number = 100): Promise<Array<EventResult>> => {
         // @ts-ignore
         const roomid = forceObjKeyOrString(room);
         const userid = forceObjKeyOrString(user, 'userid');
@@ -124,7 +124,7 @@ export class RestfulChatRoomService implements IRoomService {
     * @param cursor
     * @param maxresults
     */
-    listParticipants = (room: Room, cursor?: string, maxresults: number = 200): Promise<Array<UserResult>> => {
+    listParticipants = (room: ChatRoom, cursor?: string, maxresults: number = 200): Promise<Array<UserResult>> => {
         const config:AxiosRequestConfig = {
             method: GET,
             url: buildAPI(this._config,`${this._apiExt}/${room.id}/participants?cursor=${cursor}&maxresults=${maxresults}`),
@@ -138,7 +138,7 @@ export class RestfulChatRoomService implements IRoomService {
      * @param user
      * @param room
      */
-    joinRoom = (user: User, room: RoomResult | string): Promise<RoomUserResult> => {
+    joinRoom = (user: User, room: ChatRoomResult | string): Promise<ChatRoomUserResult> => {
         // @ts-ignore
         const roomId = forceObjKeyOrString(room);
         const config: AxiosRequestConfig = {
@@ -163,7 +163,7 @@ export class RestfulChatRoomService implements IRoomService {
      * @param user
      * @param room
      */
-    joinRoomByCustomId(user: User, room: Room | string): Promise<RoomUserResult> {
+    joinRoomByCustomId(user: User, room: ChatRoom | string): Promise<ChatRoomUserResult> {
         // @ts-ignore
         const customId = forceObjKeyOrString(room, customid);
         const config: AxiosRequestConfig = {
@@ -188,7 +188,7 @@ export class RestfulChatRoomService implements IRoomService {
      * @param user
      * @param room
      */
-    exitRoom = (user: User | string, room: Room | string): Promise<RoomExitResult> => {
+    exitRoom = (user: User | string, room: ChatRoom | string): Promise<ChatRoomExitResult> => {
         const roomId = forceObjKeyOrString(room);
         const userId = forceObjKeyOrString(user, 'userid');
         const config:AxiosRequestConfig = {
@@ -200,11 +200,11 @@ export class RestfulChatRoomService implements IRoomService {
             }
         };
         return stRequest(config).then(response => {
-            return <RoomExitResult> response.message
+            return <ChatRoomExitResult> response.message
         })
     }
 
-    closeRoom = (room:RoomResult | string): Promise<RoomResult> => {
+    closeRoom = (room:ChatRoomResult | string): Promise<ChatRoomResult> => {
         const roomId = forceObjKeyOrString(room);
         const config:AxiosRequestConfig = {
             method: POST,
@@ -213,11 +213,11 @@ export class RestfulChatRoomService implements IRoomService {
             data: {roomisopen: false}
         };
         return stRequest(config).then(response => {
-            return <RoomResult> response.message
+            return <ChatRoomResult> response.message
         })
     }
 
-    openRoom = (room:RoomResult | string): Promise<RoomResult> => {
+    openRoom = (room:ChatRoomResult | string): Promise<ChatRoomResult> => {
         const roomId = forceObjKeyOrString(room);
         const config:AxiosRequestConfig = {
             method: POST,
@@ -226,11 +226,11 @@ export class RestfulChatRoomService implements IRoomService {
             data: {roomisopen: true}
         };
         return stRequest(config).then(response => {
-            return <RoomResult> response.message
+            return <ChatRoomResult> response.message
         })
     }
 
-    updateRoom = (room:RoomResult): Promise<RoomResult> => {
+    updateRoom = (room:ChatRoomResult): Promise<ChatRoomResult> => {
         const roomId = forceObjKeyOrString(room);
         const config:AxiosRequestConfig = {
             method: POST,
@@ -239,7 +239,7 @@ export class RestfulChatRoomService implements IRoomService {
             data: room,
         };
         return stRequest(config).then(response => {
-            return <RoomResult> response.message
+            return <ChatRoomResult> response.message
         })
     }
 }

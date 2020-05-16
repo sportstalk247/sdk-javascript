@@ -16,7 +16,14 @@ import {
     ConversationListResponse, SimpleComment
 } from "../models/CommentsModels";
 
-import {Reaction, SportsTalkConfig, ReportType, RestApiResult} from "../models/CommonModels";
+import {
+    Reaction,
+    SportsTalkConfig,
+    ReportType,
+    RestApiResult,
+    UserResult,
+    UserSearchType, UserListResponse, ListRequest, UserDeletionResponse
+} from "../models/CommonModels";
 
 export interface ICommentService extends ISportsTalkConfigurable {
     createComment(convesationId: string, comment: Comment | SimpleComment | string, user: User, replyto?: Comment | string): Promise<Comment>;
@@ -62,4 +69,10 @@ export interface ICommentingClient extends ISportsTalkConfigurable, IUserConfigu
     getCommentReplies(comment:Comment, request?: CommentRequest): Promise<CommentListResponse>
     listComments(request?: CommentRequest, conversation?: Conversation): Promise<CommentListResponse>
     listConversations(filter?: ConversationRequest): Promise<ConversationListResponse>
+    setBanStatus(user: User | string, isBanned: boolean): Promise<RestApiResult<UserResult>>
+    createOrUpdateUser(user: User): Promise<UserResult>
+    searchUsers(search: string, type: UserSearchType, limit?:number): Promise<UserListResponse>
+    listUsers(request?: ListRequest): Promise<UserListResponse>
+    deleteUser(user:User | string):Promise<UserDeletionResponse>
+    getUserDetails(user: User | string): Promise<UserResult>
 }

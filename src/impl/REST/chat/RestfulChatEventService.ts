@@ -3,7 +3,7 @@ import {
     CommandOptions, CommandResponse,
     EventHandlerConfig,
     EventResult,
-    EventType, GoalOptions, Room, RoomResult
+    EventType, GoalOptions, ChatRoom, ChatRoomResult
 } from "../../../models/ChatModels";
 import {DEFAULT_CONFIG, DELETE, GET, POST} from "../../constants/api";
 import {IChatEventService} from "../../../API/ChatAPI";
@@ -34,7 +34,7 @@ export class RestfulChatEventService implements IChatEventService {
     private _polling: any; // set interval id;
     private _apiHeaders = {}
     private _jsonHeaders = {}
-    private _currentRoom: RoomResult;
+    private _currentRoom: ChatRoomResult;
     private _updatesApi: string;
     private eventHandlers:EventHandlerConfig = {}
     // api endpoints
@@ -108,7 +108,7 @@ export class RestfulChatEventService implements IChatEventService {
     /**
      * Get current room, if set.
      */
-    getCurrentRoom = (): RoomResult | null => {
+    getCurrentRoom = (): ChatRoomResult | null => {
         return this._currentRoom;
     }
 
@@ -117,7 +117,7 @@ export class RestfulChatEventService implements IChatEventService {
      * Will trigger onRoomChange() if new and old rooms are different
      * @param room
      */
-    setCurrentRoom = (room: RoomResult): Room | null => {
+    setCurrentRoom = (room: ChatRoomResult): ChatRoom | null => {
         const oldRoom = this._currentRoom;
         if(!room || !room.id) {
             throw new SettingsError(REQUIRE_ROOM_ID);

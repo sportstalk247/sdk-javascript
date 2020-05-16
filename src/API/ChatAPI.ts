@@ -6,20 +6,21 @@ import {
     EventHandlerConfig, EventListResponse,
     EventResult,
     GoalOptions,
-    Room, RoomExitResult, RoomListResponse,
-    RoomResult,
-    RoomUserResult
+    ChatRoom, ChatRoomExitResult, ChatRoomListResponse,
+    ChatRoomResult,
+    ChatRoomUserResult
 } from "../models/ChatModels";
 
 import {ISportsTalkConfigurable, IUserConfigurable} from "./CommonAPI";
 import {
+    ListRequest,
     MessageResult,
     Reaction,
     ReportReason,
     ReportType,
     RestApiResult,
-    User,
-    UserResult
+    User, UserDeletionResponse, UserListResponse,
+    UserResult, UserSearchType
 } from "../models/CommonModels";
 
 /**
@@ -28,9 +29,9 @@ import {
 export interface IChatEventService extends ISportsTalkConfigurable, IUserConfigurable  {
     startEventUpdates(),
     stopEventUpdates(),
-    setCurrentRoom(room: RoomResult | null): Room | null,
+    setCurrentRoom(room: ChatRoomResult | null): ChatRoom | null,
     setEventHandlers(eventHandlers: EventHandlerConfig),
-    getCurrentRoom(): RoomResult | null,
+    getCurrentRoom(): ChatRoomResult | null,
     getUpdates(): Promise<ChatUpdatesResult>,
     reportEvent(event: EventResult | string, reason: ReportReason): Promise<MessageResult<null>>,
     sendCommand(user:User, command: string, options?: CommandOptions):  Promise<MessageResult<CommandResponse>>
@@ -46,17 +47,17 @@ export interface IChatEventService extends ISportsTalkConfigurable, IUserConfigu
  * Interface for room management
  */
 export interface IRoomService extends ISportsTalkConfigurable {
-    listRooms(): Promise<RoomListResponse>;
-    deleteRoom(id: string | Room): Promise<DeletedRoomResponse>
-    createRoom(room: Room): Promise<RoomResult>
-    updateRoom(room:RoomResult): Promise<RoomResult>
-    closeRoom(room:RoomResult | string): Promise<RoomResult>
-    openRoom(room:RoomResult | string): Promise<RoomResult>
-    listParticipants(room: Room, cursor?: string, maxresults?: number): Promise<Array<UserResult>>
-    listUserMessages(user: User | string, Room: Room | String, cursor?: string, limit?: number): Promise<Array<EventResult>>
-    joinRoom(user: User, room: Room | string): Promise<RoomUserResult>
-    joinRoomByCustomId(user: User, room: Room | string): Promise<RoomUserResult>
-    exitRoom(user: User | string, room: Room | string): Promise<RoomExitResult>
+    listRooms(): Promise<ChatRoomListResponse>;
+    deleteRoom(id: string | ChatRoom): Promise<DeletedRoomResponse>
+    createRoom(room: ChatRoom): Promise<ChatRoomResult>
+    updateRoom(room:ChatRoomResult): Promise<ChatRoomResult>
+    closeRoom(room:ChatRoomResult | string): Promise<ChatRoomResult>
+    openRoom(room:ChatRoomResult | string): Promise<ChatRoomResult>
+    listParticipants(room: ChatRoom, cursor?: string, maxresults?: number): Promise<Array<UserResult>>
+    listUserMessages(user: User | string, Room: ChatRoom | String, cursor?: string, limit?: number): Promise<Array<EventResult>>
+    joinRoom(user: User, room: ChatRoom | string): Promise<ChatRoomUserResult>
+    joinRoomByCustomId(user: User, room: ChatRoom | string): Promise<ChatRoomUserResult>
+    exitRoom(user: User | string, room: ChatRoom | string): Promise<ChatRoomExitResult>
 }
 
 /**
@@ -72,20 +73,26 @@ export interface IChatClient extends IUserConfigurable, ISportsTalkConfigurable{
     sendGoal(message?:string, img?: string, options?: GoalOptions): Promise<MessageResult<null | CommandResponse>>
     setDefaultGoalImage(url: string);
     report(event: EventResult | string, reason: ReportType):  Promise<MessageResult<null>>,
-    listRooms(): Promise<RoomListResponse>
-    joinRoom(room: RoomResult | string): Promise<RoomUserResult>;
-    joinRoomByCustomId(user: User, room: Room | string): Promise<RoomUserResult>;
-    createRoom(room): Promise<RoomResult>;
-    getCurrentRoom(): Room | null;
-    setCurrentRoom(room:RoomResult);
+    listRooms(): Promise<ChatRoomListResponse>
+    joinRoom(room: ChatRoomResult | string): Promise<ChatRoomUserResult>;
+    joinRoomByCustomId(user: User, room: ChatRoom | string): Promise<ChatRoomUserResult>;
+    createRoom(room): Promise<ChatRoomResult>;
+    getCurrentRoom(): ChatRoom | null;
+    setCurrentRoom(room:ChatRoomResult);
     listParticipants(cursor?: string, maxresults?: number): Promise<Array<User>>;
     setEventHandlers(eventHandlers: EventHandlerConfig);
     getEventHandlers():EventHandlerConfig;
     createOrUpdateUser(user: User, setDefault?:boolean): Promise<User>
     getLatestEvents(): Promise<ChatUpdatesResult>,
-    updateRoom(room:RoomResult): Promise<RoomResult>
+    updateRoom(room:ChatRoomResult): Promise<ChatRoomResult>
     startEventUpdates();
     stopEventUpdates();
+    setBanStatus(user: User | string, isBanned: boolean): Promise<RestApiResult<UserResult>>
+    createOrUpdateUser(user: User): Promise<UserResult>
+    searchUsers(search: string, type: UserSearchType, limit?:number): Promise<UserListResponse>
+    listUsers(request?: ListRequest): Promise<UserListResponse>
+    deleteUser(user:User | string):Promise<UserDeletionResponse>
+    getUserDetails(user: User | string): Promise<UserResult>
 }
 
 /**
