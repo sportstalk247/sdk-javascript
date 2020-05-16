@@ -95,6 +95,8 @@ export interface IChatClient extends IUserConfigurable, ISportsTalkConfigurable{
     listUsers(request?: ListRequest): Promise<UserListResponse>
     deleteUser(user:User | string):Promise<UserDeletionResponse>
     getUserDetails(user: User | string): Promise<UserResult>
+    messageIsReported(event: EventResult): Boolean
+    messageIsReactedTo(event: EventResult, reaction:Reaction | string): Boolean
 }
 
 /**
