@@ -29,15 +29,20 @@ const Conversation = {
     RestfulCommentService,
     RestfulCommentModerationService
 }
-const Common = {
+
+const Users = {
     RestfulUserService,
+}
+
+const Webhooks = {
     RestfulWebhookService
 }
 
 const REST ={
     Chat,
     Conversation,
-    Common,
+    Users,
+    Webhooks
 }
 
 const services = {
