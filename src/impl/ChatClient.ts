@@ -394,8 +394,7 @@ export class ChatClient implements IChatClient {
         return this._userService.getUserDetails(user);
     }
 
-
-    messageIsReported = async (event: EventResult): Promise<Boolean> => {
+    messageIsReported = (event: EventResult): Boolean => {
         if(event && event.reports && event.reports.length) {
             const isReported = event.reports.find(report=>report.userid == this._user.userid);
             return !!isReported;
@@ -403,7 +402,7 @@ export class ChatClient implements IChatClient {
         return false;
     }
 
-    messageIsReactedTo = async (event: EventResult, reaction:Reaction | string): Promise<Boolean> => {
+    messageIsReactedTo = (event: EventResult, reaction:Reaction | string): Boolean => {
         if(event && event.reactions && event.reactions.length) {
             const reaction = event.reactions.find(report=>report.type === reaction);
             if(reaction) {
