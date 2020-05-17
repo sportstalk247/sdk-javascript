@@ -1,0 +1,67 @@
+{
+  "kind":"chat.event",
+  "id":"5ec1028b86c292109cd45405",
+  "roomid":"5ec0f93986c292109cd453de",
+  "body":"This is the first chat",
+  "added":"2020-05-17T09:23:23.6229218Z",
+  "ts":637253042036229218,
+  "eventtype":"speech",
+  "userid":"aldo",
+  "user":{
+    "kind":"app.user",
+    "userid":"aldo",
+    "handle":"Aldo",
+    "handlelowercase":"aldo",
+    "displayname":"Aldo",
+    "pictureurl":"https://res.cloudinary.com/sportstalk247/image/upload/w_50,c_fill,ar_1:1,g_auto,b_rgb:262c35/v1576069052/download_t7mxzj.jpg",
+    "profileurl":"",
+    "banned":false
+  },
+  "customtype":"",
+  "customid":"",
+  "custompayload":"",
+  "customtags":[
+
+  ],
+  "customfield1":"",
+  "customfield2":"",
+  "replyto":null,
+  "parentid":"",
+  "hierarchy":[
+
+  ],
+  "edited":false,
+  "deleted":false,
+  "active":true,
+  "mutedby":[
+
+  ],
+  "shadowban":"",
+  "hashtags":[
+
+  ],
+  "likecount":0,
+  "replycount":0,
+  "reactions":[
+    {
+      "type":"like",
+      "count":2,
+      "users":[
+        {
+          "userid":"aldo",
+          "handle":"Aldo",
+          "displayname":"Aldo"
+        },
+        {
+          "userid":"sarah",
+          "handle":"Sarah",
+          "displayname":"Sarah"
+        }
+      ]
+    }
+  ],
+  "moderation":"na",
+  "reports":[
+
+  ]
+}

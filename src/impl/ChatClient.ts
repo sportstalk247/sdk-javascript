@@ -404,11 +404,11 @@ export class ChatClient implements IChatClient {
 
     messageIsReactedTo = (event: EventResult, reaction:Reaction | string): Boolean => {
         if(event && event.reactions && event.reactions.length) {
-            const reaction = event.reactions.find(report=>report.type === reaction);
-            if(reaction) {
-                const ourUser = reaction.users.find(user=>user.userid === this._user.userid)
+            const found = event.reactions.find(report=>report.type === reaction);
+            if(found!==undefined) {
+                const ourUser = found.users.find(user=>user.userid === this._user.userid)
                 return !!ourUser;
-            }
+            } 
         }
         return false;
     }
