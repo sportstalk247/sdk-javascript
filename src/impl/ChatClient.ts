@@ -408,7 +408,7 @@ export class ChatClient implements IChatClient {
             if(found!==undefined) {
                 const ourUser = found.users.find(user=>user.userid === this._user.userid)
                 return !!ourUser;
-            } 
+            }
         }
         return false;
     }

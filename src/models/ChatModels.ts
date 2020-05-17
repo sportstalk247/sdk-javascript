@@ -182,6 +182,8 @@ export interface Event {
     custompayload?:object, // a custom payload added to the event, may be stringified JSON
     replyto?: EventResult | object, // the ID of the event that this event is a reply to
     reactions?:Array<EventReaction> // the reactions that have happened to this event.
+    shadowban: boolean
+    mutedby: []
     reports?: Array<ReportReason>
 }
 
