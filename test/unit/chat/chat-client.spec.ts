@@ -37,7 +37,7 @@ describe("Chat Client", function(){
         client.setUser({userid:'aldo', handle:'Aldo'})
         let isLiked = client.messageIsReactedTo(event, Reaction.like);
         expect(isLiked).to.be.true;
-        client.setUser({userid:'sarah', handle:'Sarah'})
+        client.setUser({userid:'lucas', handle:'Lucas'})
         isLiked = client.messageIsReactedTo(event, Reaction.like);
         expect(isLiked).to.be.false
     })
