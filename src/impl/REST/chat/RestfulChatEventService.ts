@@ -251,6 +251,9 @@ export class RestfulChatEventService implements IChatEventService {
                     }
                     continue;
                 }
+                if(event.shadowban && event.userid !== this._user.userid) {
+                    continue;
+                }
                 if (event.eventtype == EventType.purge && this.eventHandlers.onPurgeEvent) {
                     this.eventHandlers.onPurgeEvent(event);
                     continue;
