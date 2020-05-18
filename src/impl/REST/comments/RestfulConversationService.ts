@@ -107,6 +107,6 @@ export class RestfulConversationService implements IConversationService {
             url: buildAPI(this._config, `${this._apiExt}/${query}`),
             headers: this._jsonHeaders,
         }
-        return stRequest(config);
+        return stRequest(config).then(response=>response.data);
     }
 }
