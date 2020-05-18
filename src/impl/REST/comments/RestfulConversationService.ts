@@ -77,6 +77,22 @@ export class RestfulConversationService implements IConversationService {
             return result.data
         });
     }
+    /**
+     * Get a conversation object
+     * @param conversation
+     */
+    public getConversationByCustomId = (conversation: Conversation | string): Promise<ConversationResponse> => {
+        // @ts-ignore
+        const id = getUrlConversationId(conversation, 'customid');
+        const config: AxiosRequestConfig = {
+            method: GET,
+            url: buildAPI(this._config, `comment/find/conversation/bycustomid?customid=${id}`),
+            headers: this._jsonHeaders,
+        }
+        return stRequest(config).then(result=>{
+            return result.data
+        });
+    }
 
     /**
      * Deletes a conversation and all the comments in it.

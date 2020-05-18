@@ -2,6 +2,7 @@ import * as chai from 'chai';
 import {RestfulWebhookService} from "../../../src/impl/REST/webhooks/RestfulWebhookService";
 import * as dotenv from 'dotenv';
 import {Kind, SportsTalkConfig, Webhook, WebhookEvent, WebhookType} from "../../../src/models/CommonModels";
+
 dotenv.config();
 
 const { expect } = chai;
@@ -48,7 +49,7 @@ describe("Webhook Service", function(){
                 enabled: true,
                 type: WebhookType.prepublish,
                 events: [
-                    WebhookEvent.chatroomopened,
+                    WebhookEvent.chatspeech
                 ]
             }).then(resp=>{
                 prehook = resp;

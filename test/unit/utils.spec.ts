@@ -26,10 +26,10 @@ describe("buildApi", function(){
         expect(api).to.be.equal("http://www.endpoint/FakeAppId/test?sort=oldest")
         request.includechildren = true;
         api = buildAPI(config, "test", request);
-        expect(api).to.be.equal("http://www.endpoint/FakeAppId/test?sort=oldest&includechilden=true")
+        expect(api).to.be.equal("http://www.endpoint/FakeAppId/test?sort=oldest&includechildren=true")
         request.direction = ListSortDirection.forward;
         api = buildAPI(config, "test", request)
-        expect(api).to.be.equal("http://www.endpoint/FakeAppId/test?sort=oldest&includechilden=true&direction=forward")
+        expect(api).to.be.equal("http://www.endpoint/FakeAppId/test?sort=oldest&includechildren=true&direction=forward")
        ;
     })
 })
