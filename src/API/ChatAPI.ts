@@ -77,7 +77,7 @@ export interface IChatClient extends IUserConfigurable, ISportsTalkConfigurable{
     reportEvent(event: EventResult | string, reason: ReportType):  Promise<MessageResult<null>>,
     listRooms(): Promise<ChatRoomListResponse>
     joinRoom(room: ChatRoomResult | string): Promise<JoinChatRoomResponse>;
-    joinRoomByCustomId(user: User, room: ChatRoom | string): Promise<JoinChatRoomResponse>;
+    joinRoomByCustomId(room: ChatRoom | string): Promise<JoinChatRoomResponse>;
     createRoom(room): Promise<ChatRoomResult>;
     getCurrentRoom(): ChatRoom | null;
     setCurrentRoom(room:ChatRoomResult);

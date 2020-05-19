@@ -165,10 +165,10 @@ export class RestfulChatRoomService implements IRoomService {
      */
     joinRoomByCustomId(user: User, room: ChatRoom | string): Promise<JoinChatRoomResponse> {
         // @ts-ignore
-        const customId = forceObjKeyOrString(room, customid);
+        const customId = forceObjKeyOrString(room, 'customid');
         const config: AxiosRequestConfig = {
             method: POST,
-            url: buildAPI(this._config,`${this._apiExt}/${customId}/join`),
+            url: buildAPI(this._config,`chat/roomsbycustomid/${customId}/join`),
             headers: this._jsonHeaders,
             data:{
                 userId: user.userid,

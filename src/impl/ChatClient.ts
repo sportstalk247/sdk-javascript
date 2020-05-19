@@ -229,7 +229,7 @@ export class ChatClient implements IChatClient {
      * @param user
      * @param room
      */
-    joinRoomByCustomId(user: User, room: ChatRoom | string): Promise<JoinChatRoomResponse> {
+    joinRoomByCustomId(room: ChatRoom | string): Promise<JoinChatRoomResponse> {
         if(!this._user || !this._user.userid) {
             throw new SettingsError(MUST_SET_USER);
         }

@@ -34,13 +34,15 @@ describe('REPLY Chat Sequence', function() {
     let theRoom;
     describe('User 1', function () {
         it('Joins room', function (done) {
+            const custom = "chat-test-room" + new Date().getTime();
             rm.createRoom({
                 name: "Test room",
-                slug: "chat-test-room" + new Date().getTime(),
+                customid: custom
             }).then(room => {
                 theRoom = room;
-                return client.joinRoom(room)
-            }).then(() => {
+                return client.joinRoomByCustomId(custom)
+            }).then((resp) => {
+                expect(resp.room.customid).to.be.equal(custom);
                 done()
             }).catch(done)
         })
