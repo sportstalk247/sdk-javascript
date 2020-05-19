@@ -163,6 +163,10 @@ export class CommentClient implements ICommentingClient {
        return <Promise<Conversation>> this._conversationService.getConversation(conversation)
     }
 
+    public getConversationByCustomId(conversation: Conversation | string): Promise<ConversationResponse> {
+        return this._conversationService.getConversationByCustomId(conversation);
+    }
+
     /**
      * Deletes a comments. Be careful. Cannot be reversed
      * @param conversation
