@@ -413,6 +413,10 @@ export class ChatClient implements IChatClient {
         return false;
     }
 
+    listPreviousEvents = (cursor:string):Promise<ChatUpdatesResult> => {
+        return this._eventService.listPreviousEvents(cursor);
+    }
+
 
 }
 

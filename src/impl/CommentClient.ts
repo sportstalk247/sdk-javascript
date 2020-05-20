@@ -308,4 +308,5 @@ export class CommentClient implements ICommentingClient {
         return this._userService.getUserDetails(user);
     }
 
+
 }
