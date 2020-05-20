@@ -154,13 +154,46 @@ chatClient.getRoomDetailsByCustomId ('your-custom-room-id').then(function(room){
 ```
 
 ## Join a room
-To join a room, 
+### Anonymous
+You can join a room anonymously
+
+```
+chatClient.joinRoom('a-room-id').then(function(roomDetailsAndUpdates){
+    // the response will include room details and also the latest chat events.
+})
+```
+
+### Authenticated
+To join a room as an authenticated user, set the current user for the client.  This user will be used by default for all updates and chat events.
+```
+chatClient.setUser({userid: 'a-user-id', handle:'user-handle'});
+chatClient.joinRoom('a-room-id').then(function(roomDetailsAndUpdates){
+    // the response will include room details and also the latest chat events.
+})
+```
 
 ## Register event handlers
+Once you have joined a chat room, you need to be able to handle incoming events. 
+Only one handler, `onChatEvent`, is necessary:
+```javascript 1.8
+chatClient.setEventHandlers({
+    onChatEvent: function(event){ 
+        // handle the events here 
+    }
+})
+```
 
 ## Start/Subscribe to room updates
+Once you have joined a room and set your event handler, you can begin recieving new events using `startChat()`
+```javascript 1.8
+chatClient.startChat()
+```
 
 ## Stop updates
+When you want to stop recieving new events, you can stop your room subscription with `stopChat()`
+```javascript 1.8
+chatClient.stopChat()
+```
 
 # Understanding the SDK
 

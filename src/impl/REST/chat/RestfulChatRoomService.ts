@@ -138,14 +138,16 @@ export class RestfulChatRoomService implements IRoomService {
      * @param user
      * @param room
      */
-    joinRoom = (user: User, room: ChatRoomResult | string): Promise<JoinChatRoomResponse> => {
+    joinRoom = (room: ChatRoomResult | string, user?: User): Promise<JoinChatRoomResponse> => {
         // @ts-ignore
         const roomId = forceObjKeyOrString(room);
         const config: AxiosRequestConfig = {
             method: POST,
             url: buildAPI(this._config,`${this._apiExt}/${roomId}/join`),
             headers: this._jsonHeaders,
-            data:{
+        }
+        if(user && user.userid) {
+            config.data = {
                 userId: user.userid,
                 handle: user.handle,
                 displayname: user.displayname || "",
@@ -163,14 +165,16 @@ export class RestfulChatRoomService implements IRoomService {
      * @param user
      * @param room
      */
-    joinRoomByCustomId(user: User, room: ChatRoom | string): Promise<JoinChatRoomResponse> {
+    joinRoomByCustomId(room: ChatRoom | string, user?: User): Promise<JoinChatRoomResponse> {
         // @ts-ignore
         const customId = forceObjKeyOrString(room, 'customid');
         const config: AxiosRequestConfig = {
             method: POST,
             url: buildAPI(this._config,`chat/roomsbycustomid/${customId}/join`),
             headers: this._jsonHeaders,
-            data:{
+        }
+        if(user) {
+            config.data = {
                 userId: user.userid,
                 handle: user.handle,
                 displayname: user.displayname || "",

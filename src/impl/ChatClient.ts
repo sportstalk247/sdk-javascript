@@ -217,7 +217,7 @@ export class ChatClient implements IChatClient {
         if(!this._user || !this._user.userid) {
             throw new SettingsError(MUST_SET_USER);
         }
-        return this._roomService.joinRoom(this._user, room).then(response => {
+        return this._roomService.joinRoom(room, this._user).then(response => {
             this._currentRoom = response.room;
             this._eventService.setCurrentRoom(this._currentRoom);
             return response;
@@ -233,7 +233,7 @@ export class ChatClient implements IChatClient {
         if(!this._user || !this._user.userid) {
             throw new SettingsError(MUST_SET_USER);
         }
-        return this._roomService.joinRoomByCustomId(this._user, room).then(response => {
+        return this._roomService.joinRoomByCustomId(room, this._user).then(response => {
             this._currentRoom = response.room;
             this._eventService.setCurrentRoom(this._currentRoom);
             return response;

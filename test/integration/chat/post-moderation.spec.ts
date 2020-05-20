@@ -35,7 +35,7 @@ describe('Post moderation Sequence', function() {
         rm.createRoom({
             enableprofanityfilter: false,
             name: "post moderation test room",
-            slug: "post-test-room" + new Date().getTime(),
+            customid: "post-test-room" + new Date().getTime(),
             maxreports: 0,
             moderation: ModerationType.post
         }).then(room => {

@@ -57,8 +57,8 @@ export interface IRoomService extends ISportsTalkConfigurable {
     openRoom(room:ChatRoomResult | string): Promise<ChatRoomResult>
     listParticipants(room: ChatRoom, cursor?: string, maxresults?: number): Promise<Array<UserResult>>
     listUserMessages(user: User | string, Room: ChatRoom | String, cursor?: string, limit?: number): Promise<Array<EventResult>>
-    joinRoom(user: User, room: ChatRoom | string): Promise<JoinChatRoomResponse>
-    joinRoomByCustomId(user: User, room: ChatRoom | string): Promise<JoinChatRoomResponse>
+    joinRoom(room: ChatRoom | string, user: User): Promise<JoinChatRoomResponse>
+    joinRoomByCustomId( room: ChatRoom | string, user: User): Promise<JoinChatRoomResponse>
     exitRoom(user: User | string, room: ChatRoom | string): Promise<ChatRoomExitResult>
 }
 
