@@ -188,16 +188,16 @@ const commentClient = CommentClient.create({appId:..., apiToken:...});
 #### Require
  ```javascript
 const sdk =  require('sportstalk-sdk')
-const commentClient = sdk.CommentClient.create({appId:..., apiToken:...});
+const commentClient = sdk.CommentClient.init({appId:..., apiToken:...});
  ```
 
 ## Creating a user
-One of the first things you might need to do in Sportstalk is create a user. Users are shared between chat and commenting in the same application.
+One of the first things you might need to do in Sportstalk is.init a user. Users are shared between chat and commenting in the same application.
 To create a user, you can use either the chat or comment clients, or a UserService (advanced). 
 
 ```javascript
-const commentClient = sdk.CommentClient.create({...});
-commentClient.createUser({userid: "definedByYourSystem-MustBeUnique", handle: "Must-Be-Unique-String"})
+const commentClient = sdk.CommentClient.init({...});
+commentClient.initUser({userid: "definedByYourSystem-MustBeUnique", handle: "Must-Be-Unique-String"})
     .then(function(user) {
         // user has been created.
     }).catch(function(error) {
@@ -260,7 +260,7 @@ Updates the client configuration. Usually you should just create a new client.
 ```javascript
 
 const sdk = require('sportstalk-sdk');
-const client = sdk.CommentClient.create({ appId: 'yourappid', apiToken: token});
+const client = sdk.CommentClient.init({ appId: 'yourappid', apiToken: token});
 client.setConfig({appId: 'newAppId', apiToken: 'newApiToken', endpoint: 'https://www.yourproxy.server'});
 
 ```
@@ -271,7 +271,7 @@ Returns the current configuration object
 ```javascript
 
 const sdk = require('sportstalk-sdk');
-const client = sdk.CommentClient.create({ appId: 'yourappid', apiToken: token});
+const client = sdk.CommentClient.init({ appId: 'yourappid', apiToken: token});
 const config = client.getConfig();
 // config will hold { appId: 'yourappid', apiToken: token, endpoint: 'https://api.sportstalk247.com/api/v3' }
 
@@ -281,7 +281,7 @@ const config = client.getConfig();
 
 ```javascript
 const sdk = require('sportstalk-sdk');
-const client = sdk.CommentClient.create({ appId, apiToken: token});
+const client = sdk.CommentClient.init({ appId, apiToken: token});
 async function createConversation() {
       
         try {
@@ -308,7 +308,7 @@ By default, setDefault is TRUE, meaning that if you create or update a user, tha
 
 ```javascript
 async function createOrUpdateUserExampleFunction() {
-    const client = sdk.CommentClient.create({ appId, apiToken: token });
+    const client = sdk.CommentClient.init({ appId, apiToken: token });
     const user = await client.createOrUpdateUser({
             userid: "UniqueStringId", 
             handle:"UniqueButReadable",
@@ -329,7 +329,7 @@ https://gitlab.com/sportstalk247/sdk-javascript/-/blob/master/src/models/Comment
 
 ```javascript
 async function setCurrentConversationExampleFunction() {
-    const client = sdk.CommentClient.create({ appId, apiToken: token });
+    const client = sdk.CommentClient.init({ appId, apiToken: token });
     const conversation = await client.createConversation({
         conversationid: 'my-conversation-id',
         property: 'TEST',
@@ -356,7 +356,7 @@ Gets the current conversation.  Will be null or undefined if there is no current
 
 ```javascript
 async function getCurrentConversationExampleFunction() {
-    const client = sdk.CommentClient.create({ appId, apiToken: token });
+    const client = sdk.CommentClient.init({ appId, apiToken: token });
     const conversation = await client.createConversation({
         conversationid: 'my-conversation-id',
         property: 'TEST',
@@ -380,7 +380,7 @@ Retrieves data about a specific conversation from the server.
 
 ```javascript
 async function getConversationExampleFunction() {
-    const client = sdk.CommentClient.create({ appId, apiToken: token });
+    const client = sdk.CommentClient.init({ appId, apiToken: token });
     const conversation = await client.createConversation({
         conversationid: 'my-conversation-id',
         property: 'TEST',
@@ -402,7 +402,7 @@ Deletes a conversation
 const sdk = require('sportstalk-sdk');
 
 async function deleteConversationExampleFunction() {
-    const client = sdk.CommentClient.create({ appId, apiToken: token });
+    const client = sdk.CommentClient.init({ appId, apiToken: token });
     const conversation = await client.createConversation({
         conversationid: 'my-conversation-id',
         property: 'TEST',
@@ -423,7 +423,7 @@ Make a comment on the current conversation. Will throw an error if a conversatio
 const sdk = require('sportstalk-sdk');
 
 async function createCommentExampleFunction() {
-    const client = sdk.CommentClient.create({ appId, apiToken: token });
+    const client = sdk.CommentClient.init({ appId, apiToken: token });
     const conversation = await client.createConversation({
         conversationid: 'my-conversation-id',
         property: 'TEST',
@@ -445,7 +445,7 @@ Retrieves a specific comment. The param can either be a comment object with an i
 const sdk = require('sportstalk-sdk');
 
 async function getCommentExampleFunction() {
-    const client = sdk.CommentClient.create({ appId: 'yourappId', apiToken: 'your-api-token' });
+    const client = sdk.CommentClient.init({ appId: 'yourappId', apiToken: 'your-api-token' });
     const conversation = await client.createConversation({
         conversationid: 'my-conversation-id',
         property: 'TEST',
@@ -534,7 +534,7 @@ You can also use the client in node.
 
 ```typescript
 import { ChatClient } from 'sportstalk-sdk'
-const client = ChatClient.create({apiKey:'YourApiKeyHere', appId: 'yourAppId'}, {...EventHandlerConfig});
+const client = ChatClient.init({apiKey:'YourApiKeyHere', appId: 'yourAppId'}, {...EventHandlerConfig});
 ```
 
 ## Events Callbacks
