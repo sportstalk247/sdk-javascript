@@ -29,12 +29,12 @@ If you are using a proxy, the only mandatory data for a SportstalkConfig object 
 If you are using typescript, we provide typescript definitions for all objects.  It's as simple as:
  ```
  import { CommentClient } from 'sportstalk-sdk'
- const commentClient = CommentClient.create({appId: ... , apiToken: ....}); 
+ const commentClient = CommentClient.init({appId: ... , apiToken: ....}); 
 ```
  or
  ```
 import { ChatClient } from 'sportstalk-sdk'
-const chatClient = ChatClient.create({appId: ... , apiToken: ....}); 
+const chatClient = ChatClient.init({appId: ... , apiToken: ....}); 
  ```
  
  
@@ -43,8 +43,8 @@ You can use require as well.
 
 ```
 const sdk = require('sportstalk-sdk');
-const commentClient = sdk.CommentClient.create({appId..., apiToken...});
-const chatClient = sdk.ChatClient.create(({appId..., apiToken...});
+const commentClient = sdk.CommentClient.init({appId..., apiToken...});
+const chatClient = sdk.ChatClient.init(({appId..., apiToken...});
 ```
 
 You will need to register with SportsTalk and get an API Key in order to use sportstalk functions.
