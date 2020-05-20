@@ -498,4 +498,35 @@ export class RestfulChatEventService implements IChatEventService {
         return this._logicalDeleteEvent(event);
     }
 
+    listPreviousEvents = (cursor?:string, limit?: number): Promise<ChatUpdatesResult> => {
+        const theCursor = cursor || "";
+        const theLimit = limit || 100;
+        if(!this._roomApi) {
+            throw new SettingsError("No room selected");
+        }
+        return stRequest({
+            method: GET,
+            url: `${this._roomApi}/listpreviousevents?cursor=${cursor}&limit=${theLimit}`,
+            headers: this._apiHeaders
+        }).then((result) => {
+            return result.data;
+        });
+    }
+
+    listEventsHistory = (cursor?:string, limit?: number): Promise<ChatUpdatesResult> => {
+        const theCursor = cursor || "";
+        const theLimit = limit || 100;
+        if(!this._roomApi) {
+            throw new SettingsError("No room selected");
+        }
+        return stRequest({
+            method: GET,
+            url: `${this._roomApi}/listeventshistory?cursor=${cursor}&limit=${theLimit}`,
+            headers: this._apiHeaders
+        }).then((result) => {
+            return result.data;
+        });
+    }
+
+
 }
