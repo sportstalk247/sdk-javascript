@@ -157,7 +157,7 @@ chatClient.getRoomDetailsByCustomId ('your-custom-room-id').then(function(room){
 ### Anonymous
 You can join a room anonymously
 
-```
+```javascript 1.8
 chatClient.joinRoom('a-room-id').then(function(roomDetailsAndUpdates){
     // the response will include room details and also the latest chat events.
 })
@@ -165,7 +165,7 @@ chatClient.joinRoom('a-room-id').then(function(roomDetailsAndUpdates){
 
 ### Authenticated
 To join a room as an authenticated user, set the current user for the client.  This user will be used by default for all updates and chat events.
-```
+```javascript 1.8
 chatClient.setUser({userid: 'a-user-id', handle:'user-handle'});
 chatClient.joinRoom('a-room-id').then(function(roomDetailsAndUpdates){
     // the response will include room details and also the latest chat events.
@@ -194,6 +194,47 @@ When you want to stop recieving new events, you can stop your room subscription 
 ```javascript 1.8
 chatClient.stopChat()
 ```
+
+## Executing a chat command / Sending a message
+When you want to send a message, you should first set a user and then use 
+```javascript 1.8
+chatClient.setUser({userid: 'a-user-id', handle:'user-handle'});
+chatClient.sendCommand('A simple chat message').then(function(serverResponse){
+    // The result will be the raw server response in JSON to 'executeChatCommand'
+})
+```
+
+## Send a reply
+```javascript 1.8
+chatClient.setUser({userid: 'a-user-id', handle:'user-handle'});
+chatClient.sendReply('A reply', originalMessageIdOrObject).then(function(serverResponse){
+    // The result will be the raw server response in JSON.
+})
+```
+## Send a Reaction
+```javascript 1.8
+chatClient.setUser({userid: 'a-user-id', handle:'user-handle'});
+chatClient.sendReaction('like', originalMessageIdOrObject).then(function(serverResponse){
+    // The result will be the raw server response in JSON.
+})
+```
+
+## Delete a message (logical delete)
+```javascript 1.8
+chatClient.deleteEvent(eventObject).then(function(deletionResponse){
+    // on success, message has been deleted
+}).catch(function(e){
+  // something went wrong, perhaps it was already deleted or you have the wrong ID.
+})
+```
+
+## Report a message for abuse
+```javascript 1.8
+chatClient.reportEvent('event ID', 'abuse').then(function(result){ 
+    // event has been reported.
+  })
+```
+
 
 # Understanding the SDK
 

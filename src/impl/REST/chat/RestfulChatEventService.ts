@@ -5,7 +5,7 @@ import {
     EventResult,
     EventType, GoalOptions, ChatRoom, ChatRoomResult
 } from "../../../models/ChatModels";
-import {DEFAULT_CONFIG, DELETE, GET, POST} from "../../constants/api";
+import {DEFAULT_CONFIG, DELETE, GET, POST, PUT} from "../../constants/api";
 import {IChatEventService} from "../../../API/ChatAPI";
 import {buildAPI, getJSONHeaders, getUrlEncodedHeaders} from "../../utils";
 import {SettingsError} from "../../errors";
@@ -450,11 +450,7 @@ export class RestfulChatEventService implements IChatEventService {
         })
     }
 
-    /**
-     * Delete an event on the server.  Will not clear it from clients that have already displayed it.
-     * @param event
-     */
-    deleteEvent = (event: EventResult | string): Promise<RestApiResult<null>> => {
+    private _deleteEvent = (event: EventResult | string):Promise<RestApiResult<null>> => {
         if(!event) {
             throw new Error("Cannot delete a null or undefined event")
         }
@@ -473,4 +469,33 @@ export class RestfulChatEventService implements IChatEventService {
             throw e;
         });
     }
+
+    private _logicalDeleteEvent = (event:EventResult | string):Promise<RestApiResult<null>> => {
+        if(!event) {
+            throw new Error("Cannot delete a null or undefined event")
+        }
+        // @ts-ignore
+        const id = event.id || event;
+        if(!id) {
+            throw new Error("Cannot delete an event without an id")
+        }
+        const config: AxiosRequestConfig = {
+            method: PUT,
+            url: buildAPI(this._config, `chat/rooms/${this._currentRoom.id}/events/${id}/setdeleted?userid=&deleted=true&permanentifnoreplies=false`)
+        }
+        // @ts-ignore
+        return stRequest(config);
+    }
+
+    /**
+     * Delete an event on the server.  Will not clear it from clients that have already displayed it.
+     * @param event
+     */
+    deleteEvent = (event: EventResult | string, force?: boolean): Promise<RestApiResult<null>> => {
+        if(force) {
+            return this._deleteEvent(event);
+        }
+        return this._logicalDeleteEvent(event);
+    }
+
 }

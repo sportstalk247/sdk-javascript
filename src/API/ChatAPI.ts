@@ -40,7 +40,7 @@ export interface IChatEventService extends ISportsTalkConfigurable, IUserConfigu
     sendAdvertisement(user: User, options: AdvertisementOptions): Promise<MessageResult<CommandResponse>>
     sendGoal(user: User, img: string, message?:string, options?: GoalOptions): Promise<MessageResult<CommandResponse>>
     getEventHandlers(): EventHandlerConfig
-    deleteEvent(event: EventResult | string): Promise<MessageResult<null>>
+    deleteEvent(event: EventResult | string, force?:boolean): Promise<MessageResult<null>>
 }
 
 /**
@@ -89,6 +89,7 @@ export interface IChatClient extends IUserConfigurable, ISportsTalkConfigurable{
     updateRoom(room:ChatRoomResult): Promise<ChatRoomResult>
     startEventUpdates();
     stopEventUpdates();
+    deleteEvent(event: EventResult | string, force?:boolean): Promise<MessageResult<null>>
     setBanStatus(user: User | string, isBanned: boolean): Promise<RestApiResult<UserResult>>
     createOrUpdateUser(user: User): Promise<UserResult>
     searchUsers(search: string, type: UserSearchType, limit?:number): Promise<UserListResponse>
