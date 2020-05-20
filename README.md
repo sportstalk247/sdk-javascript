@@ -23,11 +23,12 @@ If you are using a proxy, the only mandatory data for a SportstalkConfig object 
 ### Creating Client Objects
 #### Using Typescript (recommended)
 If you are using typescript, we provide typescript definitions for all objects.  It's as simple as:
+##### Commenting Client
  ```
  import { CommentClient } from 'sportstalk-sdk'
  const commentClient = CommentClient.init({appId: ... , apiToken: ....}); 
 ```
- or
+##### Chat Client
  ```
 import { ChatClient } from 'sportstalk-sdk'
 const chatClient = ChatClient.init({appId: ... , apiToken: ....}); 
@@ -91,6 +92,76 @@ However, understanding basic typescript notation is still helpful for understand
 
 There is a 5 min primer on typescript and you can get started with typescript here: https://www.typescriptlang.org/docs/home.html
 
+# Key Chat Operations
+All examples are shown with promises to be used in-browser.  You can also use async/await if using node.js or react.
+
+*Before executing any of these operations, create the client like so:*
+
+Javascript:
+```javascript 1.8
+const sdk = require('sportstalk-sdk');
+const chatClient = sdk.ChatClient.init({appId:'yourAppId', apiToken:'yourApiToken'});
+```
+
+Typescript:
+ ```typescript
+import { ChatClient } from 'sportstalk-sdk'
+const chatClient = ChatClient.init({appId:'yourAppId', apiToken:'yourApiToken'}); 
+ ```
+
+## Create or Update Room
+```javascript 1.8
+chatClient.createRoom({ 
+    name: "Your room name",
+    customid: "your-custom-id",
+    moderation: "post"                     
+}).then(function(room){
+    // your room is ready.
+    const roomid = room.id
+})
+```
+
+To update a room, just call `updateRoom()` with the ID already set:
+
+```javascript 1.8
+chatClient.updateRoom({ 
+    id: 'generated-id-value',
+    name: "Your NEW room name", // updated
+    customid: "your-custom-id",
+    moderation: "post"                     
+}).then(function(room){
+    // your room is ready.
+})
+```
+## Get room details
+
+### By Room ID
+To get the details about a room, use `getRoomDetails()`
+
+```javascript 1.8
+chatClient.getRoomDetails('your-room-id').then(function(room){  
+    // your room is ready.
+ })
+```
+
+### By Room Custom ID
+To get the details about a room, use `getRoomDetailsByCustomId()`
+
+```javascript 1.8
+chatClient.getRoomDetailsByCustomId ('your-custom-room-id').then(function(room){  
+    // your room is ready.
+ })
+```
+
+## Join a room
+To join a room, 
+
+## Register event handlers
+
+## Start/Subscribe to room updates
+
+## Stop updates
+
 # Understanding the SDK
 
 ## Key concepts
@@ -120,12 +191,12 @@ Common Services:
 Chat Services:
 - ChatEventService
 - ChatRoomService
-- Chat Moderation Service
+- ChatModeration Service
 
 Comment Services:
 - CommentService
-- Conversation Service
-- Comment Moderation Service
+- ConversationService
+- CommentModerationService
 
 
 You can  see the details for each under **'Backing Services'** section
