@@ -1,31 +1,27 @@
 # Sportstalk 247 Javascript SDK
 
-
-## Usage
-The Sportstalk SDK is a helpful wrapper around the [Sportstalk API](https://apiref.sportstalk247.com/?version=latest)
-
-The set of SDKs and source (iOS, Android, and JS) is here: https://gitlab.com/sportstalk247/
-
+## STATUS: BETA
+This SDK is under active development and improvement. We are also very open to feedback if you experience pain points while using the SDK.
+## GETTING STARTED: Setting up the SDK
 #### Install via NPM
 ```
 npm install sportstalk-sdk --save
 ```
 
-## App Id and api Tokens
+### App Id and api Tokens
 Clients and services require a SportsTalkConfig object, which looks like so: 
 ```javascript
 {
     appId: 'yourappID-from-the-dashboard',
     apiToken: 'yourApiToken-from-the-dashboard', // NOTE: you should use a proxy to hide your token and restrict behavior to specific domains on the web.
-    endpoint: 'custom-endpoint' // Use this to set a proxy on the web, or if you have an on-prem install of sportstalk at a custom location.
+    endpoint: 'custom-endpoint' // OPTIONAL Use this to set a proxy on the web, or if you have an on-prem install of sportstalk at a custom location.
 }
 ```
 
 If you are using a proxy, the only mandatory data for a SportstalkConfig object is the `appId` and `endpoint`. Otherwise you will need to provide the `appId` and `apiToken`
 
-## Using the SDK in Node.js
-
-### Using Typescript (recommended)
+### Creating Client Objects
+#### Using Typescript (recommended)
 If you are using typescript, we provide typescript definitions for all objects.  It's as simple as:
  ```
  import { CommentClient } from 'sportstalk-sdk'
@@ -38,7 +34,7 @@ const chatClient = ChatClient.init({appId: ... , apiToken: ....});
  ```
  
  
-### Using require
+#### Using require
 You can use require as well.
 
 ```
