@@ -184,9 +184,9 @@ chatClient.setEventHandlers({
 ```
 
 ## Start/Subscribe to room updates
-Once you have joined a room and set your event handler, you can begin recieving new events using `startChat()`
+Once you have joined a room and set your event handler, you can begin recieving new events using `startEventUpdates()`
 ```javascript
-chatClient.startChat()
+chatClient.startEventUpdates()
 ```
 
 ## Stop updates
@@ -666,7 +666,7 @@ client.setUser({
 // List rooms, join a room, and then start talking!
 client.listRooms().then(function(list){
   return client.joinRoom(lisy.rooms[0]);
-}).then(client.startChat);
+}).then(client.startEventUpdates);
 
 ```
 For use of these events in action, see the demo page: https://www.sportstalk247.com/demo.html
@@ -832,7 +832,7 @@ async function eventServiceExample() {
     // Argument is a Room object with an ID that has been created.  See the RoomService
     const eventService =  await service.setCurrentRoom({...});
     // This will start the chat, but without callbacks nothing will happen.  See the ChatClient documentation.
-    eventService.startChat(); // will begin receiving events from the room.
+    eventService.startEventUpdates(); // will begin receiving events from the room.
 }
 ```
 
