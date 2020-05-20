@@ -98,7 +98,7 @@ All examples are shown with promises to be used in-browser.  You can also use as
 *Before executing any of these operations, create the client like so:*
 
 Javascript:
-```javascript 1.8
+```javascript
 const sdk = require('sportstalk-sdk');
 const chatClient = sdk.ChatClient.init({appId:'yourAppId', apiToken:'yourApiToken'});
 ```
@@ -110,7 +110,7 @@ const chatClient = ChatClient.init({appId:'yourAppId', apiToken:'yourApiToken'})
  ```
 
 ## Create or Update Room
-```javascript 1.8
+```javascript
 chatClient.createRoom({ 
     name: "Your room name",
     customid: "your-custom-id",
@@ -123,7 +123,7 @@ chatClient.createRoom({
 
 To update a room, just call `updateRoom()` with the ID already set:
 
-```javascript 1.8
+```javascript
 chatClient.updateRoom({ 
     id: 'generated-id-value',
     name: "Your NEW room name", // updated
@@ -147,7 +147,7 @@ chatClient.getRoomDetails('your-room-id').then(function(room){
 ### By Room Custom ID
 To get the details about a room, use `getRoomDetailsByCustomId()`
 
-```javascript 1.8
+```javascript
 chatClient.getRoomDetailsByCustomId ('your-custom-room-id').then(function(room){  
     // your room is ready.
  })
@@ -157,7 +157,7 @@ chatClient.getRoomDetailsByCustomId ('your-custom-room-id').then(function(room){
 ### Anonymous
 You can join a room anonymously
 
-```javascript 1.8
+```javascript
 chatClient.joinRoom('a-room-id').then(function(roomDetailsAndUpdates){
     // the response will include room details and also the latest chat events.
 })
@@ -165,7 +165,7 @@ chatClient.joinRoom('a-room-id').then(function(roomDetailsAndUpdates){
 
 ### Authenticated
 To join a room as an authenticated user, set the current user for the client.  This user will be used by default for all updates and chat events.
-```javascript 1.8
+```javascript
 chatClient.setUser({userid: 'a-user-id', handle:'user-handle'});
 chatClient.joinRoom('a-room-id').then(function(roomDetailsAndUpdates){
     // the response will include room details and also the latest chat events.
@@ -175,7 +175,7 @@ chatClient.joinRoom('a-room-id').then(function(roomDetailsAndUpdates){
 ## Register event handlers
 Once you have joined a chat room, you need to be able to handle incoming events. 
 Only one handler, `onChatEvent`, is necessary:
-```javascript 1.8
+```javascript
 chatClient.setEventHandlers({
     onChatEvent: function(event){ 
         // handle the events here 
@@ -185,19 +185,19 @@ chatClient.setEventHandlers({
 
 ## Start/Subscribe to room updates
 Once you have joined a room and set your event handler, you can begin recieving new events using `startChat()`
-```javascript 1.8
+```javascript
 chatClient.startChat()
 ```
 
 ## Stop updates
 When you want to stop recieving new events, you can stop your room subscription with `stopChat()`
-```javascript 1.8
+```javascript
 chatClient.stopChat()
 ```
 
 ## Executing a chat command / Sending a message
 When you want to send a message, you should first set a user and then use 
-```javascript 1.8
+```javascript
 chatClient.setUser({userid: 'a-user-id', handle:'user-handle'});
 chatClient.sendCommand('A simple chat message').then(function(serverResponse){
     // The result will be the raw server response in JSON to 'executeChatCommand'
@@ -205,14 +205,14 @@ chatClient.sendCommand('A simple chat message').then(function(serverResponse){
 ```
 
 ## Send a reply
-```javascript 1.8
+```javascript
 chatClient.setUser({userid: 'a-user-id', handle:'user-handle'});
 chatClient.sendReply('A reply', originalMessageIdOrObject).then(function(serverResponse){
     // The result will be the raw server response in JSON.
 })
 ```
 ## Send a Reaction
-```javascript 1.8
+```javascript
 chatClient.setUser({userid: 'a-user-id', handle:'user-handle'});
 chatClient.sendReaction('like', originalMessageIdOrObject).then(function(serverResponse){
     // The result will be the raw server response in JSON.
@@ -220,7 +220,7 @@ chatClient.sendReaction('like', originalMessageIdOrObject).then(function(serverR
 ```
 
 ## Delete a message (logical delete)
-```javascript 1.8
+```javascript
 chatClient.deleteEvent(eventObject).then(function(deletionResponse){
     // on success, message has been deleted
 }).catch(function(e){
@@ -229,7 +229,7 @@ chatClient.deleteEvent(eventObject).then(function(deletionResponse){
 ```
 
 ## Report a message for abuse
-```javascript 1.8
+```javascript
 chatClient.reportEvent('event ID', 'abuse').then(function(result){ 
     // event has been reported.
   })
