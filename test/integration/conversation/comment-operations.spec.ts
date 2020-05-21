@@ -133,7 +133,7 @@ describe('Comment Operations', function() {
           // await client.reportComment(commentary.comments[0], ReportType.abuse)
        })
        it('Shows that comment is flagged', async () => {
-            const queue = await ModerationClient.getModerationQueue();
+            const queue = await ModerationClient.listCommentsInModerationQueue();
             expect(queue.comments.length).to.be.greaterThan(0);
             expect(queue.comments[0].moderation).to.be.equal(CommentModeration.flagged);
        })
@@ -162,7 +162,7 @@ describe('Comment Operations', function() {
         })
 
         it('Shows that comment is flagged', async () => {
-            queue = await ModerationClient.getModerationQueue();
+            queue = await ModerationClient.listCommentsInModerationQueue();
             expect(queue.comments.length).to.be.greaterThan(0);
             expect(queue.comments[0].active).to.be.false;
         })
@@ -173,7 +173,7 @@ describe('Comment Operations', function() {
         it('Can create a comment that gets accepted', async()=>{
             acceptcomment = await client.publishComment("This is user1 comment to update");
             const report = await client2.reportComment(acceptcomment, ReportType.abuse);
-            const newqueue = await ModerationClient.getModerationQueue();
+            const newqueue = await ModerationClient.listCommentsInModerationQueue();
             expect(newqueue.comments.length).to.be.greaterThan(0);
             const approved = await ModerationClient.approveComment(acceptcomment)
             expect(approved.moderation).to.be.equal(CommentModeration.approved);

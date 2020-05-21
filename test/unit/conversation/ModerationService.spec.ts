@@ -12,7 +12,7 @@ describe("Moderation Service", function(){
         it("Requires an config", ()=>{
             const service = new RestfulCommentModerationService()
             try {
-                service.getModerationQueue()
+                service.listCommentsInModerationQueue()
             }catch(e) {
                 expect(e instanceof SettingsError).to.be.true;
             }
@@ -20,7 +20,7 @@ describe("Moderation Service", function(){
         it("Requires an AppId", ()=>{
             const service = new RestfulCommentModerationService(DEFAULT_CONFIG)
             try {
-                service.getModerationQueue()
+                service.listCommentsInModerationQueue()
             }catch(e) {
                 expect(e instanceof SettingsError).to.be.true;
             }

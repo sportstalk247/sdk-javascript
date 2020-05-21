@@ -40,17 +40,17 @@ describe('Pre Moderation sequences', function() {
                 client.setUser(user);
                 return client.joinRoom(roomid)
             }).then(() => {
-                return client.sendCommand('Test message')
+                return client.executeChatCommand('Test message')
             }).then(() => {
-                return mod.getModerationQueue()
+                return mod.listMessagesInModerationQueue()
             }).then(events => {
                 expect(events.events.length).to.be.greaterThan(0);
                 const list: Array<EventResult> = events.events || [];
                 return Promise.all(list.map(function (event) {
-                    return mod.rejectEvent(event)
+                    return mod.moderateEvent(event, false)
                 }))
             }).then(events => {
-                return mod.getModerationQueue()
+                return mod.listMessagesInModerationQueue()
             }).then(events => {
                 expect(events.events).to.have.lengthOf(0);
             }).then(() => {
@@ -92,9 +92,9 @@ describe('Pre Moderation sequences', function() {
                 client.setUser(user);
                 return client.joinRoom(roomid)
             }).then(() => {
-                return client.sendCommand('Test message')
+                return client.executeChatCommand('Test message')
             }).then(() => {
-                return mod.getModerationQueue()
+                return mod.listMessagesInModerationQueue()
             }).then(events => {
                 expect(events.events.length).to.be.greaterThan(0);
                 const list: Array<EventResult> = events.events || [];
@@ -103,7 +103,7 @@ describe('Pre Moderation sequences', function() {
                     return approval;
                 }))
             }).then(events => {
-                return mod.getModerationQueue()
+                return mod.listMessagesInModerationQueue()
             }).then(events => {
                 expect(events.events).to.have.lengthOf(0);
                 return delay(1000);

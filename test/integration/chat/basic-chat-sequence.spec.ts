@@ -60,8 +60,8 @@ describe('BASIC Chat Sequence', function() {
     describe('Users chat', function () {
         it('Lets users speak', function (done) {
             Promise.all([
-                client.sendCommand("Hello!"),
-                client2.sendCommand("This is me!")
+                client.executeChatCommand("Hello!"),
+                client2.executeChatCommand("This is me!")
             ]).then(results => {
                 done()
             }).catch(done);
@@ -86,7 +86,7 @@ describe('BASIC Chat Sequence', function() {
                     helpcalled = true;
                 }
             })
-            const resp = await client.sendCommand("*help");
+            const resp = await client.executeChatCommand("*help");
             expect(helpcalled).to.be.true;
         })
         it("Lets user issue admin command", async()=>{
@@ -97,7 +97,7 @@ describe('BASIC Chat Sequence', function() {
                     admincalled=true;
                 }
             })
-            const resp = await client.sendCommand("*ban");
+            const resp = await client.executeChatCommand("*ban");
             expect(admincalled).to.be.true;
         })
     })

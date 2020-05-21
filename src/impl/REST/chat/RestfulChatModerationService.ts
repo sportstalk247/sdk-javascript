@@ -30,7 +30,7 @@ export class RestfulChatModerationService implements IChatModerationService {
     /**
      * Get the moderation queue of events.
      */
-    getModerationQueue = (): Promise<EventListResponse> => {
+    listMessagesInModerationQueue = (): Promise<EventListResponse> => {
         return stRequest({
             method: 'GET',
             url: buildAPI(this._config, this._apiExt),
@@ -44,31 +44,12 @@ export class RestfulChatModerationService implements IChatModerationService {
      * Reject an event, removing it from the chat.
      * @param event
      */
-    rejectEvent = (event: EventResult): Promise<RestApiResult<null>> => {
+    moderateEvent = (event: EventResult, approved: boolean): Promise<RestApiResult<null>> => {
         return stRequest({
             method: 'POST',
             url: buildAPI(this._config, `${this._apiExt}/${event.id}/applydecision`),
             headers: this._apiHeaders,
-            data: {approve: false}
-        }).then(result => {
-            return result
-        }).catch(result => {
-            return {}
-        })
-    }
-
-    /**
-     * Approve an event, clearing it for the chat.
-     * @param event
-     */
-    approveEvent = (event: EventResult): Promise<RestApiResult<null>> => {
-        // @ts-ignore
-        const id = event.id | event;
-        return stRequest({
-            method: POST,
-            url: buildAPI(this._config, `${this._apiExt}/${event.id}/applydecision`),
-            headers: this._apiHeaders,
-            data: {approve: true}
+            data: {approve: !!approved}
         })
     }
 }

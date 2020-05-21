@@ -56,7 +56,7 @@ describe("Event Service", ()=>{
                 const user = await client.createOrUpdateUser({userid:"chatEventUser", handle: "chatEventUser"});
                 client.setUser(user);
                 const join = await client.joinRoom(room);
-                const response = await client.sendCommand("This is a chat event command");
+                const response = await client.executeChatCommand("This is a chat event command");
                 const updates = await client.getEventService().getUpdates();
                 await delay(1000);
                 expect(onChatEvent.callCount).to.be.greaterThan(0);
@@ -83,7 +83,7 @@ describe("Event Service", ()=>{
         describe("onReaction", ()=>{
             it("Will trigger onReaction", async()=>{
                 const id = chatMessage.id;
-                const reaction = await client.sendReaction(Reaction.like, id);
+                const reaction = await client.reactToEvent(Reaction.like, id);
                 const eventService = <RestfulChatEventService> await client.getEventService()
                 await eventService._fetchUpdatesAndTriggerCallbacks();
                 await delay(100);
@@ -96,7 +96,7 @@ describe("Event Service", ()=>{
 
         describe("onAdmin", ()=>{
             it("Will trigger onAdminCommand", async()=>{
-                const purge = await client.sendCommand("*purge zola chatEventUser");
+                const purge = await client.executeChatCommand("*purge zola chatEventUser");
                 const eventService = <RestfulChatEventService> await client.getEventService()
                 await eventService._fetchUpdatesAndTriggerCallbacks();
                 expect(onAdminCommand.callCount).to.be.greaterThan(0);

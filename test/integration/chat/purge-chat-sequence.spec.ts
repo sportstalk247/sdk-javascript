@@ -74,8 +74,8 @@ describe('PURGE Chat Sequence', function() {
     describe('Users chat', function () {
         it('Lets users speak', function (done) {
             Promise.all([
-                client.sendCommand("Hello!"),
-                client2.sendCommand("This is me!")
+                client.executeChatCommand("Hello!"),
+                client2.executeChatCommand("This is me!")
             ]).then(results => {
                 done()
             }).catch(done);
@@ -96,7 +96,7 @@ describe('PURGE Chat Sequence', function() {
     describe('GetUpdates shows purge', function () {
         it('Fires onPurge',  async function () {
             await delay(500);
-            const purge =  await client.sendCommand("*purge "+process.env.PURGE+" handle2");
+            const purge =  await client.executeChatCommand("*purge "+process.env.PURGE+" handle2");
             await client.getUpdates();
             await delay(100);
             const updates:RestfulChatEventService = <RestfulChatEventService>client.getEventService();

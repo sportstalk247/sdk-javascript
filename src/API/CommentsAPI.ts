@@ -46,7 +46,7 @@ export interface IConversationService extends IConfigurable {
 }
 
 export interface ICommentModerationService extends IConfigurable {
-    getModerationQueue():  Promise<CommentListResponse>
+    listCommentsInModerationQueue():  Promise<CommentListResponse>
     rejectComment(comment: Comment): Promise<Comment>
     approveComment(comment: Comment): Promise<Comment>
 }

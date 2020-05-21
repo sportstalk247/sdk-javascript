@@ -305,7 +305,7 @@ export class RestfulChatEventService implements IChatEventService {
      * @param command
      * @param options
      */
-    sendCommand = (user: User, command: string, options?: CommandOptions): Promise<MessageResult<CommandResponse>> => {
+    executeChatCommand = (user: User, command: string, options?: CommandOptions): Promise<MessageResult<CommandResponse>> => {
         const data = Object.assign({
             command,
             userid: user.userid
@@ -329,7 +329,7 @@ export class RestfulChatEventService implements IChatEventService {
      * @param replyto
      * @param options
      */
-    sendReply = (user: User, message: string, replyto: EventResult |string, options?: CommandOptions): Promise<MessageResult<CommandResponse>> => {
+    sendQuotedReply = (user: User, message: string, replyto: EventResult |string, options?: CommandOptions): Promise<MessageResult<CommandResponse>> => {
         // @ts-ignore
         const id = replyto.id || replyto;
         const data = Object.assign({
@@ -353,7 +353,7 @@ export class RestfulChatEventService implements IChatEventService {
      * @param event
      * @param reason
      */
-    reportEvent = (event: EventResult | string, reason: ReportReason): Promise<RestApiResult<null>> => {
+    reportMessage = (event: EventResult | string, reason: ReportReason): Promise<RestApiResult<null>> => {
         // @ts-ignore
         const id = event.id || event;
         const config:AxiosRequestConfig =  {
@@ -375,7 +375,7 @@ export class RestfulChatEventService implements IChatEventService {
      * @param reactToMessage
      * @param options
      */
-    sendReaction = (user: User,  reaction: Reaction, reactToMessage: EventResult | string, options?: CommandOptions): Promise<MessageResult<CommandResponse>> => {
+    reactToEvent = (user: User, reaction: Reaction, reactToMessage: EventResult | string, options?: CommandOptions): Promise<MessageResult<CommandResponse>> => {
         // @ts-ignore
         const source = reactToMessage.id || reactToMessage;
         const data = Object.assign({
@@ -450,7 +450,7 @@ export class RestfulChatEventService implements IChatEventService {
         })
     }
 
-    private _deleteEvent = (event: EventResult | string):Promise<RestApiResult<null>> => {
+    permanetlyDeleteEvent = (event: EventResult | string):Promise<RestApiResult<null>> => {
         if(!event) {
             throw new Error("Cannot delete a null or undefined event")
         }
@@ -470,7 +470,7 @@ export class RestfulChatEventService implements IChatEventService {
         });
     }
 
-    private _logicalDeleteEvent = (event:EventResult | string):Promise<RestApiResult<null>> => {
+    flagEventLogicallyDeleted = (event:EventResult | string):Promise<RestApiResult<null>> => {
         if(!event) {
             throw new Error("Cannot delete a null or undefined event")
         }
@@ -485,17 +485,6 @@ export class RestfulChatEventService implements IChatEventService {
         }
         // @ts-ignore
         return stRequest(config);
-    }
-
-    /**
-     * Delete an event on the server.  Will not clear it from clients that have already displayed it.
-     * @param event
-     */
-    deleteEvent = (event: EventResult | string, force?: boolean): Promise<RestApiResult<null>> => {
-        if(force) {
-            return this._deleteEvent(event);
-        }
-        return this._logicalDeleteEvent(event);
     }
 
     listPreviousEvents = (cursor?:string, limit?: number): Promise<ChatUpdatesResult> => {
@@ -527,6 +516,4 @@ export class RestfulChatEventService implements IChatEventService {
             return result.data;
         });
     }
-
-
 }

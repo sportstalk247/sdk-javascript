@@ -68,8 +68,8 @@ describe('GOAL Chat Sequence', function() {
     describe('Users chat', function () {
         it('Lets users speak', function (done) {
             Promise.all([
-                client.sendCommand("Hello!"),
-                client2.sendCommand("This is me!")
+                client.executeChatCommand("Hello!"),
+                client2.executeChatCommand("This is me!")
             ]).then(results => {
                 done()
             }).catch(done);
@@ -89,7 +89,7 @@ describe('GOAL Chat Sequence', function() {
         it('Lets user1 send a goal', function (done) {
             Promise.all([
                 client.sendGoal("GOAL!!"),
-                client2.sendCommand("That was amazing!")
+                client2.executeChatCommand("That was amazing!")
             ]).then(results => {
                 expect(results.length).to.be.equal(2);
                 done()

@@ -33,14 +33,15 @@ export interface IChatEventService extends ISportsTalkConfigurable, IUserConfigu
     setEventHandlers(eventHandlers: EventHandlerConfig),
     getCurrentRoom(): ChatRoomResult | null,
     getUpdates(): Promise<ChatUpdatesResult>,
-    reportEvent(event: EventResult | string, reason: ReportReason): Promise<MessageResult<null>>,
-    sendCommand(user:User, command: string, options?: CommandOptions):  Promise<MessageResult<CommandResponse>>
-    sendReply(user: User, message: string, replyto: string | EventResult, options?: CommandOptions): Promise<MessageResult<CommandResponse>>
-    sendReaction(user: User,  reaction: Reaction | string, reactToMessage: EventResult | string, options?: CommandOptions): Promise<MessageResult<CommandResponse>>
+    reportMessage(event: EventResult | string, reason: ReportReason): Promise<MessageResult<null>>,
+    executeChatCommand(user:User, command: string, options?: CommandOptions):  Promise<MessageResult<CommandResponse>>
+    sendQuotedReply(user: User, message: string, replyto: string | EventResult, options?: CommandOptions): Promise<MessageResult<CommandResponse>>
+    reactToEvent(user: User, reaction: Reaction | string, reactToMessage: EventResult | string, options?: CommandOptions): Promise<MessageResult<CommandResponse>>
     sendAdvertisement(user: User, options: AdvertisementOptions): Promise<MessageResult<CommandResponse>>
     sendGoal(user: User, img: string, message?:string, options?: GoalOptions): Promise<MessageResult<CommandResponse>>
     getEventHandlers(): EventHandlerConfig
-    deleteEvent(event: EventResult | string, force?:boolean): Promise<MessageResult<null>>
+    flagEventLogicallyDeleted(event:EventResult | string):Promise<RestApiResult<null>>
+    permanetlyDeleteEvent(event: EventResult | string):Promise<RestApiResult<null>>
     listPreviousEvents(cursor?:string, limit?: number): Promise<ChatUpdatesResult>
     listEventsHistory(cursor?:string, limit?: number): Promise<ChatUpdatesResult>
 }
@@ -70,13 +71,13 @@ export interface IRoomService extends ISportsTalkConfigurable {
  * For most user-facing chat implementations, this is the only class you need.
  */
 export interface IChatClient extends IUserConfigurable, ISportsTalkConfigurable{
-    sendCommand(command: string, options?: CommandOptions):  Promise<MessageResult<null | CommandResponse>>
+    executeChatCommand(command: string, options?: CommandOptions):  Promise<MessageResult<null | CommandResponse>>
     sendReply(message: string, replyto: string, options?: CommandOptions): Promise<MessageResult<null | CommandResponse>>
-    sendReaction(reaction: Reaction, reactToMessage: EventResult | string, options?: CommandOptions): Promise<MessageResult<null | CommandResponse>>
+    reactToEvent(reaction: Reaction, reactToMessage: EventResult | string, options?: CommandOptions): Promise<MessageResult<null | CommandResponse>>
     sendAdvertisement(options: AdvertisementOptions): Promise<MessageResult<null | CommandResponse>>
     sendGoal(message?:string, img?: string, options?: GoalOptions): Promise<MessageResult<null | CommandResponse>>
     setDefaultGoalImage(url: string);
-    reportEvent(event: EventResult | string, reason: ReportType):  Promise<MessageResult<null>>,
+    reportMessage(event: EventResult | string, reason: ReportType):  Promise<MessageResult<null>>,
     listRooms(): Promise<ChatRoomListResponse>
     joinRoom(room: ChatRoomResult | string): Promise<JoinChatRoomResponse>;
     joinRoomByCustomId(room: ChatRoom | string): Promise<JoinChatRoomResponse>;
@@ -92,7 +93,8 @@ export interface IChatClient extends IUserConfigurable, ISportsTalkConfigurable{
     startEventUpdates();
     stopEventUpdates();
     listPreviousEvents(cursor?:string, limit?: number): Promise<ChatUpdatesResult>
-    deleteEvent(event: EventResult | string, force?:boolean): Promise<MessageResult<null>>
+    permanetlyDeleteEvent(event: EventResult | string): Promise<MessageResult<null>>
+    flagEventLogicallyDeleted(event: EventResult | string): Promise<MessageResult<null>>
     setBanStatus(user: User | string, isBanned: boolean): Promise<RestApiResult<UserResult>>
     createOrUpdateUser(user: User): Promise<UserResult>
     searchUsers(search: string, type: UserSearchType, limit?:number): Promise<UserListResponse>
@@ -107,8 +109,7 @@ export interface IChatClient extends IUserConfigurable, ISportsTalkConfigurable{
  * Interface for Chat Moderation Services.
  */
 export interface IChatModerationService extends ISportsTalkConfigurable {
-    getModerationQueue(): Promise<EventListResponse>
-    rejectEvent(event: EventResult): Promise<MessageResult<null>>
-    approveEvent(event: EventResult): Promise<MessageResult<null>>
+    listMessagesInModerationQueue(): Promise<EventListResponse>
+    moderateEvent(event: EventResult, approved: boolean): Promise<MessageResult<null>>
 }
 

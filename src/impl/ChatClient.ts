@@ -285,8 +285,8 @@ export class ChatClient implements IChatClient {
      * @param command the chat string, which can also include admin or action commands by starting with `/` or `*`
      * @param options the custom parameters.  See CommandOptions interface for details.
      */
-    sendCommand = (command: string, options?: CommandOptions): Promise<MessageResult<CommandResponse>> => {
-        return this._eventService.sendCommand(this._user, command, options);
+    executeChatCommand = (command: string, options?: CommandOptions): Promise<MessageResult<CommandResponse>> => {
+        return this._eventService.executeChatCommand(this._user, command, options);
     }
 
 
@@ -297,7 +297,7 @@ export class ChatClient implements IChatClient {
      * @param options custom options, will depend on your chat implementation
      */
     sendReply = (message: string, replyto: EventResult | string, options?: CommandOptions): Promise<MessageResult<CommandResponse | null>> => {
-        return this._eventService.sendReply(this._user, message, replyto, options);
+        return this._eventService.sendQuotedReply(this._user, message, replyto, options);
     }
 
     /**
@@ -306,8 +306,8 @@ export class ChatClient implements IChatClient {
      * @param reactToMessage
      * @param options
      */
-    sendReaction = (reaction: Reaction | string, reactToMessage: EventResult | string, options?: CommandOptions): Promise<MessageResult<CommandResponse>> => {
-        return this._eventService.sendReaction(this._user, reaction, reactToMessage, options);
+    reactToEvent = (reaction: Reaction | string, reactToMessage: EventResult | string, options?: CommandOptions): Promise<MessageResult<CommandResponse>> => {
+        return this._eventService.reactToEvent(this._user, reaction, reactToMessage, options);
     }
 
     /**
@@ -331,12 +331,21 @@ export class ChatClient implements IChatClient {
     }
 
     /**
-     * Delete an event
+     * Flags an event as deleted
      * @param event the event to be deleted.
      * @return the result of the API call.
      */
-    deleteEvent = (event: EventResult | string, force?: boolean): Promise<MessageResult<null>> =>{
-        return this._eventService.deleteEvent(event, force);
+    flagEventLogicallyDeleted = (event: EventResult | string): Promise<MessageResult<null>> =>{
+        return this._eventService.flagEventLogicallyDeleted(event)
+    }
+
+    /**
+     * Permanently deletes an event.
+     * @param event the event to be deleted.
+     * @return the result of the API call.
+     */
+    permanetlyDeleteEvent = (event: EventResult | string): Promise<MessageResult<null>> =>{
+        return this._eventService.permanetlyDeleteEvent(event)
     }
 
     /**
@@ -344,12 +353,12 @@ export class ChatClient implements IChatClient {
      * @param event
      * @param type
      */
-    reportEvent = (event: EventResult | string, type: ReportType):Promise<MessageResult<null>> => {
+    reportMessage = (event: EventResult | string, type: ReportType):Promise<MessageResult<null>> => {
         const reason: ReportReason = {
             reporttype: type,
             userid: this._user.userid
         }
-        return this._eventService.reportEvent(event, reason);
+        return this._eventService.reportMessage(event, reason);
     }
 
     /**
