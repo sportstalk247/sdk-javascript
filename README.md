@@ -184,15 +184,15 @@ chatClient.setEventHandlers({
 ```
 
 ## Start/Subscribe to room updates
-Once you have joined a room and set your event handler, you can begin recieving new events using `startEventUpdates()`
+Once you have joined a room and set your event handler, you can begin recieving new events using `startListeningToEventUpdates()`
 ```javascript
-chatClient.startEventUpdates()
+chatClient.startListeningToEventUpdates()
 ```
 
 ## Stop updates
 When you want to stop recieving new events, you can stop your room subscription with `stopChat()`
 ```javascript
-chatClient.stopEventUpdates()
+chatClient.stopListeningToEventUpdates()
 ```
 
 ## Executing a chat command / Sending a message
@@ -832,7 +832,7 @@ async function eventServiceExample() {
     // Argument is a Room object with an ID that has been created.  See the RoomService
     const eventService =  await service.setCurrentRoom({...});
     // This will start the chat, but without callbacks nothing will happen.  See the ChatClient documentation.
-    eventService.startEventUpdates(); // will begin receiving events from the room.
+    eventService.startListeningToEventUpdates(); // will begin receiving events from the room.
 }
 ```
 
