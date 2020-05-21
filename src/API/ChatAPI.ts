@@ -90,8 +90,8 @@ export interface IChatClient extends IUserConfigurable, ISportsTalkConfigurable{
     createOrUpdateUser(user: User, setDefault?:boolean): Promise<User>
     getUpdates(): Promise<ChatUpdatesResult>,
     updateRoom(room:ChatRoomResult): Promise<ChatRoomResult>
-    startEventUpdates();
-    stopEventUpdates();
+    startListeningToEventUpdates();
+    stopListeningToEventUpdates();
     listPreviousEvents(cursor?:string, limit?: number): Promise<ChatUpdatesResult>
     permanetlyDeleteEvent(event: EventResult | string): Promise<MessageResult<null>>
     flagEventLogicallyDeleted(event: EventResult | string): Promise<MessageResult<null>>

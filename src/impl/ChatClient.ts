@@ -143,15 +143,19 @@ export class ChatClient implements IChatClient {
 
     /**
      * Start the "talk".  This will being retrieving events from sportstalk servers.
+     * If you pass a room parameter, will join the room and then start listening to updates.
      */
-    startEventUpdates = () => {
+    startListeningToEventUpdates = (room?: ChatRoomResult) => {
+        if(room) {
+            return this.joinRoom(room).then(()=>this.startListeningToEventUpdates())
+        }
         this._eventService.startEventUpdates();
     }
 
     /**
      * Stop the talk.  No new events will be retrieved.  However, if there are events still in a queue that queue may continue until empty.
      */
-    stopEventUpdates = () => {
+    stopListeningToEventUpdates = () => {
         this._eventService.stopEventUpdates();
     }
     /**
@@ -214,9 +218,6 @@ export class ChatClient implements IChatClient {
      * @param room
      */
     joinRoom = (room: ChatRoomResult | string): Promise<JoinChatRoomResponse> => {
-        if(!this._user || !this._user.userid) {
-            throw new SettingsError(MUST_SET_USER);
-        }
         return this._roomService.joinRoom(room, this._user).then(response => {
             this._currentRoom = response.room;
             this._eventService.setCurrentRoom(this._currentRoom);
@@ -230,9 +231,6 @@ export class ChatClient implements IChatClient {
      * @param room
      */
     joinRoomByCustomId(room: ChatRoom | string): Promise<JoinChatRoomResponse> {
-        if(!this._user || !this._user.userid) {
-            throw new SettingsError(MUST_SET_USER);
-        }
         return this._roomService.joinRoomByCustomId(room, this._user).then(response => {
             this._currentRoom = response.room;
             this._eventService.setCurrentRoom(this._currentRoom);

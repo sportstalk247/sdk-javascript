@@ -65,8 +65,8 @@ describe('PURGE Chat Sequence', function() {
             rm.createRoom(roomDef).then(room => {
                 return client2.joinRoom(room)
             }).then(() => {
-                client.startEventUpdates()
-                client2.startEventUpdates()
+                client.startListeningToEventUpdates()
+                client2.startListeningToEventUpdates()
                 done()
             }).catch(done)
         })
@@ -111,8 +111,8 @@ describe('PURGE Chat Sequence', function() {
         it('can be deleted', function (done) {
             rm.deleteRoom(theRoom)
                 .then(success => {
-                    client.stopEventUpdates();
-                    client2.stopEventUpdates();
+                    client.stopListeningToEventUpdates();
+                    client2.stopListeningToEventUpdates();
                     done()
                 }).catch(done);
         })
