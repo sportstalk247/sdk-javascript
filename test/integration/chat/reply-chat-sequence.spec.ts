@@ -71,7 +71,7 @@ describe('REPLY Chat Sequence', function() {
                 .then(async chatHistories => {
                     expect(chatHistories[0].events).to.have.lengthOf(2);
                     expect(chatHistories[1].events).to.have.lengthOf(2);
-                    const reply = await client2.sendReply("This is my reply", chatHistories[0].events[0]);
+                    const reply = await client2.sendReply("This is my reply", chatHistories[0].events[0].id);
                     done();
                 }).catch(done)
         })
@@ -94,7 +94,7 @@ describe('REPLY Chat Sequence', function() {
                 .catch(done)
         })
         it("deletes first event", async ()=>{
-            const deletion = await client.deleteEvent(toDelete);
+            const deletion = await client.permanetlyDeleteEvent(toDelete);
         });
     });
 

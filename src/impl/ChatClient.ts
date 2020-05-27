@@ -66,7 +66,7 @@ export class ChatClient implements IChatClient {
      * @param eventHandlers
      * @return SportsTalkClient.  Currently only a REST based client is supported.  Future SDK versions will implement other options such as firebase messaging and websockets
      */
-    static init = (config: SportsTalkConfig = {appId: ""}, eventHandlers?: EventHandlerConfig): IChatClient => {
+    static init = (config: SportsTalkConfig = {appId: ""}, eventHandlers?: EventHandlerConfig): ChatClient => {
         const client = new ChatClient();
         client.setConfig(config);
         if(eventHandlers) {
@@ -296,8 +296,12 @@ export class ChatClient implements IChatClient {
      * @param replyto the Event that is being replied to or the event ID as a string
      * @param options custom options, will depend on your chat implementation
      */
-    sendReply = (message: string, replyto: EventResult | string, options?: CommandOptions): Promise<MessageResult<CommandResponse | null>> => {
-        return this._eventService.sendQuotedReply(this._user, message, replyto, options);
+    sendQuotedReply = (message: string, replyto: EventResult | string, options?: CommandOptions): Promise<MessageResult<CommandResponse | null>> => {
+        return this._eventService.sendThreadedReply(this._user, message, replyto, options);
+    }
+
+    sendThreadedReply =(message: string, replyto: EventResult | string, options?: CommandOptions): Promise<MessageResult<CommandResponse | null>> => {
+        return this._eventService.sendThreadedReply(this._user, message, replyto, options);
     }
 
     /**
@@ -424,6 +428,11 @@ export class ChatClient implements IChatClient {
 
     listPreviousEvents = (cursor:string):Promise<ChatUpdatesResult> => {
         return this._eventService.listPreviousEvents(cursor);
+    }
+
+    sendReply(message: string, replyto: string, options?: CommandOptions): Promise<MessageResult<CommandResponse | null>> {
+        //@ts-ignore
+        return undefined;
     }
 
 

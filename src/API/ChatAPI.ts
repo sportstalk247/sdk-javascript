@@ -36,7 +36,7 @@ export interface IChatEventService extends ISportsTalkConfigurable, IUserConfigu
     getUpdates(): Promise<ChatUpdatesResult>,
     reportMessage(event: EventResult | string, reason: ReportReason): Promise<MessageResult<null>>,
     executeChatCommand(user:User, command: string, options?: CommandOptions):  Promise<MessageResult<CommandResponse>>
-    sendQuotedReply(user: User, message: string, replyto: string | EventResult, options?: CommandOptions): Promise<MessageResult<CommandResponse>>
+    sendThreadedReply(user: User, message: string, replyto: string | EventResult, options?: CommandOptions): Promise<MessageResult<CommandResponse>>
     reactToEvent(user: User, reaction: Reaction | string, reactToMessage: EventResult | string, options?: CommandOptions): Promise<MessageResult<CommandResponse>>
     sendAdvertisement(user: User, options: AdvertisementOptions): Promise<MessageResult<CommandResponse>>
     sendGoal(user: User, img: string, message?:string, options?: GoalOptions): Promise<MessageResult<CommandResponse>>

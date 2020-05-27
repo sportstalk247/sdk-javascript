@@ -99,7 +99,7 @@ describe('Pre Moderation sequences', function() {
                 expect(events.events.length).to.be.greaterThan(0);
                 const list: Array<EventResult> = events.events || [];
                 return Promise.all(list.map(async function (event) {
-                    const approval = await mod.approveEvent(event)
+                    const approval = await mod.moderateEvent(event, true)
                     return approval;
                 }))
             }).then(events => {

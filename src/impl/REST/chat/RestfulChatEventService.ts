@@ -329,7 +329,7 @@ export class RestfulChatEventService implements IChatEventService {
      * @param replyto
      * @param options
      */
-    sendQuotedReply = (user: User, message: string, replyto: EventResult |string, options?: CommandOptions): Promise<MessageResult<CommandResponse>> => {
+    sendThreadedReply = (user: User, message: string, replyto: EventResult |string, options?: CommandOptions): Promise<MessageResult<CommandResponse>> => {
         // @ts-ignore
         const id = replyto.id || replyto;
         const data = Object.assign({
@@ -340,6 +340,32 @@ export class RestfulChatEventService implements IChatEventService {
         const config:AxiosRequestConfig = {
             method: POST,
             url: this._commandApi,
+            headers:this._jsonHeaders,
+            data: data
+        }
+        return stRequest(config).catch(e=>{
+            throw e;
+        });
+    }
+
+    /**
+     * Send a quoted reply to a chat event.
+     * @param user
+     * @param message
+     * @param replyto
+     * @param options
+     */
+    sendQuotedReply = (user: User, message: string, replyto: EventResult |string, options?: CommandOptions): Promise<MessageResult<CommandResponse>> => {
+        // @ts-ignore
+        const id = replyto.id || replyto;
+        const data = Object.assign({
+            command: message,
+            userid: user.userid,
+            replyto: id,
+        }, options);
+        const config:AxiosRequestConfig = {
+            method: POST,
+            url: buildAPI(this._config, `/chat/rooms/${this._currentRoom.id}/events/${id}/quote`),
             headers:this._jsonHeaders,
             data: data
         }

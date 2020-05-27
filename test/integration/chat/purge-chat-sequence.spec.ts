@@ -87,7 +87,7 @@ describe('PURGE Chat Sequence', function() {
                 .then(async chatHistories => {
                     expect(chatHistories[0].events).to.have.lengthOf(2);
                     expect(chatHistories[1].events).to.have.lengthOf(2);
-                    await client2.sendReply("This is my reply", chatHistories[0].events[0]);
+                    await client2.sendReply("This is my reply", chatHistories[0].events[0].id);
                     done();
                 }).catch(done)
         })
