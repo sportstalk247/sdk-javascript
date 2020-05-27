@@ -188,7 +188,7 @@ export class RestfulChatEventService implements IChatEventService {
      */
     public _fetchUpdatesAndTriggerCallbacks = async () =>{
         return this.getUpdates().then(apiResult=>{
-            this._handleUpdates(apiResult);
+            this.handleUpdates(apiResult);
         }).catch(error=> {
             if(this.eventHandlers && this.eventHandlers.onNetworkError) {
                 this.eventHandlers.onNetworkError(error)
@@ -232,7 +232,7 @@ export class RestfulChatEventService implements IChatEventService {
      * @param update
      * @private
      */
-    private _handleUpdates = (update: ChatUpdatesResult) => {
+    public handleUpdates = (update: ChatUpdatesResult) => {
         if(!update) {
             return;
         }

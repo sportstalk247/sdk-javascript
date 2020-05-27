@@ -221,6 +221,7 @@ export class ChatClient implements IChatClient {
         return this._roomService.joinRoom(room, this._user).then(response => {
             this._currentRoom = response.room;
             this._eventService.setCurrentRoom(this._currentRoom);
+            this._eventService.handleUpdates(response.eventscursor);
             return response;
         })
     }
@@ -234,6 +235,7 @@ export class ChatClient implements IChatClient {
         return this._roomService.joinRoomByCustomId(room, this._user).then(response => {
             this._currentRoom = response.room;
             this._eventService.setCurrentRoom(this._currentRoom);
+            this._eventService.handleUpdates(response.eventscursor);
             return response;
         })
     }

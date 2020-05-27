@@ -27,6 +27,7 @@ export enum EventType {
 export interface JoinChatRoomResponse {
     user: UserResult,
     room: ChatRoomResult
+    eventscursor: ChatUpdatesResult
 }
 
 /**

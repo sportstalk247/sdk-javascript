@@ -182,7 +182,7 @@ export class CommentClient implements ICommentingClient {
      */
     public publishComment = (comment: string | SimpleComment, replyto?: Comment | string): Promise<Comment> => {
         const conversationid = forceObjKeyOrString(this._currentConversation, 'conversationid')
-        return this._commentService.createComment(conversationid, comment, this._user, replyto);
+        return this._commentService.publishComment(conversationid, comment, this._user, replyto);
     }
 
     /**

@@ -253,7 +253,7 @@ describe('Comment Operations', function() {
            const commentManager = new RestfulCommentService();
            try {
                // @ts-ignore
-               const comment = await commentManager.createComment(null, "some comment body", {userid: "fake", handle:"fake"});
+               const comment = await commentManager.publishComment(null, "some comment body", {userid: "fake", handle:"fake"});
                throw new Error("should have failed")
            }catch(e) {
                expect(e instanceof ValidationError).to.be.true;
@@ -274,7 +274,7 @@ describe('Comment Operations', function() {
            const commentManager = new RestfulCommentService( config);
            try {
                // @ts-ignore
-               const comment = await commentManager.createComment('1235', "some comment body", {userid: "fake", handle:"fake"}, {});
+               const comment = await commentManager.publishComment('1235', "some comment body", {userid: "fake", handle:"fake"}, {});
                throw new Error("should have failed")
            } catch(e) {
                expect(e instanceof ValidationError).to.be.true;
@@ -285,7 +285,7 @@ describe('Comment Operations', function() {
            const commentManager = new RestfulCommentService(config);
            try {
                // @ts-ignore
-               const comment = await commentManager.createComment('1235', "some comment body", {userid: "", handle:"fake"}, {});
+               const comment = await commentManager.publishComment('1235', "some comment body", {userid: "", handle:"fake"}, {});
                throw new Error("should have failed")
            } catch(e) {
                expect(e instanceof RequireUserError).to.be.true;

@@ -26,7 +26,7 @@ import {
 } from "../models/CommonModels";
 
 export interface ICommentService extends ISportsTalkConfigurable {
-    createComment(convesationId: string, comment: Comment | SimpleComment | string, user: User, replyto?: Comment | string): Promise<Comment>;
+    publishComment(convesationId: string, comment: Comment | SimpleComment | string, user: User, replyto?: Comment | string): Promise<Comment>;
     getComment(convesationId: string, comment: Comment | string): Promise<Comment | null>;
     deleteComment(convesationId: string, comment: Comment | string, user: User, final?: boolean): Promise<CommentDeletionResponse>
     updateComment(convesationId: string, comment: Comment, user: User): Promise<Comment>;

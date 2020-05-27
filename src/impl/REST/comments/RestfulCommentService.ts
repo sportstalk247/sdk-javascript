@@ -111,7 +111,7 @@ export class RestfulCommentService implements ICommentService {
      * @param user
      * @param replyto
      */
-    public createComment = (conversationId:string , comment: Comment | string, user?: User, replyto?: Comment | string): Promise<Comment> => {
+    public publishComment = (conversationId:string , comment: Comment | string, user?: User, replyto?: Comment | string): Promise<Comment> => {
         this._requireConversationId(conversationId);
         // @ts-ignore
         const replyid: Comment | string = replyto || comment.replyto;

@@ -88,7 +88,7 @@ describe('comments Migration', function() {
         it("Lets us migrate comments", async () => {
             // This won't scale to thousands because it launches everything in parallel, but will show how to use the REST client.
             const uploads = commentList.map(comment=> {
-               return commentService.createComment(testconversation.conversationid, comment);
+               return commentService.publishComment(testconversation.conversationid, comment);
             })
             const created = await Promise.all(uploads);
             expect(created.length).to.be.equal(commentList.length);

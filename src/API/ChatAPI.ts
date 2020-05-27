@@ -29,6 +29,7 @@ import {
 export interface IChatEventService extends ISportsTalkConfigurable, IUserConfigurable  {
     startEventUpdates(),
     stopEventUpdates(),
+    handleUpdates(results: ChatUpdatesResult);
     setCurrentRoom(room: ChatRoomResult | null): ChatRoom | null,
     setEventHandlers(eventHandlers: EventHandlerConfig),
     getCurrentRoom(): ChatRoomResult | null,
