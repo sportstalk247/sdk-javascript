@@ -5,7 +5,7 @@ import {
     ChatRoomResult,
     JoinChatRoomResponse,
     DeletedChatRoomResponse,
-    ChatRoomExitResult, ChatRoomListResponse
+    ChatRoomExitResult, ChatRoomListResponse, EventListResponse
 } from "../../../models/ChatModels";
 import {stRequest} from '../../network';
 import {GET, DELETE, POST, API_SUCCESS_MESSAGE} from "../../constants/api";
@@ -104,19 +104,19 @@ export class RestfulChatRoomService implements IRoomService {
     }
 
     // @ts-ignore
-    listUserMessages = (user:User | string, room: ChatRoom | string, cursor: string = "", limit: number = 100): Promise<Array<EventResult>> => {
+    listUserMessages = (user: User | string, room: ChatRoom | string, cursor: string = "", limit: number = 100): Promise<EventListResponse> => {
         // @ts-ignore
         const roomid = forceObjKeyOrString(room);
         const userid = forceObjKeyOrString(user, 'userid');
-        const url = buildAPI(this._config,`${this._apiExt}/${roomid}/messagesbyuser/${userid}/?limit=${limit}&cursor=${cursor}`);
+        const url = buildAPI(this._config, `${this._apiExt}/${roomid}/messagesbyuser/${userid}/?limit=${limit}&cursor=${cursor}`);
         return stRequest({
             method: GET,
             url: url,
             headers: this._jsonHeaders
-        }).then(result=>{
-            return result.data.events
+        }).then(result => {
+            return result.data
         });
-    }
+    };
 
 
     /*
