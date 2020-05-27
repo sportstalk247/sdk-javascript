@@ -8,37 +8,40 @@ const { expect } = chai;
 // @ts-ignore
 const config: SportsTalkConfig = {apiToken:process.env.TEST_KEY, appId: process.env.TEST_APP_ID, endpoint: process.env.TEST_ENDPOINT};
 let roomlist;
+const name = "ROOMService Test Room";
+const customid = "RM-test-room"
+const name2 = "ROOMService Test Room PRE"
+const slug2 = "RM-test-room-pre"
+let newRoom;
 describe("RoomService", function(){
-    const RM = new RestfulChatRoomService(  config);
+    const RM = new RestfulChatRoomService(config);
     it("Can create a room without moderation", done=>{
-        const name = "ROOMService Test Room"
-        const slug = "RM-test-room"
-        let newRoom;
         RM.createRoom({
             name,
-            slug
+            customid
         }).then(room=>{
             newRoom = room;
-            expect(room.name).to.be.equal(name);
-            expect(room.slug).to.be.equal(slug);
+            const roomname = room.name
+            expect(roomname).to.be.equal(name);
+            expect(room.customid).to.be.equal(customid);
         }).then(()=>{
             return RM.deleteRoom(newRoom);
         }).then(()=>{
             done();
-        }).catch(done);
+        }).catch(e=>{
+            done(e);
+        });
     })
     it("Can create a room with PRE moderation", done=>{
-        const name = "ROOMService Test Room PRE"
-        const slug = "RM-test-room-pre"
         let newRoom;
         RM.createRoom({
-            name,
-            slug,
+            name: name2,
+            customid: slug2,
             moderation: ModerationType.pre
         }).then(room=>{
             newRoom = room;
-            expect(room.name).to.be.equal(name);
-            expect(room.slug).to.be.equal(slug);
+            expect(room.name).to.be.equal(name2);
+            expect(room.customid).to.be.equal(slug2);
             expect(room.moderation).to.be.equal(ModerationType.pre);
         }).then(()=>{
             return RM.deleteRoom(newRoom);
@@ -48,16 +51,16 @@ describe("RoomService", function(){
     })
     it("Can create a room with POST moderation", done=>{
         const name = "ROOMService Test Room POST"
-        const slug = "RM-test-room-POST"
+        const customid = "RM-test-room-POST"
         let newRoom;
         RM.createRoom({
             name,
-            slug,
+            customid,
             moderation: ModerationType.post
         }).then(room=>{
             newRoom = room;
             expect(room.name).to.be.equal(name);
-            expect(room.slug).to.be.equal(slug);
+            expect(room.customid).to.be.equal(customid);
             expect(room.moderation).to.be.equal(ModerationType.post);
         }).then(()=>{
             return RM.deleteRoom(newRoom);
@@ -70,15 +73,15 @@ describe("RoomService", function(){
         Promise.all([
             RM.createRoom({
                 name: "Room1-list",
-                slug: "Room1-slug-list1234"
+                customid: "Room1-slug-list1234"
             }),
             RM.createRoom({
                 name: "Room2-list",
-                slug: "Room2-slug-list1234"
+                customid: "Room2-slug-list1234"
             }),
             RM.createRoom({
                 name: "Room3-list",
-                slug: "Room3-slug-list1234"
+                customid: "Room3-slug-list1234"
             }),
         ]).then(rooms=>{
             roomlist = rooms;
@@ -110,7 +113,7 @@ describe("RoomService", function(){
                     slug: "RM-test-room"
                 });
                 const userlist = await RM.listUserMessages({userid:'fake-user', handle:'fake-user'}, room).then(messages => {
-                    expect(messages.length).to.be.equal(0);
+                    expect(messages.events.length).to.be.equal(0);
                 });
                 const deleted = await RM.deleteRoom(room);
                 return deleted;

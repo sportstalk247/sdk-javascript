@@ -517,30 +517,26 @@ export class RestfulChatEventService implements IChatEventService {
         return stRequest(config);
     }
 
-    listPreviousEvents = (cursor?:string, limit?: number): Promise<ChatUpdatesResult> => {
-        const theCursor = cursor || "";
-        const theLimit = limit || 100;
+    listPreviousEvents = (cursor:string = '', limit: number = 100): Promise<ChatUpdatesResult> => {
         if(!this._roomApi) {
             throw new SettingsError("No room selected");
         }
         return stRequest({
             method: GET,
-            url: `${this._roomApi}/listpreviousevents?cursor=${cursor}&limit=${theLimit}`,
+            url: `${this._roomApi}/listpreviousevents?cursor=${cursor}&limit=${limit}`,
             headers: this._apiHeaders
         }).then((result) => {
             return result.data;
         });
     }
 
-    listEventsHistory = (cursor?:string, limit?: number): Promise<ChatUpdatesResult> => {
-        const theCursor = cursor || "";
-        const theLimit = limit || 100;
+    listEventsHistory = (cursor:string='', limit: number=100): Promise<ChatUpdatesResult> => {
         if(!this._roomApi) {
             throw new SettingsError("No room selected");
         }
         return stRequest({
             method: GET,
-            url: `${this._roomApi}/listeventshistory?cursor=${cursor}&limit=${theLimit}`,
+            url: `${this._roomApi}/listeventshistory?cursor=${cursor}&limit=${limit}`,
             headers: this._apiHeaders
         }).then((result) => {
             return result.data;
