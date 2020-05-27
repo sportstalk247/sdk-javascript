@@ -17,7 +17,7 @@ import {
     ReportReason,
     SportsTalkConfig,
     User,
-    MessageResult
+    MessageResult, UserResult
 } from "../../../models/CommonModels";
 import {AxiosRequestConfig} from "axios";
 const INVALID_POLL_FREQUENCY = "Invalid poll _pollFrequency.  Must be between 250ms and 5000ms"
@@ -450,10 +450,12 @@ export class RestfulChatEventService implements IChatEventService {
         })
     }
 
-    permanetlyDeleteEvent = (event: EventResult | string):Promise<RestApiResult<null>> => {
+    permanetlyDeleteEvent = (user: UserResult | string, event: EventResult | string):Promise<RestApiResult<null>> => {
         if(!event) {
             throw new Error("Cannot delete a null or undefined event")
         }
+        // @ts-ignore
+        const userid = user.userid || user;
         // @ts-ignore
         const id = event.id || event;
         if(!id) {
@@ -470,10 +472,12 @@ export class RestfulChatEventService implements IChatEventService {
         });
     }
 
-    flagEventLogicallyDeleted = (event:EventResult | string):Promise<RestApiResult<null>> => {
+    flagEventLogicallyDeleted = (user: UserResult | string, event:EventResult | string, permanentIfNoReplies: boolean=false):Promise<RestApiResult<null>> => {
         if(!event) {
             throw new Error("Cannot delete a null or undefined event")
         }
+        // @ts-ignore
+        const userid = user.userid || user;
         // @ts-ignore
         const id = event.id || event;
         if(!id) {
@@ -481,7 +485,7 @@ export class RestfulChatEventService implements IChatEventService {
         }
         const config: AxiosRequestConfig = {
             method: PUT,
-            url: buildAPI(this._config, `chat/rooms/${this._currentRoom.id}/events/${id}/setdeleted?userid=&deleted=true&permanentifnoreplies=false`)
+            url: buildAPI(this._config, `chat/rooms/${this._currentRoom.id}/events/${id}/setdeleted?userid=${userid}&deleted=true&permanentifnoreplies=${permanentIfNoReplies}`)
         }
         // @ts-ignore
         return stRequest(config);

@@ -41,8 +41,8 @@ export interface IChatEventService extends ISportsTalkConfigurable, IUserConfigu
     sendAdvertisement(user: User, options: AdvertisementOptions): Promise<MessageResult<CommandResponse>>
     sendGoal(user: User, img: string, message?:string, options?: GoalOptions): Promise<MessageResult<CommandResponse>>
     getEventHandlers(): EventHandlerConfig
-    flagEventLogicallyDeleted(event:EventResult | string):Promise<RestApiResult<null>>
-    permanetlyDeleteEvent(event: EventResult | string):Promise<RestApiResult<null>>
+    flagEventLogicallyDeleted(user: UserResult | string, event:EventResult | string, permanentIfNoReplies:boolean):Promise<RestApiResult<null>>
+    permanetlyDeleteEvent(user: UserResult | string, event: EventResult | string):Promise<RestApiResult<null>>
     listPreviousEvents(cursor?:string, limit?: number): Promise<ChatUpdatesResult>
     listEventsHistory(cursor?:string, limit?: number): Promise<ChatUpdatesResult>
 }

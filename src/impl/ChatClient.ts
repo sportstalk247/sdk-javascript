@@ -335,8 +335,8 @@ export class ChatClient implements IChatClient {
      * @param event the event to be deleted.
      * @return the result of the API call.
      */
-    flagEventLogicallyDeleted = (event: EventResult | string): Promise<MessageResult<null>> =>{
-        return this._eventService.flagEventLogicallyDeleted(event)
+    flagEventLogicallyDeleted = (event: EventResult | string, permamentifnoreplies=true): Promise<MessageResult<null>> =>{
+        return this._eventService.flagEventLogicallyDeleted(this._user, event, permamentifnoreplies)
     }
 
     /**
@@ -345,7 +345,7 @@ export class ChatClient implements IChatClient {
      * @return the result of the API call.
      */
     permanetlyDeleteEvent = (event: EventResult | string): Promise<MessageResult<null>> =>{
-        return this._eventService.permanetlyDeleteEvent(event)
+        return this._eventService.permanetlyDeleteEvent(this._user, event)
     }
 
     /**
