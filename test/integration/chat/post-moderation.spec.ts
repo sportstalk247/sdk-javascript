@@ -63,10 +63,10 @@ describe('Post moderation Sequence', function() {
     it('Lets 3 clients join same room and chat', function(done) {
        Promise.all([client.joinRoom(roomid),client2.joinRoom(roomid), client3.joinRoom(roomid)]).then((rooms)=>{
          //  console.log("JOINED room")
-           return client.sendCommand('Test message')
+           return client.executeChatCommand('Test message')
        }).then((message)=>{
          //  console.log("SENT message")
-           return mod.getModerationQueue();
+           return mod.listMessagesInModerationQueue()
        }).then(resp=> {
         //   console.log("GOT Moderation queue")
            expect(resp.events.length).to.be.equal(0);
@@ -77,15 +77,15 @@ describe('Post moderation Sequence', function() {
            const list: Array<EventResult> =  result.events || [];
            eventlength = list.length;
            return Promise.all(list.map(async function(event) {
-               await client.report(event, ReportType.abuse);
-               await client2.report(event, ReportType.abuse);
-               await client3.report(event, ReportType.abuse);
+               await client.reportMessage(event, ReportType.abuse);
+               await client2.reportMessage(event, ReportType.abuse);
+               await client3.reportMessage(event, ReportType.abuse);
            }))
        }).then(events=> {
            return delay(1000);
        }).then(()=>{
           // console.log("REPORTED all events");
-           return mod.getModerationQueue()
+           return mod.listMessagesInModerationQueue()
        }).then(resp=> {
            expect(resp.events.length).to.be.greaterThan(0);
        }).then(()=>{

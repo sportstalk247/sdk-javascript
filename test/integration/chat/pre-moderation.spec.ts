@@ -1,5 +1,5 @@
 import { ChatClient } from '../../../src/impl/ChatClient';
-import {EventResult} from "../../../src/models/ChatModels";
+import {EventResult, EventType} from "../../../src/models/ChatModels";
 import * as chai from 'chai';
 import {RestfulChatModerationService} from "../../../src/impl/REST/chat/RestfulChatModerationService";
 import * as dotenv from 'dotenv';
@@ -25,8 +25,9 @@ describe('Pre Moderation sequences', function() {
         it('Can create a room, join the room, deny messages, kill room', (done) => {
             rm.createRoom({
                 name: "Pre-moderation test Room",
-                slug: "pre-test-room"+new Date().getTime(),
+                customid: "pre-test-room"+new Date().getTime(),
                 moderation: ModerationType.pre,
+                maxreports:0
             }).then(room => {
                 roomid = room.id;
                 expect(room.moderation).to.be.equal(ModerationType.pre)
@@ -41,7 +42,8 @@ describe('Pre Moderation sequences', function() {
                 return client.joinRoom(roomid)
             }).then(() => {
                 return client.executeChatCommand('Test message')
-            }).then(() => {
+            }).then((resp) => {
+                expect(resp.data.op).to.be.equal(EventType.speech);
                 return mod.listMessagesInModerationQueue()
             }).then(events => {
                 expect(events.events.length).to.be.greaterThan(0);
@@ -77,8 +79,9 @@ describe('Pre Moderation sequences', function() {
         it('Can create a room, join the room, approve messages, kill room', (done) => {
             rm.createRoom({
                 name: "Pre-moderation test Room",
-                slug: "pre-test-room2",
+                customid: "pre-test-room2",
                 moderation: ModerationType.pre,
+                maxreports:0
             }).then(room => {
                 roomid = room.id;
                 expect(room.moderation).to.be.equal(ModerationType.pre)

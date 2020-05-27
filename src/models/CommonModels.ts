@@ -79,7 +79,7 @@ export interface SportsTalkConfig extends ClientConfig {
 export interface MessageResult<T> {
     message: string, // "Success"
     errors: object,
-    data: [T] | T
+    data: T
 }
 /**
  * All API responses take the form of an ApiResult.  This includes ApiResult<null>.

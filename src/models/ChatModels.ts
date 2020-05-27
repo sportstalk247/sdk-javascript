@@ -66,6 +66,7 @@ export interface CommandResponse {
     op: string,
     room?: ChatRoomResult,
     speech?: Event
+    action?: any
 }
 
 /**
