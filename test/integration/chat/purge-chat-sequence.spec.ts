@@ -46,7 +46,7 @@ describe('PURGE Chat Sequence', function() {
     const em2 = client2.getEventService();
     const roomDef = {
         name: "Test room",
-        slug: "chat-test-room"+new Date().getTime(),
+        customid: "chat-test-room"+new Date().getTime(),
     }
 
     let theRoom;
@@ -62,9 +62,7 @@ describe('PURGE Chat Sequence', function() {
     });
     describe('User 2', function () {
         it('Joins room', function (done) {
-            rm.createRoom(roomDef).then(room => {
-                return client2.joinRoom(room)
-            }).then(() => {
+            client2.joinRoom(theRoom).then(() => {
                 client.startListeningToEventUpdates()
                 client2.startListeningToEventUpdates()
                 done()

@@ -38,7 +38,7 @@ describe('BASIC Chat Sequence', function() {
         it('Joins room', function (done) {
             rm.createRoom({
                 name: "Test room",
-                slug: "chat-test-room"+new Date().getTime(),
+                customid: "chat-test-room"+new Date().getTime(),
             }).then(room => {
                 theRoom = room;
                 return client.joinRoom(room)

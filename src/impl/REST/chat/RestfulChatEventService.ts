@@ -494,7 +494,9 @@ export class RestfulChatEventService implements IChatEventService {
             headers: this._jsonHeaders,
         };
         // @ts-ignore
-        return stRequest(config).catch(e=>{
+        return stRequest(config).then(result=>{
+            return result;
+        }).catch(e=>{
             throw e;
         });
     }
@@ -515,7 +517,11 @@ export class RestfulChatEventService implements IChatEventService {
             url: buildAPI(this._config, `chat/rooms/${this._currentRoom.id}/events/${id}/setdeleted?userid=${userid}&deleted=true&permanentifnoreplies=${permanentIfNoReplies}`)
         }
         // @ts-ignore
-        return stRequest(config);
+        return stRequest(config).then(result=>{
+            return result;
+        }).catch(e=>{
+            throw e;
+        });
     }
 
     listPreviousEvents = (cursor:string = '', limit: number = 100): Promise<ChatUpdatesResult> => {

@@ -98,6 +98,8 @@ describe('GOAL Chat Sequence', function() {
                 client2.executeChatCommand("That was amazing!")
             ]).then(results => {
                 expect(results.length).to.be.equal(2);
+                // @ts-ignore
+                expect(results[0].data.speech.customtype).to.be.equal('goal');
                 done()
             }).catch(e=>{
                 done(e)
@@ -110,8 +112,13 @@ describe('GOAL Chat Sequence', function() {
                 .then(chatHistories => {
                     const goal = chatHistories[0].events.find(item=>item.customtype=="goal")
                     expect(goal).to.be.not.null;
+                    expect(goal).to.be.not.undefined;
                     // @ts-ignore
-                    expect(goal.custompayload).to.be.not.null;
+                    if(goal && goal.custompayload) {
+                        expect(goal.custompayload).to.be.not.null;
+                    } else {
+
+                    }
                     // @ts-ignore
                     const payload = JSON.parse(goal.custompayload);
                     expect(payload.img).to.be.equal(image)

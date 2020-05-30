@@ -88,7 +88,6 @@ describe('Comment Operations', function() {
             try {
                 const reply = await client.publishComment("I'm replying", resp);
                 commentary = await client.listComments();
-                console.log(commentary);
                 expect(commentary.comments.length).to.be.greaterThan(0);
                 const replylist: CommentListResponse = await client.getCommentReplies(resp);
                 expect(replylist.comments.length).to.be.greaterThan(0);
@@ -98,7 +97,6 @@ describe('Comment Operations', function() {
         })
         it("Lets you retrieve specific comments", async ()=>{
             const firstComment:Comment = commentary.comments[0];
-            console.log(firstComment);
             let comment = await client.getComment(firstComment);
             if(comment) {
                 expect(comment.id).to.be.equal(firstComment.id)
