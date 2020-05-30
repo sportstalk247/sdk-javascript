@@ -58,9 +58,7 @@ describe('GOAL Chat Sequence', function() {
     });
     describe('User 2', function () {
         it('Joins room', function (done) {
-            rm.createRoom(roomDef).then(room => {
-                return client2.joinRoom(room)
-            }).then(() => {
+            client2.joinRoom(theRoom).then(() => {
                 done()
             }).catch(done)
         })
@@ -71,6 +69,12 @@ describe('GOAL Chat Sequence', function() {
                 client.executeChatCommand("Hello!"),
                 client2.executeChatCommand("This is me!")
             ]).then(results => {
+                //@ts-ignore
+                expect(results[0].data.speech.id).to.be.not.null
+                //@ts-ignore
+                expect(results[1].data.speech.id).to.be.not.null
+                //@ts-ignore
+                expect(results[0].data.speech.id).to.not.equal(results[1].data.id)
                 done()
             }).catch(done);
         })
@@ -79,6 +83,8 @@ describe('GOAL Chat Sequence', function() {
         it('Shows the same to users', function (done) {
             Promise.all([em1.getUpdates(), em2.getUpdates()])
                 .then(chatHistories => {
+                    const history = chatHistories;
+                    //
                     expect(chatHistories[0].events).to.have.lengthOf(2);
                     expect(chatHistories[1].events).to.have.lengthOf(2);
                     done();

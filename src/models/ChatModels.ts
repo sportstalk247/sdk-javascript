@@ -65,7 +65,7 @@ export interface CommandResponse {
     kind: Kind.chatcommand,
     op: string,
     room?: ChatRoomResult,
-    speech?: Event
+    speech?: EventResult
     action?: any
 }
 
