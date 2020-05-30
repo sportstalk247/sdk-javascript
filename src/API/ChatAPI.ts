@@ -37,6 +37,7 @@ export interface IChatEventService extends ISportsTalkConfigurable, IUserConfigu
     reportMessage(event: EventResult | string, reason: ReportReason): Promise<MessageResult<null>>,
     executeChatCommand(user:User, command: string, options?: CommandOptions):  Promise<MessageResult<CommandResponse>>
     sendThreadedReply(user: User, message: string, replyto: string | EventResult, options?: CommandOptions): Promise<MessageResult<CommandResponse>>
+    sendQuotedReply(user: User, message: string, replyto: EventResult |string, options?: CommandOptions): Promise<MessageResult<CommandResponse>>
     reactToEvent(user: User, reaction: Reaction | string, reactToMessage: EventResult | string, options?: CommandOptions): Promise<MessageResult<CommandResponse>>
     sendAdvertisement(user: User, options: AdvertisementOptions): Promise<MessageResult<CommandResponse>>
     sendGoal(user: User, img: string, message?:string, options?: GoalOptions): Promise<MessageResult<CommandResponse>>
@@ -73,7 +74,8 @@ export interface IRoomService extends ISportsTalkConfigurable {
  */
 export interface IChatClient extends IUserConfigurable, ISportsTalkConfigurable{
     executeChatCommand(command: string, options?: CommandOptions):  Promise<MessageResult<null | CommandResponse>>
-    sendReply(message: string, replyto: string, options?: CommandOptions): Promise<MessageResult<null | CommandResponse>>
+    sendQuotedReply(message: string, replyto: string, options?: CommandOptions): Promise<MessageResult<null | CommandResponse>>
+    sendThreadedReply(message: string, replyto: string, options?: CommandOptions): Promise<MessageResult<null | CommandResponse>>
     reactToEvent(reaction: Reaction, reactToMessage: EventResult | string, options?: CommandOptions): Promise<MessageResult<null | CommandResponse>>
     sendAdvertisement(options: AdvertisementOptions): Promise<MessageResult<null | CommandResponse>>
     sendGoal(message?:string, img?: string, options?: GoalOptions): Promise<MessageResult<null | CommandResponse>>

@@ -35,7 +35,7 @@ export enum Kind {
     room = "chat.room",
     user = "app.user",
     api = "api.result",
-    webhook = "chat.webhook",
+    webhook = "webhook.webhook",
     webhooklogs = "list.webhook.logentries",
     webhookcommentpayload = "webhook.payload.comment",
     chatcommand = "chat.executecommand",

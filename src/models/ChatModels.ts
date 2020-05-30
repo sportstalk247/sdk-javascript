@@ -20,6 +20,7 @@ export enum EventType {
     roomOpen = "roomopen",
     action = "action",
     reply = "reply",
+    quote = "quote",
     goal = "goal", // custom type
     advertisement = "advertisement" // custom type
 }
@@ -76,7 +77,13 @@ export interface CommandOptions {
     customtype?: string,
     customid?: string,
     replyto?: string,
-    custompayload?: string
+    custompayload?: string,
+}
+
+export interface QuoteCommandOptions extends CommandOptions {
+    customfield1?: string,
+    customfield2?: string,
+    customtags?: string[]
 }
 
 /**
@@ -204,5 +211,5 @@ export interface ChatUpdatesResult {
     more: boolean
     itemcount: number
     room: ChatRoomResult,
-    events: [EventResult]
+    events: EventResult[]
 }

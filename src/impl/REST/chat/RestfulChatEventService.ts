@@ -3,7 +3,7 @@ import {
     CommandOptions, CommandResponse,
     EventHandlerConfig,
     EventResult,
-    EventType, GoalOptions, ChatRoom, ChatRoomResult
+    EventType, GoalOptions, ChatRoom, ChatRoomResult, QuoteCommandOptions
 } from "../../../models/ChatModels";
 import {DEFAULT_CONFIG, DELETE, GET, POST, PUT} from "../../constants/api";
 import {IChatEventService} from "../../../API/ChatAPI";
@@ -333,13 +333,12 @@ export class RestfulChatEventService implements IChatEventService {
         // @ts-ignore
         const id = replyto.id || replyto;
         const data = Object.assign({
-            command: message,
+            body: message,
             userid: user.userid,
-            replyto: id,
         }, options);
         const config:AxiosRequestConfig = {
             method: POST,
-            url: this._commandApi,
+            url: buildAPI(this._config, `chat/rooms/${this._currentRoom.id}/events/${id}/reply`),
             headers:this._jsonHeaders,
             data: data
         }
@@ -355,21 +354,22 @@ export class RestfulChatEventService implements IChatEventService {
      * @param replyto
      * @param options
      */
-    sendQuotedReply = (user: User, message: string, replyto: EventResult |string, options?: CommandOptions): Promise<MessageResult<CommandResponse>> => {
+    sendQuotedReply = (user: User, message: string, replyto: EventResult |string, options?: QuoteCommandOptions): Promise<MessageResult<CommandResponse>> => {
         // @ts-ignore
         const id = replyto.id || replyto;
         const data = Object.assign({
-            command: message,
+            body: message,
             userid: user.userid,
-            replyto: id,
         }, options);
         const config:AxiosRequestConfig = {
             method: POST,
-            url: buildAPI(this._config, `/chat/rooms/${this._currentRoom.id}/events/${id}/quote`),
+            url: buildAPI(this._config, `chat/rooms/${this._currentRoom.id}/events/${id}/quote`),
             headers:this._jsonHeaders,
             data: data
         }
-        return stRequest(config).catch(e=>{
+        return stRequest(config).then(result=>{
+            return result;
+        }).catch(e=>{
             throw e;
         });
     }

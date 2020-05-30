@@ -23,8 +23,9 @@ const makeRequest = async function makeRequest(config:Request | AxiosRequestConf
             error.response = {
                 status: response.status
             }
+            throw error;
         }
-    })
+    });
 
 }
 /**

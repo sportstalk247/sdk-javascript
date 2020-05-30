@@ -65,37 +65,47 @@ describe('REPLY Chat Sequence', function() {
             }).catch(done);
         })
     })
-    describe('GetUpdates fires', function () {
+    describe('GetUpdates with messages', function () {
         it('Shows the same to users, sends reply', function (done) {
             Promise.all([em1.getUpdates(), em2.getUpdates()])
                 .then(async chatHistories => {
                     expect(chatHistories[0].events).to.have.lengthOf(2);
                     expect(chatHistories[1].events).to.have.lengthOf(2);
-                    const reply = await client2.sendReply("This is my reply", chatHistories[0].events[0].id);
+                    const reply = await client2.sendQuotedReply("This is my reply", chatHistories[0].events[0].id);
                     done();
                 }).catch(done)
         })
     });
-    describe('GetUpdates reply sequence', function () {
+    describe('GetUpdates QuotedReply, Threaded Reply sequence', function () {
         let toDelete:EventResult;
-        it('Shows reply', function (done) {
+        let toFlag: EventResult;
+        let threadedReplyTargetId: string;
+        it('Shows Quoted reply', function (done) {
             Promise.all([em1.getUpdates(), em2.getUpdates()])
-                .then(chatHistories => {
+                .then(async (chatHistories) => {
                     expect(chatHistories[0].events).to.have.lengthOf(3);
                     expect(chatHistories[1].events).to.have.lengthOf(3);
-                    expect(chatHistories[0].events[chatHistories[0].events.length-1].eventtype).to.equal("reply");
+                    expect(chatHistories[0].events[chatHistories[0].events.length-1].eventtype).to.equal("quote");
                     expect(chatHistories[0].events[chatHistories[0].events.length-1].replyto).to.haveOwnProperty('userid');
                     expect(chatHistories[0].events[chatHistories[0].events.length-1].body).to.equal('This is my reply')
+                    threadedReplyTargetId = chatHistories[0].events[chatHistories[0].events.length-2].id;
                     return chatHistories[0];
                 }).then(chat=>{
                     toDelete = chat.events[0];
+                    toFlag = chat.events[1];
                     done();
                 })
                 .catch(done)
         })
+        it('Threads a reply', async ()=>{
+           const reply = await client.sendThreadedReply("Threaded reply", threadedReplyTargetId)
+        });
         it("deletes first event", async ()=>{
             const deletion = await client.permanetlyDeleteEvent(toDelete);
         });
+        it("Flags an event for deletion", async()=>{
+            const flagged = await client.flagEventLogicallyDeleted(toFlag);
+        })
     });
 
     describe('Kill test room', function () {

@@ -297,7 +297,7 @@ export class ChatClient implements IChatClient {
      * @param options custom options, will depend on your chat implementation
      */
     sendQuotedReply = (message: string, replyto: EventResult | string, options?: CommandOptions): Promise<MessageResult<CommandResponse | null>> => {
-        return this._eventService.sendThreadedReply(this._user, message, replyto, options);
+        return this._eventService.sendQuotedReply(this._user, message, replyto, options);
     }
 
     sendThreadedReply =(message: string, replyto: EventResult | string, options?: CommandOptions): Promise<MessageResult<CommandResponse | null>> => {
@@ -429,13 +429,6 @@ export class ChatClient implements IChatClient {
     listPreviousEvents = (cursor:string):Promise<ChatUpdatesResult> => {
         return this._eventService.listPreviousEvents(cursor);
     }
-
-    sendReply(message: string, replyto: string, options?: CommandOptions): Promise<MessageResult<CommandResponse | null>> {
-        //@ts-ignore
-        return undefined;
-    }
-
-
 }
 
 
