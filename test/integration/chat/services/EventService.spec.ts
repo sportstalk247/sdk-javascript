@@ -68,7 +68,7 @@ describe("Event Service", ()=>{
         describe("onReply", ()=>{
             it("Will trigger onReply", async()=>{
                 const id = chatMessage.id;
-                const reply = await client.sendReply("This is my reply", id)
+                const reply = await client.sendQuotedReply("This is my reply", id)
                 const eventService = <RestfulChatEventService> await client.getEventService()
                 await eventService._fetchUpdatesAndTriggerCallbacks();
                 await delay(100);

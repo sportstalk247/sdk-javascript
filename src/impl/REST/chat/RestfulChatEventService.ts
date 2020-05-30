@@ -333,12 +333,13 @@ export class RestfulChatEventService implements IChatEventService {
         // @ts-ignore
         const id = replyto.id || replyto;
         const data = Object.assign({
-            body: message,
+            command: message,
             userid: user.userid,
+            replyto: id
         }, options);
         const config:AxiosRequestConfig = {
             method: POST,
-            url: buildAPI(this._config, `chat/rooms/${this._currentRoom.id}/events/${id}/reply`),
+            url: this._commandApi,
             headers:this._jsonHeaders,
             data: data
         }

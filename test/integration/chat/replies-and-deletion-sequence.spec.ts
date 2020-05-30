@@ -34,7 +34,7 @@ describe('REPLY Chat Sequence', function() {
     let theRoom;
     describe('User 1', function () {
         it('Joins room', function (done) {
-            const custom = "chat-test-room" + new Date().getTime();
+            const custom = "chat-test-room-replies";
             rm.createRoom({
                 name: "Test room",
                 customid: custom
