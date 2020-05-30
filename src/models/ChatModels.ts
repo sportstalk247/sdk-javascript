@@ -165,7 +165,9 @@ export interface EventListResponse extends ListResponse {
 
 
 export enum EventModerationState {
-    na = "na"
+    na = "na",
+    approved = "approved",
+    rejected = "rejected"
 }
 /**
  * An EventResult is created whenever a chat event is accepted by a server, and represents the event model returned by the API.
