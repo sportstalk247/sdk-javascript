@@ -22,30 +22,42 @@ describe('Pre Moderation sequences', function() {
         const client = <ChatClient> ChatClient.init(config);
         const rm = new RestfulChatRoomService(config);
         const mod = new RestfulChatModerationService(config);
-        it('Can create a room, join the room, deny messages, kill room', (done) => {
+        let theroom;
+        it('Can create a room', async () => {
             rm.createRoom({
                 name: "Pre-moderation test Room",
-                customid: "pre-test-room"+new Date().getTime(),
+                customid: "pre-test-room" + new Date().getTime(),
                 moderation: ModerationType.pre,
-                maxreports:0
+                maxreports: 0
             }).then(room => {
                 roomid = room.id;
                 expect(room.moderation).to.be.equal(ModerationType.pre)
-                return room;
-            }).then(room => {
-                return client.createOrUpdateUser({
-                    userid: 'testsequence',
-                    handle: 'test'
-                });
+                theroom = room;
+            })
+        });
+        it('Can have a user join', async ()=> {
+            return client.createOrUpdateUser({
+                userid: 'testsequence',
+                handle: 'test'
             }).then((user) => {
+                expect(user.userid).to.not.be.null;
+                expect(user.userid).to.not.be.undefined;
                 client.setUser(user);
                 return client.joinRoom(roomid)
-            }).then(() => {
-                return client.executeChatCommand('Test message')
-            }).then((resp) => {
-                expect(resp.data.op).to.be.equal(EventType.speech);
-                return mod.listMessagesInModerationQueue()
-            }).then(events => {
+            }).then((roomresponse) => {
+                expect(roomresponse.user).to.be.not.null;
+                expect(roomresponse.room).to.be.not.null;
+                expect(roomresponse.eventscursor).to.be.not.null;
+            });
+        })
+        it("lets the user execute a chat command", async ()=> {
+            return client.executeChatCommand('Test message')
+                .then((resp) => {
+                    expect(resp.data.op).to.be.equal(EventType.speech);
+                });
+        });
+        it("Lets you list & moderate messages", async()=>{
+            return mod.listMessagesInModerationQueue().then(events => {
                 expect(events.events.length).to.be.greaterThan(0);
                 const list: Array<EventResult> = events.events || [];
                 return Promise.all(list.map(function (event) {
@@ -57,7 +69,6 @@ describe('Pre Moderation sequences', function() {
                 expect(events.events).to.have.lengthOf(0);
             }).then(() => {
                 rm.deleteRoom(roomid);
-                done();
             }).catch(async e=>{
                 try {
                     await rm.deleteRoom(roomid);
@@ -65,7 +76,6 @@ describe('Pre Moderation sequences', function() {
                     console.log("Could not cleanly delete test room");
                 }
                 console.log(e);
-                done(e);
             });
         })
     });
