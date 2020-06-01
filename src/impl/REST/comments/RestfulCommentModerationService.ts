@@ -55,11 +55,11 @@ export class RestfulCommentModerationService implements ICommentModerationServic
     /**
      * Get the moderation queue
      */
-    public listCommentsInModerationQueue = (): Promise<CommentListResponse> => {
+    public listCommentsInModerationQueue = (cursor: string = ''): Promise<CommentListResponse> => {
         this._requireAppId();
         const config: AxiosRequestConfig = {
             method: GET,
-            url: buildAPI(this._config, this._apiExt),
+            url: buildAPI(this._config, `${this._apiExt}?cursor=${cursor}`),
             headers: this._jsonHeaders,
         }
         return stRequest(config).then(result=>{

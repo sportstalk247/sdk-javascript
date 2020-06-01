@@ -97,6 +97,8 @@ describe('Comment Operations', function() {
         })
         it("Lets you retrieve specific comments", async ()=>{
             const firstComment:Comment = commentary.comments[0];
+            expect(firstComment.id).to.be.not.null;
+            expect(firstComment.id).to.be.not.undefined;
             let comment = await client.getComment(firstComment);
             if(comment) {
                 expect(comment.id).to.be.equal(firstComment.id)
@@ -114,6 +116,12 @@ describe('Comment Operations', function() {
         it("Lets you vote on a comment", async ()=>{
             const firstComment = commentary.comments[0];
             let comment = await client.getComment(firstComment);
+            if(comment) {
+                expect(comment.id).to.be.not.null;
+                expect(comment.id).to.be.not.undefined;
+            } else {
+                throw new Error("Comment is null");
+            }
             let voted = await client.voteOnComment(firstComment, Vote.up);
             expect(voted.votes).to.have.lengthOf(1);
             expect(voted.votescore).to.be.equal(1);
@@ -134,6 +142,7 @@ describe('Comment Operations', function() {
             const queue = await ModerationClient.listCommentsInModerationQueue();
             expect(queue.comments.length).to.be.greaterThan(0);
             expect(queue.comments[0].moderation).to.be.equal(CommentModeration.flagged);
+            return queue;
        })
    });
 

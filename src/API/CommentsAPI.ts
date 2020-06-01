@@ -30,7 +30,7 @@ export interface ICommentService extends ISportsTalkConfigurable {
     getComment(convesationId: string, comment: Comment | string): Promise<Comment | null>;
     deleteComment(convesationId: string, comment: Comment | string, user: User, final?: boolean): Promise<CommentDeletionResponse>
     updateComment(convesationId: string, comment: Comment, user: User): Promise<Comment>;
-    vote(convesationId: string, comment: Comment, user: User, vote:Vote): Promise<Comment>
+    vote(convesationId: string, comment: Comment | string, user: User, vote:Vote): Promise<Comment>
     report(convesationId: string, comment: Comment, user:User, reporttype: ReportType): Promise<Comment>
     react(convesationId: string, comment:Comment | string, user: User, reaction:Reaction, enable?: boolean): Promise<Comment>;
     getReplies(convesationId: string, comment: Comment | string, request?: CommentRequest): Promise<CommentListResponse>

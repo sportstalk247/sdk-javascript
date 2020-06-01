@@ -76,7 +76,7 @@ export interface CommentRequest extends ListRequest {
 export enum Vote {
     up   = "up",
     down = "down",
-    none = "none"
+    none = ""
 }
 
 export interface ConversationDeletionResponse extends HasConversationID {

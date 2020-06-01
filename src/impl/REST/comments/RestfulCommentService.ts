@@ -303,7 +303,7 @@ export class RestfulCommentService implements ICommentService {
         this._requireConversationId(conversationId);
         this._requireUser(user);
         const id = getUrlCommentId(comment);
-        return stRequest({
+        const request: AxiosRequestConfig = {
             method: POST,
             url: buildAPI(this._config, `${this._apiExt}/${conversationId}/comments/${id}/vote`),
             headers: this._jsonHeaders,
@@ -311,7 +311,8 @@ export class RestfulCommentService implements ICommentService {
                 vote: vote,
                 userid: user.userid
             }
-        }).then(result=>{
+        };
+        return stRequest(request).then(result=>{
             return result.data;
         });
     }

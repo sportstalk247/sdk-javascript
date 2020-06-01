@@ -18,7 +18,8 @@ const delay = function(timer) {
 let chatMessage;
 
 describe("Event Service", ()=>{
-
+    let reactionTriggered = false;
+    let replyTriggered = false;
     // @ts-ignore
     const client = <ChatClient> ChatClient.init(config)
     const EM = client.getEventService();
@@ -27,8 +28,12 @@ describe("Event Service", ()=>{
     const onChatEvent = sinon.spy();
     const onAdminCommand = sinon.fake();
     const onPurgeEvent = sinon.fake();
-    const onReply = sinon.fake();
-    const onReaction = sinon.fake();
+    const onReply =  function(e) {
+        replyTriggered = true;
+    }
+    const onReaction = function(e) {
+        reactionTriggered = true;
+    }
 
     client.setEventHandlers({
         onChatStart,
@@ -74,7 +79,7 @@ describe("Event Service", ()=>{
                 await delay(100);
                 const handlers = client.getEventService().getEventHandlers()
                 // @ts-ignore
-                expect(handlers.onReply.callCount).to.be.greaterThan(0);
+                expect(replyTriggered).to.be.true;
                 // @ts-ignore
                 expect(handlers.onChatEvent.callCount).to.be.greaterThan(0);
             })
@@ -89,7 +94,7 @@ describe("Event Service", ()=>{
                 await delay(100);
                 const handlers = client.getEventService().getEventHandlers()
                 // @ts-ignore
-                expect(handlers.onReaction().callCount).to.be.greaterThan(0);
+                expect(reactionTriggered).to.be.true;
             })
         })
 

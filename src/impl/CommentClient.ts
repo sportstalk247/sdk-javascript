@@ -243,7 +243,7 @@ export class CommentClient implements ICommentingClient {
      * @param comment
      * @param vote
      */
-    public voteOnComment = (comment:Comment, vote:Vote): Promise<Comment> => {
+    public voteOnComment = (comment:Comment | string, vote:Vote): Promise<Comment> => {
         const conversationid = forceObjKeyOrString(this._currentConversation, 'conversationid')
         return this._commentService.vote(conversationid, comment, this._user, vote);
     }
