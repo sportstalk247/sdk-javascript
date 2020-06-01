@@ -66,10 +66,10 @@ export class RestfulChatEventService implements IChatEventService {
     }
 
     setForwardCursor = (cursor: string) => {
-        this.lastCursor = cursor;
+        this.lastCursor = cursor || '';
     }
     setBackwardCursor = (cursor:string) =>{
-        this.oldestCursor = cursor;
+        this.oldestCursor = cursor || '';
     }
 
     /**
@@ -234,7 +234,7 @@ export class RestfulChatEventService implements IChatEventService {
                 // @ts-ignore
                 this.eventHandlers.onNetworkResponse(result);
             }
-            if(result.data.cursor) {
+            if(result.data && result.data.cursor) {
                 this.lastCursor = result.data.cursor;
             }
             return result.data;

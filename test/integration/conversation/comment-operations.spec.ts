@@ -96,6 +96,7 @@ describe('Comment Operations', function() {
             }
         })
         it("Lets you retrieve specific comments", async ()=>{
+            expect(commentary.comments).to.have.length.greaterThan(0);
             const firstComment:Comment = commentary.comments[0];
             expect(firstComment.id).to.be.not.null;
             expect(firstComment.id).to.be.not.undefined;

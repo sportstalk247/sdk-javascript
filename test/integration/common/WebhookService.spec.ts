@@ -94,7 +94,7 @@ describe("Webhook Service", function(){
         })
     })
     describe("Delete", function(){
-        it('Can delete hooks', async()=>{
+        it('Can delete pre-publish hooks', async()=>{
             try {
                 let hook;
                 if (prehook) {
@@ -104,13 +104,20 @@ describe("Webhook Service", function(){
                     const found = listsofhooks.webhooks.find(webhook => webhook.id === hook.id);
                     expect(!found).to.be.true;
                 }
+            }catch(e) {
+                throw e;
+            }
+        })
+        it('Can delete post-publish hooks', async()=>{
+            try {
+                let hook;
                 if (posthook) {
-                    hook = await HookManager.deleteWebhook(posthook)
+                    hook = await HookManager.deleteWebhook(posthook);
                     const listsofhooks = await HookManager.listWebhooks();
                     const found = listsofhooks.webhooks.find(webhook => webhook.id === hook.id);
                     expect(!found).to.be.true;
                 }
-            }catch(e) {
+            }catch(e){
                 throw e;
             }
         })
