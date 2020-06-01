@@ -48,7 +48,7 @@ export interface EventHandlerConfig {
     onAdminCommand?(response: RestApiResult<Kind.api>),
     onHelp?(result: MessageResult<Event | CommandResponse | null>),
     onNetworkError?(error: Error)
-    onRoomChange?(oldRoom?:ChatRoom, newRoom?:ChatRoom)
+    onRoomChange?(newRoom?:ChatRoom,oldRoom?:ChatRoom)
 }
 
 export interface JoinRoomResponse {

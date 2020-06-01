@@ -44,7 +44,9 @@ export class RestfulChatEventService implements IChatEventService {
     private _user: User = {userid: "", handle: ""};
 
     // poll management
-    lastCursor:number | undefined; // timestamp
+    lastTimestamp:number | undefined; // timestamp
+    lastCursor: string | undefined = undefined;
+    oldestCursor: string | undefined = undefined;
     lastMessageId:string | undefined;
     firstMessageId:string | undefined;
     firstMessageTime: number | undefined;
@@ -61,6 +63,13 @@ export class RestfulChatEventService implements IChatEventService {
             console.log(e);
             this._pollFrequency = 800;
         }
+    }
+
+    setForwardCursor = (cursor: string) => {
+        this.lastCursor = cursor;
+    }
+    setBackwardCursor = (cursor:string) =>{
+        this.oldestCursor = cursor;
     }
 
     /**
@@ -123,13 +132,14 @@ export class RestfulChatEventService implements IChatEventService {
             throw new SettingsError(REQUIRE_ROOM_ID);
         }
         if(!this._currentRoom || (this._currentRoom.id !== room.id)) {
+            this.lastTimestamp = undefined;
             this.lastCursor = undefined;
             this.lastMessageId = undefined;
             this.firstMessageId = undefined;
             this.firstMessageTime = undefined;
             this._currentRoom = room;
             if(this.eventHandlers.onRoomChange) {
-                this.eventHandlers.onRoomChange(oldRoom, this._currentRoom);
+                this.eventHandlers.onRoomChange(this._currentRoom, oldRoom);
             }
             if (this._currentRoom) {
                 this._roomApi = buildAPI(this._config, `chat/rooms/${this._currentRoom.id}`);
@@ -187,7 +197,7 @@ export class RestfulChatEventService implements IChatEventService {
      * non-debug reasons.
      */
     public _fetchUpdatesAndTriggerCallbacks = async () =>{
-        return this.getUpdates().then(apiResult=>{
+        return this.getUpdates(this.lastCursor).then(apiResult=>{
             this.handleUpdates(apiResult);
         }).catch(error=> {
             if(this.eventHandlers && this.eventHandlers.onNetworkError) {
@@ -210,18 +220,22 @@ export class RestfulChatEventService implements IChatEventService {
     /**
      * Get the latest events.
      */
-    public getUpdates = (): Promise<ChatUpdatesResult> => {
+    public getUpdates = (cursor: string = '', limit:number=100): Promise<ChatUpdatesResult> => {
         if(!this._roomApi) {
             throw new SettingsError("No room selected");
         }
-        return stRequest({
+        const request: AxiosRequestConfig =  {
             method: GET,
-            url: this._updatesApi,
+            url: `${this._updatesApi}?limit=${limit}&cursor=${cursor}`,
             headers: this._apiHeaders
-        }).then((result) => {
+        };
+        return stRequest(request).then((result) => {
             if(this.eventHandlers && this.eventHandlers.onNetworkResponse) {
                 // @ts-ignore
                 this.eventHandlers.onNetworkResponse(result);
+            }
+            if(result.data.cursor) {
+                this.lastCursor = result.data.cursor;
             }
             return result.data;
         });
@@ -236,13 +250,14 @@ export class RestfulChatEventService implements IChatEventService {
         if(!update) {
             return;
         }
+        this.lastCursor = update.cursor;
         const events: Array<EventResult> = update.events;
         if(events && events.length) {
             for (var i = 0; i < events.length; i++) {
                 const event: EventResult = events[i];
                 const ts = event.ts;
-                if (!this.lastCursor || ts > this.lastCursor) {
-                    this.lastCursor = ts;
+                if (!this.lastTimestamp || ts > this.lastTimestamp) {
+                    this.lastTimestamp = ts;
                     this.lastMessageId = event.id;
                 } else {
                     if (!this.firstMessageTime || ts < this.firstMessageTime) {

@@ -33,7 +33,7 @@ export interface IChatEventService extends ISportsTalkConfigurable, IUserConfigu
     setCurrentRoom(room: ChatRoomResult | null): ChatRoom | null,
     setEventHandlers(eventHandlers: EventHandlerConfig),
     getCurrentRoom(): ChatRoomResult | null,
-    getUpdates(): Promise<ChatUpdatesResult>,
+    getUpdates(cursor?: string): Promise<ChatUpdatesResult>,
     reportMessage(event: EventResult | string, reason: ReportReason): Promise<MessageResult<null>>,
     executeChatCommand(user:User, command: string, options?: CommandOptions):  Promise<MessageResult<CommandResponse>>
     sendThreadedReply(user: User, message: string, replyto: string | EventResult, options?: CommandOptions): Promise<MessageResult<CommandResponse>>
