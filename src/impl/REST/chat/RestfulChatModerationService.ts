@@ -4,6 +4,7 @@ import {buildAPI, getUrlEncodedHeaders} from "../../utils";
 import {DEFAULT_CONFIG, POST, } from "../../constants/api";
 import {IChatModerationService} from "../../../API/ChatAPI";
 import {RestApiResult, SportsTalkConfig, Webhook} from "../../../models/CommonModels";
+import {AxiosRequestConfig} from "axios";
 
 /**
  * This class is for moderating chat events.  Most clients will not need this unless you are building a custom moderation UI.
@@ -44,12 +45,13 @@ export class RestfulChatModerationService implements IChatModerationService {
      * Reject an event, removing it from the chat.
      * @param event
      */
-    moderateEvent = (event: EventResult, approved: boolean): Promise<RestApiResult<null>> => {
-        return stRequest({
+    moderateEvent = (event: EventResult, approved: boolean): Promise<EventResult> => {
+        const config: AxiosRequestConfig = {
             method: 'POST',
             url: buildAPI(this._config, `${this._apiExt}/${event.id}/applydecision`),
             headers: this._apiHeaders,
-            data: {approve: !!approved}
-        })
+            data: {approve: !!approved + ""}
+        }
+        return stRequest(config).then(response=>response.data)
     }
 }

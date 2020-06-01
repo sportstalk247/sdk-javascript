@@ -58,7 +58,7 @@ describe('GOAL Chat Sequence', function() {
     });
     describe('User 2', function () {
         it('Joins room', function (done) {
-            client2.joinRoom(theRoom).then(() => {
+            client2.joinRoom(theRoom).then((roomJoinResponse) => {
                 done()
             }).catch(done)
         })

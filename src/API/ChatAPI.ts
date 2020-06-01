@@ -113,6 +113,6 @@ export interface IChatClient extends IUserConfigurable, ISportsTalkConfigurable{
  */
 export interface IChatModerationService extends ISportsTalkConfigurable {
     listMessagesInModerationQueue(): Promise<EventListResponse>
-    moderateEvent(event: EventResult, approved: boolean): Promise<MessageResult<null>>
+    moderateEvent(event: EventResult, approved: boolean): Promise<EventResult>
 }
 
