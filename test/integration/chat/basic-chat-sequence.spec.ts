@@ -48,7 +48,9 @@ describe('BASIC Chat Sequence', function() {
             }).then((resp) => {
                 expect(resp.room.id).to.be.not.null;
                 done()
-            }).catch(done)
+            }).catch(e=>{
+                done(e);
+            })
         })
     });
     describe('User 2', function () {
@@ -57,7 +59,9 @@ describe('BASIC Chat Sequence', function() {
                 .then((resp) => {
                     expect(resp.room.id).to.be.not.null;
                     done()
-                }).catch(done)
+                }).catch(e=>{
+                    done(e);
+                })
         })
     })
     describe('Users chat', function () {

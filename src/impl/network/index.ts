@@ -33,6 +33,10 @@ const makeRequest = async function makeRequest(config:Request | AxiosRequestConf
  * @param config
  */
 const makeAxiosRequest = async function makeAxiosRequest(config:AxiosRequestConfig) {
+    if(config && config.headers) {
+        // @ts-ignore
+        config.decompress=true
+    }
     return axios(config).then(result=>result.data);
 }
 
