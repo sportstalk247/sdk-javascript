@@ -6,25 +6,28 @@ import {Kind, SportsTalkConfig} from "../../../src/models/CommonModels";
 import {API_SUCCESS_MESSAGE} from "../../../src/impl/constants/api";
 dotenv.config();
 
-let client;
-let mod;
 const { expect } = chai;
 // @ts-ignore
-const config: SportsTalkConfig = {apiToken:process.env.TEST_KEY, appId: process.env.TEST_APP_ID || "", endpoint: process.env.TEST_ENDPOINT};
+const config: SportsTalkConfig = {
+    apiToken:process.env.TEST_KEY,
+    appId: process.env.TEST_APP_ID || "",
+    endpoint: process.env.TEST_ENDPOINT
+};
+
 describe('BASIC Chat Sequence', function() {
-    const user1config: SportsTalkConfig = {...config,user: {
+    const user1config: SportsTalkConfig = {...config, user: {
             userid: 'testuser1',
             handle: 'handle1'
         }};
 
     const user2config: SportsTalkConfig = {
         ...config,
-
         user: {
             userid: 'testuser2',
             handle: 'handle2'
         }
     }
+
     const client:ChatClient = ChatClient.init(user1config);
     const client2:ChatClient = ChatClient.init(user2config);
     const rm = new RestfulChatRoomService({

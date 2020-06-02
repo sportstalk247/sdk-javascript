@@ -95,6 +95,10 @@ describe('Comment Operations', function() {
                 throw e;
             }
         })
+        it('Retrieves commentary', async()=>{
+            commentary = await client.listComments();
+            return commentary;
+        })
         it("Lets you retrieve specific comments", async ()=>{
             expect(commentary.comments).to.have.length.greaterThan(0);
             const firstComment:Comment = commentary.comments[0];
