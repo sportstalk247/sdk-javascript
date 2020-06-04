@@ -46,6 +46,7 @@ export class RestfulChatEventService implements IChatEventService {
     // poll management
     lastTimestamp:number | undefined; // timestamp
     lastCursor: string | undefined = undefined;
+    // for scrollback
     oldestCursor: string | undefined = undefined;
     lastMessageId:string | undefined;
     firstMessageId:string | undefined;
@@ -168,7 +169,7 @@ export class RestfulChatEventService implements IChatEventService {
      */
     startEventUpdates = () => {
         if(this._polling) {
-            console.warn("ALREADY CONNECTED TO TALK");
+            console.log("ALREADY CONNECTED TO TALK");
             return;
         }
         if(this.eventHandlers.onChatStart) {
@@ -188,6 +189,7 @@ export class RestfulChatEventService implements IChatEventService {
         ) {
             throw new SettingsError(INVALID_POLL_FREQUENCY);
         }
+        console.log(this._polling);
         this._polling = setInterval(this._fetchUpdatesAndTriggerCallbacks, this._pollFrequency || 500);
     }
 
@@ -196,8 +198,9 @@ export class RestfulChatEventService implements IChatEventService {
      * However, marked with a starting underscore to emphasize that you are probably doing something wrong if you need this for
      * non-debug reasons.
      */
-    public _fetchUpdatesAndTriggerCallbacks = async () =>{
-        return this.getUpdates(this.lastCursor).then(apiResult=>{
+    public _fetchUpdatesAndTriggerCallbacks = async () => {
+        const cursor = this.lastCursor
+        return this.getUpdates(cursor).then(apiResult=>{
             this.handleUpdates(apiResult);
         }).catch(error=> {
             if(this.eventHandlers && this.eventHandlers.onNetworkError) {
@@ -221,6 +224,9 @@ export class RestfulChatEventService implements IChatEventService {
      * Get the latest events.
      */
     public getUpdates = (cursor: string = '', limit:number=100): Promise<ChatUpdatesResult> => {
+        if(!cursor) {
+            console.log("getting last");
+        }
         if(!this._roomApi) {
             throw new SettingsError("No room selected");
         }
@@ -247,10 +253,13 @@ export class RestfulChatEventService implements IChatEventService {
      * @private
      */
     public handleUpdates = (update: ChatUpdatesResult) => {
+        console.log("handle updates");
         if(!update) {
             return;
         }
-        this.lastCursor = update.cursor;
+        if(update.cursor) {
+            this.lastCursor = update.cursor;
+        }
         const events: Array<EventResult> = update.events;
         if(events && events.length) {
             for (var i = 0; i < events.length; i++) {
@@ -264,7 +273,6 @@ export class RestfulChatEventService implements IChatEventService {
                         this.firstMessageTime = ts;
                         this.firstMessageId = event.id;
                     }
-                    continue;
                 }
                 if(event.shadowban && (!this._user || event.userid !== this._user.userid)) {
                     continue;
