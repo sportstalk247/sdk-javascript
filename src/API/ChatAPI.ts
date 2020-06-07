@@ -46,6 +46,7 @@ export interface IChatEventService extends ISportsTalkConfigurable, IUserConfigu
     permanetlyDeleteEvent(user: UserResult | string, event: EventResult | string):Promise<RestApiResult<null>>
     listPreviousEvents(cursor?:string, limit?: number): Promise<ChatUpdatesResult>
     listEventsHistory(cursor?:string, limit?: number): Promise<ChatUpdatesResult>
+    setUpdateSpeed(speed: number);
 }
 
 /**
