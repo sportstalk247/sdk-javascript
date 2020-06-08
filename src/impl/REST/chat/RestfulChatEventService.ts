@@ -292,6 +292,17 @@ export class RestfulChatEventService implements IChatEventService {
                     this.eventHandlers.onReaction(event);
                     continue;
                 }
+                if(event.eventtype == EventType.replace && this.eventHandlers.onReplace) {
+                    this.eventHandlers.onReplace(event);
+                    continue;
+                }
+                if(event.eventtype == EventType.remove && this.eventHandlers.onRemove) {
+                    this.eventHandlers.onRemove(event);
+                    continue;
+                }
+                if(event.eventtype !== 'speech') {
+                    console.log(event);
+                }
                 if (this.eventHandlers.onChatEvent) {
                     this.eventHandlers.onChatEvent(event);
                     continue;
@@ -541,6 +552,7 @@ export class RestfulChatEventService implements IChatEventService {
         }
         const config: AxiosRequestConfig = {
             method: PUT,
+            headers: this._jsonHeaders,
             url: buildAPI(this._config, `chat/rooms/${this._currentRoom.id}/events/${id}/setdeleted?userid=${userid}&deleted=true&permanentifnoreplies=${permanentIfNoReplies}`)
         }
         // @ts-ignore

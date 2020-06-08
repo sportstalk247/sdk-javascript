@@ -11,6 +11,7 @@ const makeRequest = async function makeRequest(config:Request | AxiosRequestConf
             // @ts-ignore
             config.body = JSON.stringify(config.data);
     }
+    config.headers['Content-Type'] = 'application/json';
     // @ts-ignore
     config.cors = 'no-cors';
     // @ts-ignore

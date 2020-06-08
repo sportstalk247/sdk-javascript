@@ -16,11 +16,13 @@ export enum EventType {
     speech = "speech",
     purge = "purge",
     reaction = "reaction",
+    replace = "replace",
+    remove = "remove",
     roomClosed = "roomclosed",
     roomOpen = "roomopen",
     action = "action",
-    reply = "reply",
-    quote = "quote",
+    reply = "reply", // threaded replies
+    quote = "quote", // quoted replies
     goal = "goal", // custom type
     advertisement = "advertisement" // custom type
 }
@@ -43,6 +45,8 @@ export interface EventHandlerConfig {
     onGoalEvent?(event: EventResult),
     onAdEvent?(event: EventResult),
     onReply?(event: EventResult),
+    onReplace?(event: EventResult),
+    onRemove?(event: EventResult),
     onReaction?(event:EventResult),
     onPurgeEvent?(event:EventResult),
     onAdminCommand?(response: RestApiResult<Kind.api>),
