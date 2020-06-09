@@ -3,7 +3,7 @@ import {Kind, ModerationType, Reaction, ReportType, SportsTalkConfig} from '../.
 import * as chai from 'chai';
 import * as dotenv from 'dotenv';
 import {DEFAULT_CONFIG} from "../../../src/impl/constants/api";
-import {User} from "../../../dist/models/CommonModels";
+import {User} from "../../../src/models/CommonModels";
 dotenv.config();
 
 const { expect } = chai;
