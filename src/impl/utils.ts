@@ -12,7 +12,7 @@ export function formify(data) {
     return formBody.join("&");
 }
 
-export function buildAPI(config: SportsTalkConfig, ext: string, request?: ListRequest): string {
+export function buildAPI(config: SportsTalkConfig, ext: string, request?: Object): string {
     let endpoint = `${config.endpoint || DEFAULT_CONFIG.endpoint}/${config.appId}/${ext}`;
     if(request && Object.keys(request).length > 0) {
         endpoint = `${endpoint}?${formify(request)}`;

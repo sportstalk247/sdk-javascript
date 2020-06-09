@@ -13,7 +13,7 @@ import {
     User,
     CommentResponse,
     ConversationRequest,
-    ConversationListResponse, SimpleComment
+    ConversationListResponse, SimpleComment, RepliesBatchResponse
 } from "../models/CommentsModels";
 
 import {
@@ -35,6 +35,7 @@ export interface ICommentService extends ISportsTalkConfigurable {
     react(convesationId: string, comment:Comment | string, user: User, reaction:Reaction, enable?: boolean): Promise<Comment>;
     getReplies(convesationId: string, comment: Comment | string, request?: CommentRequest): Promise<CommentListResponse>
     listComments(convesationId: string, request?: CommentRequest): Promise<CommentListResponse>
+    listRepliesBatch(conversation: Conversation | string, parentids: string[], childlimit?:number): Promise<RepliesBatchResponse>
 }
 
 export interface IConversationService extends IConfigurable {
@@ -77,4 +78,5 @@ export interface ICommentingClient extends ISportsTalkConfigurable, IUserConfigu
     listUsers(request?: ListRequest): Promise<UserListResponse>
     deleteUser(user:User | string):Promise<UserDeletionResponse>
     getUserDetails(user: User | string): Promise<UserResult>
+    listRepliesBatch(parentids: string[], limit:number=50): Promise<RepliesBatchResponse>
 }

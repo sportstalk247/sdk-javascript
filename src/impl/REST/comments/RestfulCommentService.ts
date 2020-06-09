@@ -11,7 +11,7 @@ import {
     Comment, CommentListResponse, CommentDeletionResponse,
     CommentRequest,
     Conversation,
-    Vote
+    Vote, RepliesBatchResponse
 } from "../../../models/CommentsModels";
 import {DELETE, GET, POST, PUT} from "../../constants/api";
 import {getUrlEncodedHeaders, getJSONHeaders, buildAPI, formify} from "../../utils";
@@ -387,5 +387,19 @@ export class RestfulCommentService implements ICommentService {
                 more
             };
         });
+    }
+
+    public listRepliesBatch = (conversation: Conversation | string, parentids: string[], childlimit:number = 50): Promise<RepliesBatchResponse> => {
+        const id = getUrlConversationId(conversation);
+        this._requireConversationId(id);
+        if(!parentids || !parentids.length) {
+            throw new ValidationError('Must provide a list of parent comment IDs');
+        }
+        const config: AxiosRequestConfig = {
+            method: GET,
+            url: buildAPI(this._config, `${this._apiExt}/${id}/repliesbyparentidbatch`, {parentids, childlimit}),
+            headers: this._jsonHeaders,
+        }
+        return stRequest(config).then(resp=>resp.data);
     }
 }

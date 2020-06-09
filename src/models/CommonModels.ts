@@ -49,7 +49,9 @@ export enum Kind {
     chatlist = "list.chatevents",
     eventlist = "list.events",
     roomlist = "list.chatrooms",
-    userlist = "list.users"
+    userlist = "list.users",
+    repliesbyparentidlist = "list.repliesbyparentid",
+    commentreplygrouplist = "list.commentreplygroup"
 }
 
 export interface UserResult extends User {

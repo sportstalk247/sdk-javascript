@@ -33,6 +33,16 @@ export interface CommentListResponse extends ListResponse {
     comments: Comment[]
 }
 
+export interface CommentReplyList {
+    kind: Kind.commentreplygrouplist,
+    parentid: string,
+    comments: Comment[]
+}
+export interface RepliesBatchResponse extends ListResponse {
+    kind: Kind.repliesbyparentidlist
+    repliesgroupedbyparentid: CommentReplyList[]
+}
+
 export interface ConversationResponse extends Conversation {
     kind: Kind.conversation
     appid: string,
@@ -99,6 +109,7 @@ export interface SimpleComment  {
     replyto?: string
 }
 export interface Comment extends User {
+    kind?: Kind.comment
     id?: string;
     conversationid?: string
     body: string,

@@ -18,7 +18,7 @@ import {
     CommentDeletionResponse,
     ConversationRequest,
     ConversationListResponse,
-    SimpleComment
+    SimpleComment, RepliesBatchResponse
 } from "../models/CommentsModels";
 import {RestfulCommentService} from "./REST/comments/RestfulCommentService";
 import {RestfulConversationService} from "./REST/comments/RestfulConversationService";
@@ -269,6 +269,10 @@ export class CommentClient implements ICommentingClient {
         return this._commentService.getReplies(conversationid, commentid, request);
     }
 
+    public listRepliesBatch = (parentids: string[], limit:number=50): Promise<RepliesBatchResponse> => {
+        const conversationid = forceObjKeyOrString(this._currentConversation, 'conversationid')
+        return this._commentService.listRepliesBatch(conversationid, parentids, limit)
+    }
     /**
      * Retrieves comments
      * @param request how to sort/filter the comments.  See CommentRequest
