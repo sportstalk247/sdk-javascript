@@ -18,7 +18,7 @@ import {
     CommentDeletionResponse,
     ConversationRequest,
     ConversationListResponse,
-    SimpleComment, RepliesBatchResponse
+    SimpleComment, RepliesBatchResponse, CommentResponse
 } from "../models/CommentsModels";
 import {RestfulCommentService} from "./REST/comments/RestfulCommentService";
 import {RestfulConversationService} from "./REST/comments/RestfulConversationService";
@@ -180,7 +180,7 @@ export class CommentClient implements ICommentingClient {
      * @param comment The comment string.
      * @param replyto either the comment object to reply to or the ID as a string
      */
-    public publishComment = (comment: string | SimpleComment, replyto?: Comment | string): Promise<Comment> => {
+    public publishComment = (comment: string | SimpleComment, replyto?: Comment | string): Promise<CommentResponse> => {
         const conversationid = forceObjKeyOrString(this._currentConversation, 'conversationid')
         return this._commentService.publishComment(conversationid, comment, this._user, replyto);
     }
@@ -189,8 +189,8 @@ export class CommentClient implements ICommentingClient {
      * Retrieves a specific comment
      * @param comment
      */
-    public getComment = (comment: Comment | string) => {
-        const conversationid = forceObjKeyOrString(this._currentConversation, 'conversationid')
+    public getComment = (comment: CommentResponse | string):Promise<CommentResponse | null> =>  {
+        const conversationid:string = forceObjKeyOrString(this._currentConversation, 'conversationid')
         return this._commentService.getComment(conversationid, comment);
     }
 
@@ -213,7 +213,7 @@ export class CommentClient implements ICommentingClient {
      * @param comment
      * @param final
      */
-    public deleteComment = (comment:Comment | string, final: boolean): Promise<CommentDeletionResponse> => {
+    public deleteComment = (comment:CommentResponse | string, final: boolean): Promise<CommentDeletionResponse> => {
         const conversationid = forceObjKeyOrString(this._currentConversation, 'conversationid')
         return this._commentService.deleteComment(conversationid, comment, this._user, final);
     }
@@ -222,7 +222,7 @@ export class CommentClient implements ICommentingClient {
      * Update a comment that already exists
      * @param comment
      */
-    public updateComment = (comment:Comment): Promise<Comment> => {
+    public updateComment = (comment:CommentResponse): Promise<Comment> => {
         // @ts-ignore
         const conversationid = forceObjKeyOrString(this._currentConversation, 'conversationid')
         return this._commentService.updateComment(conversationid, comment, this._user);
@@ -233,7 +233,7 @@ export class CommentClient implements ICommentingClient {
      * @param comment
      * @param reaction
      */
-    public reactToComment = (comment:Comment, reaction:Reaction): Promise<Comment> => {
+    public reactToComment = (comment:CommentResponse, reaction:Reaction): Promise<Comment> => {
         const conversationid = forceObjKeyOrString(this._currentConversation, 'conversationid')
         return this._commentService.react(conversationid, comment, this._user, reaction);
     }
@@ -243,7 +243,7 @@ export class CommentClient implements ICommentingClient {
      * @param comment
      * @param vote
      */
-    public voteOnComment = (comment:Comment | string, vote:Vote): Promise<Comment> => {
+    public voteOnComment = (comment:CommentResponse | string, vote:Vote): Promise<Comment> => {
         const conversationid = forceObjKeyOrString(this._currentConversation, 'conversationid')
         return this._commentService.vote(conversationid, comment, this._user, vote);
     }
@@ -253,7 +253,7 @@ export class CommentClient implements ICommentingClient {
      * @param comment
      * @param reportType
      */
-    public reportComment = (comment:Comment, reportType: ReportType): Promise<Comment> => {
+    public reportComment = (comment:CommentResponse, reportType: ReportType): Promise<Comment> => {
         const conversationid = forceObjKeyOrString(this._currentConversation, 'conversationid')
         return this._commentService.report(conversationid, comment, this._user, reportType);
     }
@@ -263,7 +263,7 @@ export class CommentClient implements ICommentingClient {
      * @param comment
      * @param request
      */
-    public getCommentReplies = (comment:Comment | string, request?: CommentRequest): Promise<CommentListResponse> => {
+    public getCommentReplies = (comment:CommentResponse | string, request?: CommentRequest): Promise<CommentListResponse> => {
         const conversationid = forceObjKeyOrString(this._currentConversation, 'conversationid')
         const commentid =  forceObjKeyOrString(comment)
         return this._commentService.getReplies(conversationid, commentid, request);

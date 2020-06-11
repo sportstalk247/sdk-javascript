@@ -70,7 +70,7 @@ describe('Comment Operations', function() {
     });
     describe("Responses", function() {
         let commentary: CommentListResponse;
-        let resp:Comment;
+        let resp:CommentResponse;
         it("React to a comment", async ()=>{
             try {
                 const conv = await client2.createConversation(conversation, true)
@@ -98,16 +98,18 @@ describe('Comment Operations', function() {
         it('Gets batch replies', async () => {
             try {
                 // @ts-ignore
-                const replies = await client.listRepliesBatch([resp.id]);
+                const comment2 = await client.publishComment("Another comment");
+                const reply = await client.publishComment("Another reply", comment2);
+                const replies = await client.listRepliesBatch([resp.id, comment2.id]);
                 expect(replies.kind).to.be.equal(Kind.repliesbyparentidlist);
-                expect(replies.repliesgroupedbyparentid).to.have.lengthOf(1);
+                expect(replies.repliesgroupedbyparentid).to.have.lengthOf(2);
+                expect(replies.itemcount).to.be.equal(2);
                 const group: CommentReplyList = replies.repliesgroupedbyparentid[0];
                 expect(group.parentid).to.be.equal(resp.id);
                 expect(group.kind).to.be.equal(Kind.commentreplygrouplist)
                 expect(group.comments).to.have.lengthOf(1);
                 const comment:Comment = group.comments[0];
                 expect(comment.kind).to.be.equal(Kind.comment);
-                expect(replies.itemcount).to.be.equal(1);
             } catch(e) {
                 throw e;
             }
@@ -118,7 +120,7 @@ describe('Comment Operations', function() {
         })
         it("Lets you retrieve specific comments", async ()=>{
             expect(commentary.comments).to.have.length.greaterThan(0);
-            const firstComment:Comment = commentary.comments[0];
+            const firstComment:CommentResponse = commentary.comments[0];
             expect(firstComment.id).to.be.not.null;
             expect(firstComment.id).to.be.not.undefined;
             let comment = await client.getComment(firstComment);

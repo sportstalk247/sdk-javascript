@@ -26,13 +26,13 @@ import {
 } from "../models/CommonModels";
 
 export interface ICommentService extends ISportsTalkConfigurable {
-    publishComment(convesationId: string, comment: Comment | SimpleComment | string, user: User, replyto?: Comment | string): Promise<Comment>;
-    getComment(convesationId: string, comment: Comment | string): Promise<Comment | null>;
-    deleteComment(convesationId: string, comment: Comment | string, user: User, final?: boolean): Promise<CommentDeletionResponse>
-    updateComment(convesationId: string, comment: Comment, user: User): Promise<Comment>;
-    vote(convesationId: string, comment: Comment | string, user: User, vote:Vote): Promise<Comment>
-    report(convesationId: string, comment: Comment, user:User, reporttype: ReportType): Promise<Comment>
-    react(convesationId: string, comment:Comment | string, user: User, reaction:Reaction, enable?: boolean): Promise<Comment>;
+    publishComment(convesationId: string, comment: Comment | SimpleComment | string, user: User, replyto?: Comment | string): Promise<CommentResponse>;
+    getComment(convesationId: string, comment: Comment | string): Promise<CommentResponse | null>;
+    deleteComment(convesationId: string, comment: CommentResponse | string, user: User, final?: boolean): Promise<CommentDeletionResponse>
+    updateComment(convesationId: string, comment: CommentResponse, user: User): Promise<CommentResponse>;
+    vote(convesationId: string, comment: Comment | string, user: User, vote:Vote): Promise<CommentResponse>
+    report(convesationId: string, comment: Comment, user:User, reporttype: ReportType): Promise<CommentResponse>
+    react(convesationId: string, comment:Comment | string, user: User, reaction:Reaction, enable?: boolean): Promise<CommentResponse>;
     getReplies(convesationId: string, comment: Comment | string, request?: CommentRequest): Promise<CommentListResponse>
     listComments(convesationId: string, request?: CommentRequest): Promise<CommentListResponse>
     listRepliesBatch(conversation: Conversation | string, parentids: string[], childlimit?:number): Promise<RepliesBatchResponse>
@@ -69,7 +69,7 @@ export interface ICommentingClient extends ISportsTalkConfigurable, IUserConfigu
     reactToComment(comment:Comment | string, reaction:Reaction): Promise<Comment>;
     voteOnComment(comment:Comment | string, vote:Vote);
     reportComment(comment:Comment | string, reportType: ReportType): Promise<Comment>;
-    getCommentReplies(comment:Comment, request?: CommentRequest): Promise<CommentListResponse>
+    getCommentReplies(comment:CommentResponse, request?: CommentRequest): Promise<CommentListResponse>
     listComments(request?: CommentRequest, conversation?: Conversation): Promise<CommentListResponse>
     listConversations(filter?: ConversationRequest): Promise<ConversationListResponse>
     setBanStatus(user: User | string, isBanned: boolean): Promise<RestApiResult<UserResult>>
@@ -78,5 +78,5 @@ export interface ICommentingClient extends ISportsTalkConfigurable, IUserConfigu
     listUsers(request?: ListRequest): Promise<UserListResponse>
     deleteUser(user:User | string):Promise<UserDeletionResponse>
     getUserDetails(user: User | string): Promise<UserResult>
-    listRepliesBatch(parentids: string[], limit:number=50): Promise<RepliesBatchResponse>
+    listRepliesBatch(parentids: string[], limit:number): Promise<RepliesBatchResponse>
 }

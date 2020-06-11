@@ -30,13 +30,13 @@ export interface Conversation {
 
 export interface CommentListResponse extends ListResponse {
     conversation: Conversation,
-    comments: Comment[]
+    comments: CommentResponse[]
 }
 
 export interface CommentReplyList {
     kind: Kind.commentreplygrouplist,
     parentid: string,
-    comments: Comment[]
+    comments: CommentResponse[]
 }
 export interface RepliesBatchResponse extends ListResponse {
     kind: Kind.repliesbyparentidlist
@@ -107,6 +107,10 @@ export interface SimpleComment  {
     body: string,
     added?: string, // ISO 8601 timestampe, e.g. 2020-03-02T00:00:00Z
     replyto?: string
+}
+
+export interface CommentResponse extends Comment {
+    id: string
 }
 export interface Comment extends User {
     kind?: Kind.comment
