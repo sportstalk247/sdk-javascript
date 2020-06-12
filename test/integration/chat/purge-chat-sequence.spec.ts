@@ -3,11 +3,13 @@ import * as chai from 'chai';
 import * as sinon from 'sinon';
 import {RestfulChatRoomService} from "../../../src/impl/REST/chat/RestfulChatRoomService";
 import * as dotenv from 'dotenv';
-import {SportsTalkConfig} from "../../../src/models/CommonModels";
+import {Kind, SportsTalkConfig} from "../../../src/models/CommonModels";
 import {RestfulChatEventService} from "../../../src/impl/REST/chat/RestfulChatEventService";
 dotenv.config();
 
+
 const onPurgeEvent = sinon.fake();
+
 const onChatEvent = sinon.fake();
 const delay = function(timer) {
     return new Promise(function(accept, reject){
@@ -62,9 +64,7 @@ describe('PURGE Chat Sequence', function() {
     });
     describe('User 2', function () {
         it('Joins room', function (done) {
-            client2.joinRoom(theRoom).then(() => {
-                client.startListeningToEventUpdates()
-                client2.startListeningToEventUpdates()
+            client2.joinRoom(theRoom).then((room) => {
                 done()
             }).catch(done)
         })
@@ -72,9 +72,10 @@ describe('PURGE Chat Sequence', function() {
     describe('Users chat', function () {
         it('Lets users speak', function (done) {
             Promise.all([
-                client.executeChatCommand("Hello!"),
+                client2.executeChatCommand("Hello!"),
                 client2.executeChatCommand("This is me!")
             ]).then(results => {
+                expect(results).to.have.lengthOf(2);
                 done()
             }).catch(done);
         })
@@ -95,22 +96,22 @@ describe('PURGE Chat Sequence', function() {
         it('Fires onPurge',  async function () {
             await delay(500);
             const purge =  await client.executeChatCommand("*purge "+process.env.PURGE+" handle2");
-            await client.getUpdates();
-            await delay(100);
+            expect(purge.message).to.be.equal('The user\'s 3 messages were purged.');
             const updates:RestfulChatEventService = <RestfulChatEventService>client.getEventService();
-            await updates._fetchUpdatesAndTriggerCallbacks();
-            await delay(100);
-            const handlers = updates.getEventHandlers();
-            // @ts-ignore
-            expect(handlers.onPurgeEvent.callCount).to.be.greaterThan(0);
+            return updates._fetchUpdatesAndTriggerCallbacks().then(function(res){
+                const handlers = updates.getEventHandlers();
+                // @ts-ignore
+                expect(handlers.onPurgeEvent.callCount).to.be.equal(1)
+
+            })
         })
     });
     describe('Kill test room', function () {
         it('can be deleted', function (done) {
             rm.deleteRoom(theRoom)
                 .then(success => {
-                    client.stopListeningToEventUpdates();
-                    client2.stopListeningToEventUpdates();
+                    expect(success.kind).to.be.equal(Kind.deletedroom);
+                    expect(success.deletedEventsCount).to.be.equal(1);
                     done()
                 }).catch(done);
         })

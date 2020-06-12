@@ -200,21 +200,19 @@ export class RestfulChatEventService implements IChatEventService {
      * However, marked with a starting underscore to emphasize that you are probably doing something wrong if you need this for
      * non-debug reasons.
      */
-    public _fetchUpdatesAndTriggerCallbacks = async () => {
+    public _fetchUpdatesAndTriggerCallbacks = () => {
         const cursor = this.lastCursor
         if(this._fetching) {
-            return;
+            return Promise.resolve();
         }
-        this._fetching=true;
-        return this.getUpdates(cursor).then(apiResult=>{
-           return this.handleUpdates(apiResult);
-        }).catch(error=> {
-            this._fetching = false;
+        this._fetching = true;
+        return this.getUpdates(cursor).then(this.handleUpdates).catch(error=> {
             if(this.eventHandlers && this.eventHandlers.onNetworkError) {
                 this.eventHandlers.onNetworkError(error)
             } else {
                 console.log(error);
             }
+            this._fetching = false;
         });
     }
 
