@@ -28,9 +28,7 @@ describe("Event Service", ()=>{
     const onChatEvent = sinon.spy();
     const onAdminCommand = sinon.fake();
     const onPurgeEvent = sinon.fake();
-    const onReply =  function(e) {
-        replyTriggered = true;
-    }
+    const onReply =  sinon.fake();
     const onReaction = function(e) {
         reactionTriggered = true;
     }
@@ -52,7 +50,6 @@ describe("Event Service", ()=>{
             it("will trigger onChatStart", async () => {
                 room = await RM.createRoom({name: "CallbackTest", slug: "callback-test"});
                 await EM.setCurrentRoom(room);
-                await EM.startEventUpdates();
                 expect(onChatStart.calledOnce)
             });
         });
@@ -62,8 +59,8 @@ describe("Event Service", ()=>{
                 client.setUser(user);
                 const join = await client.joinRoom(room);
                 const response = await client.executeChatCommand("This is a chat event command");
-                const updates = await client.getEventService().getUpdates();
-                await delay(1000);
+                // @ts-ignore
+                const updates = await client.getEventService()._fetchUpdatesAndTriggerCallbacks();
                 expect(onChatEvent.callCount).to.be.greaterThan(0);
                 // @ts-ignore
                 chatMessage = response.data.speech;
@@ -73,13 +70,12 @@ describe("Event Service", ()=>{
         describe("onReply", ()=>{
             it("Will trigger onReply", async()=>{
                 const id = chatMessage.id;
-                const reply = await client.sendQuotedReply("This is my reply", id)
+                const reply = await client.sendThreadedReply("This is my reply", id)
                 const eventService = <RestfulChatEventService> await client.getEventService()
                 await eventService._fetchUpdatesAndTriggerCallbacks();
-                await delay(100);
                 const handlers = client.getEventService().getEventHandlers()
                 // @ts-ignore
-                expect(replyTriggered).to.be.true;
+                expect(onReply.callCount).to.be.equal(1);
                 // @ts-ignore
                 expect(handlers.onChatEvent.callCount).to.be.greaterThan(0);
             })
@@ -91,7 +87,6 @@ describe("Event Service", ()=>{
                 const reaction = await client.reactToEvent(Reaction.like, id);
                 const eventService = <RestfulChatEventService> await client.getEventService()
                 await eventService._fetchUpdatesAndTriggerCallbacks();
-                await delay(100);
                 const handlers = client.getEventService().getEventHandlers()
                 // @ts-ignore
                 expect(reactionTriggered).to.be.true;

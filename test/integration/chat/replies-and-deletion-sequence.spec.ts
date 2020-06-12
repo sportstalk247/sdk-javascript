@@ -12,7 +12,7 @@ const { expect } = chai;
 // @ts-ignore
 const config: SportsTalkConfig = {apiToken:process.env.TEST_KEY, appId: process.env.TEST_APP_ID, endpoint: process.env.TEST_ENDPOINT};
 
-describe('REPLY Chat Sequence', function() {
+describe('REPLY & DELETE Chat Sequence', function() {
     const client = <ChatClient> ChatClient.init({
         ...config,
         user: {
@@ -83,12 +83,12 @@ describe('REPLY Chat Sequence', function() {
         it('Shows Quoted reply', function (done) {
             Promise.all([em1.getUpdates(), em2.getUpdates()])
                 .then(async (chatHistories) => {
-                    expect(chatHistories[0].events).to.have.lengthOf(3);
-                    expect(chatHistories[1].events).to.have.lengthOf(3);
+                    expect(chatHistories[0].events).to.have.lengthOf(chatHistories[0].itemcount);
+                    expect(chatHistories[1].events).to.have.lengthOf(chatHistories[1].itemcount);
                     expect(chatHistories[0].events[chatHistories[0].events.length-1].eventtype).to.equal("quote");
                     expect(chatHistories[0].events[chatHistories[0].events.length-1].replyto).to.haveOwnProperty('userid');
                     expect(chatHistories[0].events[chatHistories[0].events.length-1].body).to.equal('This is my reply')
-                    threadedReplyTargetId = chatHistories[0].events[chatHistories[0].events.length-2].id;
+                    threadedReplyTargetId = chatHistories[0].events[chatHistories[0].events.length-1].id;
                     return chatHistories[0];
                 }).then(chat=>{
                     toDelete = chat.events[0];
@@ -98,7 +98,8 @@ describe('REPLY Chat Sequence', function() {
                 .catch(done)
         })
         it('Threads a reply', async ()=>{
-           const reply = await client.sendThreadedReply("Threaded reply", threadedReplyTargetId)
+            const reply = await client.sendThreadedReply("Threaded reply", threadedReplyTargetId)
+            expect(reply)
         });
         it("deletes first event", async ()=>{
             const deletion = await client.permanetlyDeleteEvent(toDelete);
