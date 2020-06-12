@@ -111,8 +111,13 @@ describe('GOAL Chat Sequence', function() {
             Promise.all([em1.getUpdates(), em2.getUpdates()])
                 .then(chatHistories => {
                     const goal = chatHistories[0].events.find(item=>item.customtype=="goal")
-                    expect(goal).to.be.not.null;
-                    expect(goal).to.be.not.undefined;
+                    try {
+                        expect(goal).to.be.not.null;
+                        expect(goal).to.be.not.undefined;
+                    }catch(e) {
+                        console.log(chatHistories);
+                        throw e;
+                    }
                     // @ts-ignore
                     if(goal && goal.custompayload) {
                         expect(goal.custompayload).to.be.not.null;
