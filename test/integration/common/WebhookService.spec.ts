@@ -72,7 +72,7 @@ describe("Webhook Service", function(){
                done(e);
            })
         })
-        it("Can update the post publish hook", done=>{
+        it("Can update the post publish hook", function(done) {
             const updated = Object.assign(posthook, {events:[]})
             HookManager.updateWebhook(updated).then(resp=>{
                 expect(resp.events).to.have.lengthOf(0);
@@ -94,46 +94,60 @@ describe("Webhook Service", function(){
         })
     })
     describe("Delete", function(){
-        it('Can delete pre-publish hooks', async()=>{
+        it('Can delete pre-publish hooks', async function() {
             try {
-                let hook;
+
+                let listsofhooks = await HookManager.listWebhooks();
+                console.log(listsofhooks);
+                let prehook:Webhook | undefined = listsofhooks.webhooks.find(hook=>hook.kind==Kind.webhook && hook.type == WebhookType.prepublish)
                 if (prehook) {
-                    hook = await HookManager.deleteWebhook(prehook);
+                    let hook = await HookManager.deleteWebhook(prehook);
                     expect(hook.kind).to.be.equal(Kind.webhook);
-                    const listsofhooks = await HookManager.listWebhooks();
+                    listsofhooks = await HookManager.listWebhooks();
                     const found = listsofhooks.webhooks.find(webhook => webhook.id === hook.id);
                     try {
                         expect(!found).to.be.true;
-                    }catch(e) {
+                    } catch (e) {
                         console.log(listsofhooks);
                         console.log("TO DELETE");
                         console.log(prehook);
                         throw e;
                     }
+                } else {
+                    throw new Error("missing prehook");
                 }
             }catch(e) {
                 throw e;
             }
         })
-        it('Can delete post-publish hooks', async ()=>{
+        it('Can delete post-publish hooks', async function () {
             try {
-                let hook;
-                if (posthook) {
-                    hook = await HookManager.deleteWebhook(posthook);
-                    const listsofhooks = await HookManager.listWebhooks();
-                    const found = listsofhooks.webhooks.find(webhook => webhook.id === hook.id);
+                let listofhooks = await HookManager.listWebhooks();
+                console.log(listofhooks);
+                let posthook:Webhook | undefined = listofhooks.webhooks.find(hook=>hook.kind==Kind.webhook && hook.type == WebhookType.postpublish)
+                if(posthook) {
+                    let hook = await HookManager.deleteWebhook(posthook);
+                    listofhooks = await HookManager.listWebhooks();
+                    const found = listofhooks.webhooks.find(webhook => webhook.id === hook.id);
                     try {
                         expect(!found).to.be.true;
-                    } catch(e) {
-                        console.log(listsofhooks);
+                    } catch (e) {
+                        console.log(listofhooks);
                         console.log("TO DELETE");
-                        console.log(posthook);
+                        console.log(hook);
                         throw e;
                     }
+                } else {
+                    throw new Error("missing posthook");
                 }
+
             } catch (e){
                 throw e;
             }
+        })
+        it('Cleanup hooks', async function() {
+            const listsofhooks = await HookManager.listWebhooks();
+            return Promise.all(listsofhooks.webhooks.map(hook=>HookManager.deleteWebhook(hook)));
         })
     });
 })
