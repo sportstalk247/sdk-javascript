@@ -9,6 +9,11 @@ const { expect } = chai;
 let posthook:Webhook;
 let prehook:Webhook;
 // @ts-ignore
+const delay = function(timer) {
+    return new Promise(function(accept, reject){
+        const timeout = setTimeout(accept, timer)
+    })
+}
 const config: SportsTalkConfig = {apiToken:process.env.TEST_KEY, appId: process.env.TEST_APP_ID, endpoint: process.env.TEST_ENDPOINT};
 describe("Webhook Service", function(){
     const HookManager = new RestfulWebhookService(  config);
@@ -145,17 +150,17 @@ describe("Webhook Service", function(){
         //         throw e;
         //     }
         // })
-        it('Cleanup hooks', async function() {
+        it('Can delete hooks', async function() {
             let listsofhooks = await HookManager.listWebhooks();
             await Promise.all(listsofhooks.webhooks.map(hook=>HookManager.deleteWebhook(hook)));
-
+            await delay(2000);
             listsofhooks = await HookManager.listWebhooks();
             try {
                 expect(listsofhooks.itemcount).to.be.equal(0)
             }catch(e) {
                 console.log(listsofhooks);
                 throw e;
-                
+
             }
         })
     });
