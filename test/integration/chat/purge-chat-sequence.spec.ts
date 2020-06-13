@@ -95,7 +95,7 @@ describe('PURGE Chat Sequence', function() {
     describe('GetUpdates shows purge', function () {
         it('Fires onPurge',  async function () {
             try {
-                const purge = await client.executeChatCommand("*purge " + process.env.PURGE + " handle2");
+                const purge = await client2.executeChatCommand("*purge " + process.env.PURGE + " handle2");
                 expect(purge.message).to.be.equal('The user\'s 3 messages were purged.');
             } catch(e) {
                 const error = new Error(e);

@@ -106,6 +106,8 @@ describe("Webhook Service", function(){
                         expect(!found).to.be.true;
                     }catch(e) {
                         console.log(listsofhooks);
+                        console.log("TO DELETE");
+                        console.log(prehook);
                         throw e;
                     }
                 }
@@ -124,6 +126,8 @@ describe("Webhook Service", function(){
                         expect(!found).to.be.true;
                     } catch(e) {
                         console.log(listsofhooks);
+                        console.log("TO DELETE");
+                        console.log(posthook);
                         throw e;
                     }
                 }
