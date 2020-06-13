@@ -11,7 +11,11 @@ let mod;
 const { expect } = chai;
 // @ts-ignore
 const config: SportsTalkConfig = {apiToken:process.env.TEST_KEY, appId: process.env.TEST_APP_ID, endpoint: process.env.TEST_ENDPOINT};
-
+const delay = function(timer) {
+    return new Promise(function(accept, reject){
+        const timeout = setTimeout(accept, timer)
+    })
+}
 describe('REPLY & DELETE Chat Sequence', function() {
     const client = <ChatClient> ChatClient.init({
         ...config,
@@ -66,19 +70,22 @@ describe('REPLY & DELETE Chat Sequence', function() {
         })
     })
     describe('GetUpdates with messages', function () {
-        it('Shows the same to users, sends reply', function (done) {
-            Promise.all([em1.getUpdates(), em2.getUpdates()])
+        it('Shows the same to users, sends reply', function () {
+            this.timeout(5000);
+            return Promise.all([em1.getUpdates(), em2.getUpdates()])
                 .then(async chatHistories => {
                     const replyText = "This is my reply"
                     expect(chatHistories[0].events).to.have.lengthOf(2);
                     expect(chatHistories[1].events).to.have.lengthOf(2);
-                    const reply = await client2.sendQuotedReply(replyText, chatHistories[0].events[0].id);
+                    const reply = await client.sendQuotedReply(replyText, chatHistories[0].events[0].id);
                     // @ts-ignore
                     expect(reply.data.body).to.be.equal(replyText);
                     // @ts-ignore
                     expect(reply.data.eventtype).to.be.equal("quote")
-                    done();
-                }).catch(done)
+                    const updates = await em1.getUpdates();
+                    await delay(1000); // clear internal updates cache.
+                    expect(updates.events.length).to.be.equal(3);
+                });
         })
     });
     describe('GetUpdates QuotedReply, Threaded Reply sequence', function () {
@@ -86,8 +93,10 @@ describe('REPLY & DELETE Chat Sequence', function() {
         let toFlag: EventResult;
         let threadedReplyTargetId: string;
         it('Shows Quoted reply', function (done) {
+
             Promise.all([em1.getUpdates(), em2.getUpdates()])
                 .then(async (chatHistories) => {
+
                     expect(chatHistories[0].events).to.have.lengthOf(chatHistories[0].itemcount);
                     expect(chatHistories[1].events).to.have.lengthOf(chatHistories[1].itemcount);
                     const quote = chatHistories[0].events.find(event=>event.eventtype==='quote');
@@ -100,28 +109,29 @@ describe('REPLY & DELETE Chat Sequence', function() {
                     }
                     // @ts-ignore
                     expect(quote.eventtype).to.be.equal('quote');
-                    expect(chatHistories[0].events[chatHistories[0].events.length-1].replyto).to.haveOwnProperty('userid');
-                    expect(chatHistories[0].events[chatHistories[0].events.length-1].body).to.equal('This is my reply')
-                    threadedReplyTargetId = chatHistories[0].events[chatHistories[0].events.length-1].id;
-                    return chatHistories[0];
-                }).then(chat=>{
-                    toDelete = chat.events[0];
-                    toFlag = chat.events[1];
                     done();
                 })
                 .catch(done)
         })
         it('Threads a reply', async ()=>{
-            const reply = await client.sendThreadedReply("Threaded reply", threadedReplyTargetId)
-            // expect(reply)
+            const updates = await em1.getUpdates();
+            if(updates.events.length) {
+                const reply = await client.sendThreadedReply("Threaded reply", updates.events[updates.events.length - 1].id)
+                // expect(reply.data.kind).to.be.equal(Kind)
+            } else {
+                throw new Error("No updates");
+            }
         });
         it("deletes first event", async ()=>{
-            const deletion = await client.permanetlyDeleteEvent(toDelete);
+            const updates = await em1.getUpdates();
+            const deletion = await client.permanetlyDeleteEvent(updates.events[0]);
+            await delay(1000);
             // expect(deletion.data.kind).to.be.equal(Kind.deletedcomment);
         });
         it("Flags an event for deletion", async()=>{
             try {
-                const flagged = await client.flagEventLogicallyDeleted(toFlag);
+                const updates = await em1.getUpdates();
+                const flagged = await client.flagEventLogicallyDeleted(updates.events[0]);
             }catch(e){
                 console.log(e);
             }
