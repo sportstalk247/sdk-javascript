@@ -152,12 +152,13 @@ describe("Webhook Service", function(){
         // })
         it('Can delete hooks', async function() {
             let listsofhooks = await HookManager.listWebhooks();
-            await Promise.all(listsofhooks.webhooks.map(hook=>HookManager.deleteWebhook(hook)));
+            const responses = await Promise.all(listsofhooks.webhooks.map(hook=>HookManager.deleteWebhook(hook)));
             await delay(2000);
             listsofhooks = await HookManager.listWebhooks();
             try {
                 expect(listsofhooks.itemcount).to.be.equal(0)
             }catch(e) {
+                console.log(responses);
                 console.log(listsofhooks);
                 throw e;
 
