@@ -99,6 +99,7 @@ describe('PURGE Chat Sequence', function() {
                 expect(purge.message).to.be.equal('The user\'s 3 messages were purged.');
             } catch(e) {
                 const error = new Error(e);
+                console.log(e);
                 error.message = "Couldn't send command";
                 throw error;
             }
