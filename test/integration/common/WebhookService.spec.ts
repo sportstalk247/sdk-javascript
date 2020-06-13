@@ -102,22 +102,32 @@ describe("Webhook Service", function(){
                     expect(hook.kind).to.be.equal(Kind.webhook);
                     const listsofhooks = await HookManager.listWebhooks();
                     const found = listsofhooks.webhooks.find(webhook => webhook.id === hook.id);
-                    expect(!found).to.be.true;
+                    try {
+                        expect(!found).to.be.true;
+                    }catch(e) {
+                        console.log(listsofhooks);
+                        throw e;
+                    }
                 }
             }catch(e) {
                 throw e;
             }
         })
-        it('Can delete post-publish hooks', async()=>{
+        it('Can delete post-publish hooks', async ()=>{
             try {
                 let hook;
                 if (posthook) {
                     hook = await HookManager.deleteWebhook(posthook);
                     const listsofhooks = await HookManager.listWebhooks();
                     const found = listsofhooks.webhooks.find(webhook => webhook.id === hook.id);
-                    expect(!found).to.be.true;
+                    try {
+                        expect(!found).to.be.true;
+                    } catch(e) {
+                        console.log(listsofhooks);
+                        throw e;
+                    }
                 }
-            }catch(e){
+            } catch (e){
                 throw e;
             }
         })

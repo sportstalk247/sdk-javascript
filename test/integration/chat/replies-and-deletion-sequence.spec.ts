@@ -106,7 +106,7 @@ describe('REPLY & DELETE Chat Sequence', function() {
                     return chatHistories[0];
                 }).then(chat=>{
                     toDelete = chat.events[0];
-                    toFlag = chat.events[chat.events.length-1];
+                    toFlag = chat.events[1];
                     done();
                 })
                 .catch(done)
