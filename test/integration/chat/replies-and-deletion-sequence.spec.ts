@@ -82,9 +82,9 @@ describe('REPLY & DELETE Chat Sequence', function() {
                     expect(reply.data.body).to.be.equal(replyText);
                     // @ts-ignore
                     expect(reply.data.eventtype).to.be.equal("quote")
-                    const updates = await em1.getUpdates();
                     await delay(1000); // clear internal updates cache.
-                    // expect(updates.events.length).to.be.equal(3);
+                    const updates = await em1.getUpdates();
+                    expect(updates.events.length).to.be.equal(3);
                 });
         })
     });
