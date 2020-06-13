@@ -94,9 +94,14 @@ describe('PURGE Chat Sequence', function() {
 
     describe('GetUpdates shows purge', function () {
         it('Fires onPurge',  async function () {
-            await delay(500);
-            const purge =  await client.executeChatCommand("*purge "+process.env.PURGE+" handle2");
-            expect(purge.message).to.be.equal('The user\'s 3 messages were purged.');
+            try {
+                const purge = await client.executeChatCommand("*purge " + process.env.PURGE + " handle2");
+                expect(purge.message).to.be.equal('The user\'s 3 messages were purged.');
+            } catch(e) {
+                const error = new Error(e);
+                error.message = "Couldn't send command";
+                throw error;
+            }
             const updates:RestfulChatEventService = <RestfulChatEventService>client.getEventService();
             return updates._fetchUpdatesAndTriggerCallbacks().then(function(res){
                 const handlers = updates.getEventHandlers();

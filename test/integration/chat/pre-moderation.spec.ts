@@ -137,9 +137,13 @@ describe('Pre Moderation sequences', function() {
                 }).then(()=>{
                     return client.getEventService().getUpdates()
                 }).then(async (result) => {
-                    expect(result.events).to.have.lengthOf(1)
+                    try {
+                        expect(result.events).to.have.lengthOf(1)
+                    } catch(e) {
+                        console.log(result);
+                        throw e;
+                    }
                     const deleted = await rm.deleteRoom(roomid);
-
                 }).catch(async e=>{
                     try {
                         await rm.deleteRoom(roomid);
