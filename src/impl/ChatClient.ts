@@ -221,6 +221,7 @@ export class ChatClient implements IChatClient {
         return this._roomService.joinRoom(room, this._user).then(async (response) => {
             this._currentRoom = response.room;
             this._eventService.setCurrentRoom(this._currentRoom);
+            response.eventscursor.events.reverse();
             await this._eventService.handleUpdates(response.eventscursor);
             return response;
         })
