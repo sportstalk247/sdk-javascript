@@ -565,11 +565,13 @@ export class RestfulChatEventService implements IChatEventService {
         if(!this._roomApi) {
             throw new SettingsError("No room selected");
         }
+        const previousCursor = cursor || this.oldestCursor || '';
         return stRequest({
             method: GET,
             url: `${this._roomApi}/listpreviousevents?cursor=${cursor}&limit=${limit}`,
             headers: this._apiHeaders
         }).then((result) => {
+            this.oldestCursor = result.cursor;
             return result.data;
         });
     }
