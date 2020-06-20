@@ -427,8 +427,8 @@ export class ChatClient implements IChatClient {
         return false;
     }
 
-    listPreviousEvents = (cursor:string):Promise<ChatUpdatesResult> => {
-        return this._eventService.listPreviousEvents(cursor);
+    listPreviousEvents = (cursor:string, limit:number=100):Promise<ChatUpdatesResult> => {
+        return this._eventService.listPreviousEvents(cursor, limit);
     }
 }
 

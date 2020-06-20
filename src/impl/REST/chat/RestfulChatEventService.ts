@@ -568,10 +568,10 @@ export class RestfulChatEventService implements IChatEventService {
         const previousCursor = cursor || this.oldestCursor || '';
         return stRequest({
             method: GET,
-            url: `${this._roomApi}/listpreviousevents?cursor=${cursor}&limit=${limit}`,
+            url: `${this._roomApi}/listpreviousevents?cursor=${previousCursor}&limit=${limit}`,
             headers: this._apiHeaders
         }).then((result) => {
-            this.oldestCursor = result.cursor;
+            this.oldestCursor = result.data ? result.data.cursor : this.oldestCursor;
             return result.data;
         });
     }
