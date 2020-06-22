@@ -67,10 +67,11 @@ export class RestfulChatEventService implements IChatEventService {
         }
     }
 
-    setForwardCursor = (cursor: string) => {
+    setUpdatesCursor = (cursor: string) => {
         this.lastCursor = cursor || '';
     }
-    setBackwardCursor = (cursor:string) =>{
+
+    setPreviousEventsCursor = (cursor:string) =>{
         this.oldestCursor = cursor || '';
     }
 
