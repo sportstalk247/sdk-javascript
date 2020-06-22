@@ -222,7 +222,8 @@ export class ChatClient implements IChatClient {
             this._currentRoom = response.room;
             this._eventService.setCurrentRoom(this._currentRoom);
             if(response.eventscursor.events.length) {
-                this._eventService.setPreviousEventsCursor(response.eventscursor.events[0].ts+'');
+                const lastcursor = response.eventscursor.events[response.eventscursor.events.length-1].ts - 1;
+                this._eventService.setPreviousEventsCursor(lastcursor+'');
             }
             response.eventscursor.events.reverse();
             await this._eventService.handleUpdates(response.eventscursor);
