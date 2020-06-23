@@ -31,6 +31,7 @@ export interface JoinChatRoomResponse {
     user: UserResult,
     room: ChatRoomResult
     eventscursor: ChatUpdatesResult
+    previouseventscursor?: string
 }
 
 /**
