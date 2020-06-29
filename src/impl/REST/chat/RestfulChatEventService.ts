@@ -299,7 +299,7 @@ export class RestfulChatEventService implements IChatEventService {
                     this.eventHandlers.onRemove(event);
                     continue;
                 }
-                if(this.eventHandlers.onAnnouncement && (event.eventtype == EventType.announcement || event.customtype)) {
+                if(this.eventHandlers.onAnnouncement && (event.eventtype == EventType.announcement || event.customtype == EventType.announcement)) {
                     this.eventHandlers.onAnnouncement(event);
                     continue;
                 }
