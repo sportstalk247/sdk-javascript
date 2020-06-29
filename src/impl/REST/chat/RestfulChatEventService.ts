@@ -299,8 +299,9 @@ export class RestfulChatEventService implements IChatEventService {
                     this.eventHandlers.onRemove(event);
                     continue;
                 }
-                if(event.eventtype !== 'speech') {
-                    console.log(event);
+                if(this.eventHandlers.onAnnouncement && (event.eventtype == EventType.announcement || event.customtype)) {
+                    this.eventHandlers.onAnnouncement(event);
+                    continue;
                 }
                 if (this.eventHandlers.onChatEvent) {
                     this.eventHandlers.onChatEvent(event);

@@ -13,6 +13,7 @@ import {
 } from "./CommonModels";
 
 export enum EventType {
+    announcement = "announcement",
     speech = "speech",
     purge = "purge",
     reaction = "reaction",
@@ -45,6 +46,7 @@ export interface EventHandlerConfig {
     onChatEvent?(event: EventResult), // not mandatory but absolutely should be set in 99% of cases.
     onGoalEvent?(event: EventResult),
     onAdEvent?(event: EventResult),
+    onAnnouncement?(event: EventResult),
     onReply?(event: EventResult),
     onReplace?(event: EventResult),
     onRemove?(event: EventResult),
