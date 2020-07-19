@@ -13,7 +13,7 @@
     "loadtest": "tsc --declaration "
   },
   "author": "Sportstalk24/7",
-  "license": "LicenseRef-LICENSE",
+  "license": "SEE LICENSE IN LICENSE.md",
   "devDependencies": {
     "@istanbuljs/nyc-config-typescript": "^1.0.1",
     "@types/browserify": "^12.0.36",

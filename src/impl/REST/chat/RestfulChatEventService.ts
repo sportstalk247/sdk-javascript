@@ -345,10 +345,10 @@ export class RestfulChatEventService implements IChatEventService {
      * @param options
      */
     executeChatCommand = (user: User, command: string, options?: CommandOptions): Promise<MessageResult<CommandResponse>> => {
-        const data = Object.assign({
+        const data = Object.assign(options || {}, {
             command,
             userid: user.userid
-        }, options);
+        });
         const config: AxiosRequestConfig = {
             method: POST,
             url: this._commandApi,
