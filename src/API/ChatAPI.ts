@@ -79,6 +79,7 @@ export interface IChatClient extends IUserConfigurable, ISportsTalkConfigurable{
     executeChatCommand(command: string, options?: CommandOptions):  Promise<MessageResult<null | CommandResponse>>
     sendQuotedReply(message: string, replyto: string, options?: CommandOptions): Promise<MessageResult<null | CommandResponse>>
     sendThreadedReply(message: string, replyto: string, options?: CommandOptions): Promise<MessageResult<null | CommandResponse>>
+    sendAnnouncement(command:string, options?: CommandOptions): Promise<MessageResult<CommandResponse>>
     reactToEvent(reaction: Reaction, reactToMessage: EventResult | string, options?: CommandOptions): Promise<MessageResult<null | CommandResponse>>
     sendAdvertisement(options: AdvertisementOptions): Promise<MessageResult<null | CommandResponse>>
     sendGoal(message?:string, img?: string, options?: GoalOptions): Promise<MessageResult<null | CommandResponse>>

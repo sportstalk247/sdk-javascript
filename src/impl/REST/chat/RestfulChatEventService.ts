@@ -338,7 +338,7 @@ export class RestfulChatEventService implements IChatEventService {
         }
         return response;
     }
-    
+
     /**
      * Send a chat command
      * @param command
