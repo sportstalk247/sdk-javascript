@@ -338,6 +338,10 @@ export class RestfulChatEventService implements IChatEventService {
         }
         return response;
     }
+
+    private _isValidEvent = (event:EventResult):boolean => {
+
+    }
     /**
      * Send a chat command
      * @param command

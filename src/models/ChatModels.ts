@@ -24,9 +24,13 @@ export enum EventType {
     action = "action",
     reply = "reply", // threaded replies
     quote = "quote", // quoted replies
-    goal = "goal", // custom type
-    advertisement = "advertisement" // custom type
 }
+
+export const CustomEventTypes: Set<string> = new Set<string>([
+    "goal", // custom type
+    "advertisement" // custom type
+])
+
 
 export interface JoinChatRoomResponse {
     user: UserResult,
@@ -77,10 +81,16 @@ export interface CommandResponse {
     action?: any
 }
 
+export enum ChatCommandEventType {
+    announcement="announcement",
+    custom="custom", // indicates use of customEventtype.  Needs to be set to use customttype field
+    ad="ad"
+}
 /**
  * Chat commands.
  */
 export interface CommandOptions {
+    eventtype?: ChatCommandEventType,
     customtype?: string,
     customid?: string,
     replyto?: string,
