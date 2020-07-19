@@ -3,7 +3,7 @@ import {
     CommandOptions, CommandResponse,
     EventHandlerConfig,
     EventResult,
-    EventType, GoalOptions, ChatRoom, ChatRoomResult, QuoteCommandOptions
+    EventType, GoalOptions, ChatRoom, ChatRoomResult, QuoteCommandOptions, CustomEventTypes, ChatCommandEventType
 } from "../../../models/ChatModels";
 import {DEFAULT_CONFIG, DELETE, GET, POST, PUT} from "../../constants/api";
 import {IChatEventService} from "../../../API/ChatAPI";
@@ -338,10 +338,7 @@ export class RestfulChatEventService implements IChatEventService {
         }
         return response;
     }
-
-    private _isValidEvent = (event:EventResult):boolean => {
-
-    }
+    
     /**
      * Send a chat command
      * @param command
@@ -473,8 +470,9 @@ export class RestfulChatEventService implements IChatEventService {
      */
     sendAdvertisement = (user: User, options: AdvertisementOptions): Promise<MessageResult<CommandResponse>> => {
         const data = Object.assign({
-            command: options.message || EventType.advertisement,
-            customtype: EventType.advertisement,
+            command: options.message || "advertisement",
+            eventtype: ChatCommandEventType.ad,
+            customtype: ChatCommandEventType.custom,
             userid: user.userid,
             custompayload: JSON.stringify(options)
         });
@@ -505,7 +503,7 @@ export class RestfulChatEventService implements IChatEventService {
         }
         const data = Object.assign({
             command: message || 'GOAL!',
-            customtype: EventType.goal,
+            customtype: CustomEventTypes.goal,
             userid: user.userid,
             custompayload: JSON.stringify(Object.assign(defaultOptions, options))
         });

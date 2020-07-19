@@ -12,24 +12,25 @@ import {
     ReportReason, Reaction
 } from "./CommonModels";
 
-export enum EventType {
-    announcement = "announcement",
-    speech = "speech",
-    purge = "purge",
-    reaction = "reaction",
-    replace = "replace",
-    remove = "remove",
-    roomClosed = "roomclosed",
-    roomOpen = "roomopen",
-    action = "action",
-    reply = "reply", // threaded replies
-    quote = "quote", // quoted replies
+export enum EventType  {
+    speech= "speech",
+    purge= "purge",
+    reaction= "reaction",
+    replace="replace",
+    remove="remove",
+    roomClosed= "roomclosed",
+    roomOpen="roomopen",
+    action="action",
+    reply="reply", // threaded replies
+    quote= "quote",
+    ad="ad",
+    announcement="announcement",
+    custom="custom"
 }
 
-export const CustomEventTypes: Set<string> = new Set<string>([
-    "goal", // custom type
-    "advertisement" // custom type
-])
+export enum CustomEventTypes {
+    "goal"="goal", // custom type
+}
 
 
 export interface JoinChatRoomResponse {
