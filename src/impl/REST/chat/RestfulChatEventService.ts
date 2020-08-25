@@ -471,8 +471,8 @@ export class RestfulChatEventService implements IChatEventService {
     sendAdvertisement = (user: User, options: AdvertisementOptions): Promise<MessageResult<CommandResponse>> => {
         const data = Object.assign({
             command: options.message || "advertisement",
-            eventtype: ChatCommandEventType.ad,
-            customtype: ChatCommandEventType.custom,
+            eventtype: ChatCommandEventType.custom,
+            customtype: ChatCommandEventType.ad,
             userid: user.userid,
             custompayload: JSON.stringify(options)
         });
@@ -503,6 +503,7 @@ export class RestfulChatEventService implements IChatEventService {
         }
         const data = Object.assign({
             command: message || 'GOAL!',
+            eventtype: ChatCommandEventType.custom,
             customtype: CustomEventTypes.goal,
             userid: user.userid,
             custompayload: JSON.stringify(Object.assign(defaultOptions, options))
