@@ -8,7 +8,7 @@ import {
     GoalOptions,
     ChatRoom, ChatRoomExitResult, ChatRoomListResponse,
     ChatRoomResult,
-    JoinChatRoomResponse
+    JoinChatRoomResponse, BounceUserResult
 } from "../models/ChatModels";
 
 import {ISportsTalkConfigurable, IUserConfigurable} from "./CommonAPI";
@@ -63,6 +63,8 @@ export interface IRoomService extends ISportsTalkConfigurable {
     updateRoom(room:ChatRoomResult): Promise<ChatRoomResult>
     closeRoom(room:ChatRoomResult | string): Promise<ChatRoomResult>
     openRoom(room:ChatRoomResult | string): Promise<ChatRoomResult>
+    bounceUserFromRoom(room: ChatRoomResult | string, user: UserResult | string, message?: string): Promise<RestApiResult<BounceUserResult>>
+    unbounceUserFromRoom(room: ChatRoomResult | string, user: UserResult | string, message?: string): Promise<RestApiResult<BounceUserResult>>
     listParticipants(room: ChatRoom, cursor?: string, maxresults?: number): Promise<Array<UserResult>>
     listUserMessages(user: User | string, Room: ChatRoom | String, cursor?: string, limit?: number): Promise<Array<EventResult>>
     joinRoom(room: ChatRoom | string, user: User): Promise<JoinChatRoomResponse>
@@ -109,6 +111,8 @@ export interface IChatClient extends IUserConfigurable, ISportsTalkConfigurable{
     deleteUser(user:User | string):Promise<UserDeletionResponse>
     getUserDetails(user: User | string): Promise<UserResult>
     messageIsReported(event: EventResult): Boolean
+    bounceUser(user: User | string, message: string): Promise<BounceUserResult>
+    unbounceUser(user: User | string, message: string): Promise<BounceUserResult>
     messageIsReactedTo(event: EventResult, reaction:Reaction | string): Boolean
 }
 

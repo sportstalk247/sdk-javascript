@@ -11,7 +11,7 @@ import {
     CommandResponse,
     ChatRoomExitResult,
     ChatUpdatesResult,
-    ChatRoomListResponse, ChatCommandEventType
+    ChatRoomListResponse, ChatCommandEventType, BounceUserResult
 } from "../models/ChatModels";
 import {DEFAULT_CONFIG} from "./constants/api";
 import {IRoomService, IChatEventService, IChatClient} from "../API/ChatAPI";
@@ -439,6 +439,15 @@ export class ChatClient implements IChatClient {
 
     listPreviousEvents = (cursor:string, limit:number=100):Promise<ChatUpdatesResult> => {
         return this._eventService.listPreviousEvents(cursor, limit);
+    }
+
+    bounceUser = async (user: User | string, message: string): Promise<BounceUserResult> => {
+        const bounce: RestApiResult<BounceUserResult> = await this._roomService.bounceUserFromRoom( this._currentRoom , user, message);
+        return bounce.data;
+    }
+    unbounceUser = async (user: User | string, message: string): Promise<BounceUserResult> => {
+        const bounce: RestApiResult<BounceUserResult> = await this._roomService.unbounceUserFromRoom( this._currentRoom , user, message);
+        return bounce.data;
     }
 }
 
