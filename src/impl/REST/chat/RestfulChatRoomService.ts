@@ -5,12 +5,12 @@ import {
     ChatRoomResult,
     JoinChatRoomResponse,
     DeletedChatRoomResponse,
-    ChatRoomExitResult, ChatRoomListResponse, EventListResponse
+    ChatRoomExitResult, ChatRoomListResponse, EventListResponse, BounceUserResult
 } from "../../../models/ChatModels";
 import {stRequest} from '../../network';
 import {GET, DELETE, POST, API_SUCCESS_MESSAGE} from "../../constants/api";
 import {buildAPI, forceObjKeyOrString, getJSONHeaders, getUrlEncodedHeaders} from "../../utils";
-import { SportsTalkConfig, User, UserResult} from "../../../models/CommonModels";
+import {RestApiResult, SportsTalkConfig, User, UserResult} from "../../../models/CommonModels";
 import {AxiosRequestConfig} from "axios";
 
 /**
@@ -138,7 +138,7 @@ export class RestfulChatRoomService implements IRoomService {
      * @param user
      * @param room
      */
-    joinRoom = (room: ChatRoomResult | string, user?: User): Promise<JoinChatRoomResponse> => {
+    joinRoom = (room: ChatRoomResult | string, user: User): Promise<JoinChatRoomResponse> => {
         // @ts-ignore
         const roomId = forceObjKeyOrString(room);
         const config: AxiosRequestConfig = {
@@ -265,5 +265,36 @@ export class RestfulChatRoomService implements IRoomService {
             headers: this._jsonHeaders,
         };
         return stRequest(config)
+    }
+
+    bounceUserFromRoom = (room: ChatRoomResult | string, user: UserResult | string, message?: string): Promise<RestApiResult<BounceUserResult>> => {
+        const roomId = forceObjKeyOrString(room);
+        const userId = forceObjKeyOrString(user, 'userid');
+        const config: AxiosRequestConfig = {
+            method: POST,
+            url: buildAPI(this._config, `${this._apiExt}/${roomId}/bounce`),
+            headers: this._jsonHeaders,
+            data: {
+                "userid": userId,
+                "bounce": "true",
+                "announcement": message || `The bouncer shows ${userId} the way out.`
+            }
+        }
+        return stRequest(config);
+    }
+    unbounceUserFromRoom = (room: ChatRoomResult | string, user: UserResult | string, message?: string): Promise<RestApiResult<BounceUserResult>> => {
+        const roomId = forceObjKeyOrString(room);
+        const userId = forceObjKeyOrString(user, 'userid');
+        const config: AxiosRequestConfig = {
+            method: POST,
+            url: buildAPI(this._config, `${this._apiExt}/${roomId}/bounce`),
+            headers: this._jsonHeaders,
+            data: {
+                "userid": userId,
+                "bounce": "false",
+                "announcement": message || `The bouncer shows ${userId} the way out.`
+            }
+        }
+        return stRequest(config);
     }
 }

@@ -1,7 +1,7 @@
 import {RestfulChatRoomService} from "../../../../src/impl/REST/chat/RestfulChatRoomService";
 import * as chai from 'chai';
 import * as dotenv from 'dotenv';
-import {ModerationType, SportsTalkConfig} from "../../../../src/models/CommonModels";
+import {Kind, ModerationType, SportsTalkConfig} from "../../../../src/models/CommonModels";
 dotenv.config();
 
 const { expect } = chai;
@@ -115,6 +115,58 @@ describe("RoomService", function(){
                 const userlist = await RM.listUserMessages({userid:'fake-user', handle:'fake-user'}, room).then(messages => {
                     expect(messages.events.length).to.be.equal(0);
                 });
+                const deleted = await RM.deleteRoom(room);
+                return deleted;
+            }catch(e) {
+                console.log(e);
+                throw e;
+            }
+        })
+    })
+    describe("Bounce", function(){
+        it("Can bounce a user from a room", async () => {
+            try {
+                const room = await RM.createRoom({
+                    name: "ROOMService Test Room",
+                    slug: "RM-test-room"
+                });
+                const user = {
+                    userid: 'fakeUser',
+                    handle: 'fakeUser'
+                };
+                const joined = await RM.joinRoom(room, user);
+                const message = "custom message";
+                const bounced = await RM.bounceUserFromRoom(room, user, message);
+                expect(bounced.data.kind).to.be.equal(Kind.bounce);
+                expect(bounced.data.event.kind).to.be.equal(Kind.chat)
+                expect(bounced.data.room.kind).to.be.equal(Kind.room);
+                expect(bounced.data.event.body).to.be.equal(message);
+                const deleted = await RM.deleteRoom(room);
+                return deleted;
+            }catch(e) {
+                console.log(e);
+                throw e;
+            }
+        })
+    })
+    describe("DeBounce", function(){
+        it("Can bounce a user from a room", async () => {
+            try {
+                const room = await RM.createRoom({
+                    name: "ROOMService Test Room",
+                    slug: "RM-test-room"
+                });
+                const user = {
+                    userid: 'fakeUser',
+                    handle: 'fakeUser'
+                };
+                const joined = await RM.joinRoom(room, user);
+                const bounced = await RM.bounceUserFromRoom(room, user, "custom message");
+                const message = "Allowed back";
+                const deBounce = await RM.unbounceUserFromRoom(room, user, message);
+                expect(deBounce.data.kind).to.be.equal(Kind.bounce);
+                expect(deBounce.data.event).to.be.null;
+                expect(deBounce.data.room.kind).to.be.equal(Kind.room);
                 const deleted = await RM.deleteRoom(room);
                 return deleted;
             }catch(e) {

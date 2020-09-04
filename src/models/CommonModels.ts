@@ -33,6 +33,7 @@ export interface User {
 export enum Kind {
     chat = "chat.event",
     room = "chat.room",
+    bounce = "chat.bounceuser",
     user = "app.user",
     api = "api.result",
     webhook = "webhook.webhook",
