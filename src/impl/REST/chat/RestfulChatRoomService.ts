@@ -292,7 +292,7 @@ export class RestfulChatRoomService implements IRoomService {
             data: {
                 "userid": userId,
                 "bounce": "false",
-                "announcement": message || `The bouncer shows ${userId} the way out.`
+                "announcement": message || `The bouncer let ${userId} back in.`
             }
         }
         return stRequest(config);

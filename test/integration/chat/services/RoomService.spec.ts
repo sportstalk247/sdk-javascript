@@ -150,7 +150,7 @@ describe("RoomService", function(){
         })
     })
     describe("DeBounce", function(){
-        it("Can bounce a user from a room", async () => {
+        it("Can unbounce a user from a room", async () => {
             try {
                 const room = await RM.createRoom({
                     name: "ROOMService Test Room",
