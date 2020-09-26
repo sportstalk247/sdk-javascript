@@ -1,8 +1,9 @@
 # Sportstalk 247 Javascript SDK
 My using this SDK you agree to the license located in LICENSE.md
 
-## STATUS: BETA
-This SDK is under active development and improvement. We are also very open to feedback if you experience pain points while using the SDK.
+## STATUS: STABLE BETA
+This SDK is used in production successfully and is considered stable.  At the same time, the SDK is under active development and improvement. We are also very open to feedback if you experience pain points while using the SDK.
+
 ## GETTING STARTED: Setting up the SDK
 #### Install via NPM
 ```
@@ -236,6 +237,13 @@ chatClient.reportMessage('event ID', 'abuse').then(function(result){
   })
 ```
 
+## Bounce a user from a room
+```javascript
+chatClient.bounceUser('userID string or UserResult Object', 'optional message').then(function(result)) {
+    // User will be bounced from the room.  Their ID will be added to the room's bounced users list.  
+    // A bounce event will be in the next getUpdates() call.
+}
+```
 
 # Understanding the SDK
 
@@ -709,6 +717,8 @@ This is called every time there is any network response.  Most of the time you d
 ### onChatEvent(event: EventResult)
 This is the most critical callback. Each **new** chat event seen by the sdk client instance will be passed to this callback.  It is possible to render the entire chat experience with just this callback, and mosst other callbacks (such as onGoalEvent) are just convenience wrappers for the Sportstalk custom event system.  
 
+Please take a loook at the different eventtype keys in `src/models/ChatModels.ts` in interface `EventType`.  Your code should be preparred to accept any of these events and render appropriately.
+
 Your UI solution should accept each chat event and render it.  This callback could also be used to trigger push notifications.
 
 ### onGoalEvent(event: EventResult)
@@ -728,7 +738,7 @@ If both are set, `onReaction` will be called **instead of** `onChatEvent` for re
 Clients should implement `onPurgeEvent()` if there is any moderation.  Purge events are used by the sportstalk SDK to let clients to know to remove messages that have been moderated as harmful or against policies and should be removed from the UI.        
 
 ### onAdminCommand(response: ApiResult)
-`onAdminCommand` will be triggered on a successful server response when an admin command **is sent**.  For instance, if an admin sends a purge command, `onAdminCommand` will be triggered when the purge command is sent, and `onPurgeEvent` will be triggered with the purge message is sent from the API.
+`onAdminCommand` will be triggered on a successful server response when an admin command **is sent**.  Admin commands often do not result in updates to getUpdates() so it's necessary to handle what happens based on API response. For instance, if an admin sends a purge command, `onAdminCommand` will be triggered when the purge command is sent, and `onPurgeEvent` will be triggered with the purge message is sent from the API.
 
 Note that if `onHelp` is set it will be triggered instead of onAdminCommand because there may be special considerations - loading a different screen, navigating to a website, etc.
 

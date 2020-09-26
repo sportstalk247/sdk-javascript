@@ -15,6 +15,7 @@ import {
 export enum EventType  {
     speech= "speech",
     purge= "purge",
+    bounce = "bounce",
     reaction= "reaction",
     replace="replace",
     remove="remove",
@@ -145,7 +146,6 @@ export interface ChatRoom {
     moderation?: ModerationType, // 'pre' or 'post'
     slug?:string,// The room slug, migrated to customid
     customid?: string,
-    bouncedusers?: UserResult[],
     enableprofanityfilter?: boolean, //Defaults to true, events in room will have profanity filtered (in English).
     delaymessageseconds?: number, // Delays messages, used for throttling. Defaults to zero and most of the time that's what you will want.
     enableactions?: boolean, // Whether or not users can utilize action commands.
@@ -163,6 +163,7 @@ export interface ChatRoomResult extends ChatRoom {
     kind?: Kind.room,  //"chat.room"
     ownerid?:string,
     appid?: string,
+    bouncedusers?: string[],
     added: string, // ISO Date
     inroom?:number,
     whenmodified?:string // ISO Date
@@ -240,6 +241,9 @@ export interface ChatUpdatesResult {
     events: EventResult[]
 }
 
+/**
+ * EventResult will have eventtype === 'bounce'
+ */
 export interface BounceUserResult {
     kind: Kind.bounce,
     event: EventResult,
