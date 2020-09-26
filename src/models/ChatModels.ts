@@ -163,7 +163,7 @@ export interface ChatRoomResult extends ChatRoom {
     kind?: Kind.room,  //"chat.room"
     ownerid?:string,
     appid?: string,
-    bouncedusers?: string[],
+    bouncedusers?: string[], // will be a list of UserID strings.
     added: string, // ISO Date
     inroom?:number,
     whenmodified?:string // ISO Date
