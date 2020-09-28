@@ -94,6 +94,86 @@ However, understanding basic typescript notation is still helpful for understand
 
 There is a 5 min primer on typescript and you can get started with typescript here: https://www.typescriptlang.org/docs/home.html
 
+
+# Understanding the SDK
+
+## Key concepts
+CHAT: This is a real-time experience designed to make a user feel like other people are present with that person.  The state of a chat room updates in real time, and you receive notifications that update the state.  In general, chat content is disposable: It is enjoyed in the moment but in the future its rare for people to go back and look at past conversation information. Chat messages are also often short and don’t necessarily add a thought to the conversation. Chat drives engagement in the moment by keeping your attention and is best used with live events because its no fun to be in a chat room by yourself. 
+
+COMMENTS: A comment is something you post on an article or video or other context.  Unlike chat, comments are often read long after they are posted, and are more likely to be longer messages that contain a more thoughtful point. They are intended to add to the value of the thing on which the comment appears. Use comments when you don’t real time responses, people will see your comment later.
+
+CONVERSATION: This is a commenting context, such as an article or video that people are commenting on. Comments are created within the context of a conversation.
+
+ROOM: A chat “room” is a virtual space in which people can chat.  Events occur in the room, such as a person entering the room, saying something, or exiting the room.  If a user reacts to something by liking it, this also generates an event.  The SDK listens for new events, processes events, raises call backs for you, and updates the state of the room in memory, so it’s less work for the developer.
+
+## Client Objects
+The SDK is broken up into 2 Clients and a set of backing services.
+For most user-facing operations you'll want one of the clients:
+
+* Chat Client -  `const chatClient = require('sportstalk-sdk').ChatClient.create({appId, apiToken});`
+* Commenting Client  `const commentClient = require('sportstalk-sdk').CommentClient.create({appId, apiToken});`
+
+These clients handle most common operation while hiding the backing APIs and simplifying some operations and will manage state for you.
+
+However, you may want to use the APIs directly, in which case there are a set of backing REST services that you can use:
+
+Common Services:
+- UserService
+- WebhookService
+
+Chat Services:
+- ChatEventService
+- ChatRoomService
+- ChatModeration Service
+
+Comment Services:
+- CommentService
+- ConversationService
+- CommentModerationService
+
+
+You can  see the details for each under **'Backing Services'** section
+
+## Data Models
+Models are broken up into 3 groups:
+* Chat specific models (https://gitlab.com/sportstalk247/sdk-javascript/-/blob/master/src/models/ChatModels.ts)
+* Commenting specific models (https://gitlab.com/sportstalk247/sdk-javascript/-/blob/master/src/models/CommentsModels.ts)
+* Common Models such as users or webhooks (https://gitlab.com/sportstalk247/sdk-javascript/-/blob/master/src/models/CommonModels.ts)
+
+The models are defined using typescript notation (https://www.typescriptlang.org/).
+You don't have to be an expert on Typescript to use these models, as they just describe JSON objects.
+
+For instance:
+```typescript
+export interface Example {
+    id?: string
+}
+```
+This describes a type `Example` with a single property `id` which may or may not be present.
+The following are all valid `Example` objects:
+```javascript
+const example1 = {} // id is optional, and undefined.
+const example2 = {id:null} // id property is present but null
+const example3 = {id: "123412351235"} // id is a string
+```
+However this is not a valid `Example` object:
+```javascript
+const badExample = {
+    id:{
+        members: []
+    }
+}
+```
+Nor is this:
+```javascript
+const badExample2 = {
+    id:1231 // id property is there but is a number and not a string. This is not allowed.
+}
+```
+
+These typescript definitions help you be certain about the data you will get from the API and allow you to write code with confidence about the data you will or will not receive.
+
+
 # Key Chat Operations
 All examples are shown with promises to be used in-browser.  You can also use async/await if using node.js or react.
 
@@ -110,6 +190,23 @@ Typescript:
 import { ChatClient } from 'sportstalk-sdk'
 const chatClient = ChatClient.init({appId:'yourAppId', apiToken:'yourApiToken'}); 
  ```
+
+
+## Creating a user
+One of the first things you might need to do in Sportstalk is create a user. Users are shared between chat and commenting in the same application.
+To create a user, you can use either the chat or comment clients, or a UserService (advanced). 
+
+```javascript
+const chatClient = sdk.ChatClient.init({...});
+chatClient.createOrUpdateUser({userid: "definedByYourSystem-MustBeUnique", handle: "Must-Be-Unique-String"})
+    .then(function(user) {
+        // user has been created.
+    }).catch(function(error) {
+        // make sure to catch and handle errors.  
+        // It is possible to have network or settings errors. 
+        // For instance if you do not set a unique handle you will get an error. 
+    })
+```
 
 ## Create or Update Room
 ```javascript
@@ -223,7 +320,7 @@ chatClient.reactToEvent('like', originalMessageIdOrObject).then(function(serverR
 
 ## Delete a message (logical delete)
 ```javascript
-chatClient.flagEventLogicallyDeleted(eventObject).then(function(deletionResponse){
+chatClient.flagEventLogicallyDeleted(chatEvent).then(function(deletionResponse){
     // on success, message has been deleted
 }).catch(function(e){
   // something went wrong, perhaps it was already deleted or you have the wrong ID.
@@ -238,6 +335,7 @@ chatClient.reportMessage('event ID', 'abuse').then(function(result){
 ```
 
 ## Bounce a user from a room
+Bouncing/banning require you to check permissions inside your app as Sportstalk does not attach user permissions and instead depends on the host permissioning system.
 ```javascript
 chatClient.bounceUser('userID string or UserResult Object', 'optional message').then(function(result)) {
     // User will be bounced from the room.  Their ID will be added to the room's bounced users list.  
@@ -245,85 +343,13 @@ chatClient.bounceUser('userID string or UserResult Object', 'optional message').
 }
 ```
 
-# Understanding the SDK
-
-## Key concepts
-CHAT: This is a real-time experience designed to make a user feel like other people are present with that person.  The state of a chat room updates in real time, and you receive notifications that update the state.  In general, chat content is disposable: It is enjoyed in the moment but in the future its rare for people to go back and look at past conversation information. Chat messages are also often short and don’t necessarily add a thought to the conversation. Chat drives engagement in the moment by keeping your attention and is best used with live events because its no fun to be in a chat room by yourself. 
-
-COMMENTS: A comment is something you post on an article or video or other context.  Unlike chat, comments are often read long after they are posted, and are more likely to be longer messages that contain a more thoughtful point. They are intended to add to the value of the thing on which the comment appears. Use comments when you don’t real time responses, people will see your comment later.
-
-CONVERSATION: This is a commenting context, such as an article or video that people are commenting on. Comments are created within the context of a conversation.
-
-ROOM: A chat “room” is a virtual space in which people can chat.  Events occur in the room, such as a person entering the room, saying something, or exiting the room.  If a user reacts to something by liking it, this also generates an event.  The SDK listens for new events, processes events, raises call backs for you, and updates the state of the room in memory, so it’s less work for the developer.
-
-## Client Objects
-The SDK is broken up into 2 Clients and a set of backing services.
-For most user-facing operations you'll want one of the clients:
-
-* Chat Client -  `const chatClient = require('sportstalk-sdk').ChatClient.create({appId, apiToken});`
-* Commenting Client  `const commentClient = require('sportstalk-sdk').CommentClient.create({appId, apiToken});`
-
-These clients handle most common operation while hiding the backing APIs and simplifying some operations and will manage state for you.
-
-However, you may want to use the APIs directly, in which case there are a set of backing REST services that you can use:
-
-Common Services:
-- UserService
-- WebhookService
-
-Chat Services:
-- ChatEventService
-- ChatRoomService
-- ChatModeration Service
-
-Comment Services:
-- CommentService
-- ConversationService
-- CommentModerationService
-
-
-You can  see the details for each under **'Backing Services'** section
-
-## Data Models
-Models are broken up into 3 groups:
-* Chat specific models (https://gitlab.com/sportstalk247/sdk-javascript/-/blob/master/src/models/ChatModels.ts)
-* Commenting specific models (https://gitlab.com/sportstalk247/sdk-javascript/-/blob/master/src/models/CommentsModels.ts)
-* Common Models such as users or webhooks (https://gitlab.com/sportstalk247/sdk-javascript/-/blob/master/src/models/CommonModels.ts)
-
-The models are defined using typescript notation (https://www.typescriptlang.org/).
-You don't have to be an expert on Typescript to use these models, as they just describe JSON objects.
-
-For instance:
-```typescript
-export interface Example {
-    id?: string
-}
-```
-This describes a type `Example` with a single property `id` which may or may not be present.
-The following are all valid `Example` objects:
+## Unbounce a user from a room
 ```javascript
-const example1 = {} // id is optional, and undefined.
-const example2 = {id:null} // id property is present but null
-const example3 = {id: "123412351235"} // id is a string
-```
-However this is not a valid `Example` object:
-```javascript
-const badExample = {
-    id:{
-        members: []
-    }
-}
-```
-Nor is this:
-```javascript
-const badExample2 = {
-    id:1231 // id property is there but is a number and not a string. This is not allowed.
+chatClient.unbounceUser('userID string or UserResult Object', 'optional message').then(function(result)) {
+    // User will be unbounced from the room.  Their ID will be removed from the room's bounced users list.  
 }
 ```
 
-These typescript definitions help you be certain about the data you will get from the API and allow you to write code with confidence about the data you will or will not receive.
-
-       
 # Comments API
 
 ## Getting Started
@@ -347,7 +373,7 @@ To create a user, you can use either the chat or comment clients, or a UserServi
 
 ```javascript
 const commentClient = sdk.CommentClient.init({...});
-commentClient.init({userid: "definedByYourSystem-MustBeUnique", handle: "Must-Be-Unique-String"})
+commentClient.createOrUpdateUser({userid: "definedByYourSystem-MustBeUnique", handle: "Must-Be-Unique-String"})
     .then(function(user) {
         // user has been created.
     }).catch(function(error) {
