@@ -1185,7 +1185,7 @@ To create a CommentService do the following:
 
 
 Create a comment
-~~~~~~~~~~~~~~~~
+++++++++++++++++
 
 .. code-block:: javascript
 
@@ -1199,7 +1199,7 @@ Create a comment
 
 
 Delete a commment
-~~~~~~~~~~~~~~~~~
++++++++++++++++++
 
 .. code-block:: javascript
 
@@ -1228,7 +1228,7 @@ To create a CommentModerationService do the following:
     }
 
 Approve a comment
-~~~~~~~~~~~~~~~~~
++++++++++++++++++
 
 Approving a comment makes it available to users in the conversation.
 
@@ -1244,7 +1244,7 @@ Approving a comment makes it available to users in the conversation.
 
 
 Reject a comment
-~~~~~~~~~~~~~~~~
+++++++++++++++++
 
 Rejecting a comment makes it unavailable to users in the conversation.
 
