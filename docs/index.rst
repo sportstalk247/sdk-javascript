@@ -16,7 +16,8 @@ Install via NPM
 
 App Id and api Tokens
 ---------------------
-Clients and services require a SportsTalkConfig object, which looks like so: 
+Clients and services require a SportsTalkConfig object, which looks like so:
+
 .. code-block:: javascript
   
     {
@@ -33,12 +34,14 @@ Creating Client Objects
 #### Using Typescript (recommended)
 If you are using typescript, we provide typescript definitions for all objects.  It's as simple as:
 ##### Commenting Client
+
 .. code-block:: javascript
   
     import { CommentClient } from 'sportstalk-sdk'
     const commentClient = CommentClient.init({appId: ... , apiToken: ....});
 
 ##### Chat Client
+
 .. code-block:: javascript
   
     import { ChatClient } from 'sportstalk-sdk'
@@ -162,6 +165,7 @@ The models are defined using typescript notation (https://www.typescriptlang.org
 You don't have to be an expert on Typescript to use these models, as they just describe JSON objects.
 
 For instance:
+
 .. code-block:: javascript
 
     export interface Example {
@@ -170,6 +174,7 @@ For instance:
 
 This describes a type `Example` with a single property `id` which may or may not be present.
 The following are all valid `Example` objects:
+
 .. code-block:: javascript
   
 
@@ -178,6 +183,7 @@ The following are all valid `Example` objects:
     const example3 = {id: "123412351235"} // id is a string
 
 However this is not a valid `Example` object:
+
 .. code-block:: javascript
     const badExample = {
         id:{
@@ -186,6 +192,7 @@ However this is not a valid `Example` object:
     }
 
 Nor is this:
+
 .. code-block:: javascript
   
 
@@ -204,17 +211,17 @@ All examples are shown with promises to be used in-browser.  You can also use as
 *Before executing any of these operations, create the client like so:*
 
 Javascript:
+
 .. code-block:: javascript
-  
 
     const sdk = require('sportstalk-sdk');
     const chatClient = sdk.ChatClient.init({appId:'yourAppId', apiToken:'yourApiToken'});
 
 
 Typescript:
+
 .. code-block:: javascript
-  
-    
+
     import { ChatClient } from 'sportstalk-sdk'
     const chatClient = ChatClient.init({appId:'yourAppId', apiToken:'yourApiToken'});
 
@@ -226,6 +233,7 @@ One of the first things you might need to do in Sportstalk is create a user. Use
 To create a user, you can use either the chat or comment clients, or a UserService (advanced). 
 
 .. code-block:: javascript
+
     const chatClient = sdk.ChatClient.init({...});
     chatClient.createOrUpdateUser({userid: "definedByYourSystem-MustBeUnique", handle: "Must-Be-Unique-String"})
         .then(function(user) {
@@ -239,7 +247,9 @@ To create a user, you can use either the chat or comment clients, or a UserServi
 
 Create or Update Room
 ---------------------
+
 .. code-block:: javascript
+
     chatClient.createRoom({
         name: "Your room name",
         customid: "your-custom-id",
@@ -253,6 +263,7 @@ Create or Update Room
 To update a room, just call `updateRoom()` with the ID already set:
 
 .. code-block:: javascript
+
     chatClient.updateRoom({
         id: 'generated-id-value',
         name: "Your NEW room name", // updated
@@ -269,6 +280,7 @@ Get room details
 To get the details about a room, use `getRoomDetails()`
 
 .. code-block:: javascript
+
     chatClient.getRoomDetails('your-room-id').then(function(room){
         // your room is ready.
      })
@@ -278,6 +290,7 @@ To get the details about a room, use `getRoomDetails()`
 To get the details about a room, use `getRoomDetailsByCustomId()`
 
 .. code-block:: javascript
+
     chatClient.getRoomDetailsByCustomId ('your-custom-room-id').then(function(room){
         // your room is ready.
      })
@@ -285,18 +298,24 @@ To get the details about a room, use `getRoomDetailsByCustomId()`
 
 Join a room
 -----------
-### Anonymous
+Anonymous
+~~~~~~~~~
 You can join a room anonymously
 
 .. code-block:: javascript
+
     chatClient.joinRoom('a-room-id').then(function(roomDetailsAndUpdates){
         // the response will include room details and also the latest chat events.
     })
 
 
-### Authenticated
+Authenticated
+~~~~~~~~~~~~~
+
 To join a room as an authenticated user, set the current user for the client.  This user will be used by default for all updates and chat events.
+
 .. code-block:: javascript
+
     chatClient.setUser({userid: 'a-user-id', handle:'user-handle'});
     chatClient.joinRoom('a-room-id').then(function(roomDetailsAndUpdates){
         // the response will include room details and also the latest chat events.
@@ -305,9 +324,11 @@ To join a room as an authenticated user, set the current user for the client.  T
 
 Register event handlers
 -----------------------
-Once you have joined a chat room, you need to be able to handle incoming events. 
+Once you have joined a chat room, you need to be able to handle incoming events.
 Only one handler, `onChatEvent`, is necessary:
+
 .. code-block:: javascript
+
     chatClient.setEventHandlers({
         onChatEvent: function(event){
             // handle the events here
@@ -318,7 +339,9 @@ Only one handler, `onChatEvent`, is necessary:
 Start/Subscribe to room updates
 -------------------------------
 Once you have joined a room and set your event handler, you can begin recieving new events using `startListeningToEventUpdates()`
+
 .. code-block:: javascript
+
     chatClient.startListeningToEventUpdates()
 
 
@@ -400,14 +423,18 @@ Getting Started
 ---------------
 If you are looking to build a custom conversation, you will the need the `CommentClient`, which you can get by:
 
-#### Typescript
+Typescript
+
 .. code-block:: javascript
+
     import { CommentClient } from 'sportstalk-sdk'
     const commentClient = CommentClient.create({appId:..., apiToken:...});
 
 
-#### Require
+ Require
+
 .. code-block:: javascript
+
     const sdk =  require('sportstalk-sdk')
     const commentClient = sdk.CommentClient.init({appId:..., apiToken:...});
 
@@ -418,6 +445,7 @@ One of the first things you might need to do in Sportstalk is.init a user. Users
 To create a user, you can use either the chat or comment clients, or a UserService (advanced). 
 
 .. code-block:: javascript
+
     const commentClient = sdk.CommentClient.init({...});
     commentClient.createOrUpdateUser({userid: "definedByYourSystem-MustBeUnique", handle: "Must-Be-Unique-String"})
         .then(function(user) {
@@ -434,14 +462,18 @@ Finding and joining a conversation
 Most users will want to just find and join a conversation created by an admin in the sportstalk dashboard.
 
 To list conversations, use the `listConversations()` method of the CommentsClient, like so:
+
 .. code-block:: javascript
+
     const response = commentClient.listsConversations();
     const conversations = response.conversations; // Array of Conversation objects
     const cursor = response.cursor; // used for scrolling through long lists of conversations.
 
 
 Powering your UI with this data is up to you, but you might do something like so (in pug template format):
+
 .. code-block:: javascript
+
     h3 Conversations
     ul
       each conversation in conversations
@@ -453,6 +485,7 @@ To join a conversation, you will need a user, please see the section above about
 Once you have a user, joining a conversation is simple:
 
 .. code-block:: javascript
+
     async function showJoinConversation() {
 
         const user = await commentClient.createOrUpdateUser({userid: "definedByYourSystem-MustBeUnique", handle: "Must-Be-Unique-String"})
@@ -479,9 +512,13 @@ Once you have a user, joining a conversation is simple:
 
 CommentClient API
 -----------------
-#### setConfig() 
+setConfig()
+~~~~~~~~~~~
+
 Updates the client configuration. Usually you should just create a new client.
+
 .. code-block:: javascript
+
     const sdk = require('sportstalk-sdk');
     const client = sdk.CommentClient.init({ appId: 'yourappid', apiToken: token});
     client.setConfig({appId: 'newAppId', apiToken: 'newApiToken', endpoint: 'https://www.yourproxy.server'});
@@ -489,18 +526,24 @@ Updates the client configuration. Usually you should just create a new client.
 
 
 
-#### getConfig(): SportsTalkConfig;
+getConfig(): SportsTalkConfig
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 Returns the current configuration object
+
 .. code-block:: javascript
+
     const sdk = require('sportstalk-sdk');
     const client = sdk.CommentClient.init({ appId: 'yourappid', apiToken: token});
     const config = client.getConfig();
     // config will hold { appId: 'yourappid', apiToken: token, endpoint: 'https://api.sportstalk247.com/api/v3' }
 
 
-#### createConversation (conversation: Conversation, setDefault: boolean)
+createConversation (conversation: Conversation, setDefault: boolean)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: javascript
+
     const sdk = require('sportstalk-sdk');
     const client = sdk.CommentClient.init({ appId: 'your-app-id', apiToken: 'your-api-token'});
     async function createConversation() {
@@ -523,11 +566,14 @@ Returns the current configuration object
 Create a new conversation that others can join and add comments.
 
 
-#### createOrUpdateUser (user: User, setDefault?:boolean): Promise(User)
+createOrUpdateUser (user: User, setDefault?:boolean): Promise(User)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 Create a new user or update an existing one.   You need a user to be set for some operations.
 By default, setDefault is TRUE, meaning that if you create or update a user, that will be the user used for commenting.
 
 .. code-block:: javascript
+
     async function createOrUpdateUserExampleFunction() {
         const client = sdk.CommentClient.init({ appId: 'your-app-id', apiToken: 'your-api-token'});
         const user = await client.createOrUpdateUser({
@@ -549,6 +595,7 @@ You can see the Conversation and Comments models in this file:
 https://gitlab.com/sportstalk247/sdk-javascript/-/blob/master/src/models/CommentsModels.ts
 
 .. code-block:: javascript
+
     async function setCurrentConversationExampleFunction() {
         const client = sdk.CommentClient.init({ appId: 'your-app-id', apiToken: 'your-api-token'});
         const conversation = await client.createConversation({
@@ -572,10 +619,12 @@ https://gitlab.com/sportstalk247/sdk-javascript/-/blob/master/src/models/Comment
     }
 
 
-#### getCurrentConversation(): Conversation | null | undefined;
+getCurrentConversation(): Conversation | null | undefined
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Gets the current conversation.  Will be null or undefined if there is no current conversation.
 
 .. code-block:: javascript
+
     async function getCurrentConversationExampleFunction() {
         const client = sdk.CommentClient.init({ appId: 'your-app-id', apiToken: 'your-api-token'});
         const conversation = await client.createConversation({
@@ -596,10 +645,13 @@ Gets the current conversation.  Will be null or undefined if there is no current
 
 
 
-#### getConversation(conversation: Conversation | string): Promise<Conversation>
+getConversation(conversation: Conversation | string): Promise<Conversation>
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 Retrieves data about a specific conversation from the server.
 
 .. code-block:: javascript
+
     async function getConversationExampleFunction() {
         const client = sdk.CommentClient.init({ appId: 'your-app-id', apiToken: 'your-api-token'});
         const conversation = await client.createConversation({
@@ -616,10 +668,13 @@ Retrieves data about a specific conversation from the server.
     }
 
 
-#### deleteConversation(conversation: Conversation | string);
+deleteConversation(conversation: Conversation | string)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 Deletes a conversation
 
 .. code-block:: javascript
+
     const sdk = require('sportstalk-sdk');
 
     async function deleteConversationExampleFunction() {
@@ -638,9 +693,13 @@ Deletes a conversation
     }
 
 
-#### makeComment(comment: string, replyto?: Comment | string)
+makeComment(comment: string, replyto?: Comment | string)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 Make a comment on the current conversation. Will throw an error if a conversation is not set.
+
 .. code-block:: javascript
+
     const sdk = require('sportstalk-sdk');
 
     async function createCommentExampleFunction() {
@@ -662,7 +721,9 @@ Make a comment on the current conversation. Will throw an error if a conversatio
 
 #### getComment(comment: Comment | string): Promise<Comment | null>;
 Retrieves a specific comment. The param can either be a comment object with an id or just the id.
+
 .. code-block:: javascript
+
     const sdk = require('sportstalk-sdk');
 
     async function getCommentExampleFunction() {
@@ -724,6 +785,7 @@ At minimum, you will want to set 5 callbacks:
 See a simple WEB example below.  To use this, you will need to get the web sdk under `/dist/web-sdk.js` or `/dist/web-sdk.min.js`
 
 .. code-block:: javascript
+
     // first create a client
     const client = ChatClient.init({apiToken:'YourApiTokenHere'},  {...EventHandlerConfig});
 
@@ -755,6 +817,7 @@ For use of these events in action, see the demo page: https://www.sportstalk247.
 You can also use the client in node.
 
 .. code-block:: javascript
+
     import { ChatClient } from 'sportstalk-sdk'
     const client = ChatClient.init({apiToken:'YourApiKeyHere', appId: 'yourAppId'}, {...EventHandlerConfig});
 
@@ -764,6 +827,7 @@ Events Callbacks
 Sportstalk uses callback functions to handle events.  These callbacks are specified with the `EventHandlerConfig`:
 
 .. code-block:: typescript
+
     interface EventHandlerConfig {
         onChatStart?: Function;
         onNetworkResponse?(response: EventResult[]);
@@ -866,6 +930,7 @@ The webhook service governs the creation and management of webhooks.  The Chat a
 To instantiate the Webhook service:
 
 .. code-block:: javascript
+
     const sdk = require('sportstalk-sdk');
     const service = new sdk.services.WebhookService({appId, apiToken});
     const hooks =  await service.listWebhooks()
@@ -874,6 +939,7 @@ To instantiate the Webhook service:
 #### Create a new webhook
 
 .. code-block:: javascript
+
     const sdk = require('sportstalk-sdk');
     const service = new sdk.services.WebhookService({appId, apiToken});
     const newHook = await service.createWebhook({
@@ -887,7 +953,9 @@ To instantiate the Webhook service:
 
 
 #### Delete a webhook
+
 .. code-block:: javascript
+
     const sdk = require('sportstalk-sdk');
     const service = new sdk.services.WebhookService({appid, apitoken});
     const newHook = await service.deleteWebhook('id-of-previously-created-webhook');
@@ -895,7 +963,9 @@ To instantiate the Webhook service:
 
 
 #### Update a webhook
+
 .. code-block:: javascript
+
     const sdk = require('sportstalk-sdk');
     const service = new sdk.services.WebhookService({appId: 'your-app-id', apiToken: 'your-api-token'});
     async function updateWebhookExample() {
@@ -921,14 +991,15 @@ It's duties include receiving and filtering new events, and then deciding which 
 To create a ChatEventService:
 
 .. code-block:: javascript
-const sdk = require('sportstalk-sdk');
-const service = new sdk.services.ChatEventService({appId: 'your-app-id', apiToken: 'your-api-token'});
-async function eventServiceExample() {
-    // Argument is a Room object with an ID that has been created.  See the RoomService
-    const eventService =  await service.setCurrentRoom({...});
-    // This will start the chat, but without callbacks nothing will happen.  See the ChatClient documentation.
-    eventService.startListeningToEventUpdates(); // will begin receiving events from the room.
-}
+
+    const sdk = require('sportstalk-sdk');
+    const service = new sdk.services.ChatEventService({appId: 'your-app-id', apiToken: 'your-api-token'});
+    async function eventServiceExample() {
+        // Argument is a Room object with an ID that has been created.  See the RoomService
+        const eventService =  await service.setCurrentRoom({...});
+        // This will start the chat, but without callbacks nothing will happen.  See the ChatClient documentation.
+        eventService.startListeningToEventUpdates(); // will begin receiving events from the room.
+    }
 
 
 
@@ -939,6 +1010,7 @@ The chat room service can be used for Chat Room creation and managment for an ap
 To create a RoomService:
 
 .. code-block:: javascript
+
     const sdk = require('sportstalk-sdk');
     const service = new sdk.services.ChatRoomService({appId: 'your-app-id', apiToken: 'your-api-token'});
     async function listRoomsExample() {
@@ -946,7 +1018,9 @@ To create a RoomService:
     }
 
 #### Creating a chat room
+
 .. code-block:: javascript
+
     const sdk = require('sportstalk-sdk');
     const service = new sdk.services.ChatRoomService({appId: 'your-app-id', apiToken: 'your-api-token'});
     async function createRoomExample() {
@@ -968,7 +1042,9 @@ To create a RoomService:
 
 #### Closing a chat room
 You can close a room by ID.
+
 .. code-block:: javascript
+
     const service = new sdk.services.ChatRoomService({appId: 'your-app-id', apiToken: 'your-api-token'});({appId, apiToken});
     const sdk = require('sportstalk-sdk');
     async function closeRoomExample() {
@@ -978,7 +1054,9 @@ You can close a room by ID.
 
 #### Opening a chat room
 You can close a room by ID.
+
 .. code-block:: javascript
+
     const sdk = require('sportstalk-sdk');
     const service = new sdk.services.ChatRoomService({appId: 'your-app-id', apiToken: 'your-api-token'});
     async function openRoomExample() {
@@ -992,6 +1070,7 @@ If you are done with a room, you can delete it.
 **WARNING:** this cannot be undone. All messages in the room will be destroyed as well.
 
 .. code-block:: javascript
+
     const sdk = require('sportstalk-sdk');
     const service = new sdk.services.ChatRoomService({appId: 'your-app-id', apiToken: 'your-api-token'});
     async function deleteRoomExample() {
@@ -1002,7 +1081,9 @@ Chat Moderation Service
 ~~~~~~~~~~~~~~~~~~~~~~~
 If you are creating a moderation UI for chat, this is the class you need.
 To instantiate the Chat Moderation service and get the moderation queue:
+
 .. code-block:: javascript
+
     const sdk = require('sportstalk-sdk');
     const service = new sdk.services.ChatModerationService({appId: 'your-app-id', apiToken: 'your-api-token'});
     async function moderationExample() {
@@ -1012,7 +1093,9 @@ To instantiate the Chat Moderation service and get the moderation queue:
 
 
 #### Approving a Chat Event - allow in chat.
+
 .. code-block:: javascript
+
     const sdk = require('sportstalk-sdk');
     const service = new sdk.services.ChatModerationService({appId: 'your-app-id', apiToken: 'your-api-token'});
     async function moderationApproveExample() {
@@ -1022,8 +1105,10 @@ To instantiate the Chat Moderation service and get the moderation queue:
     }
 
 
-#### Reject a Chat Event - remove from chat 
+#### Reject a Chat Event - remove from chat
+
 .. code-block:: javascript
+
     const sdk = require('sportstalk-sdk');
     const service = new sdk.services.ChatModerationService({appId: 'your-app-id', apiToken: 'your-api-token'});
     async function moderationApproveExample() {
@@ -1032,22 +1117,28 @@ To instantiate the Chat Moderation service and get the moderation queue:
         const result = service.rejectEvent(event);
     }
 
-
+===================
 Commenting Services
--------------------
+===================
+
 Conversation Service
-~~~~~~~~~~~~~~~
+--------------------
+
 The conversation service is used to create, list, and update converations.  In most cases, you do not need this class, but should use the CommentingClient.
 
 To create a ConversationService do the following:
 
 .. code-block:: javascript
+
     const sdk = require('sportstalk-sdk');
     const service = new sdk.services.ConversationService({appId: 'your-app-id', apiToken: 'your-api-token'});
 
 
-#### Create a new conversation
+Create a new conversation
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
 .. code-block:: javascript
+
     const sdk = require('sportstalk-sdk');
     const service = new sdk.services.ConversationService({appId: 'your-app-id', apiToken: 'your-api-token'});
     async function createConversationServiceExample() {
@@ -1059,8 +1150,11 @@ To create a ConversationService do the following:
         })
     }
 
-#### Delete a conversation
+Delete a conversation
+~~~~~~~~~~~~~~~~~~~~~
+
 .. code-block:: javascript
+
     const sdk = require('sportstalk-sdk');
     const service = new sdk.services.ConversationService({appId: 'your-app-id', apiToken: 'your-api-token'});
     async function deleteConversationServiceExample() {
@@ -1068,9 +1162,13 @@ To create a ConversationService do the following:
     }
 
 
-#### Update a conversation
+Update a conversation
+~~~~~~~~~~~~~~~~~~~~~
+
 You can use the service to update a conversation you've already created by passing in new values. You cannot change the ID after creation.
+
 .. code-block:: javascript
+
     const sdk = require('sportstalk-sdk');
     const service = new sdk.services.ConversationService({appId: 'your-app-id', apiToken: 'your-api-token'});
     async function updateConversationServiceExample() {
@@ -1080,9 +1178,13 @@ You can use the service to update a conversation you've already created by passi
         })
     }
 
-#### List available conversations
+List available conversations
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 You can list all the available conversations for your app.
+
 .. code-block:: javascript
+
     const sdk = require('sportstalk-sdk');
     const service = new sdk.services.ConversationService({appId: 'your-app-id', apiToken: 'your-api-token'});
     async function updateConversationServiceExample() {
@@ -1098,13 +1200,17 @@ The comment service manages comments **for a specific conversation**.  You need 
 To create a CommentService do the following:
 
 .. code-block:: javascript
+
     const sdk = require('sportstalk-sdk');
     const service = new sdk.services.CommentService({appId: 'your-app-id', apiToken: 'your-api-token'});
     service.setConversation({id: 'yourConverationId'})
 
 
-#### Create a comment
+Create a comment
+~~~~~~~~~~~~~~~~
+
 .. code-block:: javascript
+
     const sdk = require('sportstalk-sdk');
     const service = new sdk.services.CommentService({appId: 'your-app-id', apiToken: 'your-api-token'});
     service.setConversation({id: 'yourConverationId'})
@@ -1114,8 +1220,11 @@ To create a CommentService do the following:
     }
 
 
-#### Delete a commment
+Delete a commment
+~~~~~~~~~~~~~~~~~
+
 .. code-block:: javascript
+
     const sdk = require('sportstalk-sdk');
     const service = new sdk.services.CommentService({appId: 'your-app-id', apiToken: 'your-api-token'});
     service.setConversation({id: 'yourConverationId'})
@@ -1133,16 +1242,20 @@ The comment moderation service is useful for creating custom moderation UIs.
 To create a CommentModerationService do the following:
 
 .. code-block:: javascript
+
     const sdk = require('sportstalk-sdk');
     const service = new sdk.services.CommentModerationService({appId: 'your-app-id', apiToken: 'your-api-token'});
     async function getCommentModerationQueueExample() {
         const queue = service.listCommentsInModerationQueue();
     }
 
-#### Approve a comment
+Approve a comment
+~~~~~~~~~~~~~~~~~
+
 Approving a comment makes it available to users in the conversation.
 
 .. code-block:: javascript
+
     const sdk = require('sportstalk-sdk');
     const service = new sdk.services.CommentModerationService({appId: 'your-app-id', apiToken: 'your-api-token'});
     async function approveCommentExample() {
@@ -1152,10 +1265,13 @@ Approving a comment makes it available to users in the conversation.
     }
 
 
-#### Reject a comment
+Reject a comment
+~~~~~~~~~~~~~~~~
+
 Rejecting a comment makes it unavailable to users in the conversation.
 
 .. code-block:: javascript
+
     const sdk = require('sportstalk-sdk');
     const service = new sdk.services.CommentModerationService({appId: 'your-app-id', apiToken: 'your-api-token'});
     async function approveCommentExample() {
