@@ -6,6 +6,14 @@ My using this SDK you agree to the license located in LICENSE.md
 STATUS: STABLE BETA
 This SDK is used in production successfully and is considered stable.  At the same time, the SDK is under active development and improvement. We are also very open to feedback if you experience pain points while using the SDK.
 
+.. contents:: :depth: 2
+
+.. toctree::
+   :maxdepth: 2
+
+   :caption: Data Models
+   /chat/models/chat-models.rst
+
 ===================================
 GETTING STARTED: Setting up the SDK
 ===================================
@@ -69,13 +77,6 @@ You can use require as well.
 
 
 You will need to register with SportsTalk and get an API Key in order to use sportstalk functions.
-
-.. toctree::
-   :maxdepth: 2
-   :hidden:
-   :caption: Data Models
-
-   /chat/models/chat-models.rst
 
 
 Using the SDK on the Web
