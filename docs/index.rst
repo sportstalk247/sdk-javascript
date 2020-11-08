@@ -148,25 +148,29 @@ These clients handle most common operation while hiding the backing APIs and sim
 However, you may want to use the APIs directly, in which case there are a set of backing REST services that you can use:
 
 Common Services:
-- UserService
-- WebhookService
+
+* UserService
+* WebhookService
 
 Chat Services:
-- ChatEventService
-- ChatRoomService
-- ChatModeration Service
+
+* ChatEventService
+* ChatRoomService
+* ChatModeration Service
 
 Comment Services:
-- CommentService
-- ConversationService
-- CommentModerationService
+* CommentService
+* ConversationService
+* CommentModerationService
 
 
 You can  see the details for each under **'Backing Services'** section
 
 Data Models
 -----------
+
 Models are broken up into 3 groups:
+
 * Chat specific models (https://gitlab.com/sportstalk247/sdk-javascript/-/blob/master/src/models/ChatModels.ts)
 * Commenting specific models (https://gitlab.com/sportstalk247/sdk-javascript/-/blob/master/src/models/CommentsModels.ts)
 * Common Models such as users or webhooks (https://gitlab.com/sportstalk247/sdk-javascript/-/blob/master/src/models/CommonModels.ts)
