@@ -31,16 +31,22 @@ If you are using a proxy, the only mandatory data for a SportstalkConfig object 
 
 Creating Client Objects
 -----------------------
-#### Using Typescript (recommended)
+
+Using Typescript (recommended)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 If you are using typescript, we provide typescript definitions for all objects.  It's as simple as:
-##### Commenting Client
+
+Commenting Client
++++++++++++++++++
 
 .. code-block:: javascript
   
     import { CommentClient } from 'sportstalk-sdk'
     const commentClient = CommentClient.init({appId: ... , apiToken: ....});
 
-##### Chat Client
+Chat Client
++++++++++++
 
 .. code-block:: javascript
   
@@ -49,7 +55,9 @@ If you are using typescript, we provide typescript definitions for all objects. 
 
  
  
-#### Using require
+Using require
+~~~~~~~~~~~~~
+
 You can use require as well.
 
 .. code-block:: javascript
@@ -102,7 +110,9 @@ You can also use comments in async/await blocks (preferred).
 
 For more reading, please see this article: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise
 
-## A note on Typescript
+A note on Typescript
+--------------------
+
 The SDK is written in Typescript which provides type checking and the ability to declare and describe objects similar to typed languages such as Java.
 This is very helpful when describing parameters or models because you can reference all the possible members of an object ahead of time.
 
@@ -276,7 +286,9 @@ To update a room, just call `updateRoom()` with the ID already set:
 Get room details
 ----------------
 
-### By Room ID
+By Room ID
+~~~~~~~~~~
+
 To get the details about a room, use `getRoomDetails()`
 
 .. code-block:: javascript
@@ -286,7 +298,9 @@ To get the details about a room, use `getRoomDetails()`
      })
 
 
-### By Room Custom ID
+By Room Custom ID
+~~~~~~~~~~~~~~~~~
+
 To get the details about a room, use `getRoomDetailsByCustomId()`
 
 .. code-block:: javascript
@@ -298,6 +312,7 @@ To get the details about a room, use `getRoomDetailsByCustomId()`
 
 Join a room
 -----------
+
 Anonymous
 ~~~~~~~~~
 You can join a room anonymously
@@ -587,7 +602,9 @@ By default, setDefault is TRUE, meaning that if you create or update a user, tha
     }
 
 
-#### setCurrentConversation(conversation)
+setCurrentConversation(conversation)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 Set the current conversation for commenting.
 The parameter can either be a conversation object or just a conversation ID.
 
@@ -719,7 +736,8 @@ Make a comment on the current conversation. Will throw an error if a conversatio
     }
 
 
-#### getComment(comment: Comment | string): Promise<Comment | null>;
+getComment(comment: Comment | string): Promise<Comment | null>
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Retrieves a specific comment. The param can either be a comment object with an id or just the id.
 
 .. code-block:: javascript
@@ -743,28 +761,38 @@ Retrieves a specific comment. The param can either be a comment object with an i
     }
 
 
-#### deleteComment(comment:Comment | string, final: boolean): Promise<CommentDeletionResponse>
+deleteComment(comment:Comment | string, final: boolean): Promise<CommentDeletionResponse>
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Deletes a comment
 
-#### updateComment(comment:Comment)
+updateComment(comment:Comment)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Updates a comment
 
-#### reactToComment(comment:Comment | string, reaction:Reaction)
+reactToComment(comment:Comment | string, reaction:Reaction)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Reacts to a comment
 
-#### voteOnComment(comment:Comment | string, vote:Vote)
+voteOnComment(comment:Comment | string, vote:Vote)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Vote a comment up or down
 
-#### reportComment(comment:Comment | string, reportType: ReportType)
+reportComment(comment:Comment | string, reportType: ReportType)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 Report a comment for violating community rules.
 
-#### getCommentReplies(comment:Comment, request?: CommentRequest)
+getCommentReplies(comment:Comment, request?: CommentRequest)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Get replies to a comment
 
-#### getComments(request?: CommentRequest, conversation?: Conversation)
+getComments(request?: CommentRequest, conversation?: Conversation)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 Gets the latest comments for the default conversation.
 
-#### listConversations(filter?: ConversationRequest)
+listConversations(filter?: ConversationRequest)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 List conversations that are available to comment.
 
 ====
@@ -846,45 +874,59 @@ Sportstalk uses callback functions to handle events.  These callbacks are specif
 
 Callback function overview
 --------------------------
-### onChatStart()
+onChatStart()
+~~~~~~~~~~~~~
 This callback is triggered once whenever 'client.startTalk()' is called.  You can use this to remove loading screens, hide advertisements, and so on.
 
-### onNetworkResponse(response: eventResult[])
+onNetworkResponse(response: eventResult[])
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This is called every time there is any network response.  Most of the time you do **NOT** want to use this callback but it can be useful for diagnostic information as it receives raw response data.  The format of this data is currently the result of a REST api call, but this is **not guaranteed**.  Future versions of the sportstalk sdk may use other transsport mechanisms such as websockets and/or firebase messaging.  In this case this callback would receive the raw socket or firebase message data.
 
 ### onChatEvent(event: EventResult)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This is the most critical callback. Each **new** chat event seen by the sdk client instance will be passed to this callback.  It is possible to render the entire chat experience with just this callback, and mosst other callbacks (such as onGoalEvent) are just convenience wrappers for the Sportstalk custom event system.  
 
 Please take a loook at the different eventtype keys in `src/models/ChatModels.ts` in interface `EventType`.  Your code should be preparred to accept any of these events and render appropriately.
 
 Your UI solution should accept each chat event and render it.  This callback could also be used to trigger push notifications.
 
-### onGoalEvent(event: EventResult)
+onGoalEvent(event: EventResult)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 This is a **convenience wrapper** that only works with the built-in SDK `sendGoal`.  These methods make use of the custom event types exposed by the sportstalk REST api and are purely to make creating sports experiences simpler. The REST SportsTalk api does not understand a 'goal' event, but utilizes custom event types.  This call back should **only** be used if you are also using the defaults provided by `client.sendGoal()`.  
 **Note that if this callback is registered, these custom goal events will NOT be sent to `onChatEvent`**
 
-### onAdEvent(event: EventResult)
+onAdEvent(event: EventResult)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 All the caveats of `onGoalEvent` apply to `onAdEvent`.  These callbacks are just convenience wrappers for the custom event system exposed by the sportstalk REST api to make building typical sports applications easier.      
 
-### onReply(event: EventResult)
+onReply(event: EventResult)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 If both are set, `onReply` will be called **instead of** `onChatEvent` for reply events.  
 
-### onReaction(event: EventResult)
+onReaction(event: EventResult)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 If both are set, `onReaction` will be called **instead of** `onChatEvent` for reply events.  
 
-### onPurgeEvent(event: EventResult)
+onPurgeEvent(event: EventResult)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 Clients should implement `onPurgeEvent()` if there is any moderation.  Purge events are used by the sportstalk SDK to let clients to know to remove messages that have been moderated as harmful or against policies and should be removed from the UI.        
 
-### onAdminCommand(response: ApiResult)
+onAdminCommand(response: ApiResult)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 `onAdminCommand` will be triggered on a successful server response when an admin command **is sent**.  Admin commands often do not result in updates to getUpdates() so it's necessary to handle what happens based on API response. For instance, if an admin sends a purge command, `onAdminCommand` will be triggered when the purge command is sent, and `onPurgeEvent` will be triggered with the purge message is sent from the API.
 
 Note that if `onHelp` is set it will be triggered instead of onAdminCommand because there may be special considerations - loading a different screen, navigating to a website, etc.
 
-### onHelp(response:ApiResult)
+onHelp(response:ApiResult)
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 `onHelp` will be triggered only when there is a successful API response for *sending* the `*help` command.  Use this callback to display a help screen.  If not set, the help API response will be sent to `onAdminCommand`
 
-### onNetworkError(error: Error) 
+onNetworkError(error: Error)
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 `onNetworkError` will be called if there are issues retrieving messages from the SportsTalk server. It is NOT called if there is an issue sending a specific message.  `onNetworkError` is intended for monitoring background communications to show messages like "Chat may be unavailable, please check your network connectivity".
 
 You can use `onNetworkError` and `onNetworkReponse` to show/hide such message connectivity errors.
@@ -936,7 +978,8 @@ To instantiate the Webhook service:
     const hooks =  await service.listWebhooks()
 
 
-#### Create a new webhook
+Create a new webhook
+++++++++++++++++++++
 
 .. code-block:: javascript
 
@@ -952,7 +995,8 @@ To instantiate the Webhook service:
     // if successful your hook was created.
 
 
-#### Delete a webhook
+Delete a webhook
+++++++++++++++++
 
 .. code-block:: javascript
 
@@ -962,7 +1006,8 @@ To instantiate the Webhook service:
     // if successful your hook was created.
 
 
-#### Update a webhook
+Update a webhook
+++++++++++++++++
 
 .. code-block:: javascript
 
@@ -1017,7 +1062,8 @@ To create a RoomService:
         const chatRooms =  await service.listRooms()
     }
 
-#### Creating a chat room
+Creating a chat room
+++++++++++++++++++++
 
 .. code-block:: javascript
 
@@ -1040,7 +1086,9 @@ To create a RoomService:
 
 
 
-#### Closing a chat room
+Closing a chat room
++++++++++++++++++++
+
 You can close a room by ID.
 
 .. code-block:: javascript
@@ -1052,7 +1100,9 @@ You can close a room by ID.
     }
 
 
-#### Opening a chat room
+Opening a chat room
++++++++++++++++++++
+
 You can close a room by ID.
 
 .. code-block:: javascript
@@ -1064,7 +1114,9 @@ You can close a room by ID.
     }
 
 
-#### Deleting a chat room
+Deleting a chat room
+++++++++++++++++++++
+
 If you are done with a room, you can delete it.
 
 **WARNING:** this cannot be undone. All messages in the room will be destroyed as well.
@@ -1092,7 +1144,8 @@ To instantiate the Chat Moderation service and get the moderation queue:
     }
 
 
-#### Approving a Chat Event - allow in chat.
+Approving a Chat Event - allow in chat.
++++++++++++++++++++++++++++++++++++++++
 
 .. code-block:: javascript
 
@@ -1105,7 +1158,8 @@ To instantiate the Chat Moderation service and get the moderation queue:
     }
 
 
-#### Reject a Chat Event - remove from chat
+Reject a Chat Event - remove from chat
+++++++++++++++++++++++++++++++++++++++
 
 .. code-block:: javascript
 
