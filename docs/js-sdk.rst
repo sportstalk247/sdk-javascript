@@ -945,12 +945,12 @@ Update a webhook
 
 If successful your hook was updated.  The new settings will replace the old ones, so be sure to configure anything you want to differ from the defaults.
 
-=============
+
 Chat Services
-=============
+---------------
 
 Chat Event Service
-------------------
+~~~~~~~~~~~~~~~~~~
 
 The chat event service encapsulates event management inside a room.
 It's duties include receiving and filtering new events, and then deciding which callbacks should be triggered based on each event.
@@ -970,7 +970,7 @@ To create a ChatEventService:
 
 
 Chat Room Service
------------------
+~~~~~~~~~~~~~~~~~
 
 The chat room service can be used for Chat Room creation and managment for an app.  In most cases, you do not need to use this service as the ChatClient interface provides the same functionality.
 
@@ -985,7 +985,7 @@ To create a RoomService:
     }
 
 Creating a chat room
-~~~~~~~~~~~~~~~~~~~~
+++++++++++++++++++++
 
 .. code-block:: javascript
 
@@ -1009,7 +1009,7 @@ Creating a chat room
 
 
 Closing a chat room
-~~~~~~~~~~~~~~~~~~~
++++++++++++++++++++
 
 You can close a room by ID.
 
@@ -1023,7 +1023,7 @@ You can close a room by ID.
 
 
 Opening a chat room
-~~~~~~~~~~~~~~~~~~~
++++++++++++++++++++
 
 You can close a room by ID.
 
@@ -1037,7 +1037,7 @@ You can close a room by ID.
 
 
 Deleting a chat room
-~~~~~~~~~~~~~~~~~~~~
+++++++++++++++++++++
 
 If you are done with a room, you can delete it.
 
@@ -1093,12 +1093,14 @@ Reject a Chat Event - remove from chat
         const result = service.rejectEvent(event);
     }
 
-===================
+
 Commenting Services
-===================
+-------------------
+
+Commenting features are backed by the Conversation, Commenting, and Comment Moderation services.
 
 Conversation Service
---------------------
+~~~~~~~~~~~~~~~~~~~~
 
 The conversation service is used to create, list, and update converations.  In most cases, you do not need this class, but should use the CommentingClient.
 
@@ -1111,7 +1113,7 @@ To create a ConversationService do the following:
 
 
 Create a new conversation
-~~~~~~~~~~~~~~~~~~~~~~~~~
++++++++++++++++++++++++++
 
 .. code-block:: javascript
 
@@ -1127,7 +1129,7 @@ Create a new conversation
     }
 
 Delete a conversation
-~~~~~~~~~~~~~~~~~~~~~
++++++++++++++++++++++
 
 .. code-block:: javascript
 
@@ -1139,7 +1141,7 @@ Delete a conversation
 
 
 Update a conversation
-~~~~~~~~~~~~~~~~~~~~~
++++++++++++++++++++++
 
 You can use the service to update a conversation you've already created by passing in new values. You cannot change the ID after creation.
 
@@ -1155,7 +1157,7 @@ You can use the service to update a conversation you've already created by passi
     }
 
 List available conversations
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+++++++++++++++++++++++++++++
 
 You can list all the available conversations for your app.
 
