@@ -10,10 +10,10 @@ This SDK is used in production successfully and is considered stable.  At the sa
     :hidden:
     :maxdepth: 1
 
-    /js-sdk.rst
+    js-sdk
 
     :caption: Data Models
-    /chat/models/chat-models.rst
+    /chat/models/chat-models
 
 ===================================
 GETTING STARTED: Setting up the SDK
