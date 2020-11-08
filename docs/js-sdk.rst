@@ -627,9 +627,8 @@ The easiest way to see how these event works is to see the demo page: https://ww
 * Make sure you handle errors for sending messages in case of network disruption.   For instance, `client.sendCommand('message').catch(handleErrorInUiFn)`
 
 
-===================
-Key Chat Operations
-===================
+Chat Client Operations
+-------------------
 All examples are shown with promises to be used in-browser.  You can also use async/await if using node.js or react.
 
 *Before executing any of these operations, create the client like so:*
@@ -652,7 +651,7 @@ Typescript:
 
 
 Creating a user
----------------
+~~~~~~~~~~~~~~~
 One of the first things you might need to do in Sportstalk is create a user. Users are shared between chat and commenting in the same application.
 To create a user, you can use either the chat or comment clients, or a UserService (advanced).
 
@@ -669,8 +668,8 @@ To create a user, you can use either the chat or comment clients, or a UserServi
         })
 
 
-Create or Update Room
----------------------
+Create or Update a Chat Room
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: javascript
 
@@ -698,10 +697,10 @@ To update a room, just call `updateRoom()` with the ID already set:
     })
 
 Get room details
-----------------
+~~~~~~~~~~~~~~~~
 
 By Room ID
-~~~~~~~~~~
+++++++++++
 
 To get the details about a room, use `getRoomDetails()`
 
@@ -713,7 +712,7 @@ To get the details about a room, use `getRoomDetails()`
 
 
 By Room Custom ID
-~~~~~~~~~~~~~~~~~
++++++++++++++++++
 
 To get the details about a room, use `getRoomDetailsByCustomId()`
 
@@ -725,10 +724,11 @@ To get the details about a room, use `getRoomDetailsByCustomId()`
 
 
 Join a room
------------
+~~~~~~~~~~~~~~~
 
 Anonymous
-~~~~~~~~~
++++++++++
+
 You can join a room anonymously
 
 .. code-block:: javascript
@@ -739,7 +739,7 @@ You can join a room anonymously
 
 
 Authenticated
-~~~~~~~~~~~~~
++++++++++++++
 
 To join a room as an authenticated user, set the current user for the client.  This user will be used by default for all updates and chat events.
 
@@ -752,7 +752,8 @@ To join a room as an authenticated user, set the current user for the client.  T
 
 
 Register event handlers
------------------------
+~~~~~~~~~~~~~~~~~~~~~~~
+
 Once you have joined a chat room, you need to be able to handle incoming events.
 Only one handler, `onChatEvent`, is necessary:
 
@@ -766,7 +767,8 @@ Only one handler, `onChatEvent`, is necessary:
 
 
 Start/Subscribe to room updates
--------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 Once you have joined a room and set your event handler, you can begin recieving new events using `startListeningToEventUpdates()`
 
 .. code-block:: javascript
@@ -775,7 +777,8 @@ Once you have joined a room and set your event handler, you can begin recieving 
 
 
 Stop updates
-------------
+~~~~~~~~~~~~
+
 When you want to stop recieving new events, you can stop your room subscription with `stopListeningToEventUpdates()`
 
 .. code-block:: javascript
@@ -784,7 +787,8 @@ When you want to stop recieving new events, you can stop your room subscription 
 
 
 Executing a chat command / Sending a message
---------------------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 When you want to send a message, you should first set a user and then use
 
 .. code-block:: javascript
@@ -796,7 +800,7 @@ When you want to send a message, you should first set a user and then use
 
 
 Send a reply
-------------
+~~~~~~~~~~~~
 
 .. code-block:: javascript
 
@@ -806,7 +810,7 @@ Send a reply
     })
 
 Send a Reaction
----------------
+~~~~~~~~~~~~~~~
 
 .. code-block:: javascript
 
@@ -817,7 +821,7 @@ Send a Reaction
 
 
 Delete a message (logical delete)
----------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: javascript
 
@@ -829,7 +833,7 @@ Delete a message (logical delete)
 
 
 Report a message for abuse
---------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: javascript
 
@@ -839,7 +843,7 @@ Report a message for abuse
 
 
 Bounce a user from a room
--------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~
 Bouncing/banning require you to check permissions inside your app as Sportstalk does not attach user permissions and instead depends on the host permissioning system.
 
 .. code-block:: javascript
@@ -851,7 +855,7 @@ Bouncing/banning require you to check permissions inside your app as Sportstalk 
 
 
 Unbounce a user from a room
----------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: javascript
 
