@@ -945,10 +945,13 @@ Update a webhook
 
 If successful your hook was updated.  The new settings will replace the old ones, so be sure to configure anything you want to differ from the defaults.
 
+=============
 Chat Services
-_____________
+=============
+
 Chat Event Service
-~~~~~~~~~~~~~~~~~~
+------------------
+
 The chat event service encapsulates event management inside a room.
 It's duties include receiving and filtering new events, and then deciding which callbacks should be triggered based on each event.
 To create a ChatEventService:
@@ -967,7 +970,8 @@ To create a ChatEventService:
 
 
 Chat Room Service
-~~~~~~~~~~~~~~~~~
+-----------------
+
 The chat room service can be used for Chat Room creation and managment for an app.  In most cases, you do not need to use this service as the ChatClient interface provides the same functionality.
 
 To create a RoomService:
@@ -981,7 +985,7 @@ To create a RoomService:
     }
 
 Creating a chat room
-++++++++++++++++++++
+~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: javascript
 
@@ -1005,7 +1009,7 @@ Creating a chat room
 
 
 Closing a chat room
-+++++++++++++++++++
+~~~~~~~~~~~~~~~~~~~
 
 You can close a room by ID.
 
@@ -1019,7 +1023,7 @@ You can close a room by ID.
 
 
 Opening a chat room
-+++++++++++++++++++
+~~~~~~~~~~~~~~~~~~~
 
 You can close a room by ID.
 
@@ -1033,7 +1037,7 @@ You can close a room by ID.
 
 
 Deleting a chat room
-++++++++++++++++++++
+~~~~~~~~~~~~~~~~~~~~
 
 If you are done with a room, you can delete it.
 
@@ -1048,7 +1052,7 @@ If you are done with a room, you can delete it.
     }
 
 Chat Moderation Service
-~~~~~~~~~~~~~~~~~~~~~~~
+-----------------------
 If you are creating a moderation UI for chat, this is the class you need.
 To instantiate the Chat Moderation service and get the moderation queue:
 
@@ -1063,7 +1067,7 @@ To instantiate the Chat Moderation service and get the moderation queue:
 
 
 Approving a Chat Event - allow in chat.
-+++++++++++++++++++++++++++++++++++++++
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: javascript
 
@@ -1077,7 +1081,7 @@ Approving a Chat Event - allow in chat.
 
 
 Reject a Chat Event - remove from chat
-++++++++++++++++++++++++++++++++++++++
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: javascript
 
