@@ -7,8 +7,9 @@ STATUS: STABLE BETA
 This SDK is used in production successfully and is considered stable.  At the same time, the SDK is under active development and improvement. We are also very open to feedback if you experience pain points while using the SDK.
 
 .. toctree::
-    :maxdepth: 2
     :hidden:
+    :maxdepth: 2
+
     /js-sdk.rst
 
     :caption: Data Models
@@ -38,11 +39,22 @@ Clients and services require a SportsTalkConfig object, which looks like so:
 
 If you are using a proxy, the only mandatory data for a SportstalkConfig object is the `appId` and `endpoint`. Otherwise you will need to provide the `appId` and `apiToken`
 
+Using the SDK on the Web
+------------------------
+To use directly, we host the web SDK on our website.
+
+* Latest version: https://www.sportstalk247.com/dist/sdk/latest/web-sdk.js
+* Latest minified version: https://www.sportstalk247.com/dist/sdk/latest/web-sdk.min.js
+
+You can also look inside the Sportstalk package at `/dist/web-sdk.js` or use the minified version at `/dist/web-sdk.min.js`
+
+
+=======================
 Creating Client Objects
------------------------
+=======================
 
 Using Typescript (recommended)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+------------------------------
 
 If you are using typescript, we provide typescript definitions for all objects.  It's as simple as:
 
@@ -65,7 +77,7 @@ Chat Client
  
  
 Using require
-~~~~~~~~~~~~~
+-------------
 
 You can use require as well.
 
@@ -77,16 +89,6 @@ You can use require as well.
 
 
 You will need to register with SportsTalk and get an API Key in order to use sportstalk functions.
-
-
-Using the SDK on the Web
-------------------------
-To use directly, we host the web SDK on our website.
-
-* Latest version: https://www.sportstalk247.com/dist/sdk/latest/web-sdk.js
-* Latest minified version: https://www.sportstalk247.com/dist/sdk/latest/web-sdk.min.js
- 
-You can also look inside the Sportstalk package at `/dist/web-sdk.js` or use the minified version at `/dist/web-sdk.min.js`
 
 
 A Note on Promises
