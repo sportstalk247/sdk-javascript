@@ -140,8 +140,18 @@ Client Objects
 The SDK is broken up into 2 Clients and a set of backing services.
 For most user-facing operations you'll want one of the clients:
 
-* Chat Client -  `const chatClient = require('sportstalk-sdk').ChatClient.create({appId, apiToken});`
-* Commenting Client  `const commentClient = require('sportstalk-sdk').CommentClient.create({appId, apiToken});`
+Chat Client
+~~~~~~~~~~~
+.. code-block:: javascript
+
+    const chatClient = require('sportstalk-sdk').ChatClient.create({appId, apiToken});
+
+Commenting Client
+~~~~~~~~~~~~~~~~~
+
+.. code-block:: javascript
+
+    const commentClient = require('sportstalk-sdk').CommentClient.create({appId, apiToken});
 
 These clients handle most common operation while hiding the backing APIs and simplifying some operations and will manage state for you.
 
@@ -159,6 +169,7 @@ Chat Services:
 * ChatModeration Service
 
 Comment Services:
+
 * CommentService
 * ConversationService
 * CommentModerationService
