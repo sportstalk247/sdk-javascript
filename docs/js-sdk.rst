@@ -1066,8 +1066,8 @@ To instantiate the Chat Moderation service and get the moderation queue:
     }
 
 
-Approving a Chat Event - allow in chat.
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Approving a Chat Event
+~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: javascript
 
@@ -1080,8 +1080,8 @@ Approving a Chat Event - allow in chat.
     }
 
 
-Reject a Chat Event - remove from chat
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+Reject a Chat Event
+~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: javascript
 
