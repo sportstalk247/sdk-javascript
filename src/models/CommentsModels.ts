@@ -105,7 +105,7 @@ export enum CommentModeration {
 
 export interface SimpleComment  {
     body: string,
-    added?: string, // ISO 8601 timestampe, e.g. 2020-03-02T00:00:00Z
+    added?: string, // ISO 8601 timestamp, e.g. 2020-03-02T00:00:00Z
     replyto?: string
 }
 
