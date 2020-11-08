@@ -362,8 +362,10 @@ Once you have joined a room and set your event handler, you can begin recieving 
 
 Stop updates
 ------------
-When you want to stop recieving new events, you can stop your room subscription with `stopChat()`
+When you want to stop recieving new events, you can stop your room subscription with `stopListeningToEventUpdates()`
+
 .. code-block:: javascript
+
     chatClient.stopListeningToEventUpdates()
 
 
@@ -541,6 +543,7 @@ Once you have a user, joining a conversation is simple:
 
 CommentClient API
 -----------------
+
 setConfig()
 ~~~~~~~~~~~
 
