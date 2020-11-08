@@ -18,7 +18,7 @@ App Id and api Tokens
 ---------------------
 Clients and services require a SportsTalkConfig object, which looks like so: 
 .. code-block:: javascript
-    :linenos:
+  
     {
         appId: 'yourappID-from-the-dashboard',
         apiToken: 'yourApiToken-from-the-dashboard', // NOTE: you should use a proxy to hide your token and restrict behavior to specific domains on the web.
@@ -34,13 +34,13 @@ Creating Client Objects
 If you are using typescript, we provide typescript definitions for all objects.  It's as simple as:
 ##### Commenting Client
 .. code-block:: javascript
-    :linenos:
+  
     import { CommentClient } from 'sportstalk-sdk'
     const commentClient = CommentClient.init({appId: ... , apiToken: ....});
 
 ##### Chat Client
 .. code-block:: javascript
-    :linenos:
+  
     import { ChatClient } from 'sportstalk-sdk'
     const chatClient = ChatClient.init({appId: ... , apiToken: ....});
 
@@ -50,7 +50,7 @@ If you are using typescript, we provide typescript definitions for all objects. 
 You can use require as well.
 
 .. code-block:: javascript
-    :linenos:
+  
     const sdk = require('sportstalk-sdk');
     const commentClient = sdk.CommentClient.init({appId..., apiToken...});
     const chatClient = sdk.ChatClient.init(({appId..., apiToken...});
@@ -76,7 +76,7 @@ Almost all SDK functions require communication with a server.  Therefore, most m
 Here are some ways that you can use promises.
 
 .. code-block:: javascript
-    :linenos:
+  
     commentsClient.listConversations()
         .then(function(response) {
           const conversations = response.conversations;
@@ -89,7 +89,7 @@ Here are some ways that you can use promises.
 You can also use comments in async/await blocks (preferred).  
 
 .. code-block:: javascript
-    :linenos:
+  
     async function yourFunction() {
         const response = await commentsClient.listConversations();
         const conversations = response.conversations;
@@ -163,7 +163,6 @@ You don't have to be an expert on Typescript to use these models, as they just d
 
 For instance:
 .. code-block:: javascript
-    :linenos:
 
     export interface Example {
         id?: string
@@ -172,7 +171,7 @@ For instance:
 This describes a type `Example` with a single property `id` which may or may not be present.
 The following are all valid `Example` objects:
 .. code-block:: javascript
-    :linenos:
+  
 
     const example1 = {} // id is optional, and undefined.
     const example2 = {id:null} // id property is present but null
@@ -180,8 +179,6 @@ The following are all valid `Example` objects:
 
 However this is not a valid `Example` object:
 .. code-block:: javascript
-    :linenos:
-
     const badExample = {
         id:{
             members: []
@@ -190,7 +187,7 @@ However this is not a valid `Example` object:
 
 Nor is this:
 .. code-block:: javascript
-    :linenos:
+  
 
     const badExample2 = {
         id:1231 // id property is there but is a number and not a string. This is not allowed.
@@ -208,7 +205,7 @@ All examples are shown with promises to be used in-browser.  You can also use as
 
 Javascript:
 .. code-block:: javascript
-    :linenos:
+  
 
     const sdk = require('sportstalk-sdk');
     const chatClient = sdk.ChatClient.init({appId:'yourAppId', apiToken:'yourApiToken'});
@@ -216,7 +213,7 @@ Javascript:
 
 Typescript:
 .. code-block:: javascript
-    :linenos:
+  
     
     import { ChatClient } from 'sportstalk-sdk'
     const chatClient = ChatClient.init({appId:'yourAppId', apiToken:'yourApiToken'});
