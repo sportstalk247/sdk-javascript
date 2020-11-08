@@ -9,9 +9,10 @@ This SDK is used in production successfully and is considered stable.  At the sa
 ===================================
 GETTING STARTED: Setting up the SDK
 ===================================
+
 Install via NPM
 ---------------
-  `npm install sportstalk-sdk --save`
+  ``npm install sportstalk-sdk --save``
 
 
 App Id and api Tokens
@@ -68,6 +69,13 @@ You can use require as well.
 
 
 You will need to register with SportsTalk and get an API Key in order to use sportstalk functions.
+
+.. toctree::
+   :maxdepth: 2
+   :hidden:
+   :caption: Data Models
+
+   /chat/models/chat-models.rst
 
 
 Using the SDK on the Web
