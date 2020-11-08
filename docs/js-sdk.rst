@@ -20,6 +20,7 @@ For most user-facing operations you'll want one of the clients:
 
 Chat Client
 ~~~~~~~~~~~
+
 .. code-block:: javascript
 
     const chatClient = require('sportstalk-sdk').ChatClient.create({appId, apiToken});
@@ -875,13 +876,14 @@ Common Services
 
 User Service
 ~~~~~~~~~~~~
+
 The user service handles user creation and management including banning users.
 
 To instantiate a User Service:
+
 .. code-block:: javascript
     const sdk = require('sportstalk-sdk');
     const userService = new sdk.services.UserService({appId, apiToken});
-    const list = userService.listUsers();
 
 
 Webhook Service
@@ -903,6 +905,7 @@ Create a new webhook
 
     const sdk = require('sportstalk-sdk');
     const service = new sdk.services.WebhookService({appId, apiToken});
+
     const newHook = await service.createWebhook({
         label: 'A user friendly label',
         url: 'http://www.your-hook-endpoint.com/endpoint',
@@ -920,6 +923,7 @@ Delete a webhook
 
     const sdk = require('sportstalk-sdk');
     const service = new sdk.services.WebhookService({appid, apitoken});
+
     const newHook = await service.deleteWebhook('id-of-previously-created-webhook');
     // if successful your hook was created.
 
@@ -960,6 +964,7 @@ To create a ChatEventService:
 
     const sdk = require('sportstalk-sdk');
     const service = new sdk.services.ChatEventService({appId: 'your-app-id', apiToken: 'your-api-token'});
+    
     async function eventServiceExample() {
         // Argument is a Room object with an ID that has been created.  See the RoomService
         const eventService =  await service.setCurrentRoom({...});
