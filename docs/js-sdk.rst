@@ -1244,9 +1244,3 @@ Rejecting a comment makes it unavailable to users in the conversation.
         const rejectedComment = await service.rejectComment(queuedComment);
     }
 
-
-===================
-Copyright & License
-===================
-
-Copyright (c) 2020 Sportstalk247

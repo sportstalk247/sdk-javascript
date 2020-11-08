@@ -12,7 +12,7 @@ This SDK is used in production successfully and is considered stable.  At the sa
 
     js-sdk
 
-    :caption: Data Models
+    :caption: Models
     /chat/models/chat-models
 
 ===================================
@@ -131,9 +131,3 @@ You **do not** need to write your project in typescript to use this SDK.  This S
 However, understanding basic typescript notation is still helpful for understanding the data models returned by the API.
 
 There is a 5 min primer on typescript and you can get started with typescript here: https://www.typescriptlang.org/docs/home.html
-
-===================
-Copyright & License
-===================
-
-Copyright (c) 2020 Sportstalk247
