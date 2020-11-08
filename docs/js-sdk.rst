@@ -5,13 +5,15 @@ Understanding the SDK
 
 Key concepts
 ------------
-CHAT: This is a real-time experience designed to make a user feel like other people are present with that person.  The state of a chat room updates in real time, and you receive notifications that update the state.  In general, chat content is disposable: It is enjoyed in the moment but in the future its rare for people to go back and look at past conversation information. Chat messages are also often short and don’t necessarily add a thought to the conversation. Chat drives engagement in the moment by keeping your attention and is best used with live events because its no fun to be in a chat room by yourself.
+``CHAT``: This is a real-time experience designed to make a user feel like other people are present with that person.  The state of a chat room updates in real time, and you receive notifications that update the state.  In general, chat content is disposable: It is enjoyed in the moment but in the future its rare for people to go back and look at past conversation information. Chat messages are also often short and don’t necessarily add a thought to the conversation. Chat drives engagement in the moment by keeping your attention and is best used with live events because its no fun to be in a chat room by yourself.
 
-COMMENTS: A comment is something you post on an article or video or other context.  Unlike chat, comments are often read long after they are posted, and are more likely to be longer messages that contain a more thoughtful point. They are intended to add to the value of the thing on which the comment appears. Use comments when you don’t real time responses, people will see your comment later.
+``ROOM``: A chat “room” is a virtual space in which people can chat.  Events occur in the room, such as a person entering the room, saying something, or exiting the room.  If a user reacts to something by liking it, this also generates an event.  The SDK listens for new events, processes events, raises call backs for you, and updates the state of the room in memory, so it’s less work for the developer.
 
-CONVERSATION: This is a commenting context, such as an article or video that people are commenting on. Comments are created within the context of a conversation.
+``COMMENTS``: A comment is something you post on an article or video or other context.  Unlike chat, comments are often read long after they are posted, and are more likely to be longer messages that contain a more thoughtful point. They are intended to add to the value of the thing on which the comment appears. Use comments when you don’t real time responses, people will see your comment later.
 
-ROOM: A chat “room” is a virtual space in which people can chat.  Events occur in the room, such as a person entering the room, saying something, or exiting the room.  If a user reacts to something by liking it, this also generates an event.  The SDK listens for new events, processes events, raises call backs for you, and updates the state of the room in memory, so it’s less work for the developer.
+``CONVERSATION``: This is a commenting context, such as an article or video that people are commenting on. Comments are created within the context of a conversation.
+
+Chats belong to Rooms and Comments belong in Conversations
 
 Client Objects
 --------------
@@ -964,7 +966,7 @@ To create a ChatEventService:
 
     const sdk = require('sportstalk-sdk');
     const service = new sdk.services.ChatEventService({appId: 'your-app-id', apiToken: 'your-api-token'});
-    
+
     async function eventServiceExample() {
         // Argument is a Room object with an ID that has been created.  See the RoomService
         const eventService =  await service.setCurrentRoom({...});
