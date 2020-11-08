@@ -4,30 +4,32 @@ Sportstalk 247 Javascript SDK
 My using this SDK you agree to the license located in LICENSE.md
 
 STATUS: STABLE BETA
--------------------
 This SDK is used in production successfully and is considered stable.  At the same time, the SDK is under active development and improvement. We are also very open to feedback if you experience pain points while using the SDK.
 
+===================================
 GETTING STARTED: Setting up the SDK
------------------------------------
+===================================
 Install via NPM
-~~~~~~~~~~~~~~~
-```
-npm install sportstalk-sdk --save
-```
+---------------
+::
+  npm install sportstalk-sdk --save
 
-### App Id and api Tokens
+
+App Id and api Tokens
+---------------------
 Clients and services require a SportsTalkConfig object, which looks like so: 
-```javascript
-{
-    appId: 'yourappID-from-the-dashboard',
-    apiToken: 'yourApiToken-from-the-dashboard', // NOTE: you should use a proxy to hide your token and restrict behavior to specific domains on the web.
-    endpoint: 'custom-endpoint' // OPTIONAL Use this to set a proxy on the web, or if you have an on-prem install of sportstalk at a custom location.
-}
-```
+::
+    {
+        appId: 'yourappID-from-the-dashboard',
+        apiToken: 'yourApiToken-from-the-dashboard', // NOTE: you should use a proxy to hide your token and restrict behavior to specific domains on the web.
+        endpoint: 'custom-endpoint' // OPTIONAL Use this to set a proxy on the web, or if you have an on-prem install of sportstalk at a custom location.
+    }
+
 
 If you are using a proxy, the only mandatory data for a SportstalkConfig object is the `appId` and `endpoint`. Otherwise you will need to provide the `appId` and `apiToken`
 
-### Creating Client Objects
+Creating Client Objects
+-----------------------
 #### Using Typescript (recommended)
 If you are using typescript, we provide typescript definitions for all objects.  It's as simple as:
 ##### Commenting Client
