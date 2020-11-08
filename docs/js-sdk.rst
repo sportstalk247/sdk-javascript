@@ -106,238 +106,6 @@ Nor is this:
 
 These typescript definitions help you be certain about the data you will get from the API and allow you to write code with confidence about the data you will or will not receive.
 
-===================
-Key Chat Operations
-===================
-All examples are shown with promises to be used in-browser.  You can also use async/await if using node.js or react.
-
-*Before executing any of these operations, create the client like so:*
-
-Javascript:
-
-.. code-block:: javascript
-
-    const sdk = require('sportstalk-sdk');
-    const chatClient = sdk.ChatClient.init({appId:'yourAppId', apiToken:'yourApiToken'});
-
-
-Typescript:
-
-.. code-block:: javascript
-
-    import { ChatClient } from 'sportstalk-sdk'
-    const chatClient = ChatClient.init({appId:'yourAppId', apiToken:'yourApiToken'});
-
-
-
-Creating a user
----------------
-One of the first things you might need to do in Sportstalk is create a user. Users are shared between chat and commenting in the same application.
-To create a user, you can use either the chat or comment clients, or a UserService (advanced).
-
-.. code-block:: javascript
-
-    const chatClient = sdk.ChatClient.init({...});
-    chatClient.createOrUpdateUser({userid: "definedByYourSystem-MustBeUnique", handle: "Must-Be-Unique-String"})
-        .then(function(user) {
-            // user has been created.
-        }).catch(function(error) {
-            // make sure to catch and handle errors.
-            // It is possible to have network or settings errors.
-            // For instance if you do not set a unique handle you will get an error.
-        })
-
-
-Create or Update Room
----------------------
-
-.. code-block:: javascript
-
-    chatClient.createRoom({
-        name: "Your room name",
-        customid: "your-custom-id",
-        moderation: "post"
-    }).then(function(room){
-        // your room is ready.
-        const roomid = room.id
-    })
-
-
-To update a room, just call `updateRoom()` with the ID already set:
-
-.. code-block:: javascript
-
-    chatClient.updateRoom({
-        id: 'generated-id-value',
-        name: "Your NEW room name", // updated
-        customid: "your-custom-id",
-        moderation: "post"
-    }).then(function(room){
-        // your room is ready.
-    })
-
-Get room details
-----------------
-
-By Room ID
-~~~~~~~~~~
-
-To get the details about a room, use `getRoomDetails()`
-
-.. code-block:: javascript
-
-    chatClient.getRoomDetails('your-room-id').then(function(room){
-        // your room is ready.
-     })
-
-
-By Room Custom ID
-~~~~~~~~~~~~~~~~~
-
-To get the details about a room, use `getRoomDetailsByCustomId()`
-
-.. code-block:: javascript
-
-    chatClient.getRoomDetailsByCustomId ('your-custom-room-id').then(function(room){
-        // your room is ready.
-     })
-
-
-Join a room
------------
-
-Anonymous
-~~~~~~~~~
-You can join a room anonymously
-
-.. code-block:: javascript
-
-    chatClient.joinRoom('a-room-id').then(function(roomDetailsAndUpdates){
-        // the response will include room details and also the latest chat events.
-    })
-
-
-Authenticated
-~~~~~~~~~~~~~
-
-To join a room as an authenticated user, set the current user for the client.  This user will be used by default for all updates and chat events.
-
-.. code-block:: javascript
-
-    chatClient.setUser({userid: 'a-user-id', handle:'user-handle'});
-    chatClient.joinRoom('a-room-id').then(function(roomDetailsAndUpdates){
-        // the response will include room details and also the latest chat events.
-    })
-
-
-Register event handlers
------------------------
-Once you have joined a chat room, you need to be able to handle incoming events.
-Only one handler, `onChatEvent`, is necessary:
-
-.. code-block:: javascript
-
-    chatClient.setEventHandlers({
-        onChatEvent: function(event){
-            // handle the events here
-        }
-    })
-
-
-Start/Subscribe to room updates
--------------------------------
-Once you have joined a room and set your event handler, you can begin recieving new events using `startListeningToEventUpdates()`
-
-.. code-block:: javascript
-
-    chatClient.startListeningToEventUpdates()
-
-
-Stop updates
-------------
-When you want to stop recieving new events, you can stop your room subscription with `stopListeningToEventUpdates()`
-
-.. code-block:: javascript
-
-    chatClient.stopListeningToEventUpdates()
-
-
-Executing a chat command / Sending a message
---------------------------------------------
-When you want to send a message, you should first set a user and then use
-
-.. code-block:: javascript
-
-    chatClient.setUser({userid: 'a-user-id', handle:'user-handle'});
-    chatClient.executeChatCommand('A simple chat message').then(function(serverResponse){
-        // The result will be the raw server response in JSON to 'executeChatCommand'
-    })
-
-
-Send a reply
-------------
-
-.. code-block:: javascript
-
-    chatClient.setUser({userid: 'a-user-id', handle:'user-handle'});
-    chatClient.sendQuotedReply('A reply', originalMessageIdOrObject).then(function(serverResponse){
-        // The result will be the raw server response in JSON.
-    })
-
-Send a Reaction
----------------
-
-.. code-block:: javascript
-
-    chatClient.setUser({userid: 'a-user-id', handle:'user-handle'});
-    chatClient.reactToEvent('like', originalMessageIdOrObject).then(function(serverResponse){
-        // The result will be the raw server response in JSON.
-    })
-
-
-Delete a message (logical delete)
----------------------------------
-
-.. code-block:: javascript
-
-    chatClient.flagEventLogicallyDeleted(chatEvent).then(function(deletionResponse){
-        // on success, message has been deleted
-    }).catch(function(e){
-      // something went wrong, perhaps it was already deleted or you have the wrong ID.
-    })
-
-
-Report a message for abuse
---------------------------
-
-.. code-block:: javascript
-
-    chatClient.reportMessage('event ID', 'abuse').then(function(result){
-        // event has been reported.
-      })
-
-
-Bounce a user from a room
--------------------------
-Bouncing/banning require you to check permissions inside your app as Sportstalk does not attach user permissions and instead depends on the host permissioning system.
-
-.. code-block:: javascript
-
-    chatClient.bounceUser('userID string or UserResult Object', 'optional message').then(function(result)) {
-        // User will be bounced from the room.  Their ID will be added to the room's bounced users list.
-        // A bounce event will be in the next getUpdates() call.
-    }
-
-
-Unbounce a user from a room
----------------------------
-
-.. code-block:: javascript
-
-    chatClient.unbounceUser('userID string or UserResult Object', 'optional message').then(function(result)) {
-        // User will be unbounced from the room.  Their ID will be removed from the room's bounced users list.
-    }
-
 
 ============
 Comments API
@@ -705,9 +473,9 @@ listConversations(filter?: ConversationRequest)
 
 List conversations that are available to comment.
 
-====
-Chat
-====
+========
+Chat API
+========
 GETTING STARTED: How to use the SDK
 -----------------------------------
 This Sportstalk SDK is meant to power custom chat applications.  Sportstalk does not enforce any restricitons on your UI design, but instead empowers your developers to focus on the user experience without worrying about the underlying chat behavior.
@@ -858,9 +626,245 @@ The easiest way to see how these event works is to see the demo page: https://ww
 * Use the promises from sendCommand, sendReply, etc, to show/hide some sort of indication that the message is being sent.
 * Make sure you handle errors for sending messages in case of network disruption.   For instance, `client.sendCommand('message').catch(handleErrorInUiFn)`
 
+
+===================
+Key Chat Operations
+===================
+All examples are shown with promises to be used in-browser.  You can also use async/await if using node.js or react.
+
+*Before executing any of these operations, create the client like so:*
+
+Javascript:
+
+.. code-block:: javascript
+
+    const sdk = require('sportstalk-sdk');
+    const chatClient = sdk.ChatClient.init({appId:'yourAppId', apiToken:'yourApiToken'});
+
+
+Typescript:
+
+.. code-block:: javascript
+
+    import { ChatClient } from 'sportstalk-sdk'
+    const chatClient = ChatClient.init({appId:'yourAppId', apiToken:'yourApiToken'});
+
+
+
+Creating a user
+---------------
+One of the first things you might need to do in Sportstalk is create a user. Users are shared between chat and commenting in the same application.
+To create a user, you can use either the chat or comment clients, or a UserService (advanced).
+
+.. code-block:: javascript
+
+    const chatClient = sdk.ChatClient.init({...});
+    chatClient.createOrUpdateUser({userid: "definedByYourSystem-MustBeUnique", handle: "Must-Be-Unique-String"})
+        .then(function(user) {
+            // user has been created.
+        }).catch(function(error) {
+            // make sure to catch and handle errors.
+            // It is possible to have network or settings errors.
+            // For instance if you do not set a unique handle you will get an error.
+        })
+
+
+Create or Update Room
+---------------------
+
+.. code-block:: javascript
+
+    chatClient.createRoom({
+        name: "Your room name",
+        customid: "your-custom-id",
+        moderation: "post"
+    }).then(function(room){
+        // your room is ready.
+        const roomid = room.id
+    })
+
+
+To update a room, just call `updateRoom()` with the ID already set:
+
+.. code-block:: javascript
+
+    chatClient.updateRoom({
+        id: 'generated-id-value',
+        name: "Your NEW room name", // updated
+        customid: "your-custom-id",
+        moderation: "post"
+    }).then(function(room){
+        // your room is ready.
+    })
+
+Get room details
+----------------
+
+By Room ID
+~~~~~~~~~~
+
+To get the details about a room, use `getRoomDetails()`
+
+.. code-block:: javascript
+
+    chatClient.getRoomDetails('your-room-id').then(function(room){
+        // your room is ready.
+     })
+
+
+By Room Custom ID
+~~~~~~~~~~~~~~~~~
+
+To get the details about a room, use `getRoomDetailsByCustomId()`
+
+.. code-block:: javascript
+
+    chatClient.getRoomDetailsByCustomId ('your-custom-room-id').then(function(room){
+        // your room is ready.
+     })
+
+
+Join a room
+-----------
+
+Anonymous
+~~~~~~~~~
+You can join a room anonymously
+
+.. code-block:: javascript
+
+    chatClient.joinRoom('a-room-id').then(function(roomDetailsAndUpdates){
+        // the response will include room details and also the latest chat events.
+    })
+
+
+Authenticated
+~~~~~~~~~~~~~
+
+To join a room as an authenticated user, set the current user for the client.  This user will be used by default for all updates and chat events.
+
+.. code-block:: javascript
+
+    chatClient.setUser({userid: 'a-user-id', handle:'user-handle'});
+    chatClient.joinRoom('a-room-id').then(function(roomDetailsAndUpdates){
+        // the response will include room details and also the latest chat events.
+    })
+
+
+Register event handlers
+-----------------------
+Once you have joined a chat room, you need to be able to handle incoming events.
+Only one handler, `onChatEvent`, is necessary:
+
+.. code-block:: javascript
+
+    chatClient.setEventHandlers({
+        onChatEvent: function(event){
+            // handle the events here
+        }
+    })
+
+
+Start/Subscribe to room updates
+-------------------------------
+Once you have joined a room and set your event handler, you can begin recieving new events using `startListeningToEventUpdates()`
+
+.. code-block:: javascript
+
+    chatClient.startListeningToEventUpdates()
+
+
+Stop updates
+------------
+When you want to stop recieving new events, you can stop your room subscription with `stopListeningToEventUpdates()`
+
+.. code-block:: javascript
+
+    chatClient.stopListeningToEventUpdates()
+
+
+Executing a chat command / Sending a message
+--------------------------------------------
+When you want to send a message, you should first set a user and then use
+
+.. code-block:: javascript
+
+    chatClient.setUser({userid: 'a-user-id', handle:'user-handle'});
+    chatClient.executeChatCommand('A simple chat message').then(function(serverResponse){
+        // The result will be the raw server response in JSON to 'executeChatCommand'
+    })
+
+
+Send a reply
+------------
+
+.. code-block:: javascript
+
+    chatClient.setUser({userid: 'a-user-id', handle:'user-handle'});
+    chatClient.sendQuotedReply('A reply', originalMessageIdOrObject).then(function(serverResponse){
+        // The result will be the raw server response in JSON.
+    })
+
+Send a Reaction
+---------------
+
+.. code-block:: javascript
+
+    chatClient.setUser({userid: 'a-user-id', handle:'user-handle'});
+    chatClient.reactToEvent('like', originalMessageIdOrObject).then(function(serverResponse){
+        // The result will be the raw server response in JSON.
+    })
+
+
+Delete a message (logical delete)
+---------------------------------
+
+.. code-block:: javascript
+
+    chatClient.flagEventLogicallyDeleted(chatEvent).then(function(deletionResponse){
+        // on success, message has been deleted
+    }).catch(function(e){
+      // something went wrong, perhaps it was already deleted or you have the wrong ID.
+    })
+
+
+Report a message for abuse
+--------------------------
+
+.. code-block:: javascript
+
+    chatClient.reportMessage('event ID', 'abuse').then(function(result){
+        // event has been reported.
+      })
+
+
+Bounce a user from a room
+-------------------------
+Bouncing/banning require you to check permissions inside your app as Sportstalk does not attach user permissions and instead depends on the host permissioning system.
+
+.. code-block:: javascript
+
+    chatClient.bounceUser('userID string or UserResult Object', 'optional message').then(function(result)) {
+        // User will be bounced from the room.  Their ID will be added to the room's bounced users list.
+        // A bounce event will be in the next getUpdates() call.
+    }
+
+
+Unbounce a user from a room
+---------------------------
+
+.. code-block:: javascript
+
+    chatClient.unbounceUser('userID string or UserResult Object', 'optional message').then(function(result)) {
+        // User will be unbounced from the room.  Their ID will be removed from the room's bounced users list.
+    }
+
+
 ================
 Backing Services
 ================
+
+The Chat and Comment clients are powered by a set of backing services that make calls to the REST API. There may be cases where you want more "raw" access to the REST API.  In these cases you can load and initialize these services directly.
 
 Common Services
 ---------------
