@@ -164,6 +164,7 @@ You don't have to be an expert on Typescript to use these models, as they just d
 For instance:
 .. code-block:: javascript
     :linenos:
+
     export interface Example {
         id?: string
     }
@@ -172,6 +173,7 @@ This describes a type `Example` with a single property `id` which may or may not
 The following are all valid `Example` objects:
 .. code-block:: javascript
     :linenos:
+
     const example1 = {} // id is optional, and undefined.
     const example2 = {id:null} // id property is present but null
     const example3 = {id: "123412351235"} // id is a string
@@ -179,6 +181,7 @@ The following are all valid `Example` objects:
 However this is not a valid `Example` object:
 .. code-block:: javascript
     :linenos:
+
     const badExample = {
         id:{
             members: []
@@ -188,6 +191,7 @@ However this is not a valid `Example` object:
 Nor is this:
 .. code-block:: javascript
     :linenos:
+
     const badExample2 = {
         id:1231 // id property is there but is a number and not a string. This is not allowed.
     }
@@ -205,6 +209,7 @@ All examples are shown with promises to be used in-browser.  You can also use as
 Javascript:
 .. code-block:: javascript
     :linenos:
+
     const sdk = require('sportstalk-sdk');
     const chatClient = sdk.ChatClient.init({appId:'yourAppId', apiToken:'yourApiToken'});
 
@@ -212,6 +217,7 @@ Javascript:
 Typescript:
 .. code-block:: javascript
     :linenos:
+    
     import { ChatClient } from 'sportstalk-sdk'
     const chatClient = ChatClient.init({appId:'yourAppId', apiToken:'yourApiToken'});
 
