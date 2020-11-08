@@ -164,7 +164,7 @@ export interface ChatRoomResult extends ChatRoom {
     ownerid?:string,
     appid?: string,
     bouncedusers?: string[], // will be a list of UserID strings.
-    added: string, // ISO Date
+    added?: string, // ISO Date
     inroom?:number,
     whenmodified?:string // ISO Date
 }
