@@ -369,8 +369,10 @@ When you want to stop recieving new events, you can stop your room subscription 
 
 Executing a chat command / Sending a message
 --------------------------------------------
-When you want to send a message, you should first set a user and then use 
+When you want to send a message, you should first set a user and then use
+
 .. code-block:: javascript
+
     chatClient.setUser({userid: 'a-user-id', handle:'user-handle'});
     chatClient.executeChatCommand('A simple chat message').then(function(serverResponse){
         // The result will be the raw server response in JSON to 'executeChatCommand'
@@ -379,7 +381,9 @@ When you want to send a message, you should first set a user and then use
 
 Send a reply
 ------------
+
 .. code-block:: javascript
+
     chatClient.setUser({userid: 'a-user-id', handle:'user-handle'});
     chatClient.sendQuotedReply('A reply', originalMessageIdOrObject).then(function(serverResponse){
         // The result will be the raw server response in JSON.
@@ -387,7 +391,9 @@ Send a reply
 
 Send a Reaction
 ---------------
+
 .. code-block:: javascript
+
     chatClient.setUser({userid: 'a-user-id', handle:'user-handle'});
     chatClient.reactToEvent('like', originalMessageIdOrObject).then(function(serverResponse){
         // The result will be the raw server response in JSON.
@@ -396,7 +402,9 @@ Send a Reaction
 
 Delete a message (logical delete)
 ---------------------------------
+
 .. code-block:: javascript
+
     chatClient.flagEventLogicallyDeleted(chatEvent).then(function(deletionResponse){
         // on success, message has been deleted
     }).catch(function(e){
@@ -406,7 +414,9 @@ Delete a message (logical delete)
 
 Report a message for abuse
 --------------------------
+
 .. code-block:: javascript
+
     chatClient.reportMessage('event ID', 'abuse').then(function(result){
         // event has been reported.
       })
@@ -415,7 +425,9 @@ Report a message for abuse
 Bounce a user from a room
 -------------------------
 Bouncing/banning require you to check permissions inside your app as Sportstalk does not attach user permissions and instead depends on the host permissioning system.
+
 .. code-block:: javascript
+
     chatClient.bounceUser('userID string or UserResult Object', 'optional message').then(function(result)) {
         // User will be bounced from the room.  Their ID will be added to the room's bounced users list.
         // A bounce event will be in the next getUpdates() call.
@@ -424,7 +436,9 @@ Bouncing/banning require you to check permissions inside your app as Sportstalk 
 
 Unbounce a user from a room
 ---------------------------
+
 .. code-block:: javascript
+
     chatClient.unbounceUser('userID string or UserResult Object', 'optional message').then(function(result)) {
         // User will be unbounced from the room.  Their ID will be removed from the room's bounced users list.
     }
@@ -487,7 +501,7 @@ To list conversations, use the `listConversations()` method of the CommentsClien
 
 Powering your UI with this data is up to you, but you might do something like so (in pug template format):
 
-.. code-block:: javascript
+.. code-block:: pug
 
     h3 Conversations
     ul
