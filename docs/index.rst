@@ -8,7 +8,7 @@ This SDK is used in production successfully and is considered stable.  At the sa
 
 .. toctree::
     :hidden:
-    :maxdepth: 2
+    :maxdepth: 1
 
     /js-sdk.rst
 
