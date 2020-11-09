@@ -2,8 +2,98 @@
 Commenting API
 ==============
 
+Getting Started
+---------------
+If you are looking to build a custom conversation, you will the need the `CommentClient`, which you can get by:
+
+Typescript
+
+.. code-block:: javascript
+
+    import { CommentClient } from 'sportstalk-sdk'
+    const commentClient = CommentClient.create({appId:..., apiToken:...});
+
+
+ Require
+
+.. code-block:: javascript
+
+    const sdk =  require('sportstalk-sdk')
+    const commentClient = sdk.CommentClient.init({appId:..., apiToken:...});
+
+
+Creating a user
+---------------
+One of the first things you might need to do in Sportstalk is.init a user. Users are shared between chat and commenting in the same application.
+To create a user, you can use either the chat or comment clients, or a UserService (advanced).
+
+.. code-block:: javascript
+
+    const commentClient = sdk.CommentClient.init({...});
+    commentClient.createOrUpdateUser({userid: "definedByYourSystem-MustBeUnique", handle: "Must-Be-Unique-String"})
+        .then(function(user) {
+            // user has been created.
+        }).catch(function(error) {
+            // make sure to catch and handle errors.
+            // It is possible to have network or settings errors.
+            // For instance if you do not set a unique handle you will get an error.
+        })
+
+
+Finding and joining a conversation
+----------------------------------
+Most users will want to just find and join a conversation created by an admin in the sportstalk dashboard.
+
+To list conversations, use the `listConversations()` method of the CommentsClient, like so:
+
+.. code-block:: javascript
+
+    const response = commentClient.listsConversations();
+    const conversations = response.conversations; // Array of Conversation objects
+    const cursor = response.cursor; // used for scrolling through long lists of conversations.
+
+
+Powering your UI with this data is up to you, but you might do something like so (in pug template format):
+
+.. code-block:: pug
+
+    h3 Conversations
+    ul
+      each conversation in conversations
+        li= conversation.title
+          span.id= conversation.id
+
+
+To join a conversation, you will need a user, please see the section above about creating a user first.
+Once you have a user, joining a conversation is simple:
+
+.. code-block:: javascript
+
+    async function showJoinConversation() {
+
+        const user = await commentClient.createOrUpdateUser({userid: "definedByYourSystem-MustBeUnique", handle: "Must-Be-Unique-String"})
+        // this will automatically set the user, but you can also set the user manually
+        commentClient.setUser(user);
+
+        const list = await commentClient.listConversations();
+        const conversations =  list.conversations;
+
+        // Let's join the first conversation in the list
+        commentClient.setCurrentConversation(conversations[0]); // you should ensure there are conversations first to avoid a null error
+
+        // You are now able to get a list of recent comments
+        let comments =  await commentClient.getComments();
+
+        // let's make our own comment!
+        const mycomment = await commentClient.comment("This is my comment on this conversation!");
+
+        // let's see the comment in the list
+        comments = await commentClient.getComments(); // my comment will be included unlesss there was an error
+    }
+
+
 Comment Client
------------------
+--------------
 
 Creating a CommentClient
 ~~~~~~~~~~~~~~~~~~~~~~~~
