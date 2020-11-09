@@ -12,8 +12,14 @@ This SDK is used in production successfully and is considered stable.  At the sa
 
     js-sdk
 
-    :caption: Models
-    /chat/models/chat-models
+    :caption: Common Objects
+    /models/common-models
+    :caption: Chat Objects
+    /models/chat-models
+    :caption: Comment Objects
+
+
+
 
 ===================================
 GETTING STARTED: Setting up the SDK

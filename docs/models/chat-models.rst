@@ -1,5 +1,5 @@
 ===========
-Chat Models
+Chat Objects
 ===========
 
 Chat Event
@@ -31,7 +31,7 @@ All new posts and actions are of type ``Event``.
 
 
 EventType
----------
+~~~~~~~~~
 
 Every chat event has an ``EventType`` as part of the response.  A chat event's EventType will be used to select the callback function used to handle the event.
 The following ``EventType`` values are supported:
@@ -55,6 +55,8 @@ The following ``EventType`` values are supported:
         custom="custom"
     }
 
+EventReaction
+~~~~~~~~~~~~~
 
 .. code-block:: javascript
 
@@ -65,7 +67,7 @@ The following ``EventType`` values are supported:
     }
 
 EventModeration Values
-----------------------
+~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: javascript
 
@@ -75,6 +77,16 @@ EventModeration Values
         rejected = "rejected" // Event was moderated and rejected
     }
 
+Report Reasons
+~~~~~~~~~~~~~~
+
+.. code-block:: javascript
+
+    export enum EventModerationState {
+        na = "na", // has not been moderated.
+        approved = "approved", // Event was moderated and approved
+        rejected = "rejected" // Event was moderated and rejected
+    }
 
 
 CustomTypes
