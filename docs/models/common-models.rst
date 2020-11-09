@@ -94,9 +94,13 @@ API responses to User Deletion will wrap a ``UserDeletionResponse``
         kind: Kind.deleteduser
     }
 
+.. _ClientConfig:
+.. _SportsTalkConfig:
+
 
 Configuration Models
 --------------------
+
 
 Client Configuration
 ~~~~~~~~~~~~~~~~~~~~

@@ -55,7 +55,7 @@ You can also use the client in node.
 
 Events Callbacks
 ----------------
-Sportstalk uses callback functions to handle events.  These callbacks are specified with the `EventHandlerConfig`:
+Sportstalk uses callback functions to handle events.  These callbacks are specified with the :ref:`EventHandlerConfig`:
 
 .. code-block:: typescript
 
@@ -202,6 +202,8 @@ To create a user, you can use either the chat or comment clients, or a :ref:`Use
 
 Create or Update a Chat Room
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Creates a :ref:`ChatRoom` is no/unknown ID is passed or a or updates an exisiting :ref:`ChatRoom` if an ID is passed and it exists.
 
 .. code-block:: javascript
 

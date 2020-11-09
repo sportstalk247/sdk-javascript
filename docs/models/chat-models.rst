@@ -143,6 +143,8 @@ A chatroom is where chats take place.  Items with ``?`` after them are optional 
 Chat Configuration Objects
 --------------------------
 
+.. _EventHandlerConfig:
+
 EventHandlerConfig
 ~~~~~~~~~~~~~~~~~~
 This is the configuration object for the ChatClient and EventService.  It provides a set of callback functions that will be triggered when appropriate events are detected.
@@ -227,7 +229,32 @@ Example: if no callback is set for ``onAnnouncement`` then events with the ``ann
 Chat API Result Objects
 -----------------------
 
-.. _chat-room-result:
+.. _ChatRoom:
+
+ChatRoom
+~~~~~~~~
+
+ChatRooms are the context for chat events and realtime conversations.
+
+.. code-block:: javascript
+
+    interface ChatRoom {
+        id?: string, // set by server on creation.
+        name: string, //The name of the room
+        description?: string, // optional room description
+        moderation?: ModerationType, // 'pre' or 'post'
+        slug?: string,// The room slug, migrated to customid
+        customid?: string, // Optional, can be used for linking an ID in another system.
+        enableprofanityfilter?: boolean, //Defaults to true, events in room will have profanity filtered (in English).
+        delaymessageseconds?: number, // Delays messages, used for throttling. Defaults to zero and most of the time that's what you will want.
+        enableactions?: boolean, // Whether or not users can utilize action commands.
+        roomisopen?: boolean, // allows chat
+        maxreports?: number, // defaults to 3. The number of flags it takes to add a comment to the moderation queue.
+        enableenterAndexit?: boolean, // Whether the room allows people to enter.  This is different than being open.  A room that denies entry can still be open and therefore allow chat by existing room members.
+        throttle?: number //(optional) Defaults to 0. This is the number of seconds to delay new incomming messags so that the chat room doesn't scroll messages too fast.
+    }
+
+.. _ChatRoomResult:
 ChatRoomResult
 ~~~~~~~~~~~~~~
 
