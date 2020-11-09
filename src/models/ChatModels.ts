@@ -48,7 +48,7 @@ export interface JoinChatRoomResponse {
  */
 export interface EventHandlerConfig {
     onChatStart?: Function;
-    onNetworkResponse?(response: RestApiResult<any>);
+    onNetworkResponse?(response: any);
     onChatEvent?(event: EventResult), // not mandatory but absolutely should be set in 99% of cases.
     onGoalEvent?(event: EventResult),
     onAdEvent?(event: EventResult),

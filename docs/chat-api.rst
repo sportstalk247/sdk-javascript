@@ -84,7 +84,7 @@ onChatStart()
 ~~~~~~~~~~~~~
 This callback is triggered once whenever ```client.startListeningToEventUpdates()``` is called.  You can use this to remove loading screens, hide advertisements, and so on.
 
-onNetworkResponse(response: eventResult[])
+onNetworkResponse(response: any)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This is called every time there is any network response.  Most of the time you do **NOT** want to use this callback but it can be useful for diagnostic information as it receives raw response data.  The format of this data is currently the result of a REST api call, but this is **not guaranteed**.  Future versions of the sportstalk sdk may use other transsport mechanisms such as websockets and/or firebase messaging.  In this case this callback would receive the raw socket or firebase message data.
 
