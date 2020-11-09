@@ -7,12 +7,13 @@ Getting Started with Chat
 This Sportstalk SDK is meant to power custom chat applications.  Sportstalk does not enforce any restricitons on your UI design, but instead empowers your developers to focus on the user experience without worrying about the underlying chat behavior.
 
 Sportstalk is an EVENT DRIVEN API. When new talk events occur, the SDK will trigger appropriate callbacks, if set.
-At minimum, you will want to set 5 callbacks:
-* onChatStart
-* onChatEvent
-* onPurgeEvent
-* onReaction
-* onAdminCommand
+The only mandatory callback is ```onChatEvent```.  However, at minimum, you will want to set 5 callbacks:
+
+* ```onChatStart```
+* ```onChatEvent```
+* ```onPurgeEvent```
+* ```onReaction```
+* ```onAdminCommand```
 
 See a simple WEB example below.  To use this, you will need to get the web sdk under `/dist/web-sdk.js` or `/dist/web-sdk.min.js`
 
@@ -48,7 +49,7 @@ For use of these events in action, see the demo page: https://www.sportstalk247.
 
 You can also use the client in node.
 
-.. code-block:: javascript
+.. code-block:: typescript
 
     import { ChatClient } from 'sportstalk-sdk'
     const client = ChatClient.init({apiToken:'YourApiKeyHere', appId: 'yourAppId'}, {...EventHandlerConfig});
@@ -81,7 +82,7 @@ Callback function overview
 
 onChatStart()
 ~~~~~~~~~~~~~
-This callback is triggered once whenever 'client.startTalk()' is called.  You can use this to remove loading screens, hide advertisements, and so on.
+This callback is triggered once whenever ```client.startListeningToEventUpdates()``` is called.  You can use this to remove loading screens, hide advertisements, and so on.
 
 onNetworkResponse(response: eventResult[])
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -135,24 +136,6 @@ onNetworkError(error: Error)
 `onNetworkError` will be called if there are issues retrieving messages from the SportsTalk server. It is NOT called if there is an issue sending a specific message.  `onNetworkError` is intended for monitoring background communications to show messages like "Chat may be unavailable, please check your network connectivity".
 
 You can use `onNetworkError` and `onNetworkReponse` to show/hide such message connectivity errors.
-
-The Bare Minimum
-----------------
-The only critical events that you need to handle are `onChatEvent` which will be called for each new chat event, `onAdminCommand` which will handle messages from administrators, `onPurgeEvent` which will be called when purge commands are issued to clear messages that violate content policy.
-
-You will probably also want to use `onChatStart` to show/hide any loading messages.
-
-The easiest way to see how these event works is to see the demo page: https://www.sportstalk247.com/demo.html
-
-# Chat Application Best Practices
-* Do not 'fire and forget' chat messages.  Most chat applications require some level of moderation.  Your UI should make sure to keep track of message metadata such as:
-    * Message ID
-    * User Handle for each message.
-    * User ID for each message.  In the event of moderation or purge events,  your app will need to be able to find and remove purged messages.
-    * Timestamp
-* Use the promises from sendCommand, sendReply, etc, to show/hide some sort of indication that the message is being sent.
-* Make sure you handle errors for sending messages in case of network disruption.   For instance, `client.sendCommand('message').catch(handleErrorInUiFn)`
-
 
 Chat Client Operations
 -------------------
