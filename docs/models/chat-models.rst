@@ -227,7 +227,7 @@ Example: if no callback is set for ``onAnnouncement`` then events with the ``ann
 Chat API Result Objects
 -----------------------
 
-.. _ChatRoomResult:
+.. _chat-room-result:
 ChatRoomResult
 ~~~~~~~~~~~~~~
 
