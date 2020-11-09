@@ -139,12 +139,12 @@ A chatroom is where chats take place.  Items with ``?`` after them are optional 
         throttle?: number //(optional) Defaults to 0. This is the number of seconds to delay new incomming messags so that the chat room doesn't scroll messages too fast.
     }
 
-=====================
-Configuration Objects
-=====================
+
+Chat Configuration Objects
+--------------------------
 
 EventHandlerConfig
-------------------
+~~~~~~~~~~~~~~~~~~
 This is the configuration object for the ChatClient and EventService.  It provides a set of callback functions that will be triggered when appropriate events are detected.
 If no callback is sent, then ``onChatEvent()`` will be called instead.
 
@@ -223,12 +223,12 @@ Example: if no callback is set for ``onAnnouncement`` then events with the ``ann
     }
 
 
-==================
-API Result Objects
-==================
+
+Chat API Result Objects
+-----------------------
 
 ChatRoomResult
---------------
+~~~~~~~~~~~~~~
 
 The Model describing the API result of a created room. The key difference between a ChatRoom and a ChatRoomResult objects will always have an ID, whereas ChatRoom objects do not have this guarantee.
 
@@ -247,7 +247,7 @@ The Model describing the API result of a created room. The key difference betwee
 
 
 JoinChatRoomResponse
---------------------
+~~~~~~~~~~~~~~~~~~~~
 
 This is the response from the JoinRoom API call.
 
@@ -261,7 +261,7 @@ This is the response from the JoinRoom API call.
     }
 
 ChatRoom List Response
-----------------------
+~~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: javascript
 
@@ -274,8 +274,7 @@ ChatRoom List Response
     }
 
 Event List Response
--------------------
-
+~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: javascript
 
@@ -285,7 +284,8 @@ Event List Response
     }
 
 Event Result
-------------
+~~~~~~~~~~~~
+
 An EventResult is created whenever a chat event is accepted by a server, and represents the event model returned by the API.
 
 .. code-block:: javascript
@@ -300,7 +300,7 @@ An EventResult is created whenever a chat event is accepted by a server, and rep
     }
 
 Chat Updates Result
--------------------
+~~~~~~~~~~~~~~~~~~~
 
 This is produced whenever you call ``getEventUpdates()`` or automatically after you have started listening for updates.
 
@@ -318,7 +318,7 @@ This is produced whenever you call ``getEventUpdates()`` or automatically after 
 
 
 Join Room
----------
+~~~~~~~~~
 
 This is wrapped by an ``ApiResult<>`` in the raw REST api.
 
@@ -330,7 +330,7 @@ This is wrapped by an ``ApiResult<>`` in the raw REST api.
     }
 
 Exit Room
----------
+~~~~~~~~~
 
 .. code-block:: javascript
 
@@ -343,7 +343,7 @@ Exit Room
 
 
 Delete Chat Room
-----------------
+~~~~~~~~~~~~~~~~
 
 .. code-block:: typescript
 
@@ -355,7 +355,7 @@ Delete Chat Room
 
 
 Chat Command Response
----------------------
+~~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: typescript
 
@@ -368,7 +368,7 @@ Chat Command Response
     }
 
 Bounce User Response
---------------------
+~~~~~~~~~~~~~~~~~~~~
 
 .. code-block:: typescript
 
