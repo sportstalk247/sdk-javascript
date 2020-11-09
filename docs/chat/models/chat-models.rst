@@ -2,6 +2,29 @@
 Chat Models
 ===========
 
+ChatRoom
+________
+
+A chatroom is where chats take place.  Items with ``?`` after them are optional and defaults will be used if omitted.
+
+.. code-block:: javascript
+
+    export interface ChatRoom {
+        id?: string, // set by server on creation.
+        name:string, //The name of the room
+        description?: string, // optional room description
+        moderation?: ModerationType, // 'pre' or 'post'
+        slug?:string,// The room slug, migrated to customid
+        customid?: string,
+        enableprofanityfilter?: boolean, //Defaults to true, events in room will have profanity filtered (in English).
+        delaymessageseconds?: number, // Delays messages, used for throttling. Defaults to zero and most of the time that's what you will want.
+        enableactions?: boolean, // Whether or not users can utilize action commands.
+        roomisopen?: boolean, // allows chat
+        maxreports?: number, // defaults to 3. The number of flags it takes to add a comment to the moderation queue.
+        enableenterAndexit?: boolean, // Whether the room allows people to enter.  This is different than being open.  A room that denies entry can still be open and therefore allow chat by existing room members.
+        throttle?: number //(optional) Defaults to 0. This is the number of seconds to delay new incomming messags so that the chat room doesn't scroll messages too fast.
+    }
+
 EventType
 ---------
 
@@ -33,13 +56,13 @@ The following ``EventType`` values are supported:
         "goal" = "goal", // custom type
     }
 
+
 .. code-block:: javascript
 
-    export interface JoinChatRoomResponse {
-        user: UserResult,
-        room: ChatRoomResult
-        eventscursor: ChatUpdatesResult
-        previouseventscursor?: string
+    export interface EventReaction {
+        type: Reaction | string,
+        count: number,
+        users: UserResult[]
     }
 
 .. code-block:: javascript
@@ -67,30 +90,16 @@ The following ``EventType`` values are supported:
         onRoomChange?(newRoom?:ChatRoom,oldRoom?:ChatRoom)
     }
 
+
 .. code-block:: javascript
 
-    export interface JoinRoomResponse {
-        room: ChatRoom,
-        user: User
+    export enum EventModerationState {
+        na = "na",
+        approved = "approved",
+        rejected = "rejected"
     }
 
-.. code-block:: typescript
 
-    export interface DeletedChatRoomResponse {
-        kind: Kind.deletedroom,
-        deletedEventsCount: number,
-        room: ChatRoom
-    }
-
-.. code-block:: typescript
-
-    export interface CommandResponse {
-        kind: Kind.chatcommand,
-        op: string,
-        room?: ChatRoomResult,
-        speech?: EventResult
-        action?: any
-    }
 
 .. code-block:: javascript
 
@@ -145,51 +154,21 @@ The following ``EventType`` values are supported:
         side?: string, // A string representation of which 'side' the goal is by.  Usage depends on chat implementation.
     }
 
-.. code-block:: javascript
-
-    /**
-     * The response messsages for a RoomExit action.
-     */
-    export enum ChatRoomExitResult {
-        success = "Success"
-    }
 
 ==================
 API Result Objects
 ==================
 
-
-.. code-block:: javascript
-    /**
-     * Describes a chat room.
-     */
-    export interface ChatRoom {
-        id?: string, // set by server on creation.
-        name:string, //The name of the room
-        description?: string, // optional room description
-        moderation?: ModerationType, // 'pre' or 'post'
-        slug?:string,// The room slug, migrated to customid
-        customid?: string,
-        enableprofanityfilter?: boolean, //Defaults to true, events in room will have profanity filtered (in English).
-        delaymessageseconds?: number, // Delays messages, used for throttling. Defaults to zero and most of the time that's what you will want.
-        enableactions?: boolean, // Whether or not users can utilize action commands.
-        roomisopen?: boolean, // allows chat
-        maxreports?: number, // defaults to 3. The number of flags it takes to add a comment to the moderation queue.
-        enableenterAndexit?: boolean, // Whether the room allows people to enter.  This is different than being open.  A room that denies entry can still be open and therefore allow chat by existing room members.
-        throttle?: number //(optional) Defaults to 0. This is the number of seconds to delay new incomming messags so that the chat room doesn't scroll messages too fast.
-    }
-
 ChatRoomResult
 --------------
 
+The Model describing the API result of a created room. The key difference between a ChatRoom and a ChatRoomResult objects will always have an ID, whereas ChatRoom objects do not have this guarantee.
+
 .. code-block:: javascript
 
-    /**
-     * The Model describing the API result of a created room. The key difference is that RoomResult objects will always have an ID, whereas Room objects do not have this guarantee.
-     */
     export interface ChatRoomResult extends ChatRoom {
         id: string,
-        kind?: Kind.room,  //"chat.room"
+        kind?: Kind.room,  // "chat.room" will always be there but is optional for APIs that require a ChatRoomResult
         ownerid?:string,
         appid?: string,
         bouncedusers?: string[], // will be a list of UserID strings.
@@ -197,6 +176,24 @@ ChatRoomResult
         inroom?:number,
         whenmodified?:string // ISO Date
     }
+
+
+JoinChatRoomResponse
+--------------------
+
+This is the response from the JoinRoom API call.
+
+.. code-block:: javascript
+
+    export interface JoinChatRoomResponse {
+        user: UserResult,
+        room: ChatRoomResult
+        eventscursor: ChatUpdatesResult
+        previouseventscursor?: string
+    }
+
+ChatRoom List Response
+----------------------
 
 .. code-block:: javascript
 
@@ -208,6 +205,9 @@ ChatRoomResult
         rooms: Array<ChatRoomResult>,
     }
 
+Event List Response
+-------------------
+
 .. code-block:: javascript
 
     /**
@@ -218,13 +218,6 @@ ChatRoomResult
         events: Array<EventResult>
     }
 
-.. code-block:: javascript
-
-    export enum EventModerationState {
-        na = "na",
-        approved = "approved",
-        rejected = "rejected"
-    }
 
 .. code-block:: javascript
 
@@ -264,14 +257,6 @@ ChatRoomResult
 
 .. code-block:: javascript
 
-    export interface EventReaction {
-        type: Reaction | string,
-        count: number,
-        users: UserResult[]
-    }
-
-.. code-block:: javascript
-
     /**
      * Result of getting chat updates.
      */
@@ -293,4 +278,38 @@ ChatRoomResult
         kind: Kind.bounce,
         event: EventResult,
         room: ChatRoomResult
+    }
+
+.. code-block:: javascript
+
+    export interface JoinRoomResponse {
+        room: ChatRoom,
+        user: User
+    }
+
+.. code-block:: typescript
+
+    export interface DeletedChatRoomResponse {
+        kind: Kind.deletedroom,
+        deletedEventsCount: number,
+        room: ChatRoom
+    }
+
+.. code-block:: typescript
+
+    export interface CommandResponse {
+        kind: Kind.chatcommand,
+        op: string,
+        room?: ChatRoomResult,
+        speech?: EventResult
+        action?: any
+    }
+
+.. code-block:: javascript
+
+    /**
+     * The response messsages for a RoomExit action.
+     */
+    export enum ChatRoomExitResult {
+        success = "Success"
     }
