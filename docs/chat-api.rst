@@ -86,30 +86,54 @@ onNetworkResponse(response: any)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This is called every time there is any network response.  Most of the time you do **NOT** want to use this callback but it can be useful for diagnostic information as it receives raw response data.  The format of this data is currently the result of a REST api call, but this is **not guaranteed**.  Future versions of the sportstalk sdk may use other transsport mechanisms such as websockets and/or firebase messaging.  In this case this callback would receive the raw socket or firebase message data.
 
-onChatEvent(event: :ref:`EventResult`)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+onChatEvent
+~~~~~~~~~~~
+
+**Parameters:**
+
+* event: :ref:`EventResult`
+
 This is the most critical callback. Each **new** chat event seen by the sdk client instance will be passed to this callback.  It is possible to render the entire chat experience with just this callback, and mosst other callbacks (such as onGoalEvent) are just convenience wrappers for the Sportstalk custom event system.
 
 Please take a loook at the different eventtype keys in `src/models/ChatModels.ts` in interface `EventType`.  Your code should be preparred to accept any of these events and render appropriately.
 
 Your UI solution should accept each chat event and render it.  This callback could also be used to trigger push notifications.
 
-onGoalEvent(event: :ref:`EventResult`)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+onGoalEvent
+~~~~~~~~~~~
+
+**Parameters:**
+
+* event: :ref:`EventResult`
 
 This is a **convenience wrapper** that only works with the built-in SDK `sendGoal`.  These methods make use of the custom event types exposed by the sportstalk REST api and are purely to make creating sports experiences simpler. The REST SportsTalk api does not understand a 'goal' event, but utilizes custom event types.  This call back should **only** be used if you are also using the defaults provided by `client.sendGoal()`.
 **Note that if this callback is registered, these custom goal events will NOT be sent to `onChatEvent`**
 
-onAdEvent(event: :ref:`EventResult`)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+onAdEvent
+~~~~~~~~~
+
+**Parameters:**
+
+* event: :ref:`EventResult`
+
 All the caveats of `onGoalEvent` apply to `onAdEvent`.  These callbacks are just convenience wrappers for the custom event system exposed by the sportstalk REST api to make building typical sports applications easier.
 
-onReply(event: EventResult)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~
+onReply
+~~~~~~~
+
+**Parameters:**
+
+* event: :ref:`EventResult`
+
 If both are set, `onReply` will be called **instead of** `onChatEvent` for reply events.
 
-onReaction(event: EventResult)
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+onReaction
+~~~~~~~~~~
+
+**Parameters:**
+
+* event: :ref:`EventResult`
+
 If both are set, `onReaction` will be called **instead of** `onChatEvent` for reply events.
 
 onPurgeEvent(event: EventResult)
