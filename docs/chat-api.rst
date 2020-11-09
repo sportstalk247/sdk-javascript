@@ -9,11 +9,11 @@ This Sportstalk SDK is meant to power custom chat applications.  Sportstalk does
 Sportstalk is an EVENT DRIVEN API. When new talk events occur, the SDK will trigger appropriate callbacks, if set.
 The only mandatory callback is ```onChatEvent```.  However, at minimum, you will want to set 5 callbacks:
 
-* ```onChatStart```
-* ```onChatEvent```
-* ```onPurgeEvent```
-* ```onReaction```
-* ```onAdminCommand```
+* ``onChatStart``
+* ``onChatEvent``
+* ``onPurgeEvent``
+* ``onReaction``
+* ``onAdminCommand``
 
 See a simple WEB example below.  To use this, you will need to get the web sdk under `/dist/web-sdk.js` or `/dist/web-sdk.min.js`
 
