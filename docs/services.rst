@@ -24,6 +24,8 @@ The Chat and Comment clients are powered by a set of backing services that make 
 Common Services
 ---------------
 
+:: _UserService:
+
 User Service
 ~~~~~~~~~~~~
 
