@@ -185,7 +185,7 @@ Typescript:
 Creating a user
 ~~~~~~~~~~~~~~~
 One of the first things you might need to do in Sportstalk is create a user. Users are shared between chat and commenting in the same application.
-To create a user, you can use either the chat or comment clients, or a :ref:`user-service<UserService>` (advanced).
+To create a user, you can use either the chat or comment clients, or a :ref:`UserService` (advanced).
 
 .. code-block:: javascript
 
