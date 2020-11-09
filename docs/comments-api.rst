@@ -6,15 +6,14 @@ Getting Started
 ---------------
 If you are looking to build a custom conversation, you will the need the `CommentClient`, which you can get by:
 
-Typescript
+**Typescript imports:**
 
-.. code-block:: javascript
+.. code-block:: typescript
 
     import { CommentClient } from 'sportstalk-sdk'
-    const commentClient = CommentClient.create({appId:..., apiToken:...});
+    const commentClient = CommentClient.init({appId:..., apiToken:...});
 
-
- Require
+**Using Require:**
 
 .. code-block:: javascript
 
