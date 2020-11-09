@@ -7,6 +7,7 @@ Global models are object definitions used across Sportstalk services.  For insta
 Lists
 -----
 
+.. _target ListResponse:
 List Response
 ~~~~~~~~~~~~~
 
@@ -38,6 +39,8 @@ User Models
 
  A User is someone able to chat in chatrooms and make comments in conversations.
  Users must be created before they can make comments or chat, and they must choice a chat room before they can participate.
+
+.. _target User:
 
 User
 ~~~~

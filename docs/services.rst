@@ -35,6 +35,15 @@ To instantiate a User Service:
     const sdk = require('sportstalk-sdk');
     const userService = new sdk.services.UserService({appId, apiToken});
 
+Create a User
++++++++++++++
+
+.. code-block:: javascript
+    const sdk = require('sportstalk-sdk');
+    const userService = new sdk.services.UserService({appId, apiToken});
+
+    const user = userService.createOrUpdateUser({ userid: 'user-123415', handle: 'myUserHandle' });
+
 
 Webhook Service
 ~~~~~~~~~~~~~~~

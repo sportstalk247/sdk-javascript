@@ -1,6 +1,6 @@
-========
-Chat API
-========
+===============
+Chat Client API
+===============
 
 Getting Started with Chat
 -------------------------
