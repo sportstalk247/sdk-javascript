@@ -2,28 +2,33 @@
 Chat Models
 ===========
 
-ChatRoom
-________
+Chat Event
+----------
 
-A chatroom is where chats take place.  Items with ``?`` after them are optional and defaults will be used if omitted.
+All new posts and actions are of type ``Event``.
 
 .. code-block:: javascript
 
-    export interface ChatRoom {
-        id?: string, // set by server on creation.
-        name:string, //The name of the room
-        description?: string, // optional room description
-        moderation?: ModerationType, // 'pre' or 'post'
-        slug?:string,// The room slug, migrated to customid
-        customid?: string,
-        enableprofanityfilter?: boolean, //Defaults to true, events in room will have profanity filtered (in English).
-        delaymessageseconds?: number, // Delays messages, used for throttling. Defaults to zero and most of the time that's what you will want.
-        enableactions?: boolean, // Whether or not users can utilize action commands.
-        roomisopen?: boolean, // allows chat
-        maxreports?: number, // defaults to 3. The number of flags it takes to add a comment to the moderation queue.
-        enableenterAndexit?: boolean, // Whether the room allows people to enter.  This is different than being open.  A room that denies entry can still be open and therefore allow chat by existing room members.
-        throttle?: number //(optional) Defaults to 0. This is the number of seconds to delay new incomming messags so that the chat room doesn't scroll messages too fast.
+    export interface Event {
+        roomid: string, // The ID of the room to which the event was sent.
+        added?: string, // ISO 8601 timestamp.  Can be sent to set it, otherwise set by server.
+        ts: number, // a millisecond level timestamp. Used for evaluating relative times between events. Do not rely on this as a true time value, use added.
+        body: string, // Chat text
+        active?: boolean,
+        moderation?: EventModerationState,
+        eventtype: EventType, // speech, purge, etc. Can hold custom types beyond those in the enum. The enum contains only system types.
+        userid: string // the ID of the user who created the event.
+        user: UserResult // the User object who created the event
+        customtype?:string, // a custom type set for the event, or empty string
+        customid?:string, // a custom id for the event, or empty string.
+        custompayload?:object, // a custom payload added to the event, may be stringified JSON
+        replyto?: EventResult | object, // the ID of the event that this event is a reply to
+        reactions?:Array<EventReaction> // the reactions that have happened to this event.
+        shadowban: boolean
+        mutedby: []
+        reports?: Array<ReportReason>
     }
+
 
 EventType
 ---------
@@ -50,12 +55,6 @@ The following ``EventType`` values are supported:
         custom="custom"
     }
 
-.. code-block:: javascript
-
-    export enum CustomEventTypes {
-        "goal" = "goal", // custom type
-    }
-
 
 .. code-block:: javascript
 
@@ -64,6 +63,80 @@ The following ``EventType`` values are supported:
         count: number,
         users: UserResult[]
     }
+
+EventModeration Values
+----------------------
+
+.. code-block:: javascript
+
+    export enum EventModerationState {
+        na = "na", // has not been moderated.
+        approved = "approved", // Event was moderated and approved
+        rejected = "rejected" // Event was moderated and rejected
+    }
+
+
+
+CustomTypes
+-----------
+
+Command Options EventType
+~~~~~~~~~~~~~~~~~~~~~~~~~
+
+Most EventTypes are set by the server. However, you can specify a few as part of the CommandOptions
+
+.. code-block:: javascript
+
+    export enum ChatOptionsEventType {
+        announcement = "announcement",
+        custom = "custom", // indicates use of customEventtype.  Needs to be set to use customttype field
+        ad ="ad"
+    }
+
+
+.. code-block:: javascript
+
+    export enum CustomEventTypes {
+        "goal" = "goal", // custom type
+    }
+
+
+
+
+
+ChatRoom
+________
+
+A chatroom is where chats take place.  Items with ``?`` after them are optional and defaults will be used if omitted.
+
+.. code-block:: javascript
+
+    export interface ChatRoom {
+        id?: string, // set by server on creation.
+        name:string, //The name of the room
+        description?: string, // optional room description
+        moderation?: ModerationType, // 'pre' or 'post'
+        slug?:string,// The room slug, migrated to customid
+        customid?: string,
+        enableprofanityfilter?: boolean, //Defaults to true, events in room will have profanity filtered (in English).
+        delaymessageseconds?: number, // Delays messages, used for throttling. Defaults to zero and most of the time that's what you will want.
+        enableactions?: boolean, // Whether or not users can utilize action commands.
+        roomisopen?: boolean, // allows chat
+        maxreports?: number, // defaults to 3. The number of flags it takes to add a comment to the moderation queue.
+        enableenterAndexit?: boolean, // Whether the room allows people to enter.  This is different than being open.  A room that denies entry can still be open and therefore allow chat by existing room members.
+        throttle?: number //(optional) Defaults to 0. This is the number of seconds to delay new incomming messags so that the chat room doesn't scroll messages too fast.
+    }
+
+=====================
+Configuration Objects
+=====================
+
+EventHandlerConfig
+------------------
+This is the configuration object for the ChatClient and EventService.  It provides a set of callback functions that will be triggered when appropriate events are detected.
+If no callback is sent, then ``onChatEvent()`` will be called instead.
+
+Example: if no callback is set for ``onAnnouncement`` then events with the ``announcement`` EventType will be passed to ``onChatEvent()``;
 
 .. code-block:: javascript
 
@@ -91,23 +164,6 @@ The following ``EventType`` values are supported:
     }
 
 
-.. code-block:: javascript
-
-    export enum EventModerationState {
-        na = "na",
-        approved = "approved",
-        rejected = "rejected"
-    }
-
-
-
-.. code-block:: javascript
-
-    export enum ChatCommandEventType {
-        announcement="announcement",
-        custom="custom", // indicates use of customEventtype.  Needs to be set to use customttype field
-        ad="ad"
-    }
 
 .. code-block:: javascript
 
@@ -219,27 +275,6 @@ Event List Response
     }
 
 
-.. code-block:: javascript
-
-    export interface Event {
-        roomid: string, // The ID of the room to which the event was sent.
-        added?: string, // ISO 8601 timestamp
-        ts: number, // a millisecond level timestamp. Used for evaluating relative times between events. Do not rely on this as a true time value, use added.
-        body: string, // Chat text
-        active?: boolean,
-        moderation?: EventModerationState,
-        eventtype: EventType, // speech, purge, etc. Can hold custom types beyond those in the enum. The enum contains only system types.
-        userid: string // the ID of the user who created the event.
-        user: UserResult // the User object who created the event
-        customtype?:string, // a custom type set for the event, or empty string
-        customid?:string, // a custom id for the event, or empty string.
-        custompayload?:object, // a custom payload added to the event, may be stringified JSON
-        replyto?: EventResult | object, // the ID of the event that this event is a reply to
-        reactions?:Array<EventReaction> // the reactions that have happened to this event.
-        shadowban: boolean
-        mutedby: []
-        reports?: Array<ReportReason>
-    }
 
 .. code-block:: javascript
 

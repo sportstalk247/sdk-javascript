@@ -11,7 +11,7 @@ import {
     CommandResponse,
     ChatRoomExitResult,
     ChatUpdatesResult,
-    ChatRoomListResponse, ChatCommandEventType, BounceUserResult
+    ChatRoomListResponse, ChatOptionsEventType, BounceUserResult
 } from "../models/ChatModels";
 import {DEFAULT_CONFIG} from "./constants/api";
 import {IRoomService, IChatEventService, IChatClient} from "../API/ChatAPI";
@@ -297,7 +297,7 @@ export class ChatClient implements IChatClient {
      * @param options
      */
     sendAnnouncement = (command:string, options?: CommandOptions): Promise<MessageResult<CommandResponse>> => {
-        return this._eventService.executeChatCommand(this._user, command, Object.assign(options || {}, {eventtype: ChatCommandEventType.announcement}))
+        return this._eventService.executeChatCommand(this._user, command, Object.assign(options || {}, {eventtype: ChatOptionsEventType.announcement}))
     }
 
 

@@ -83,7 +83,7 @@ export interface CommandResponse {
     action?: any
 }
 
-export enum ChatCommandEventType {
+export enum ChatOptionsEventType {
     announcement="announcement",
     custom="custom", // indicates use of customEventtype.  Needs to be set to use customttype field
     ad="ad"
@@ -92,7 +92,7 @@ export enum ChatCommandEventType {
  * Chat commands.
  */
 export interface CommandOptions {
-    eventtype?: ChatCommandEventType,
+    eventtype?: ChatOptionsEventType,
     customtype?: string,
     customid?: string,
     replyto?: string,

@@ -3,7 +3,7 @@ import {
     CommandOptions, CommandResponse,
     EventHandlerConfig,
     EventResult,
-    EventType, GoalOptions, ChatRoom, ChatRoomResult, QuoteCommandOptions, CustomEventTypes, ChatCommandEventType
+    EventType, GoalOptions, ChatRoom, ChatRoomResult, QuoteCommandOptions, CustomEventTypes, ChatOptionsEventType
 } from "../../../models/ChatModels";
 import {DEFAULT_CONFIG, DELETE, GET, POST, PUT} from "../../constants/api";
 import {IChatEventService} from "../../../API/ChatAPI";
@@ -471,8 +471,8 @@ export class RestfulChatEventService implements IChatEventService {
     sendAdvertisement = (user: User, options: AdvertisementOptions): Promise<MessageResult<CommandResponse>> => {
         const data = Object.assign({
             command: options.message || "advertisement",
-            eventtype: ChatCommandEventType.custom,
-            customtype: ChatCommandEventType.ad,
+            eventtype: ChatOptionsEventType.custom,
+            customtype: ChatOptionsEventType.ad,
             userid: user.userid,
             custompayload: JSON.stringify(options)
         });
@@ -503,7 +503,7 @@ export class RestfulChatEventService implements IChatEventService {
         }
         const data = Object.assign({
             command: message || 'GOAL!',
-            eventtype: ChatCommandEventType.custom,
+            eventtype: ChatOptionsEventType.custom,
             customtype: CustomEventTypes.goal,
             userid: user.userid,
             custompayload: JSON.stringify(Object.assign(defaultOptions, options))
