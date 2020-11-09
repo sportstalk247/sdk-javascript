@@ -11,6 +11,7 @@ This SDK is used in production successfully and is considered stable.  At the sa
     :maxdepth: 1
 
     js-sdk
+    comments-api
 
     :caption: Common Objects
     /models/common-models
