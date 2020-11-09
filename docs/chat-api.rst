@@ -7,7 +7,7 @@ Getting Started with Chat
 This Sportstalk SDK is meant to power custom chat applications.  Sportstalk does not enforce any restricitons on your UI design, but instead empowers your developers to focus on the user experience without worrying about the underlying chat behavior.
 
 Sportstalk is an EVENT DRIVEN API. When new talk events occur, the SDK will trigger appropriate callbacks, if set.
-The only mandatory callback is ```onChatEvent```.  However, at minimum, you will want to set 5 callbacks:
+The only mandatory callback is :ref:`onChatEvent`.  However, at minimum, you will want to set 5 callbacks:
 
 * ``onChatStart``
 * ``onChatEvent``
@@ -86,12 +86,14 @@ onNetworkResponse(response: any)
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 This is called every time there is any network response.  Most of the time you do **NOT** want to use this callback but it can be useful for diagnostic information as it receives raw response data.  The format of this data is currently the result of a REST api call, but this is **not guaranteed**.  Future versions of the sportstalk sdk may use other transsport mechanisms such as websockets and/or firebase messaging.  In this case this callback would receive the raw socket or firebase message data.
 
+:: _onChatEvent:
+
 onChatEvent
 ~~~~~~~~~~~
 
 **Parameters:**
 
-* event: :ref:`EventResult`
+event: :ref:`EventResult`
 
 This is the most critical callback. Each **new** chat event seen by the sdk client instance will be passed to this callback.  It is possible to render the entire chat experience with just this callback, and mosst other callbacks (such as onGoalEvent) are just convenience wrappers for the Sportstalk custom event system.
 
@@ -104,7 +106,7 @@ onGoalEvent
 
 **Parameters:**
 
-* event: :ref:`EventResult`
+event: :ref:`EventResult`
 
 This is a **convenience wrapper** that only works with the built-in SDK `sendGoal`.  These methods make use of the custom event types exposed by the sportstalk REST api and are purely to make creating sports experiences simpler. The REST SportsTalk api does not understand a 'goal' event, but utilizes custom event types.  This call back should **only** be used if you are also using the defaults provided by `client.sendGoal()`.
 **Note that if this callback is registered, these custom goal events will NOT be sent to `onChatEvent`**
@@ -184,8 +186,8 @@ Typescript:
 
 Creating a user
 ~~~~~~~~~~~~~~~
-One of the first things you might need to do in Sportstalk is create a :ref:`User`. :ref:`User`s are shared between chat and commenting in the same application.
-To create a user, you can use either the chat or comment clients, or a :ref:`UserService` (advanced).
+One of the first things you might need to do in Sportstalk is create a :ref:`User`. :ref:`User` are shared between chat and commenting in the same application.
+To create a user, you can use either the chat or comment clients, or a :ref:`UserService`.
 
 .. code-block:: javascript
 
