@@ -2,8 +2,8 @@
 Chat API
 ========
 
-GETTING STARTED: How to use the SDK
------------------------------------
+Getting Started with Chat
+-------------------------
 This Sportstalk SDK is meant to power custom chat applications.  Sportstalk does not enforce any restricitons on your UI design, but instead empowers your developers to focus on the user experience without worrying about the underlying chat behavior.
 
 Sportstalk is an EVENT DRIVEN API. When new talk events occur, the SDK will trigger appropriate callbacks, if set.
