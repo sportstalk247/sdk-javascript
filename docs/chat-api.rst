@@ -242,6 +242,8 @@ To get the details about a room, use `getRoomDetails()`
         // your room is ready.
      })
 
+Returns a :ref:`ChatRoomResult`
+
 
 By Room Custom ID
 +++++++++++++++++
