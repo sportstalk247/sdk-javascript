@@ -42,10 +42,8 @@ See a simple WEB example below.  To use this, you will need to get the web sdk u
 
     // List rooms, join a room, and then start talking!
     client.listRooms().then(function(list){
-      return client.joinRoom(lisy.rooms[0]);
+      return client.joinRoom(list.rooms[0]);
     }).then(client.startEventUpdates);
-
-For use of these events in action, see the demo page: https://www.sportstalk247.com/demo.html
 
 You can also use the client in node.
 
