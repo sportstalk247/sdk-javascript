@@ -283,6 +283,7 @@ Event List Response
         events: Array<EventResult>
     }
 
+.. _EventResult:
 Event Result
 ~~~~~~~~~~~~
 
