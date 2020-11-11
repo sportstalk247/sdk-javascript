@@ -11,7 +11,7 @@ import {
     CommandResponse,
     ChatRoomExitResult,
     ChatUpdatesResult,
-    ChatRoomListResponse, ChatOptionsEventType, BounceUserResult
+    ChatRoomListResponse, ChatOptionsEventType, BounceUserResult, ShadowBanOptions
 } from "../models/ChatModels";
 import {DEFAULT_CONFIG} from "./constants/api";
 import {IRoomService, IChatEventService, IChatClient} from "../API/ChatAPI";
@@ -400,6 +400,10 @@ export class ChatClient implements IChatClient {
 
     setBanStatus = (user: User | string, isBanned: boolean): Promise<RestApiResult<UserResult>> => {
         return this._userService.setBanStatus(user, isBanned);
+    }
+
+    setShadowBanStatus = (user: User | string, options: ShadowBanOptions): Promise<RestApiResult<UserResult>> => {
+        return this._userService.setShadowBanStatus(user, options.shadowban, options.expiryseconds);
     }
 
     searchUsers = (search: string, type: UserSearchType, limit?:number): Promise<UserListResponse> => {

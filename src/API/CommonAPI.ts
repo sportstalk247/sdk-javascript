@@ -26,6 +26,7 @@ export interface IUserConfigurable {
 
 export interface IUserService extends ISportsTalkConfigurable {
     setBanStatus(user: User | string, isBanned: boolean): Promise<RestApiResult<UserResult>>
+    setShadowBanStatus(user: User | string, isShadowBanned: boolean, expiryseconds?: number): Promise<RestApiResult<UserResult>>
     createOrUpdateUser(user: User): Promise<UserResult>
     searchUsers(search: string, type: UserSearchType, limit?:number): Promise<UserListResponse>
     listUsers(request?: ListRequest): Promise<UserListResponse>

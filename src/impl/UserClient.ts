@@ -28,6 +28,9 @@ export class UserClient implements ISportsTalkConfigurable, IUserService {
         return this._userService.setBanStatus(user, isBanned);
     }
 
+    setShadowBanStatus = (user: User | string, isShadowBanned: boolean, expiryseconds?: number): Promise<RestApiResult<UserResult>> => {
+        return this._userService.setShadowBanStatus(user, isShadowBanned, expiryseconds);
+    }
     createOrUpdateUser = (user: User): Promise<UserResult> => {
         return this._userService.createOrUpdateUser(user);
     }

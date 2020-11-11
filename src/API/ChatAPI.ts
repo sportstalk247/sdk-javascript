@@ -8,7 +8,7 @@ import {
     GoalOptions,
     ChatRoom, ChatRoomExitResult, ChatRoomListResponse,
     ChatRoomResult,
-    JoinChatRoomResponse, BounceUserResult
+    JoinChatRoomResponse, BounceUserResult, ShadowBanOptions
 } from "../models/ChatModels";
 
 import {ISportsTalkConfigurable, IUserConfigurable} from "./CommonAPI";
@@ -105,6 +105,7 @@ export interface IChatClient extends IUserConfigurable, ISportsTalkConfigurable{
     permanetlyDeleteEvent(event: EventResult | string): Promise<MessageResult<null>>
     flagEventLogicallyDeleted(event: EventResult | string): Promise<MessageResult<null>>
     setBanStatus(user: User | string, isBanned: boolean): Promise<RestApiResult<UserResult>>
+    setShadowBanStatus(user: User | string, options: ShadowBanOptions): Promise<RestApiResult<UserResult>>
     createOrUpdateUser(user: User): Promise<UserResult>
     searchUsers(search: string, type: UserSearchType, limit?:number): Promise<UserListResponse>
     listUsers(request?: ListRequest): Promise<UserListResponse>

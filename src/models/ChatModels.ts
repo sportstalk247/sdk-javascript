@@ -155,6 +155,12 @@ export interface ChatRoom {
     throttle?: number //(optional) Defaults to 0. This is the number of seconds to delay new incomming messags so that the chat room doesn't scroll messages too fast.
 }
 
+export interface ShadowBanOptions {
+    shadowban: boolean,
+    expiryseconds?: number,
+    roomid?: string
+}
+
 /**
  * The Model describing the API result of a created room. The key difference is that RoomResult objects will always have an ID, whereas Room objects do not have this guarantee.
  */
