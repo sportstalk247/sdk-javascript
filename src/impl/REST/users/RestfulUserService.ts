@@ -62,7 +62,7 @@ export class RestfulUserService implements IUserService {
 
     /**
      * Bans or unbans a user.  If isBanned = true the user will be banned (global).  This same command with isBanned = false will unban them.
-     * @param user
+     * @param user || userid
      * @param isBanned
      */
     setBanStatus = (user: User | string, isBanned: boolean): Promise<RestApiResult<UserResult>> => {
@@ -74,6 +74,32 @@ export class RestfulUserService implements IUserService {
             url: url,
             headers: this._jsonHeaders,
             data: {banned: ""+isBanned}
+        });
+    }
+
+    /**
+     * Shadowbans (Mutes) a user.  A shadowbanned user's messages will be ignored by the **ChatClient** unless the userid matches the sender.
+     *
+     * @param user
+     * @param isShadowBanned
+     * @param expireseconds
+     */
+    setShadowBanStatus = (user:User | String, isShadowBanned: boolean, expireseconds?: number): Promise<RestApiResult<any>> => {
+        // @ts-ignore
+        const userid = user.userid || user;
+        const url = buildAPI(this._config,`${this._apiExt}/${userid}/shadowban`);
+        const data:any = {
+            shadowban: ""+isShadowBanned
+        }
+        if(expireseconds && isShadowBanned) {
+            data.expireseconds = Math.floor(expireseconds)
+        }
+
+        return stRequest({
+            method: POST,
+            url: url,
+            headers: this._jsonHeaders,
+            data
         });
     }
 

@@ -57,6 +57,47 @@ describe("UserManager", function(){
         })
 
     })
+    describe("ShadowBan", function(){
+        it("Can shadowban the user", done=>{
+            UM.setShadowBanStatus(user, true).then(res=>{
+                user = res.data;
+                expect(user.shadowbanned).to.be.true;
+                done();
+            }).catch(done);
+        })
+        it("Can unshadowban the user", done=>{
+            UM.setShadowBanStatus(user, false).then(res=>{
+                user = res.data;
+                expect(user.shadowbanned).to.be.false;
+                done();
+            }).catch(done)
+        })
+        it("Can shadowban the user with id", done=>{
+            UM.setShadowBanStatus(userid, true).then(res=>{
+                user = res.data;
+                expect(user.shadowbanned).to.be.true;
+                done();
+            }).catch(done);
+        })
+        it("Can unshadowban the user with id", done=>{
+            UM.setShadowBanStatus(userid, false).then(res=>{
+                user = res.data;
+                expect(user.shadowbanned).to.be.false;
+                done();
+            }).catch(done)
+        })
+        it("Can shadowban the user with an expiry time", done=>{
+            UM.setShadowBanStatus(user, true, 90).then(res=>{
+                user = res.data;
+                expect(user.shadowbanned).to.be.true;
+                const date: Date = new Date(user.shadowbanexpires);
+                expect(date).be.greaterThan(new Date());
+            })
+        })
+
+    })
+
+
     describe("Search", function() {
         it("Can search by userid", async()=>{
            const results = await UM.searchUsers(userid, UserSearchType.userid)
