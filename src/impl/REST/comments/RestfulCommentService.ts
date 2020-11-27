@@ -11,7 +11,7 @@ import {
     Comment, CommentListResponse, CommentDeletionResponse,
     CommentRequest,
     Conversation,
-    Vote, RepliesBatchResponse, CommentResponse
+    Vote, RepliesBatchResponse, CommentResult
 } from "../../../models/CommentsModels";
 import {DELETE, GET, POST, PUT} from "../../constants/api";
 import {getUrlEncodedHeaders, getJSONHeaders, buildAPI, formify} from "../../utils";
@@ -111,7 +111,7 @@ export class RestfulCommentService implements ICommentService {
      * @param user
      * @param replyto
      */
-    public publishComment = (conversationId:string , comment: Comment | string, user?: User, replyto?: Comment | string): Promise<CommentResponse> => {
+    public publishComment = (conversationId:string , comment: Comment | string, user?: User, replyto?: Comment | string): Promise<CommentResult> => {
         this._requireConversationId(conversationId);
         // @ts-ignore
         const replyid: Comment | string = replyto || comment.replyto;
@@ -128,7 +128,7 @@ export class RestfulCommentService implements ICommentService {
      * @param comment
      * @private
      */
-    private _makeComment = (conversationId:string, comment: Comment): Promise<CommentResponse> => {
+    private _makeComment = (conversationId:string, comment: Comment): Promise<CommentResult> => {
         const config:AxiosRequestConfig = {
             method: POST,
             url: buildAPI(this._config, `${this._apiExt}/${conversationId}/comments`),
@@ -146,7 +146,7 @@ export class RestfulCommentService implements ICommentService {
      * @param replyTo
      * @private
      */
-    private _makeReply = (conversationId: string, comment: Comment, replyTo: Comment | string): Promise<CommentResponse> => {
+    private _makeReply = (conversationId: string, comment: Comment, replyTo: Comment | string): Promise<CommentResult> => {
         // @ts-ignore
         const replyId = replyTo.id || replyTo || comment.replyto;
         if(!replyId || !(typeof replyId === 'string')) {
@@ -170,7 +170,7 @@ export class RestfulCommentService implements ICommentService {
      * Get a specific comment.
      * @param comment
      */
-    public getComment = ( conversationId: string, comment: Comment | string,): Promise<CommentResponse | null> => {
+    public getComment = ( conversationId: string, comment: Comment | string,): Promise<CommentResult | null> => {
         this._requireConversationId(conversationId);
         const id = getUrlCommentId(comment);
         const config: AxiosRequestConfig = {
@@ -252,7 +252,7 @@ export class RestfulCommentService implements ICommentService {
      * Update a comment
      * @param comment
      */
-    public updateComment = ( conversationId: string, comment: Comment): Promise<CommentResponse> => {
+    public updateComment = ( conversationId: string, comment: Comment): Promise<CommentResult> => {
         this._requireConversationId(conversationId);
         const id = getUrlCommentId(comment);
         return stRequest({
@@ -273,7 +273,7 @@ export class RestfulCommentService implements ICommentService {
      * @param reaction The reaction type.  Currently only "like" is supported and built-in.
      * @param enable Whether the reaction should be toggled on or off, defaults to true.
      */
-    public react = (conversationId: string, comment:Comment | string, user:User, reaction:Reaction,enable = true): Promise<CommentResponse> => {
+    public react = (conversationId: string, comment:Comment | string, user:User, reaction:Reaction,enable = true): Promise<CommentResult> => {
         this._requireConversationId(conversationId);
         this._requireUser(user);
         const id = getUrlCommentId(comment);
@@ -299,7 +299,7 @@ export class RestfulCommentService implements ICommentService {
      * @param user
      * @param vote
      */
-    public vote = ( conversationId: string, comment: Comment, user:User, vote:Vote): Promise<CommentResponse> => {
+    public vote = ( conversationId: string, comment: Comment, user:User, vote:Vote): Promise<CommentResult> => {
         this._requireConversationId(conversationId);
         this._requireUser(user);
         const id = getUrlCommentId(comment);
@@ -323,7 +323,7 @@ export class RestfulCommentService implements ICommentService {
      * @param user
      * @param reporttype
      */
-    public report = ( conversationId: string, comment: Comment, user:User, reporttype: ReportType): Promise<CommentResponse> => {
+    public report = ( conversationId: string, comment: Comment, user:User, reporttype: ReportType): Promise<CommentResult> => {
         this._requireConversationId(conversationId);
         this._requireUser(user)
         const id = getUrlCommentId(comment);

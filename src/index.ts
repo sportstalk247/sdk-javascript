@@ -7,7 +7,8 @@ import {RestfulChatEventService} from "./impl/REST/chat/RestfulChatEventService"
 import {RestfulChatRoomService} from "./impl/REST/chat/RestfulChatRoomService";
 import {RestfulUserService} from "./impl/REST/users/RestfulUserService";
 import * as ChatModels from './models/ChatModels';
-import * as ConversationModels from './models/CommentsModels';
+import * as CommentModels from './models/CommentsModels';
+import { SportsTalkConfig } from './models/CommonModels';
 import * as CommonModels from './models/CommonModels';
 import * as Constants from './impl/constants/api';
 import * as Messages from './impl/constants/messages';
@@ -24,11 +25,13 @@ const Chat = {
     RestfulChatRoomService
 }
 
-const Conversation = {
+
+const Comments = {
     RestfulConversationService,
     RestfulCommentService,
     RestfulCommentModerationService
 }
+
 
 const Users = {
     RestfulUserService,
@@ -40,7 +43,7 @@ const Webhooks = {
 
 const REST ={
     Chat,
-    Conversation,
+    Comments,
     Users,
     Webhooks
 }
@@ -60,6 +63,12 @@ const impl = {
     REST
 }
 
+const Types = {
+    Comments: CommentModels,
+    Chat: ChatModels,
+    Common: CommonModels
+}
+
 export {
     ChatClient,
     CommentClient,
@@ -67,10 +76,10 @@ export {
     services,
     impl,
     ChatModels,
-    ConversationModels,
+    CommentModels,
     CommonModels,
     Constants,
     Errors,
     Messages,
-    API
+    SportsTalkConfig
 }

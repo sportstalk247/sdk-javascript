@@ -1,7 +1,7 @@
 import {ApiHeaders, RestApiResult, ClientConfig} from "../../../models/CommonModels";
 import {AxiosRequestConfig} from "axios";
 import {stRequest} from '../../network';
-import {Comment, CommentListResponse} from "../../../models/CommentsModels";
+import {Comment, CommentListResponse, CommentResult} from "../../../models/CommentsModels";
 import {DEFAULT_CONFIG, GET, POST} from "../../constants/api";
 import {getUrlEncodedHeaders, getJSONHeaders, buildAPI, formify} from "../../utils";
 import {ICommentModerationService} from "../../../API/CommentsAPI";
@@ -71,7 +71,7 @@ export class RestfulCommentModerationService implements ICommentModerationServic
      * Reject a comment, removing it from the comments
      * @param comment
      */
-    rejectComment = (comment: Comment): Promise<Comment> => {
+    rejectComment = (comment: CommentResult): Promise<CommentResult> => {
         const config:AxiosRequestConfig = {
             method: 'POST',
             url: buildAPI(this._config, `${this._apiExt}/${comment.id}/applydecision`),
@@ -83,11 +83,28 @@ export class RestfulCommentModerationService implements ICommentModerationServic
         })
     }
 
+
+    /**
+     * Moderate a comment
+     * @param comment
+     */
+    moderateComment = (comment: CommentResult, approve: boolean): Promise<CommentResult> => {
+        const config:AxiosRequestConfig = {
+            method: 'POST',
+            url: buildAPI(this._config, `${this._apiExt}/${comment.id}/applydecision`),
+            headers: this._apiHeaders,
+            data: formify({approve: approve})
+        }
+        return stRequest(config).then(result => {
+            return result.data
+        })
+    }
+
     /**
      * Approve a comment, allowing it to show in a comments.
      * @param comment
      */
-    approveComment = (comment: Comment): Promise<Comment> => {
+    approveComment = (comment: Comment): Promise<CommentResult> => {
         const config: AxiosRequestConfig = {
             method: POST,
             url: buildAPI(this._config, `${this._apiExt}/${comment.id}/applydecision`),

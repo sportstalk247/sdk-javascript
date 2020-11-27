@@ -7,7 +7,7 @@ import {
     Comment,
     CommentListResponse,
     CommentModeration,
-    CommentResponse,
+    CommentResult,
     Vote
 } from "../../../src/models/CommentsModels";
 import {RestfulCommentService} from "../../../src/impl/REST/comments/RestfulCommentService";

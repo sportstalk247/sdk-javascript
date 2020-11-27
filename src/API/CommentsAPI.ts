@@ -11,7 +11,7 @@ import {
     CommentRequest,
     CommentListResponse,
     User,
-    CommentResponse,
+    CommentResult,
     ConversationRequest,
     ConversationListResponse, SimpleComment, RepliesBatchResponse
 } from "../models/CommentsModels";
@@ -26,13 +26,13 @@ import {
 } from "../models/CommonModels";
 
 export interface ICommentService extends ISportsTalkConfigurable {
-    publishComment(convesationId: string, comment: Comment | SimpleComment | string, user: User, replyto?: Comment | string): Promise<CommentResponse>;
-    getComment(convesationId: string, comment: Comment | string): Promise<CommentResponse | null>;
-    deleteComment(convesationId: string, comment: CommentResponse | string, user: User, final?: boolean): Promise<CommentDeletionResponse>
-    updateComment(convesationId: string, comment: CommentResponse, user: User): Promise<CommentResponse>;
-    vote(convesationId: string, comment: Comment | string, user: User, vote:Vote): Promise<CommentResponse>
-    report(convesationId: string, comment: Comment, user:User, reporttype: ReportType): Promise<CommentResponse>
-    react(convesationId: string, comment:Comment | string, user: User, reaction:Reaction, enable?: boolean): Promise<CommentResponse>;
+    publishComment(convesationId: string, comment: Comment | SimpleComment | string, user: User, replyto?: Comment | string): Promise<CommentResult>;
+    getComment(convesationId: string, comment: Comment | string): Promise<CommentResult | null>;
+    deleteComment(convesationId: string, comment: CommentResult | string, user: User, final?: boolean): Promise<CommentDeletionResponse>
+    updateComment(convesationId: string, comment: CommentResult, user: User): Promise<CommentResult>;
+    vote(convesationId: string, comment: Comment | string, user: User, vote:Vote): Promise<CommentResult>
+    report(convesationId: string, comment: Comment, user:User, reporttype: ReportType): Promise<CommentResult>
+    react(convesationId: string, comment:Comment | string, user: User, reaction:Reaction, enable?: boolean): Promise<CommentResult>;
     getReplies(convesationId: string, comment: Comment | string, request?: CommentRequest): Promise<CommentListResponse>
     listComments(convesationId: string, request?: CommentRequest): Promise<CommentListResponse>
     listRepliesBatch(conversation: Conversation | string, parentids: string[], childlimit?:number): Promise<RepliesBatchResponse>
@@ -54,22 +54,22 @@ export interface ICommentModerationService extends IConfigurable {
 
 export interface ICommentingClient extends ISportsTalkConfigurable, IUserConfigurable   {
     getConfig(): SportsTalkConfig;
-    setConfig(config: SportsTalkConfig, commentManager?: ICommentService, conversationManager?: IConversationService)
+    setConfig(config: SportsTalkConfig, commentManager?: ICommentService, conversationManager?: IConversationService): void
     createConversation (conversation: Conversation, setDefault: boolean): Promise<Conversation>;
     createOrUpdateUser (user: User, setDefault?:boolean): Promise<User>;
     setCurrentConversation(conversation: Conversation | string): Conversation | string;
     getCurrentConversation(): Conversation | string | null | undefined;
     getConversation(conversation: Conversation | string): Promise<Conversation>;
     getConversationByCustomId(conversation: Conversation | string): Promise<ConversationResponse>
-    deleteConversation(conversation: Conversation | string);
+    deleteConversation(conversation: Conversation | string): Promise<ConversationDeletionResponse>;
     publishComment(comment: string | SimpleComment | Comment, replyto?: Comment | string): Promise<Comment>;
     getComment(comment: Comment | string): Promise<Comment | null>;
     deleteComment(comment:Comment | string, final: boolean): Promise<CommentDeletionResponse>;
     updateComment(comment:Comment): Promise<Comment>;
     reactToComment(comment:Comment | string, reaction:Reaction): Promise<Comment>;
-    voteOnComment(comment:Comment | string, vote:Vote);
+    voteOnComment(comment:Comment | string, vote:Vote): Promise<CommentResult>;
     reportComment(comment:Comment | string, reportType: ReportType): Promise<Comment>;
-    getCommentReplies(comment:CommentResponse, request?: CommentRequest): Promise<CommentListResponse>
+    getCommentReplies(comment:CommentResult, request?: CommentRequest): Promise<CommentListResponse>
     listComments(request?: CommentRequest, conversation?: Conversation): Promise<CommentListResponse>
     listConversations(filter?: ConversationRequest): Promise<ConversationListResponse>
     setBanStatus(user: User | string, isBanned: boolean): Promise<RestApiResult<UserResult>>

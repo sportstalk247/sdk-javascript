@@ -30,13 +30,13 @@ export interface Conversation {
 
 export interface CommentListResponse extends ListResponse {
     conversation: Conversation,
-    comments: CommentResponse[]
+    comments: CommentResult[]
 }
 
 export interface CommentReplyList {
     kind: Kind.commentreplygrouplist,
     parentid: string,
-    comments: CommentResponse[]
+    comments: CommentResult[]
 }
 export interface RepliesBatchResponse extends ListResponse {
     kind: Kind.repliesbyparentidlist
@@ -91,7 +91,6 @@ export enum Vote {
 
 export interface ConversationDeletionResponse extends HasConversationID {
     kind: Kind.deletedconversation,
-    conversationid: string,
     userid?: string,
     deletedConversations: number,
     deletedComments: number
@@ -109,7 +108,8 @@ export interface SimpleComment  {
     replyto?: string
 }
 
-export interface CommentResponse extends Comment {
+export interface CommentResult extends Comment {
+    kind: Kind.comment
     id: string
 }
 export interface Comment extends User {

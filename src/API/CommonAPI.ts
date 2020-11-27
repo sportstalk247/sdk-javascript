@@ -20,7 +20,7 @@ export interface IConfigurable {
 }
 
 export interface IUserConfigurable {
-    setUser(user: User);
+    setUser(user: User):void;
     getUser(): User | undefined | null;
 }
 

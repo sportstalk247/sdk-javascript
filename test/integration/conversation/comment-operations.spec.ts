@@ -7,7 +7,7 @@ import {
     Comment,
     CommentListResponse,
     CommentModeration, CommentReplyList,
-    CommentResponse,
+    CommentResult,
     Vote
 } from "../../../src/models/CommentsModels";
 import {RestfulCommentService} from "../../../src/impl/REST/comments/RestfulCommentService";
@@ -70,14 +70,14 @@ describe('Comment Operations', function() {
     });
     describe("Responses", function() {
         let commentary: CommentListResponse;
-        let resp:CommentResponse;
+        let resp:CommentResult;
         it("React to a comment", async ()=>{
             try {
                 const conv = await client2.createConversation(conversation, true)
                 resp = await client2.publishComment("This is my comment")
                 expect(resp.body).to.be.equal("This is my comment");
                 // @ts-ignore
-                const response:CommentResponse = await client.reactToComment(resp, Reaction.like);
+                const response:CommentResult = await client.reactToComment(resp, Reaction.like);
                 expect(response.kind).to.be.equal(Kind.comment);
 
             } catch (e) {
@@ -120,7 +120,7 @@ describe('Comment Operations', function() {
         })
         it("Lets you retrieve specific comments", async ()=>{
             expect(commentary.comments).to.have.length.greaterThan(0);
-            const firstComment:CommentResponse = commentary.comments[0];
+            const firstComment:CommentResult = commentary.comments[0];
             expect(firstComment.id).to.be.not.null;
             expect(firstComment.id).to.be.not.undefined;
             let comment = await client.getComment(firstComment);
