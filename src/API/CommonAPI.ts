@@ -12,11 +12,11 @@ import {
 } from "../models/CommonModels";
 
 export interface ISportsTalkConfigurable {
-    setConfig(config: SportsTalkConfig)
+    setConfig(config: SportsTalkConfig):void
 }
 
 export interface IConfigurable {
-    setConfig(config: ClientConfig)
+    setConfig(config: ClientConfig): void
 }
 
 export interface IUserConfigurable {
