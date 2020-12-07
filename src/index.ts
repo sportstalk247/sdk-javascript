@@ -1,4 +1,3 @@
-import * as API from "./API/ChatAPI";
 import {ChatClient} from './impl/ChatClient';
 import {CommentClient} from './impl/CommentClient';
 import {UserClient} from './impl/UserClient';
@@ -48,7 +47,7 @@ const REST ={
     Webhooks
 }
 
-const services = {
+const Services = {
     ChatModerationService: RestfulChatModerationService,
     ChatEventService: RestfulChatEventService,
     ChatRoomService: RestfulChatRoomService,
@@ -66,20 +65,21 @@ const impl = {
 const Types = {
     Comments: CommentModels,
     Chat: ChatModels,
-    Common: CommonModels
+    Common: CommonModels,
+    Errors,
+    Messages,
 }
 
 export {
     ChatClient,
     CommentClient,
     UserClient,
-    services,
+    Services,
     impl,
     ChatModels,
     CommentModels,
     CommonModels,
     Constants,
-    Errors,
-    Messages,
+    Types,
     SportsTalkConfig
 }
