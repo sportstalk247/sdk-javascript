@@ -267,7 +267,7 @@ export class RestfulChatRoomService implements IRoomService {
         return stRequest(config)
     }
 
-    purgeUserMessagesFromRoom = (room: ChatRoomResult | string, user: User | string): Promise<any> => {
+    purgeUserMessagesFromRoom = (room: ChatRoomResult | string, user: User | string): Promise<RestApiResult<BounceUserResult>> => {
         const roomId = forceObjKeyOrString(room, 'customid');
         const userId = forceObjKeyOrString(user, 'userid');
         const config:AxiosRequestConfig = {
