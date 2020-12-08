@@ -45,15 +45,15 @@ export class RestfulChatEventService implements IChatEventService {
     private _user: User = {userid: "", handle: ""};
 
     // poll management
-    lastTimestamp:number | undefined; // timestamp
-    lastCursor: string | undefined = undefined;
+    private lastTimestamp:number | undefined; // timestamp
+    private lastCursor: string | undefined = undefined;
     // for scrollback
-    oldestCursor: string | undefined = undefined;
-    lastMessageId:string | undefined;
-    firstMessageId:string | undefined;
-    firstMessageTime: number | undefined;
+    private oldestCursor: string | undefined = undefined;
+    private lastMessageId:string | undefined;
+    private firstMessageId:string | undefined;
+    private firstMessageTime: number | undefined;
 
-    _pollFrequency: number =  800;
+    private _pollFrequency: number =  800;
 
     constructor(config: SportsTalkConfig, eventHandlers: EventHandlerConfig = {}) {
         this.setConfig(config);

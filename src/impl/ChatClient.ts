@@ -255,6 +255,16 @@ export class ChatClient implements IChatClient {
     }
 
     /**
+     * Removes all user messages from a room.
+     */
+    purgeUserMessagesFromRoom = (user: UserResult | string): Promise<RestApiResult<null>> => {
+        if(!this._currentRoom) {
+            throw new SettingsError("Requires you to have joined a room to issue purge");
+        }
+        return this._roomService.purgeUserMessagesFromRoom(this._currentRoom, user);
+    }
+
+    /**
      * Gets currently set room.  Returns the current room or undefined if a room has not been joined.
      */
     getCurrentRoom = (): ChatRoomResult | null => {

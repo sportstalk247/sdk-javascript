@@ -97,6 +97,7 @@ export interface IChatClient extends IUserConfigurable, ISportsTalkConfigurable{
     listParticipants(cursor?: string, maxresults?: number): Promise<Array<User>>;
     setEventHandlers(eventHandlers: EventHandlerConfig);
     getEventHandlers():EventHandlerConfig;
+    purgeUserMessagesFromRoom(user: UserResult | string): Promise<RestApiResult<null>>
     createOrUpdateUser(user: User, setDefault?:boolean): Promise<User>
     getUpdates(): Promise<ChatUpdatesResult>,
     updateRoom(room:ChatRoomResult): Promise<ChatRoomResult>
