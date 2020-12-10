@@ -25,6 +25,9 @@ import {
     UserSearchType, UserListResponse, ListRequest, UserDeletionResponse
 } from "../models/CommonModels";
 
+/**
+ * @interface
+ */
 export interface ICommentService extends ISportsTalkConfigurable {
     publishComment(convesationId: string, comment: Comment | SimpleComment | string, user: User, replyto?: Comment | string): Promise<CommentResult>;
     getComment(convesationId: string, comment: Comment | string): Promise<CommentResult | null>;
@@ -38,6 +41,9 @@ export interface ICommentService extends ISportsTalkConfigurable {
     listRepliesBatch(conversation: Conversation | string, parentids: string[], childlimit?:number): Promise<RepliesBatchResponse>
 }
 
+/**
+ * @interface
+ */
 export interface IConversationService extends IConfigurable {
     createConversation(settings: Conversation): Promise<ConversationResponse>;
     getConversation(conversation: Conversation | string): Promise<ConversationResponse>;
@@ -46,12 +52,18 @@ export interface IConversationService extends IConfigurable {
     deleteConversation(conversation: Conversation | string): Promise<ConversationDeletionResponse>
 }
 
+/**
+ * @interface
+ */
 export interface ICommentModerationService extends IConfigurable {
     listCommentsInModerationQueue():  Promise<CommentListResponse>
     rejectComment(comment: Comment): Promise<Comment>
     approveComment(comment: Comment): Promise<Comment>
 }
 
+/**
+ * @interface
+ */
 export interface ICommentingClient extends ISportsTalkConfigurable, IUserConfigurable   {
     getConfig(): SportsTalkConfig;
     setConfig(config: SportsTalkConfig, commentManager?: ICommentService, conversationManager?: IConversationService): void

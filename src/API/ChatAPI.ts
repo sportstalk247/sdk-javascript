@@ -25,6 +25,7 @@ import {
 
 /**
  * Interface for the EventService, which handles chat events and any polling.
+ * @interface
  */
 export interface IChatEventService extends ISportsTalkConfigurable, IUserConfigurable  {
     startEventUpdates(),
@@ -53,6 +54,7 @@ export interface IChatEventService extends ISportsTalkConfigurable, IUserConfigu
 
 /**
  * Interface for room management
+ * @interface
  */
 export interface IRoomService extends ISportsTalkConfigurable {
     /**
@@ -124,6 +126,7 @@ export interface IRoomService extends ISportsTalkConfigurable {
  * Interface for ChatClient.
  *
  * For most user-facing chat implementations, this is the only class you need.
+ * @interface
  */
 export interface IChatClient extends IUserConfigurable, ISportsTalkConfigurable{
     executeChatCommand(command: string, options?: CommandOptions):  Promise<MessageResult<null | CommandResponse>>
@@ -168,6 +171,7 @@ export interface IChatClient extends IUserConfigurable, ISportsTalkConfigurable{
 
 /**
  * Interface for Chat Moderation Services.
+ * @interface
  */
 export interface IChatModerationService extends ISportsTalkConfigurable {
     listMessagesInModerationQueue(): Promise<EventListResponse>

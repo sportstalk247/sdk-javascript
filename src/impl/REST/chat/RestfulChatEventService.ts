@@ -28,6 +28,7 @@ const INVALID_POLL_FREQUENCY = "Invalid poll _pollFrequency.  Must be between 25
  *
  * NOTE: All operations can throw errors if there are network or server issues.
  * You should ensure that ALL operations that return promises have a catch block or handle errors in some way.
+ * @class
  */
 export class RestfulChatEventService implements IChatEventService {
     private _config: SportsTalkConfig = {appId: ""};

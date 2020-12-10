@@ -36,6 +36,7 @@ import {IUserService} from "../API/CommonAPI";
  *
  * NOTE: All operations can throw errors if there are network or server issues.
  * You should ensure that ALL operations that return promises have a catch block or handle errors in some way.
+ * @class
  */
 export class ChatClient implements IChatClient {
 
@@ -311,7 +312,7 @@ export class ChatClient implements IChatClient {
         this._eventService.setCurrentRoom(room);
     }
 
-    getRoomDetails = (room:ChatRoomResult | string): Promise<ChatRoomResult> => {
+    getRoomDetails = (room:ChatRoomResult | string): Promise<ChatRoomResult | null> => {
        return this._roomService.getRoomDetails(room);
     }
 
@@ -319,7 +320,7 @@ export class ChatClient implements IChatClient {
      * Returns the ChatRoomResult for a given id.
      * @param room
      */
-    getRoomDetailsByCustomId = (room: ChatRoomResult | string): Promise<ChatRoomResult> => {
+    getRoomDetailsByCustomId = (room: ChatRoomResult | string): Promise<ChatRoomResult | null> => {
         return this._roomService.getRoomDetailsByCustomId(room);
     }
 

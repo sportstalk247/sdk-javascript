@@ -8,6 +8,7 @@ import {AxiosRequestConfig} from "axios";
 
 /**
  * This class is for moderating chat events.  Most clients will not need this unless you are building a custom moderation UI.
+ * @class
  */
 export class RestfulChatModerationService implements IChatModerationService {
 

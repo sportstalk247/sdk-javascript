@@ -12,6 +12,10 @@ import {ISportsTalkConfigurable, IUserService} from "../API/CommonAPI";
 import {RestfulUserService} from "./REST/users/RestfulUserService";
 import {DEFAULT_CONFIG} from "./constants/api";
 
+/**
+ * A class used for managing users.  Typically used by custom management dashboards.
+ * @class
+ */
 export class UserClient implements ISportsTalkConfigurable, IUserService {
 
     // Configuration settings

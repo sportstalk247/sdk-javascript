@@ -11,19 +11,31 @@ import {
     ListRequest, UserListResponse, WebhookListResponse, UserDeletionResponse
 } from "../models/CommonModels";
 
+/**
+ * @interface
+ */
 export interface ISportsTalkConfigurable {
     setConfig(config: SportsTalkConfig):void
 }
 
+/**
+ * @interface
+ */
 export interface IConfigurable {
     setConfig(config: ClientConfig): void
 }
 
+/**
+ * @interface
+ */
 export interface IUserConfigurable {
     setUser(user: User):void;
     getUser(): User | undefined | null;
 }
 
+/**
+ * @interface
+ */
 export interface IUserService extends ISportsTalkConfigurable {
     setBanStatus(user: User | string, isBanned: boolean): Promise<RestApiResult<UserResult>>
     setShadowBanStatus(user: User | string, isShadowBanned: boolean, expiryseconds?: number): Promise<RestApiResult<UserResult>>
@@ -34,6 +46,9 @@ export interface IUserService extends ISportsTalkConfigurable {
     getUserDetails(user: User | string): Promise<UserResult>
 }
 
+/**
+ * @interface
+ */
 export interface IWebhookService extends ISportsTalkConfigurable {
     listWebhooks(): Promise<WebhookListResponse>
     createWebhook(hook: Webhook): Promise<Webhook>;
