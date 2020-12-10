@@ -9,7 +9,8 @@ import {
     User,
     UserResult,
     ListRequest,
-    ListResponse, UserListResponse, UserDeletionResponse
+    UserListResponse,
+    UserDeletionResponse
 } from "../../../models/CommonModels";
 import {IUserService} from "../../../API/CommonAPI";
 
@@ -39,11 +40,13 @@ export class RestfulUserService implements IUserService {
     }
 
     /**
-     * UserResult Management
+     * User Management
      */
+
     /**
      * If the user exists, updates the user. Otherwise creates a new user.
-     * @param user a UserResult model.  The values of 'banned', 'handlelowercase' and 'kind' are ignored.
+     * @return user a User
+     * @param user a User model.  The values of 'banned', 'handlelowercase' and 'kind' are ignored.
      */
     createOrUpdateUser = (user: User): Promise<UserResult> => {
         const config:AxiosRequestConfig = {
@@ -150,6 +153,10 @@ export class RestfulUserService implements IUserService {
         return stRequest(config).then(response=>response.data);
     }
 
+    /**
+     * Returns a list of users.  You can provide a ListRequest object to customize the query.
+     * @param request a ListRequest
+     */
     listUsers = (request?: ListRequest): Promise<UserListResponse> => {
         let query = "?";
         if(request) {
@@ -165,6 +172,10 @@ export class RestfulUserService implements IUserService {
         });
     }
 
+    /**
+     * Returns a user.
+     * @param user either a UserResult or a string representing a userid.  Typically used when you only have the userid.
+     */
     getUserDetails(user: User | string): Promise<UserResult> {
         const id = forceObjKeyOrString(user, 'userid');
         const config:AxiosRequestConfig = {
