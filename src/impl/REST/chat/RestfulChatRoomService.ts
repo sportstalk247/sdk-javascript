@@ -247,7 +247,7 @@ export class RestfulChatRoomService implements IRoomService {
         })
     }
 
-    getRoomDetails = (room:ChatRoomResult | string): Promise<ChatRoomResult> => {
+    getRoomDetails = (room:ChatRoomResult | string): Promise<ChatRoomResult | null> => {
         const roomId = forceObjKeyOrString(room);
         const config:AxiosRequestConfig = {
             method: GET,
@@ -257,7 +257,7 @@ export class RestfulChatRoomService implements IRoomService {
         return stRequest(config)
     }
 
-    getRoomDetailsByCustomId = (room: ChatRoomResult | string): Promise<ChatRoomResult> => {
+    getRoomDetailsByCustomId = (room: ChatRoomResult | string): Promise<ChatRoomResult | null> => {
         const roomId = forceObjKeyOrString(room, 'customid');
         const config:AxiosRequestConfig = {
             method: GET,

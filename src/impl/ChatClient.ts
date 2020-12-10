@@ -30,7 +30,7 @@ import {
 import {MISSING_ROOM, MUST_SET_USER} from "./constants/messages";
 import {IUserService} from "../API/CommonAPI";
 
-/**
+/** @class ChatClient provides an interface to chat applications.
  * The ChatClient is the primary class you will want to use if you are creating a chat application.
  * Common chat operations are abstracted through this class.
  *
@@ -39,24 +39,52 @@ import {IUserService} from "../API/CommonAPI";
  */
 export class ChatClient implements IChatClient {
 
-    // Configuration settings
+    /**
+     * Holds the configuration for the ChatClient and Backing services.
+     * @private
+     */
     private _config: SportsTalkConfig = {appId: ""};
-    // User
+    /**
+     * Holds the current user for the client.
+     * @private
+     */
     private _user: User = {userid: "", handle: ""};
 
-    // Room state tracking
+    /**
+     * Holds the currently active chat room being observed by the client.
+     * A client can observe one room at a time.
+     * @private
+     */
     private _currentRoom: ChatRoomResult;
 
-    // Default goal image URL for sending goal events
+    /**
+     * Convenience holder for a goal image for the goal API
+     * @private
+     */
     private _defaultGoalImage: string | undefined;
 
-    // These hold the services that APIs are delegated through
+    /**
+     * Holds an event service used by the ChatClient
+     * @private
+     */
     private _eventService: IChatEventService;
+
+    /**
+     * Holds the RoomService used by the ChatClient
+     * @private
+     */
+
     private _roomService: IRoomService;
+    /**
+     * Holds the UserService used by the ChatClient
+     * @private
+     */
     private _userService: IUserService;
 
-    // A debug method for dumping the entire object tree if needed.
-    getDebug = () => {
+    /**
+     * Debugging method to grab the internal state and help debug.
+     */
+    _getDebug = () => {
         return JSON.stringify(this);
     }
 
@@ -106,6 +134,7 @@ export class ChatClient implements IChatClient {
     /**
      * Sets the default goal image
      * @param url a full URL, e.g. https://yourserver.com/some/image/url.png
+     * @return string The url that was set for the goal image.
      */
     setDefaultGoalImage = (url: string):string => {
         this._defaultGoalImage = url;
@@ -121,14 +150,15 @@ export class ChatClient implements IChatClient {
     }
 
     /**
-     * Gets the current event handlers
+     * Gets the event handlers
+     * @return eventsHandlerconfig The configuration object for event handler functions.
      */
     getEventHandlers = ():EventHandlerConfig => {
         return this._eventService.getEventHandlers();
     }
 
     /**
-     * Get the current event service
+     * @return IChatEventService The backing event service.
      */
     getEventService = ():IChatEventService => {
         return this._eventService;
@@ -136,6 +166,7 @@ export class ChatClient implements IChatClient {
 
     /**
      * Get the current room service.
+     * @return IRoomService
      */
     getRoomService = ():IRoomService => {
         return this._roomService;
@@ -284,6 +315,10 @@ export class ChatClient implements IChatClient {
        return this._roomService.getRoomDetails(room);
     }
 
+    /**
+     * Returns the ChatRoomResult for a given id.
+     * @param room
+     */
     getRoomDetailsByCustomId = (room: ChatRoomResult | string): Promise<ChatRoomResult> => {
         return this._roomService.getRoomDetailsByCustomId(room);
     }
@@ -321,6 +356,12 @@ export class ChatClient implements IChatClient {
         return this._eventService.sendQuotedReply(this._user, message, replyto, options);
     }
 
+    /**
+     * Reply to an event
+     * @param message the text that will make up the reply
+     * @param replyto the Event that is being replied to or the event ID as a string
+     * @param options custom options, will depend on your chat implementation
+     */
     sendThreadedReply =(message: string, replyto: EventResult | string, options?: CommandOptions): Promise<MessageResult<CommandResponse | null>> => {
         return this._eventService.sendThreadedReply(this._user, message, replyto, options);
     }
@@ -440,7 +481,16 @@ export class ChatClient implements IChatClient {
         return false;
     }
 
+    /**
+     * Checks if a message was reacted to by the current user.
+     * @param event The event to evaluate.
+     * @param reaction true or false.  Returns false if no user set.
+     */
     messageIsReactedTo = (event: EventResult, reaction:Reaction | string): Boolean => {
+        if(!this._user || !this._user.userid) {
+            return false;
+        }
+
         if(event && event.reactions && event.reactions.length) {
             const found = event.reactions.find(report=>report.type === reaction);
             if(found!==undefined) {
@@ -451,15 +501,33 @@ export class ChatClient implements IChatClient {
         return false;
     }
 
+    /**
+     * Lists events older than a given cursor.
+     * @param cursor
+     * @param limit
+     */
     listPreviousEvents = (cursor:string, limit:number=100):Promise<ChatUpdatesResult> => {
         return this._eventService.listPreviousEvents(cursor, limit);
     }
-
-    bounceUser = async (user: User | string, message: string): Promise<BounceUserResult> => {
+    /**
+     * Bounces a user from a room, removing from room and banning them.
+     *
+     * @param user a UserResult (with id) or a string representing the userid
+     * @param message the bounce reason.
+     * @return BounceUserResult the result of the command from the server.
+     */
+    bounceUser = async (user: UserResult | string, message: string): Promise<BounceUserResult> => {
         const bounce: RestApiResult<BounceUserResult> = await this._roomService.bounceUserFromRoom( this._currentRoom , user, message);
         return bounce.data;
     }
-    unbounceUser = async (user: User | string, message: string): Promise<BounceUserResult> => {
+    /**
+     * Removes a user from the bounce list if they were bounced before. Allows them to rejoin chat.
+     *
+     * @param user a UserResult (with id) or a string representing the userid
+     * @param message the bounce reason.
+     * @return BounceUserResult the result of the command from the server.
+     */
+    unbounceUser = async (user: UserResult | string, message: string): Promise<BounceUserResult> => {
         const bounce: RestApiResult<BounceUserResult> = await this._roomService.unbounceUserFromRoom( this._currentRoom , user, message);
         return bounce.data;
     }

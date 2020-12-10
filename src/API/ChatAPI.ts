@@ -55,14 +55,61 @@ export interface IChatEventService extends ISportsTalkConfigurable, IUserConfigu
  * Interface for room management
  */
 export interface IRoomService extends ISportsTalkConfigurable {
+    /**
+     * Lists available rooms for an app
+     */
     listRooms(): Promise<ChatRoomListResponse>;
-    getRoomDetails(room:ChatRoomResult | string): Promise<ChatRoomResult>
-    getRoomDetailsByCustomId(room:ChatRoomResult | string): Promise<ChatRoomResult>
+
+    /**
+     * Gets room details
+     * @param room a ChatRoomResult or a string which represents roomID.
+     * @returns the ChatRoomResult or null, if no room found.
+     */
+    getRoomDetails(room:ChatRoomResult | string): Promise<ChatRoomResult | null>
+
+    /**
+     * Gets room details
+     * @param room a ChatRoomResult or a string which represents customid.
+     * @returns the ChatRoomResult or null, if no room found.  If there is no customid set on the ChatRoomResult object, this will return null.
+     */
+    getRoomDetailsByCustomId(room:ChatRoomResult | string): Promise<ChatRoomResult | null>
+
+    /**
+     *
+     * @param id
+     */
     deleteRoom(id: string | ChatRoom): Promise<DeletedChatRoomResponse>
+
+    /**
+     * Creates a room.  Will throw an error on failure.
+     * @param room the ChatRoomResult representing the object on the server
+     */
     createRoom(room: ChatRoom): Promise<ChatRoomResult>
+
+    /**
+     * Will update the room with new values.
+     * @param room
+     */
     updateRoom(room:ChatRoomResult): Promise<ChatRoomResult>
+
+    /**
+     * Will set a room to be in the "closed" state.
+     * @param room
+     */
     closeRoom(room:ChatRoomResult | string): Promise<ChatRoomResult>
+
+    /**
+     * Will set a room to be in the "open" state.
+     * @param room
+     */
     openRoom(room:ChatRoomResult | string): Promise<ChatRoomResult>
+
+    /**
+     * Will remove a user from a room and prevent them from returning
+     * @param room the room
+     * @param user the user to bounce from the room
+     * @param message A message giving an explanation.
+     */
     bounceUserFromRoom(room: ChatRoomResult | string, user: UserResult | string, message?: string): Promise<RestApiResult<BounceUserResult>>
     purgeUserMessagesFromRoom(room: ChatRoomResult | string, user: User | string): Promise<RestApiResult<any>>
     unbounceUserFromRoom(room: ChatRoomResult | string, user: UserResult | string, message?: string): Promise<RestApiResult<BounceUserResult>>

@@ -46,7 +46,6 @@ Create a User
 
     const user = userService.createOrUpdateUser({ userid: 'user-123415', handle: 'myUserHandle' });
 
-
 Webhook Service
 ~~~~~~~~~~~~~~~
 The webhook service governs the creation and management of webhooks.  The Chat and Comment clients do not provide access to this functionality.
@@ -55,7 +54,7 @@ To instantiate the Webhook service:
 .. code-block:: javascript
 
     const sdk = require('sportstalk-sdk');
-    const service = new sdk.services.WebhookService({appId, apiToken});
+    const service = new sdk.Services.WebhookService({appId, apiToken});
     const hooks =  await service.listWebhooks()
 
 
@@ -65,7 +64,7 @@ Create a new webhook
 .. code-block:: javascript
 
     const sdk = require('sportstalk-sdk');
-    const service = new sdk.services.WebhookService({appId, apiToken});
+    const service = new sdk.Services.WebhookService({appId, apiToken});
 
     const newHook = await service.createWebhook({
         label: 'A user friendly label',
@@ -83,10 +82,12 @@ Delete a webhook
 .. code-block:: javascript
 
     const sdk = require('sportstalk-sdk');
-    const service = new sdk.services.WebhookService({appid, apitoken});
+    const service = new sdk.Services.WebhookService({appid, apitoken});
 
     const newHook = await service.deleteWebhook('id-of-previously-created-webhook');
     // if successful your hook was created.
+
+
 
 
 Update a webhook
@@ -95,7 +96,7 @@ Update a webhook
 .. code-block:: javascript
 
     const sdk = require('sportstalk-sdk');
-    const service = new sdk.services.WebhookService({appId: 'your-app-id', apiToken: 'your-api-token'});
+    const service = new sdk.Services.WebhookService({appId: 'your-app-id', apiToken: 'your-api-token'});
     async function updateWebhookExample() {
         const newHook = await service.updateWebhook({
                 id: 'id-of-previously-crated-hook',
@@ -124,7 +125,7 @@ To create a ChatEventService:
 .. code-block:: javascript
 
     const sdk = require('sportstalk-sdk');
-    const service = new sdk.services.ChatEventService({appId: 'your-app-id', apiToken: 'your-api-token'});
+    const service = new sdk.Services.ChatEventService({appId: 'your-app-id', apiToken: 'your-api-token'});
 
     async function eventServiceExample() {
         // Argument is a Room object with an ID that has been created.  See the RoomService
@@ -145,7 +146,7 @@ To create a RoomService:
 .. code-block:: javascript
 
     const sdk = require('sportstalk-sdk');
-    const service = new sdk.services.ChatRoomService({appId: 'your-app-id', apiToken: 'your-api-token'});
+    const service = new sdk.Services.ChatRoomService({appId: 'your-app-id', apiToken: 'your-api-token'});
     async function listRoomsExample() {
         const chatRooms =  await service.listRooms()
     }
@@ -156,7 +157,7 @@ Creating a chat room
 .. code-block:: javascript
 
     const sdk = require('sportstalk-sdk');
-    const service = new sdk.services.ChatRoomService({appId: 'your-app-id', apiToken: 'your-api-token'});
+    const service = new sdk.Services.ChatRoomService({appId: 'your-app-id', apiToken: 'your-api-token'});
     async function createRoomExample() {
         const chatRoom =  await service.createRoom({
             name: "Room name",
@@ -181,7 +182,7 @@ You can close a room by ID.
 
 .. code-block:: javascript
 
-    const service = new sdk.services.ChatRoomService({appId: 'your-app-id', apiToken: 'your-api-token'});({appId, apiToken});
+    const service = new sdk.Services.ChatRoomService({appId: 'your-app-id', apiToken: 'your-api-token'});({appId, apiToken});
     const sdk = require('sportstalk-sdk');
     async function closeRoomExample() {
         const chatRoom =  await service.closeRoom('roomid');
@@ -196,7 +197,7 @@ You can close a room by ID.
 .. code-block:: javascript
 
     const sdk = require('sportstalk-sdk');
-    const service = new sdk.services.ChatRoomService({appId: 'your-app-id', apiToken: 'your-api-token'});
+    const service = new sdk.Services.ChatRoomService({appId: 'your-app-id', apiToken: 'your-api-token'});
     async function openRoomExample() {
         const chatRoom =  await service.openRoom('roomid');
     }
@@ -212,7 +213,7 @@ If you are done with a room, you can delete it.
 .. code-block:: javascript
 
     const sdk = require('sportstalk-sdk');
-    const service = new sdk.services.ChatRoomService({appId: 'your-app-id', apiToken: 'your-api-token'});
+    const service = new sdk.Services.ChatRoomService({appId: 'your-app-id', apiToken: 'your-api-token'});
     async function deleteRoomExample() {
         const chatRoom =  await service.deleteRoom('roomid');
     }
@@ -225,7 +226,7 @@ To instantiate the Chat Moderation service and get the moderation queue:
 .. code-block:: javascript
 
     const sdk = require('sportstalk-sdk');
-    const service = new sdk.services.ChatModerationService({appId: 'your-app-id', apiToken: 'your-api-token'});
+    const service = new sdk.Services.ChatModerationService({appId: 'your-app-id', apiToken: 'your-api-token'});
     async function moderationExample() {
         const queue =  await service.getModerationQueue();
         // queue has events awaiting moderation
@@ -238,7 +239,7 @@ Approving a Chat Event
 .. code-block:: javascript
 
     const sdk = require('sportstalk-sdk');
-    const service = new sdk.services.ChatModerationService({appId: 'your-app-id', apiToken: 'your-api-token'});
+    const service = new sdk.Services.ChatModerationService({appId: 'your-app-id', apiToken: 'your-api-token'});
     async function moderationApproveExample() {
         const queue =  await service.getModerationQueue();
         const event = queue.events[0]; // this assumes there is at least one event.
@@ -252,7 +253,7 @@ Reject a Chat Event
 .. code-block:: javascript
 
     const sdk = require('sportstalk-sdk');
-    const service = new sdk.services.ChatModerationService({appId: 'your-app-id', apiToken: 'your-api-token'});
+    const service = new sdk.Services.ChatModerationService({appId: 'your-app-id', apiToken: 'your-api-token'});
     async function moderationApproveExample() {
         const queue =  await service.getModerationQueue();
         const event = queue.events[0]; // this assumes there is at least one event.
@@ -275,7 +276,7 @@ To create a ConversationService do the following:
 .. code-block:: javascript
 
     const sdk = require('sportstalk-sdk');
-    const service = new sdk.services.ConversationService({appId: 'your-app-id', apiToken: 'your-api-token'});
+    const service = new sdk.Services.ConversationService({appId: 'your-app-id', apiToken: 'your-api-token'});
 
 
 Create a new conversation
@@ -284,7 +285,7 @@ Create a new conversation
 .. code-block:: javascript
 
     const sdk = require('sportstalk-sdk');
-    const service = new sdk.services.ConversationService({appId: 'your-app-id', apiToken: 'your-api-token'});
+    const service = new sdk.Services.ConversationService({appId: 'your-app-id', apiToken: 'your-api-token'});
     async function createConversationServiceExample() {
         const conversation =  await service.createConversation({
              conversationid: "a-unique-id-you-create",
@@ -300,7 +301,7 @@ Delete a conversation
 .. code-block:: javascript
 
     const sdk = require('sportstalk-sdk');
-    const service = new sdk.services.ConversationService({appId: 'your-app-id', apiToken: 'your-api-token'});
+    const service = new sdk.Services.ConversationService({appId: 'your-app-id', apiToken: 'your-api-token'});
     async function deleteConversationServiceExample() {
         const deletionResponse =  await service.deleteConversation("a-unique-id-you-create"});
     }
@@ -314,7 +315,7 @@ You can use the service to update a conversation you've already created by passi
 .. code-block:: javascript
 
     const sdk = require('sportstalk-sdk');
-    const service = new sdk.services.ConversationService({appId: 'your-app-id', apiToken: 'your-api-token'});
+    const service = new sdk.Services.ConversationService({appId: 'your-app-id', apiToken: 'your-api-token'});
     async function updateConversationServiceExample() {
         const conversation =  await service.createConversation({
              conversationid: "your-unique-id",
@@ -330,7 +331,7 @@ You can list all the available conversations for your app.
 .. code-block:: javascript
 
     const sdk = require('sportstalk-sdk');
-    const service = new sdk.services.ConversationService({appId: 'your-app-id', apiToken: 'your-api-token'});
+    const service = new sdk.Services.ConversationService({appId: 'your-app-id', apiToken: 'your-api-token'});
     async function updateConversationServiceExample() {
         const listResponse =  await service.listConversations(); // contains the list of conversations and a cursor.
         const conversationArray = listresponse.conversations; // conversation array is now an object of type Conversation[]
@@ -346,7 +347,7 @@ To create a CommentService do the following:
 .. code-block:: javascript
 
     const sdk = require('sportstalk-sdk');
-    const service = new sdk.services.CommentService({appId: 'your-app-id', apiToken: 'your-api-token'});
+    const service = new sdk.Services.CommentService({appId: 'your-app-id', apiToken: 'your-api-token'});
     service.setConversation({id: 'yourConverationId'})
 
 
@@ -356,7 +357,7 @@ Create a comment
 .. code-block:: javascript
 
     const sdk = require('sportstalk-sdk');
-    const service = new sdk.services.CommentService({appId: 'your-app-id', apiToken: 'your-api-token'});
+    const service = new sdk.Services.CommentService({appId: 'your-app-id', apiToken: 'your-api-token'});
     service.setConversation({id: 'yourConverationId'})
     async function createCommentExample() {
         const user = {userid:"a-user-id", handle:"a-user-handle"};
@@ -370,7 +371,7 @@ Delete a commment
 .. code-block:: javascript
 
     const sdk = require('sportstalk-sdk');
-    const service = new sdk.services.CommentService({appId: 'your-app-id', apiToken: 'your-api-token'});
+    const service = new sdk.Services.CommentService({appId: 'your-app-id', apiToken: 'your-api-token'});
     service.setConversation({id: 'yourConverationId'})
     async function deleteCommentExample() {
         const user = {userid:"a-user-id", handle:"a-user-handle"};
@@ -388,7 +389,7 @@ To create a CommentModerationService do the following:
 .. code-block:: javascript
 
     const sdk = require('sportstalk-sdk');
-    const service = new sdk.services.CommentModerationService({appId: 'your-app-id', apiToken: 'your-api-token'});
+    const service = new sdk.Services.CommentModerationService({appId: 'your-app-id', apiToken: 'your-api-token'});
     async function getCommentModerationQueueExample() {
         const queue = service.listCommentsInModerationQueue();
     }
@@ -401,7 +402,7 @@ Approving a comment makes it available to users in the conversation.
 .. code-block:: javascript
 
     const sdk = require('sportstalk-sdk');
-    const service = new sdk.services.CommentModerationService({appId: 'your-app-id', apiToken: 'your-api-token'});
+    const service = new sdk.Services.CommentModerationService({appId: 'your-app-id', apiToken: 'your-api-token'});
     async function approveCommentExample() {
         const queue = service.listCommentsInModerationQueue();
         const queuedComment = queue.comments[0]; // Assumes that the list has at least one comment in it.
@@ -417,7 +418,7 @@ Rejecting a comment makes it unavailable to users in the conversation.
 .. code-block:: javascript
 
     const sdk = require('sportstalk-sdk');
-    const service = new sdk.services.CommentModerationService({appId: 'your-app-id', apiToken: 'your-api-token'});
+    const service = new sdk.Services.CommentModerationService({appId: 'your-app-id', apiToken: 'your-api-token'});
     async function approveCommentExample() {
         const queue = service.listCommentsInModerationQueue();
         const queuedComment = queue.comments[0]; // Assumes that the list has at least one comment in it.
