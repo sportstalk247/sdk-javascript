@@ -538,6 +538,12 @@ export class RestfulChatEventService implements IChatEventService {
         })
     }
 
+    /**
+     * Removes an event from the server.  This cannot be reversed.  This can leave some content orphaned if there are replies.
+     * Typically, you should use the `flagEventLogicallyDeleted` method instead, with `permanentIfNoReplies` set to `true`
+     * @param user
+     * @param event
+     */
     permanetlyDeleteEvent = (user: UserResult | string, event: EventResult | string):Promise<RestApiResult<null>> => {
         if(!event) {
             throw new Error("Cannot delete a null or undefined event")
@@ -562,6 +568,12 @@ export class RestfulChatEventService implements IChatEventService {
         });
     }
 
+    /**
+     * Flags an event as deleted so it is not sent in updates or scrollback, however the content is kept on the server.
+     * @param user
+     * @param event
+     * @param permanentIfNoReplies if true, this becomes a permanent delete if there are no replies.
+     */
     flagEventLogicallyDeleted = (user: UserResult | string, event:EventResult | string, permanentIfNoReplies: boolean=false):Promise<RestApiResult<null>> => {
         if(!event) {
             throw new Error("Cannot delete a null or undefined event")
@@ -586,6 +598,11 @@ export class RestfulChatEventService implements IChatEventService {
         });
     }
 
+    /**
+     * Lists events going backwards in time.
+     * @param cursor
+     * @param limit
+     */
     listPreviousEvents = (cursor:string = '', limit: number = 100): Promise<ChatUpdatesResult> => {
         if(!this._roomApi) {
             throw new SettingsError("No room selected");
@@ -601,6 +618,12 @@ export class RestfulChatEventService implements IChatEventService {
         });
     }
 
+    /**
+     * This is used for bulk export.  Typically not used in real-time application
+     * This will return all events regardless of active/inactive status.
+     * @param cursor
+     * @param limit
+     */
     listEventsHistory = (cursor:string='', limit: number=100): Promise<ChatUpdatesResult> => {
         if(!this._roomApi) {
             throw new SettingsError("No room selected");
