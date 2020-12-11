@@ -22,7 +22,6 @@ import {AxiosRequestConfig} from "axios";
  */
 export class RestfulChatRoomService implements IRoomService {
     private _config: SportsTalkConfig;
-    private _knownRooms: ChatRoom[] = [];
     private _apiHeaders = {};
     private _jsonHeaders = {}
     private _apiExt = 'chat/rooms';
@@ -37,7 +36,6 @@ export class RestfulChatRoomService implements IRoomService {
      */
     setConfig = (config: SportsTalkConfig) => {
         this._config = config;
-        this._knownRooms = []
         this._apiHeaders = getUrlEncodedHeaders(this._config.apiToken);
         this._jsonHeaders = getJSONHeaders(this._config.apiToken);
     }
@@ -45,29 +43,15 @@ export class RestfulChatRoomService implements IRoomService {
     /**
      * RoomResult Handling
      */
-    listRooms = (): Promise<ChatRoomListResponse> => {
+    listRooms = (cursor?: string, limit?: number): Promise<ChatRoomListResponse> => {
         const config:AxiosRequestConfig = {
             method: GET,
-            url: buildAPI(this._config, this._apiExt),
+            url: buildAPI(this._config, `${this._apiExt}?cursor=${cursor ? cursor : ''}&limit=${ limit ? limit : 100}`),
             headers: this._jsonHeaders,
         };
         return stRequest(config).then(result=>{
-            this._knownRooms = result.data.rooms
             return result.data;
         });
-    }
-
-    /**
-     * Get the list of known rooms.  Used as a cache after first query to speed up UI.
-     * use listRooms() to get a fresh set.
-     */
-    getKnownRooms = async (): Promise<Array<ChatRoom>> => {
-        if(!this._knownRooms) {
-            const response = await this.listRooms();
-            this._knownRooms = response.rooms;
-            return this._knownRooms
-        }
-        return this._knownRooms;
     }
 
     /**

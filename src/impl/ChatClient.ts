@@ -193,8 +193,8 @@ export class ChatClient implements IChatClient {
     /**
      * Retrieve available rooms for this chat app.
      */
-    listRooms = (): Promise<ChatRoomListResponse> => {
-        return this._roomService.listRooms();
+    listRooms = (cursor?: string, limit?: number): Promise<ChatRoomListResponse> => {
+        return this._roomService.listRooms(cursor, limit);
     }
     /**
      * List all participants in a room.  Must have joined a room first.

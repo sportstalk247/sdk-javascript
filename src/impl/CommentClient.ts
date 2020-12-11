@@ -37,19 +37,47 @@ import {forceObjKeyOrString} from "./utils";
  * @class
  */
 export class CommentClient implements ICommentingClient {
+    /**
+     * Holds the config object
+     * @private
+     */
     private _config: SportsTalkConfig
+    /**
+     * Holds the ConversationService powering the client
+     * @private
+     */
     private _conversationService: IConversationService;
+    /**
+     * Holds the CommentService powering the client
+     * @private
+     */
     private _commentService: ICommentService;
+    /**
+     * Holds the UserService powering the CommentClient
+     * @private
+     */
     private _userService: IUserService
+    /**
+     * The current user
+     * @private
+     */
     private _user: User;
+    /**
+     * Holds the current conversation state.
+     * @private
+     */
     private _currentConversation: Conversation | string;
 
+    /**
+     * Default settings for comment requests.
+     * @private
+     */
     private _defaultCommentRequest: CommentRequest = {
         includechildren: false
     }
     /**
      * Creates a new Conversation Client
-     * @param config
+     * @param SportsTalkConfig
      * @param initialConversation Either a comments object or a comments id
      * @param commentService optional and here for future extension for custom implementations of the comment service.
      * @param conversationService optional and here for future extension for cusstom implementations of the comments service.
@@ -66,6 +94,7 @@ export class CommentClient implements ICommentingClient {
 
     /**
      * Get the current configuration object
+     * @return SportsTalkConfig
      */
     public getConfig = (): SportsTalkConfig => {
         return this._config;
@@ -150,6 +179,7 @@ export class CommentClient implements ICommentingClient {
     }
     /**
      * Returns the current default comments
+     * @return conversation a Conversation object, a string for the conversationID, or null.
      */
     public getCurrentConversation = (): Conversation | string | null => {
        return this._currentConversation;

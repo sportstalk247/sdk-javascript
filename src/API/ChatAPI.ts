@@ -60,7 +60,7 @@ export interface IRoomService extends ISportsTalkConfigurable {
     /**
      * Lists available rooms for an app
      */
-    listRooms(): Promise<ChatRoomListResponse>;
+    listRooms(cursor?: string, limit?: number): Promise<ChatRoomListResponse>
 
     /**
      * Gets room details
@@ -138,7 +138,7 @@ export interface IChatClient extends IUserConfigurable, ISportsTalkConfigurable{
     sendGoal(message?:string, img?: string, options?: GoalOptions): Promise<MessageResult<null | CommandResponse>>
     setDefaultGoalImage(url: string);
     reportMessage(event: EventResult | string, reason: ReportType):  Promise<MessageResult<null>>,
-    listRooms(): Promise<ChatRoomListResponse>
+    listRooms(cursor?: string, limit?: number): Promise<ChatRoomListResponse>
     joinRoom(room: ChatRoomResult | string): Promise<JoinChatRoomResponse>;
     joinRoomByCustomId(room: ChatRoom | string): Promise<JoinChatRoomResponse>;
     createRoom(room): Promise<ChatRoomResult>;
