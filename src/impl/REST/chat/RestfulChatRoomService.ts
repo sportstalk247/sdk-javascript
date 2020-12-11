@@ -88,12 +88,19 @@ export class RestfulChatRoomService implements IRoomService {
         });
     }
 
+    /**
+     *
+     * @param user
+     * @param room
+     * @param cursor
+     * @param limit
+     */
     // @ts-ignore
     listUserMessages = (user: User | string, room: ChatRoom | string, cursor: string = "", limit: number = 100): Promise<EventListResponse> => {
         // @ts-ignore
         const roomid = forceObjKeyOrString(room);
         const userid = forceObjKeyOrString(user, 'userid');
-        const url = buildAPI(this._config, `${this._apiExt}/${roomid}/messagesbyuser/${userid}/?limit=${limit}&cursor=${cursor}`);
+        const url = buildAPI(this._config, `${this._apiExt}/${roomid}/messagesbyuser/${userid}/?limit=${limit ? limit: 100}&cursor=${cursor ? cursor : ''}`);
         return stRequest({
             method: GET,
             url: url,
@@ -112,7 +119,7 @@ export class RestfulChatRoomService implements IRoomService {
     listParticipants = (room: ChatRoom, cursor?: string, maxresults: number = 200): Promise<Array<UserResult>> => {
         const config:AxiosRequestConfig = {
             method: GET,
-            url: buildAPI(this._config,`${this._apiExt}/${room.id}/participants?cursor=${cursor}&maxresults=${maxresults}`),
+            url: buildAPI(this._config,`${this._apiExt}/${room.id}/participants?cursor=${cursor ? cursor : ''}&maxresults=${maxresults ? maxresults : 200}`),
             headers: this._jsonHeaders
         };
         return stRequest(config).then(result=>result.data);
@@ -173,9 +180,9 @@ export class RestfulChatRoomService implements IRoomService {
     }
 
     /**
-     * Exit a room.
-     * @param user
-     * @param room
+     * Removes a user from a room.
+     * @param user The user to exit from the room, or their ID.
+     * @param room The chatroom to exit or it's ID.
      */
     exitRoom = (user: User | string, room: ChatRoom | string): Promise<ChatRoomExitResult> => {
         const roomId = forceObjKeyOrString(room);
@@ -193,6 +200,10 @@ export class RestfulChatRoomService implements IRoomService {
         })
     }
 
+    /**
+     * Sets a room to be closed.
+     * @param room The room to open
+     */
     closeRoom = (room:ChatRoomResult | string): Promise<ChatRoomResult> => {
         const roomId = forceObjKeyOrString(room);
         const config:AxiosRequestConfig = {
@@ -206,6 +217,10 @@ export class RestfulChatRoomService implements IRoomService {
         })
     }
 
+    /**
+     * Sets a room to be open.
+     * @param room The room to open
+     */
     openRoom = (room:ChatRoomResult | string): Promise<ChatRoomResult> => {
         const roomId = forceObjKeyOrString(room);
         const config:AxiosRequestConfig = {
@@ -219,6 +234,10 @@ export class RestfulChatRoomService implements IRoomService {
         })
     }
 
+    /**
+     * Will update room settings
+     * @param room A ChatRoomResult.  The room must already exist.  All settings sent will be overridden.
+     */
     updateRoom = (room:ChatRoomResult): Promise<ChatRoomResult> => {
         const roomId = forceObjKeyOrString(room);
         const config:AxiosRequestConfig = {
@@ -232,6 +251,10 @@ export class RestfulChatRoomService implements IRoomService {
         })
     }
 
+    /**
+     * Will retrieve room details
+     * @param room A ChatRoomResult object or a room id.
+     */
     getRoomDetails = (room:ChatRoomResult | string): Promise<ChatRoomResult | null> => {
         const roomId = forceObjKeyOrString(room);
         const config:AxiosRequestConfig = {
@@ -242,6 +265,10 @@ export class RestfulChatRoomService implements IRoomService {
         return stRequest(config)
     }
 
+    /**
+     * Will retrieve the room details.
+     * @param room a customid for a room, or a ChatRoomResult with a customID set.
+     */
     getRoomDetailsByCustomId = (room: ChatRoomResult | string): Promise<ChatRoomResult | null> => {
         const roomId = forceObjKeyOrString(room, 'customid');
         const config:AxiosRequestConfig = {
@@ -252,6 +279,11 @@ export class RestfulChatRoomService implements IRoomService {
         return stRequest(config)
     }
 
+    /**
+     * Will remove all of a user's messages from a room and send a purge event to clients.
+     * @param room the ChatRoomResult or a room ID.
+     * @param user the User or a userid string.
+     */
     purgeUserMessagesFromRoom = (room: ChatRoomResult | string, user: User | string): Promise<RestApiResult<BounceUserResult>> => {
         const roomId = forceObjKeyOrString(room, 'userid');
         const userId = forceObjKeyOrString(user, 'userid');
@@ -263,6 +295,12 @@ export class RestfulChatRoomService implements IRoomService {
         return stRequest(config)
     }
 
+    /**
+     * Removes a user from a room and prevents them from returning. Will add them to the 'bounced users' list on the room.
+     * @param room ChatRoomResult or ChatRoom ID
+     * @param user User or userid string.
+     * @param message The message to show the user explaining the bounce/unbounce.
+     */
     bounceUserFromRoom = (room: ChatRoomResult | string, user: UserResult | string, message?: string): Promise<RestApiResult<BounceUserResult>> => {
         const roomId = forceObjKeyOrString(room);
         const userId = forceObjKeyOrString(user, 'userid');
@@ -278,7 +316,13 @@ export class RestfulChatRoomService implements IRoomService {
         }
         return stRequest(config);
     }
-    unbounceUserFromRoom = (room: ChatRoomResult | string, user: UserResult | string, message?: string): Promise<RestApiResult<BounceUserResult>> => {
+    /**
+     * Removes a user from the room's bounce list
+     * @param room ChatRoomResult or ChatRoom ID
+     * @param user User or userid string.
+     * @param message The message to show the user explaining the bounce/unbounce.
+     */
+    unbounceUserFromRoom = (room: ChatRoomResult | string, user: User | string, message?: string): Promise<RestApiResult<BounceUserResult>> => {
         const roomId = forceObjKeyOrString(room);
         const userId = forceObjKeyOrString(user, 'userid');
         const config: AxiosRequestConfig = {

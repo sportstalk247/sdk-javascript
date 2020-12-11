@@ -56,6 +56,11 @@ export class RestfulChatEventService implements IChatEventService {
 
     private _pollFrequency: number =  800;
 
+    /**
+     * @param config The SportsTalkConfig object
+     * @param eventHandlers A set of event handlers that will deal with chat events received from polling.
+     * @constructor
+     */
     constructor(config: SportsTalkConfig, eventHandlers: EventHandlerConfig = {}) {
         this.setConfig(config);
         this.setEventHandlers(eventHandlers);
@@ -68,10 +73,21 @@ export class RestfulChatEventService implements IChatEventService {
         }
     }
 
+    /**
+     * Manually set the cursor used to grab new updates.
+     * You may want to use this and setPreviousEventsCursor if you are scrolling through a large number of messages
+     * and wish to limit the number of events somehow to improve UI responsiveness.
+     * @param cursor
+     */
     setUpdatesCursor = (cursor: string) => {
         this.lastCursor = cursor || '';
     }
 
+    /**
+     * Manually set the cursor holding the oldest event known, for scrollback.
+     * You may need to use this if you scroll back a lot
+     * @param cursor
+     */
     setPreviousEventsCursor = (cursor:string) =>{
         this.oldestCursor = cursor || '';
     }
@@ -102,6 +118,7 @@ export class RestfulChatEventService implements IChatEventService {
 
     /**
      * Get the user
+     * @return User
      */
     getUser = () => {
         return this._user;
@@ -120,6 +137,7 @@ export class RestfulChatEventService implements IChatEventService {
 
     /**
      * Get current room, if set.
+     * @return ChatRoomResult
      */
     getCurrentRoom = (): ChatRoomResult | null => {
         return this._currentRoom;
@@ -129,6 +147,7 @@ export class RestfulChatEventService implements IChatEventService {
      * Set current room, reset chat polling if a new room.
      * Will trigger onRoomChange() if new and old rooms are different
      * @param room
+     * @return ChatRoomResult or null
      */
     setCurrentRoom = (room: ChatRoomResult): ChatRoom | null => {
         const oldRoom = this._currentRoom;
@@ -161,7 +180,7 @@ export class RestfulChatEventService implements IChatEventService {
 
     /**
      * Set how often we poll for events, defaults to 800ms
-     * @param frequency
+     * @param frequency poll frequency in milliseconds
      */
     setUpdateSpeed = (frequency:number) => {
         this._pollFrequency = frequency;
@@ -574,7 +593,7 @@ export class RestfulChatEventService implements IChatEventService {
         const previousCursor = cursor || this.oldestCursor || '';
         return stRequest({
             method: GET,
-            url: `${this._roomApi}/listpreviousevents?cursor=${previousCursor}&limit=${limit}`,
+            url: `${this._roomApi}/listpreviousevents?cursor=${previousCursor? previousCursor : ''}&limit=${limit ? limit : 100}`,
             headers: this._apiHeaders
         }).then((result) => {
             this.oldestCursor = result.data ? result.data.cursor : this.oldestCursor;
@@ -588,7 +607,7 @@ export class RestfulChatEventService implements IChatEventService {
         }
         return stRequest({
             method: GET,
-            url: `${this._roomApi}/listeventshistory?cursor=${cursor}&limit=${limit}`,
+            url: `${this._roomApi}/listeventshistory?cursor=${cursor ? cursor: ''}&limit=${limit ? limit : 100}`,
             headers: this._apiHeaders
         }).then((result) => {
             return result.data;
