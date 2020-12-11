@@ -60,6 +60,13 @@ To use directly, we host the web SDK on our website.
 
 You can also look inside the Sportstalk package at `/dist/web-sdk.js` or use the minified version at `/dist/web-sdk.min.js`
 
+=====================
+Source Documentation
+=====================
+
+The Sportstalk SDK is open source with substantial comments.
+You can see everything here: https://gitlab.com/sportstalk247/sdk-javascript/-/tree/master/src
+
 
 =======================
 Creating Client Objects
