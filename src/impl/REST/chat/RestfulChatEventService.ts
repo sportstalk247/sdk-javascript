@@ -43,6 +43,8 @@ export class RestfulChatEventService implements IChatEventService {
     // api endpoints
     private _roomApi: string | null; // holds the string of the room path
     private _commandApi: string; // holds the string of the chat command path.
+    // Holds a set of ignored userIDs.
+    private _ignoreList: Set<string> = new Set();
 
     private _user: User = {userid: "", handle: ""}; // current user.
 
@@ -303,6 +305,12 @@ export class RestfulChatEventService implements IChatEventService {
                         this.firstMessageId = event.id;
                     }
                 }
+                /**
+                 * Handle event conditions.
+                 */
+                // skip if user is ignored.
+                if(this._ignoreList.has(event.userid)) continue;
+                // ignore if shadowbanned.
                 if(event.shadowban && (!this._user || event.userid !== this._user.userid)) {
                     continue;
                 }
