@@ -29,6 +29,7 @@ import {
 } from "../models/CommonModels";
 import {MISSING_ROOM, MUST_SET_USER} from "./constants/messages";
 import {IUserService} from "../API/CommonAPI";
+import {forceObjKeyOrString} from "./utils";
 
 /** @class ChatClient provides an interface to chat applications.
  * The ChatClient is the primary class you will want to use if you are creating a chat application.
@@ -288,12 +289,16 @@ export class ChatClient implements IChatClient {
 
     /**
      * Removes all user messages from a room.
+     * @param user Optional.  A user whose messages to purge from room.
+     * @param room Optional.  The room to purge messages from. Defaults to current room, if set.  Otherwise throws an error.
      */
-    purgeUserMessagesFromRoom = (user: UserResult | string): Promise<RestApiResult<null>> => {
-        if(!this._currentRoom) {
-            throw new SettingsError("Requires you to have joined a room to issue purge");
+    purgeUserMessagesFromRoom = (user?: UserResult | string, room?: ChatRoomResult | string): Promise<RestApiResult<null>> => {
+        const theUser = user || this._user;
+        const theRoom = room || this._currentRoom;
+        if(!theRoom) {
+            throw new SettingsError("Requires setting a room to issue purge");
         }
-        return this._roomService.purgeUserMessagesFromRoom(this._currentRoom, user);
+        return this._roomService.purgeUserMessagesFromRoom(theRoom, theUser);
     }
 
     /**
@@ -474,9 +479,21 @@ export class ChatClient implements IChatClient {
         return this._userService.getUserDetails(user);
     }
 
-    messageIsReported = (event: EventResult): Boolean => {
+    /**
+     * Checks if the current user has already reported a message.
+     * If no current user set or provided, throws an error;
+     * @param event the event to check.  Will evaluate if the given user or default user has reported it.
+     * @param user optional. A user to check for reporting.
+     * @return boolean true if reported by the given user.
+     */
+    messageIsReported = (event: EventResult, user?: User | string): Boolean => {
+        const checkUser = user || this._user;
+        const id = forceObjKeyOrString(checkUser, 'userid');
+        if(id) {
+            return false;
+        }
         if(event && event.reports && event.reports.length) {
-            const isReported = event.reports.find(report=>report.userid == this._user.userid);
+            const isReported = event.reports.find(report=>report.userid == id);
             return !!isReported;
         }
         return false;
@@ -503,7 +520,7 @@ export class ChatClient implements IChatClient {
     }
 
     /**
-     * Lists events older than a given cursor.
+     * Lists events older than a given cursor.  Will default to the last known cursor if updates have been triggered.
      * @param cursor
      * @param limit
      */
