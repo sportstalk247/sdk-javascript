@@ -31,30 +31,37 @@ const INVALID_POLL_FREQUENCY = "Invalid poll _pollFrequency.  Must be between 25
  * @class
  */
 export class RestfulChatEventService implements IChatEventService {
-    private _config: SportsTalkConfig = {appId: ""};
-    private _polling: any; // set interval id;
-    private _apiHeaders = {}
-    private _jsonHeaders = {}
-    private _fetching: boolean = false;
-    private _currentRoom: ChatRoomResult;
-    private _updatesApi: string;
-    private eventHandlers:EventHandlerConfig = {}
-    // api endpoints
-    private _roomApi: string | null;
-    private _commandApi: string;
 
-    private _user: User = {userid: "", handle: ""};
+    private _config: SportsTalkConfig = {appId: ""};
+    private _polling: any; // holds the timer reference.
+    private _apiHeaders = {} // holds the API headers
+    private _jsonHeaders = {}
+    private _fetching: boolean = false; // used to prevent a queue of requests if network is down.
+    private _currentRoom: ChatRoomResult; // holds the current chat room.
+    private _updatesApi: string; // caches the string computation of the updates API path.
+    private eventHandlers:EventHandlerConfig = {} // holds the event handler function references.
+    // api endpoints
+    private _roomApi: string | null; // holds the string of the room path
+    private _commandApi: string; // holds the string of the chat command path.
+
+    private _user: User = {userid: "", handle: ""}; // current user.
 
     // poll management
     private lastTimestamp:number | undefined; // timestamp
-    private lastCursor: string | undefined = undefined;
+    private lastCursor: string | undefined = undefined; //holds the cursor for the most recent message received in current room
     // for scrollback
-    private oldestCursor: string | undefined = undefined;
-    private lastMessageId:string | undefined;
+    private oldestCursor: string | undefined = undefined; // holds the oldest cursor known
+    private lastMessageId:string | undefined; // holds the ID of the lasts received event
     private firstMessageId:string | undefined;
     private firstMessageTime: number | undefined;
 
+    /**
+     * How often to poll for updates. can be set by ENV variable of SPORTSTALK_POLL_FREQUENCY on the server side.
+     * Can also be set with setUpdateSpeed()
+     * @private
+     */
     private _pollFrequency: number =  800;
+
 
     /**
      * @param config The SportsTalkConfig object

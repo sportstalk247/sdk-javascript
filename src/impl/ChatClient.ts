@@ -31,7 +31,7 @@ import {MISSING_ROOM, MUST_SET_USER} from "./constants/messages";
 import {IUserService} from "../API/CommonAPI";
 import {forceObjKeyOrString} from "./utils";
 
-/** @class ChatClient provides an interface to chat applications.
+/** ChatClient provides an interface to chat applications.
  * The ChatClient is the primary class you will want to use if you are creating a chat application.
  * Common chat operations are abstracted through this class.
  *
