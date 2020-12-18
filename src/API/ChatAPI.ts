@@ -89,6 +89,13 @@ export interface IRoomService extends ISportsTalkConfigurable {
     createRoom(room: ChatRoom): Promise<ChatRoomResult>
 
     /**
+     * Returns a specific event for the room
+     * @param id
+     * @param roomid OPTIONAL.  The room id for the room holding the event. Defaults to the current room. If no value passed and no room set, the method will throw an error.
+     */
+    getEventById(id:string, roomid?: string): Promise<EventResult>
+
+    /**
      * Will update the room with new values.
      * @param room
      */

@@ -112,7 +112,7 @@ export class RestfulChatEventService implements IChatEventService {
     /**
      * Get current event handler callback functions
      */
-    getEventHandlers(): EventHandlerConfig {
+    getEventHandlers = (): EventHandlerConfig => {
         return this.eventHandlers || {};
     }
 

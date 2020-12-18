@@ -134,6 +134,15 @@ export class ChatClient implements IChatClient {
     }
 
     /**
+     * Returns a specific event for the room
+     * @param id
+     * @param roomid OPTIONAL.  The room id for the room holding the event. Defaults to the current room. If no value passed and no room set, the method will throw an error.
+     */
+    getEventById = (id:string, roomid?: string): Promise<EventResult> => {
+        return this._roomService.getEventById(id, roomid || this._currentRoom.id);
+    }
+
+    /**
      * Sets the default goal image
      * @param url a full URL, e.g. https://yourserver.com/some/image/url.png
      * @return string The url that was set for the goal image.

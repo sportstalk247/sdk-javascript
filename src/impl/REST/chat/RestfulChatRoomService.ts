@@ -12,6 +12,7 @@ import {GET, DELETE, POST, API_SUCCESS_MESSAGE} from "../../constants/api";
 import {buildAPI, forceObjKeyOrString, getJSONHeaders, getUrlEncodedHeaders} from "../../utils";
 import {RestApiResult, SportsTalkConfig, User, UserResult} from "../../../models/CommonModels";
 import {AxiosRequestConfig} from "axios";
+import {SettingsError} from "../../errors";
 
 /**
  * This room uses REST to manage sportstalk chat rooms.
@@ -178,6 +179,29 @@ export class RestfulChatRoomService implements IRoomService {
             return response.data;
         })
     }
+
+    /**
+     * Returns a specific event for the room
+     * @param id
+     * @param roomid OPTIONAL.  The room id for the room holding the event. Defaults to the current room. If no value passed and no room set, the method will throw an error.
+     */
+    getEventById = (eventid:string, roomid: string): Promise<EventResult> => {
+        if(!roomid) {
+            throw new SettingsError("Cannot retrieve event: No room selected");
+        }
+        if(!eventid) {
+            throw new SettingsError("Cannot retrieve event: Invalid event ID");
+        }
+        const request: AxiosRequestConfig =  {
+            method: GET,
+            url: buildAPI(this._config,`${this._apiExt}/${roomid}/events/${eventid}`),
+            headers: this._apiHeaders
+        };
+        return stRequest(request).then((result) => {
+            return result;
+        });
+    }
+
 
     /**
      * Removes a user from a room.
