@@ -198,7 +198,7 @@ export class RestfulChatRoomService implements IRoomService {
             headers: this._apiHeaders
         };
         return stRequest(request).then((result) => {
-            return result;
+            return result.data;
         });
     }
 
