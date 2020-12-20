@@ -187,6 +187,16 @@ export interface IChatClient extends IUserConfigurable, ISportsTalkConfigurable 
     isUserBouncedFromRoom(user: User | string, forceRefresh?: boolean, room?: ChatRoomResult | string): Promise<boolean>
 
     /**
+     * Checks if a user is shadowbanned from a room.  If forceRefresh is true, will always ask the server for fresh data.
+     * Will also check the server if the current room is just an ID and not a full ChatRoomResult object.
+     * @param user
+     * @param room optional room, will use current room if not set.
+     * @param forceRefresh will force a server update of the room before checking status.
+     */
+    isUserShadowbanned(user: User | string, forceRefresh?: boolean, room?: ChatRoomResult | string): Promise<boolean>
+
+
+    /**
      * Send an advertisement custom event
      * @param options
      */

@@ -31,7 +31,8 @@ import {MISSING_ROOM, MUST_SET_USER} from "./constants/messages";
 import {IUserService} from "../API/CommonAPI";
 import {forceObjKeyOrString} from "./utils";
 
-/** ChatClient provides an interface to chat applications.
+/**
+ * ChatClient provides an interface to chat applications.
  * The ChatClient is the primary class you will want to use if you are creating a chat application.
  * Common chat operations are abstracted through this class.
  *
@@ -343,8 +344,8 @@ export class ChatClient implements IChatClient {
      * Checks if a user is bounced from a room.  If forceRefresh is true, will always ask the server for fresh data.
      * Will also check the server if the current room is just an ID and not a full ChatRoomResult object.
      * @param user
-     * @param room optional room, will use current room if not set.
      * @param forceRefresh will force a server update of the room before checking status.
+     * @param room optional room, will use current room if not set.
      */
     isUserBouncedFromRoom = async (user: User | string, forceRefresh?: boolean, room?: ChatRoomResult | string): Promise<boolean> => {
         let chatroom: ChatRoomResult | string | null = room || this._currentRoom || null;
@@ -376,6 +377,48 @@ export class ChatClient implements IChatClient {
         }
         // @ts-ignore
         if(chatroom && chatroom.bouncedusers && chatroom.bouncedusers.includes(userid)) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * Checks if a user is bounced from a room.  If forceRefresh is true, will always ask the server for fresh data.
+     * Will also check the server if the current room is just an ID and not a full ChatRoomResult object.
+     * @param user
+     * @param forceRefresh will force a server update of the room before checking status
+     * @param room optional room, will use current room if not set.
+     */
+    isUserShadowbanned = async (user: User | string, forceRefresh?: boolean, room?: ChatRoomResult | string): Promise<boolean> => {
+        let chatroom: ChatRoomResult | string | null = room || this._currentRoom || null;
+        if(!chatroom) {
+            throw new Error("Invalid room, make sure the room has a valid ID");
+        }
+        // @ts-ignore
+        let userid: string;
+        // @ts-ignore
+        if ("userid" in user) {
+            userid = user.userid
+        } else {
+            userid = user;
+        }
+        // Force refresh if room is an ID and not a room result.
+        // @ts-ignore
+        if(forceRefresh || !chatroom.id) {
+            chatroom = await this.getRoomDetails(chatroom);
+            if(chatroom && this._currentRoom && this._currentRoom.id) {
+                if(chatroom.id === this._currentRoom.id) {
+                    this._currentRoom = chatroom;
+                }
+            }
+        }
+
+        // @ts-ignore
+        if(!chatroom || !chatroom.shadowbannedusers || chatroom.shadowbannedusers.length === 0) {
+            return false;
+        }
+        // @ts-ignore
+        if(chatroom && chatroom.shadowbannedusers && chatroom.shadowbannedusers.includes(userid)) {
             return true;
         }
         return false;
