@@ -178,6 +178,15 @@ export interface IChatClient extends IUserConfigurable, ISportsTalkConfigurable 
     reactToEvent(reaction: Reaction, reactToMessage: EventResult | string, options?: CommandOptions): Promise<MessageResult<null | CommandResponse>>
 
     /**
+     * Checks if a user is bounced from a room.  If forceRefresh is true, will always ask the server for fresh data.
+     * Will also check the server if the current room is just an ID and not a full ChatRoomResult object.
+     * @param user
+     * @param room optional room, will use current room if not set.
+     * @param forceRefresh will force a server update of the room before checking status.
+     */
+    isUserBouncedFromRoom(user: User | string, forceRefresh?: boolean, room?: ChatRoomResult | string): Promise<boolean>
+
+    /**
      * Send an advertisement custom event
      * @param options
      */
@@ -332,10 +341,38 @@ export interface IChatClient extends IUserConfigurable, ISportsTalkConfigurable 
      * @param options
      */
     setShadowBanStatus(user: User | string, options: ShadowBanOptions): Promise<RestApiResult<UserResult>>
+
+    /**
+     * creates a new user, or updates a user if that userid already exists.
+     * Do not use blindly.
+     * @param user
+     */
     createOrUpdateUser(user: User): Promise<UserResult>
+
+    /**
+     * Finds a user
+     * @param search
+     * @param type
+     * @param limit
+     */
     searchUsers(search: string, type: UserSearchType, limit?:number): Promise<UserListResponse>
+
+    /**
+     * Lists users.
+     * @param request a ListRequest, containing cursor and limit properties.
+     */
     listUsers(request?: ListRequest): Promise<UserListResponse>
+
+    /**
+     * Deletes a user. Cannot be reversed.
+     * @param user a User object with an id or a userid string
+     */
     deleteUser(user:User | string):Promise<UserDeletionResponse>
+
+    /**
+     * Gets a fresh copy of a user from the server.
+     * @param user
+     */
     getUserDetails(user: User | string): Promise<UserResult>
     /**
      * Checks if the current user has already reported a message.

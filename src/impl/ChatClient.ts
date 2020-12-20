@@ -260,7 +260,7 @@ export class ChatClient implements IChatClient {
      * @param room
      */
     joinRoom = (room: ChatRoomResult | string): Promise<JoinChatRoomResponse> => {
-        return this._roomService.joinRoom(room, this._user).then(async (response) => {
+        return this._roomService.joinRoom(room, this._user).then(async (response:JoinChatRoomResponse) => {
             this._currentRoom = response.room;
             this._eventService.setCurrentRoom(this._currentRoom);
             this._eventService.setPreviousEventsCursor(response.previouseventscursor || '');
@@ -276,9 +276,10 @@ export class ChatClient implements IChatClient {
      * @param room
      */
     joinRoomByCustomId(room: ChatRoom | string): Promise<JoinChatRoomResponse> {
-        return this._roomService.joinRoomByCustomId(room, this._user).then(response => {
+        return this._roomService.joinRoomByCustomId(room, this._user).then(async (response:JoinChatRoomResponse) => {
             this._currentRoom = response.room;
             this._eventService.setCurrentRoom(this._currentRoom);
+            this._eventService.setPreviousEventsCursor(response.previouseventscursor || '');
             this._eventService.handleUpdates(response.eventscursor);
             return response;
         })
@@ -337,6 +338,49 @@ export class ChatClient implements IChatClient {
     getRoomDetailsByCustomId = (room: ChatRoomResult | string): Promise<ChatRoomResult | null> => {
         return this._roomService.getRoomDetailsByCustomId(room);
     }
+
+    /**
+     * Checks if a user is bounced from a room.  If forceRefresh is true, will always ask the server for fresh data.
+     * Will also check the server if the current room is just an ID and not a full ChatRoomResult object.
+     * @param user
+     * @param room optional room, will use current room if not set.
+     * @param forceRefresh will force a server update of the room before checking status.
+     */
+    isUserBouncedFromRoom = async (user: User | string, forceRefresh?: boolean, room?: ChatRoomResult | string): Promise<boolean> => {
+        let chatroom: ChatRoomResult | string | null = room || this._currentRoom || null;
+        if(!chatroom) {
+            throw new Error("Invalid room, make sure the room has a valid ID");
+        }
+        // @ts-ignore
+        let userid: string;
+        // @ts-ignore
+        if ("userid" in user) {
+            userid = user.userid
+        } else {
+            userid = user;
+        }
+        // Force refresh if room is an ID and not a room result.
+        // @ts-ignore
+        if(forceRefresh || !chatroom.id) {
+            chatroom = await this.getRoomDetails(chatroom);
+            if(chatroom && this._currentRoom && this._currentRoom.id) {
+                if(chatroom.id === this._currentRoom.id) {
+                    this._currentRoom = chatroom;
+                }
+            }
+        }
+
+        // @ts-ignore
+        if(!chatroom || !chatroom.bouncedusers || chatroom.bouncedusers.length === 0) {
+            return false;
+        }
+        // @ts-ignore
+        if(chatroom && chatroom.bouncedusers && chatroom.bouncedusers.includes(userid)) {
+            return true;
+        }
+        return false;
+    }
+
 
     /**
      * ROOM COMMANDS SECTION
