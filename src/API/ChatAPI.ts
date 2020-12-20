@@ -325,6 +325,12 @@ export interface IChatClient extends IUserConfigurable, ISportsTalkConfigurable 
      */
     permanetlyDeleteEvent(event: EventResult | string): Promise<MessageResult<null>>
     setBanStatus(user: User | string, isBanned: boolean): Promise<RestApiResult<UserResult>>
+
+    /**
+     * Sets shadowban status for a user.
+     * @param user
+     * @param options
+     */
     setShadowBanStatus(user: User | string, options: ShadowBanOptions): Promise<RestApiResult<UserResult>>
     createOrUpdateUser(user: User): Promise<UserResult>
     searchUsers(search: string, type: UserSearchType, limit?:number): Promise<UserListResponse>
