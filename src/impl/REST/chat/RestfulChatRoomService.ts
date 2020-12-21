@@ -309,7 +309,7 @@ export class RestfulChatRoomService implements IRoomService {
      * @param user the User or a userid string.
      */
     purgeUserMessagesFromRoom = (room: ChatRoomResult | string, user: User | string): Promise<RestApiResult<BounceUserResult>> => {
-        const roomId = forceObjKeyOrString(room, 'userid');
+        const roomId = forceObjKeyOrString(room, 'id');
         const userId = forceObjKeyOrString(user, 'userid');
         const config:AxiosRequestConfig = {
             method: POST,
@@ -326,7 +326,7 @@ export class RestfulChatRoomService implements IRoomService {
      * @param message The message to show the user explaining the bounce/unbounce.
      */
     bounceUserFromRoom = (room: ChatRoomResult | string, user: UserResult | string, message?: string): Promise<RestApiResult<BounceUserResult>> => {
-        const roomId = forceObjKeyOrString(room);
+        const roomId = forceObjKeyOrString(room, 'id');
         const userId = forceObjKeyOrString(user, 'userid');
         const config: AxiosRequestConfig = {
             method: POST,
