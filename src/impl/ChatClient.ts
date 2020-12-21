@@ -353,12 +353,13 @@ export class ChatClient implements IChatClient {
             throw new Error("Invalid room, make sure the room has a valid ID");
         }
         // @ts-ignore
-        let userid: string;
+        let userid: string
         // @ts-ignore
-        if ("userid" in user) {
-            userid = user.userid
+        if(user) {
+            // @ts-ignore
+            userid = user.userid || user
         } else {
-            userid = user;
+            throw new Error("Must provide a user or userid");
         }
         // Force refresh if room is an ID and not a room result.
         // @ts-ignore
@@ -395,12 +396,13 @@ export class ChatClient implements IChatClient {
             throw new Error("Invalid room, make sure the room has a valid ID");
         }
         // @ts-ignore
-        let userid: string;
+        let userid: string
         // @ts-ignore
-        if ("userid" in user) {
-            userid = user.userid
+        if(user) {
+            // @ts-ignore
+            userid = user.userid || user
         } else {
-            userid = user;
+            throw new Error("Must provide a user or userid");
         }
         // Force refresh if room is an ID and not a room result.
         // @ts-ignore

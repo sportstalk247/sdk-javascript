@@ -286,7 +286,7 @@ export class RestfulChatRoomService implements IRoomService {
             url: buildAPI(this._config,`${this._apiExt}/${roomId}`),
             headers: this._jsonHeaders,
         };
-        return stRequest(config)
+        return stRequest(config).then(result=>result.data);
     }
 
     /**
@@ -300,7 +300,7 @@ export class RestfulChatRoomService implements IRoomService {
             url: buildAPI(this._config,`chat/roomsbycustomid/${roomId}`),
             headers: this._jsonHeaders,
         };
-        return stRequest(config)
+        return stRequest(config).then(result=>result.data);
     }
 
     /**
