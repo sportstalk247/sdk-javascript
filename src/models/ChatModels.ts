@@ -25,13 +25,15 @@ export enum EventType  {
     reply="reply", // threaded replies
     quote= "quote",
     ad="ad",
+    exit="exit",
+    enter="enter",
     announcement="announcement",
     custom="custom"
 }
 
-export enum CustomEventTypes {
-    "goal"="goal", // custom type
-}
+export const CustomEventTypes = {
+    goal:"goal" // custom type
+} as const;
 
 
 export interface JoinChatRoomResponse {
