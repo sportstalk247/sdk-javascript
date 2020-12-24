@@ -1,9 +1,18 @@
 import {
-    AdvertisementOptions, ChatUpdatesResult,
-    CommandOptions, CommandResponse,
+    AdvertisementOptions,
+    ChatUpdatesResult,
+    CommandOptions,
+    CommandResponse,
     EventHandlerConfig,
     EventResult,
-    EventType, GoalOptions, ChatRoom, ChatRoomResult, QuoteCommandOptions, CustomEventTypes, ChatOptionsEventType
+    EventType,
+    GoalOptions,
+    ChatRoom,
+    ChatRoomResult,
+    QuoteCommandOptions,
+    CustomEventTypes,
+    ChatOptionsEventType,
+    EventSearchParams, ChatEventsList
 } from "../../../models/ChatModels";
 import {DEFAULT_CONFIG, DELETE, GET, POST, PUT} from "../../constants/api";
 import {IChatEventService} from "../../../API/ChatAPI";
@@ -650,5 +659,17 @@ export class RestfulChatEventService implements IChatEventService {
         }).then((result) => {
             return result.data;
         });
+    }
+
+    searchEventHistory = (params: EventSearchParams): Promise<ChatEventsList> => {
+        if(params.fromhandle && params.fromuserid) {
+            throw new SettingsError("Search for ID or Handle, not both");
+        }
+        return stRequest({
+            method: POST,
+            url: buildAPI(this._config, `chat/searchevents`),
+            headers: this._apiHeaders,
+            data: params
+        }).then(result=>result.data);
     }
 }

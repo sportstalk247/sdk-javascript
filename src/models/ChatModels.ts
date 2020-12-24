@@ -240,16 +240,19 @@ export interface EventReaction {
     users: UserResult[]
 }
 
-/**
- * Result of getting chat updates.
- */
-export interface ChatUpdatesResult {
+export interface ChatEventsList {
     kind: Kind.chatlist,
     cursor: string
     more: boolean
     itemcount: number
-    room: ChatRoomResult,
     events: EventResult[]
+}
+
+/**
+ * Result of getting chat updates.
+ */
+export interface ChatUpdatesResult extends ChatEventsList {
+    room: ChatRoomResult,
 }
 
 /**
@@ -259,4 +262,15 @@ export interface BounceUserResult {
     kind: Kind.bounce,
     event: EventResult,
     room: ChatRoomResult
+}
+
+export interface EventSearchParams {
+    fromuserid?: string,
+    fromhandle?: string,
+    roomid?: string
+    body?: string
+    direction?: 'forward' | 'backward',
+    types?: EventType[],
+    cursor?: string,
+    limit?: number
 }

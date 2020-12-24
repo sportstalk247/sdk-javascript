@@ -117,5 +117,15 @@ describe("Event Service", ()=>{
                 }).catch(done);
             })
         })
+        describe("Search chat events", ()=>{
+            it('can search events', done=>{
+                EM.searchEventHistory({fromuserid: "chatEventUser"}).then(res=>{
+                    console.log(res);
+                    expect(res.kind).to.be.equal('list.chatevents');
+                    expect(res.more).to.be.false;
+                    done();
+                })
+            })
+        })
     })
 })

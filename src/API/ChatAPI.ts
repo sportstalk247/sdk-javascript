@@ -8,7 +8,7 @@ import {
     GoalOptions,
     ChatRoom, ChatRoomExitResult, ChatRoomListResponse,
     ChatRoomResult,
-    JoinChatRoomResponse, BounceUserResult, ShadowBanOptions
+    JoinChatRoomResponse, BounceUserResult, ShadowBanOptions, EventSearchParams
 } from "../models/ChatModels";
 
 import {ISportsTalkConfigurable, IUserConfigurable} from "./CommonAPI";
@@ -50,6 +50,7 @@ export interface IChatEventService extends ISportsTalkConfigurable, IUserConfigu
     listPreviousEvents(cursor?:string, limit?: number): Promise<ChatUpdatesResult>
     listEventsHistory(cursor?:string, limit?: number): Promise<ChatUpdatesResult>
     setUpdateSpeed(speed: number);
+    searchEventHistory(params: EventSearchParams): Promise<any>
 }
 
 /**
