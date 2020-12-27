@@ -3,6 +3,12 @@ export enum ModerationType {
     post = "post"
 }
 
+export const UserModerationState = {
+    Flagged: 'flagged',
+    Approved: 'approved',
+    Rejected: 'rejected'
+} as const;
+
 export interface ClientConfig {
     appId?: string,
     apiToken?: string,
@@ -203,4 +209,9 @@ export interface WebhookLogResponse extends ListResponse {
 export interface ListRequest {
     cursor?: string, // should be a cursor value supplied by API.
     limit?: number // must be an integer
+}
+export interface UserModerationListRequest extends ListRequest {
+    filterHandle?: string,
+    filterUserId?: string,
+    filterModerationState?: typeof UserModerationState
 }

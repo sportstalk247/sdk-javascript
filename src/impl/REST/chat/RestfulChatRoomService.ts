@@ -328,6 +328,8 @@ export class RestfulChatRoomService implements IRoomService {
     bounceUserFromRoom = (room: ChatRoomResult | string, user: UserResult | string, message?: string): Promise<RestApiResult<BounceUserResult>> => {
         const roomId = forceObjKeyOrString(room, 'id');
         const userId = forceObjKeyOrString(user, 'userid');
+        // @ts-ignore
+        const announcement:string = message || `The bouncer shows ${user.handle || userId} the way out.`
         const config: AxiosRequestConfig = {
             method: POST,
             url: buildAPI(this._config, `${this._apiExt}/${roomId}/bounce`),
@@ -335,7 +337,7 @@ export class RestfulChatRoomService implements IRoomService {
             data: {
                 "userid": userId,
                 "bounce": "true",
-                "announcement": message || `The bouncer shows ${userId} the way out.`
+                "announcement": announcement
             }
         }
         return stRequest(config);

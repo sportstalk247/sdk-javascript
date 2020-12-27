@@ -10,7 +10,7 @@ import {
     UserResult,
     ListRequest,
     UserListResponse,
-    UserDeletionResponse
+    UserDeletionResponse, UserModerationListRequest
 } from "../../../models/CommonModels";
 import {IUserService} from "../../../API/CommonAPI";
 
@@ -176,7 +176,7 @@ export class RestfulUserService implements IUserService {
      * Returns a user.
      * @param user either a UserResult or a string representing a userid.  Typically used when you only have the userid.
      */
-    getUserDetails(user: User | string): Promise<UserResult> {
+    getUserDetails = (user: User | string): Promise<UserResult> => {
         const id = forceObjKeyOrString(user, 'userid');
         const config:AxiosRequestConfig = {
             method: GET,
@@ -186,5 +186,15 @@ export class RestfulUserService implements IUserService {
         return stRequest(config).then(response=>{
             return response.data;
         });
+    }
+
+    listUsersInModerationQueue = (request: UserModerationListRequest): Promise<any> => {
+        const config: AxiosRequestConfig = {
+            method: POST,
+            url: buildAPI(this._config, `user/moderation/queues/reportedusers`),
+            headers: this._jsonHeaders,
+            data: request
+        }
+        return stRequest(config).then(response=>response.data);
     }
 }
