@@ -1,3 +1,5 @@
+import {EventType} from "./ChatModels";
+
 export enum ModerationType {
     pre = "pre",
     post = "post"
@@ -214,4 +216,11 @@ export interface UserModerationListRequest extends ListRequest {
     filterHandle?: string,
     filterUserId?: string,
     filterModerationState?: typeof UserModerationState
+}
+
+export interface NotificationListRequest extends ListRequest{
+    limit?: number,
+    userid: string,
+    includeread?: boolean,
+    filterNotificationTypes?: EventType[]
 }

@@ -1,18 +1,22 @@
 import {AxiosRequestConfig} from "axios";
 import {stRequest} from "../../network";
 import {DELETE, GET, POST} from "../../constants/api";
-import {buildAPI, forceObjKeyOrString, formify, getJSONHeaders, getUrlEncodedHeaders} from "../../utils";
+import {buildAPI, forceObjKeyOrString, formify, getJSONHeaders} from "../../utils";
 import {
+    ListRequest,
+    NotificationListRequest,
     RestApiResult,
-    UserSearchType,
     SportsTalkConfig,
     User,
-    UserResult,
-    ListRequest,
+    UserDeletionResponse,
     UserListResponse,
-    UserDeletionResponse, UserModerationListRequest
+    UserModerationListRequest,
+    UserResult,
+    UserSearchType
 } from "../../../models/CommonModels";
+import {EventType} from '../../../models/ChatModels';
 import {IUserService} from "../../../API/CommonAPI";
+import {SettingsError} from "../../errors";
 
 /**
  * Class for handling user management via REST.
@@ -194,6 +198,31 @@ export class RestfulUserService implements IUserService {
             url: buildAPI(this._config, `user/moderation/queues/reportedusers`),
             headers: this._jsonHeaders,
             data: request
+        }
+        return stRequest(config).then(response=>response.data);
+    }
+
+    listUserNotifications = (request: NotificationListRequest): Promise<any> => {
+        const defaults: Partial<NotificationListRequest> = {
+            limit: 20,
+            includeread: false,
+            filterNotificationTypes: [EventType.speech, EventType.reply, EventType.reaction]
+        }
+        const finalRequest:NotificationListRequest = Object.assign(defaults, request);
+        if(!finalRequest.userid) {
+            throw new SettingsError("Must include userid to request notifications");
+        }
+        if(!finalRequest.filterNotificationTypes || !finalRequest.filterNotificationTypes.length) {
+            throw new SettingsError("Must include at least one notification type");
+        }
+        let typeString = '';
+        finalRequest.filterNotificationTypes.map((type:EventType)=>{
+            typeString = `${typeString}&filterNotificationTypes=${type}`;
+        });
+        const config: AxiosRequestConfig = {
+            method: GET,
+            headers:this._jsonHeaders,
+            url: buildAPI(this._config, `${this._apiExt}/${finalRequest.userid}/notifications/list?userid=${finalRequest.userid}${typeString}&limit=${finalRequest.limit}&includeread=${finalRequest.includeread}`)
         }
         return stRequest(config).then(response=>response.data);
     }

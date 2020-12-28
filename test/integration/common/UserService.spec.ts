@@ -10,8 +10,8 @@ const { expect } = chai;
 // @ts-ignore
 const config: SportsTalkConfig = {apiToken:process.env.TEST_KEY, appId: process.env.TEST_APP_ID, endpoint: process.env.TEST_ENDPOINT};
 describe("UserManager", function(){
-    const UM = new RestfulUserService(  config);
-    const RM = new RestfulChatRoomService(  config);
+    const UM = new RestfulUserService(config);
+    const RM = new RestfulChatRoomService(config);
     const userid = "107AC57E-85ED-4E1D-BDAF-2533CD3872EB"
     let user;
     describe("Creation", function() {
@@ -92,9 +92,9 @@ describe("UserManager", function(){
                 expect(user.shadowbanned).to.be.true;
                 const date: Date = new Date(user.shadowbanexpires);
                 expect(date).be.greaterThan(new Date());
+                done();
             })
         })
-
     })
 
 
@@ -135,6 +135,15 @@ describe("UserManager", function(){
             const response = await UM.listUsers({limit:1});
             expect(response.users.length).to.be.equal(1);
 
+        })
+    })
+
+    describe("Can request notifications", function() {
+        it("Can list notifications", async ()=> {
+            const response = await UM.listUserNotifications({
+                userid: user.userid,
+            })
+            expect(response);
         })
     })
 
