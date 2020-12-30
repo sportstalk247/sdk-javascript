@@ -4,7 +4,7 @@ import {
     RestApiResult,
     SportsTalkConfig,
     User, UserDeletionResponse,
-    UserListResponse,
+    UserListResponse, UserModerationListRequest,
     UserResult,
     UserSearchType
 } from "../models/CommonModels";
@@ -53,4 +53,8 @@ export class UserClient implements ISportsTalkConfigurable, IUserService {
     getUserDetails = (user: User | string): Promise<UserResult> => {
         return this._userService.getUserDetails(user);
     }
+
+    listUsersInModerationQueue = (request: UserModerationListRequest): Promise<any> => {
+        return this._userService.listUsersInModerationQueue(request);
+}
 }
