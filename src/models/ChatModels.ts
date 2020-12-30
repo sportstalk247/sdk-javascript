@@ -155,7 +155,7 @@ export interface ChatRoom {
     enableactions?: boolean, // Whether or not users can utilize action commands.
     roomisopen?: boolean, // allows chat
     maxreports?: number, // defaults to 3. The number of flags it takes to add a comment to the moderation queue.
-    enableenterAndexit?: boolean, // Whether the room allows people to enter.  This is different than being open.  A room that denies entry can still be open and therefore allow chat by existing room members.
+    enableenterandexit?: boolean, // Whether the room allows people to enter.  This is different than being open.  A room that denies entry can still be open and therefore allow chat by existing room members.
     throttle?: number //(optional) Defaults to 0. This is the number of seconds to delay new incomming messags so that the chat room doesn't scroll messages too fast.
 }
 
