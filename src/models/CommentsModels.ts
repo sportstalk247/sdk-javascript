@@ -12,6 +12,7 @@ export interface HasConversationID {
 
 export interface Conversation {
     conversationid: string,
+    customid?: string,
     property: string,
     moderation: ModerationType,
     owneruserid?: string,
