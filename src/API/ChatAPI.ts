@@ -13,6 +13,7 @@ import {
 
 import {ISportsTalkConfigurable, IUserConfigurable} from "./CommonAPI";
 import {
+    ChatModerationQueueListRequest,
     ListRequest,
     MessageResult,
     Reaction,
@@ -426,7 +427,7 @@ export interface IChatClient extends IUserConfigurable, ISportsTalkConfigurable 
  * @interface
  */
 export interface IChatModerationService extends ISportsTalkConfigurable {
-    listMessagesInModerationQueue(): Promise<EventListResponse>
+    listMessagesInModerationQueue(moderationQueueRequest: ChatModerationQueueListRequest): Promise<EventListResponse>
     moderateEvent(event: EventResult, approved: boolean): Promise<EventResult>
 }
 

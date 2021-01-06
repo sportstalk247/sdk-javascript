@@ -45,8 +45,10 @@ export enum Kind {
     user = "app.user",
     api = "api.result",
     webhook = "webhook.webhook",
+    webhookevent = "webhook.event",
     webhooklogs = "list.webhook.logentries",
     webhookcommentpayload = "webhook.payload.comment",
+    webhookcommentreplypayload = "webhook.payload.commentreply",
     chatcommand = "chat.executecommand",
     conversation = "comment.conversation",
     deletedconversation = "delete.conversation",
@@ -105,7 +107,8 @@ export enum Reaction {
 }
 
 export enum ReportType {
-    abuse = 'abuse'
+    abuse = 'abuse',
+    spam = "spam",
 }
 
 export interface ReportReason {
@@ -212,6 +215,11 @@ export interface ListRequest {
     cursor?: string, // should be a cursor value supplied by API.
     limit?: number // must be an integer
 }
+
+export interface ChatModerationQueueListRequest extends ListRequest {
+    roomId?: string // RoomID to restrict items expecting moderation.
+}
+
 export interface UserModerationListRequest extends ListRequest {
     filterHandle?: string,
     filterUserId?: string,

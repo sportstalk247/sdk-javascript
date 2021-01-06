@@ -1,9 +1,9 @@
 import {EventListResponse, EventResult} from "../../../models/ChatModels";
 import {stRequest} from '../../network';
-import {buildAPI, getUrlEncodedHeaders} from "../../utils";
+import {buildAPI, getJSONHeaders, getUrlEncodedHeaders} from "../../utils";
 import {DEFAULT_CONFIG, POST, } from "../../constants/api";
 import {IChatModerationService} from "../../../API/ChatAPI";
-import {RestApiResult, SportsTalkConfig, Webhook} from "../../../models/CommonModels";
+import {ChatModerationQueueListRequest, RestApiResult, SportsTalkConfig, Webhook} from "../../../models/CommonModels";
 import {AxiosRequestConfig} from "axios";
 
 /**
@@ -14,6 +14,7 @@ export class RestfulChatModerationService implements IChatModerationService {
 
     private _config: SportsTalkConfig = {appId: ""};
     private _apiHeaders;
+    private _jsonHeaders;
     private _apiExt:string = 'chat/moderation/queues/events';
 
     constructor(config: SportsTalkConfig) {
@@ -26,18 +27,20 @@ export class RestfulChatModerationService implements IChatModerationService {
      */
     public setConfig(config: SportsTalkConfig) {
         this._config = Object.assign(DEFAULT_CONFIG, config);
-        this._apiHeaders = getUrlEncodedHeaders(this._config.apiToken);
+        this._jsonHeaders = getJSONHeaders(this._config.apiToken);
     }
 
     /**
      * Get the moderation queue of events.
      */
-    listMessagesInModerationQueue = (): Promise<EventListResponse> => {
-        return stRequest({
+    listMessagesInModerationQueue = (request: ChatModerationQueueListRequest): Promise<EventListResponse> => {
+        const url:string = buildAPI(this._config, `${this._apiExt}?cursor=${request.cursor ? request.cursor : ''}&roomId=${request.roomId? request.roomId :''}&limit=${request.limit?request.limit :''}`);
+        const config:AxiosRequestConfig = {
             method: 'GET',
-            url: buildAPI(this._config, this._apiExt),
-            headers: this._apiHeaders
-        }).then(result => {
+            url,
+            headers: this._jsonHeaders
+        }
+        return stRequest(config).then(result => {
             return result.data
         });
     }
@@ -50,7 +53,7 @@ export class RestfulChatModerationService implements IChatModerationService {
         const config: AxiosRequestConfig = {
             method: 'POST',
             url: buildAPI(this._config, `${this._apiExt}/${event.id}/applydecision`),
-            headers: this._apiHeaders,
+            headers: this._jsonHeaders,
             data: {approve: !!approved + ""}
         }
         return stRequest(config).then(response=>response.data)
