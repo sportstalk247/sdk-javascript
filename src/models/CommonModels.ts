@@ -223,6 +223,8 @@ export interface ChatModerationQueueListRequest extends ListRequest {
 export interface UserModerationListRequest extends ListRequest {
     filterHandle?: string,
     filterUserId?: string,
+    filterChatRoomId?: string,
+    filterChatRoomCustomId: string,
     filterModerationState?: typeof UserModerationState
 }
 
