@@ -647,6 +647,25 @@ export class ChatClient implements IChatClient {
         const bounce: RestApiResult<BounceUserResult> = await this._roomService.unbounceUserFromRoom( this._currentRoom , user, message);
         return bounce.data;
     }
+
+    /**
+     * Manually set the cursor used to grab new updates.
+     * You may want to use this and setPreviousEventsCursor if you are scrolling through a large number of messages
+     * and wish to limit the number of events somehow to improve UI responsiveness.
+     * @param cursor
+     */
+    setUpdatesCursor = (cursor: string) => {
+        this._eventService.setUpdatesCursor(cursor);
+    }
+
+    /**
+     * Manually set the cursor holding the oldest event known, for scrollback.
+     * You may need to use this if you scroll back a lot
+     * @param cursor
+     */
+    setPreviousEventsCursor = (cursor:string) =>{
+        this._eventService.setPreviousEventsCursor(cursor);
+    }
 }
 
 

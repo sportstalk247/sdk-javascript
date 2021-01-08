@@ -637,7 +637,9 @@ export class RestfulChatEventService implements IChatEventService {
             url: `${this._roomApi}/listpreviousevents?cursor=${previousCursor? previousCursor : ''}&limit=${limit ? limit : 100}`,
             headers: this._apiHeaders
         }).then((result) => {
-            this.oldestCursor = result.data ? result.data.cursor : this.oldestCursor;
+            if(!cursor) {
+                this.oldestCursor = result.data ? result.data.cursor : this.oldestCursor;
+            }
             return result.data;
         });
     }

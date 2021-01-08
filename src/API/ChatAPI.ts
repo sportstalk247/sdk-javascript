@@ -146,7 +146,8 @@ export interface IChatClient extends IUserConfigurable, ISportsTalkConfigurable 
      * @param options the custom parameters.  See CommandOptions interface for details.
      * @return MessageResult returns the server response.
      */
-    executeChatCommand(command: string, options?: CommandOptions):  Promise<MessageResult<null | CommandResponse>>
+    executeChatCommand(command: string, options?: CommandOptions): Promise<MessageResult<null | CommandResponse>>
+
     /**
      * Reply to an event
      * @param message the text that will make up the reply
@@ -168,7 +169,7 @@ export interface IChatClient extends IUserConfigurable, ISportsTalkConfigurable 
      * @param command
      * @param options
      */
-    sendAnnouncement(command:string, options?: CommandOptions): Promise<MessageResult<CommandResponse>>
+    sendAnnouncement(command: string, options?: CommandOptions): Promise<MessageResult<CommandResponse>>
 
     /**
      * React to an event
@@ -212,7 +213,7 @@ export interface IChatClient extends IUserConfigurable, ISportsTalkConfigurable 
      * @param img The full url of the image to send as part of the goal, e.g. https://....
      * @param options other custom options to send.
      */
-    sendGoal(message?:string, img?: string, options?: GoalOptions): Promise<MessageResult<null | CommandResponse>>
+    sendGoal(message?: string, img?: string, options?: GoalOptions): Promise<MessageResult<null | CommandResponse>>
 
     /**
      * Convenience API for sending goals. This sets a default image so that users don't need to provide one
@@ -226,7 +227,7 @@ export interface IChatClient extends IUserConfigurable, ISportsTalkConfigurable 
      * @param event
      * @param type
      */
-    reportMessage(event: EventResult | string, reason: ReportType):  Promise<MessageResult<null>>,
+    reportMessage(event: EventResult | string, reason: ReportType): Promise<MessageResult<null>>,
 
     /**
      * List rooms. Allows you to cursor through longer lists.
@@ -247,7 +248,7 @@ export interface IChatClient extends IUserConfigurable, ISportsTalkConfigurable 
      * @param room An already created room with a roomId.
      * @return the updated room information.
      */
-    updateRoom(room:ChatRoomResult): Promise<ChatRoomResult>
+    updateRoom(room: ChatRoomResult): Promise<ChatRoomResult>
 
     /**
      * Join a chat room
@@ -273,7 +274,7 @@ export interface IChatClient extends IUserConfigurable, ISportsTalkConfigurable 
      * Sets the current room. The room must have an ID and have already been created on the server.
      * @param room
      */
-    setCurrentRoom(room:ChatRoomResult);
+    setCurrentRoom(room: ChatRoomResult);
 
     /**
      * List participants in the chatroom.
@@ -292,7 +293,7 @@ export interface IChatClient extends IUserConfigurable, ISportsTalkConfigurable 
      * Gets the current handler functions. Often used for debugging.
      * @return EventHandlerConfig
      */
-    getEventHandlers():EventHandlerConfig;
+    getEventHandlers(): EventHandlerConfig;
 
     /**
      * Removes all user messages from a room.
@@ -306,7 +307,7 @@ export interface IChatClient extends IUserConfigurable, ISportsTalkConfigurable 
      * @param user a User model.  The values of 'banned', 'handlelowercase' and 'kind' are ignored.
      * @return Promise<User> will return a UserResult object from the creation of a user or the update of a user with the same ID.
      */
-    createOrUpdateUser(user: User, setDefault?:boolean): Promise<User>
+    createOrUpdateUser(user: User, setDefault?: boolean): Promise<User>
 
     /**
      * Polls the server.
@@ -330,7 +331,7 @@ export interface IChatClient extends IUserConfigurable, ISportsTalkConfigurable 
      * @param cursor
      * @param limit
      */
-    listPreviousEvents(cursor?:string, limit?: number): Promise<ChatUpdatesResult>
+    listPreviousEvents(cursor?: string, limit?: number): Promise<ChatUpdatesResult>
 
     /**
      * Flags an event as deleted
@@ -345,6 +346,7 @@ export interface IChatClient extends IUserConfigurable, ISportsTalkConfigurable 
      * @return the result of the API call.
      */
     permanetlyDeleteEvent(event: EventResult | string): Promise<MessageResult<null>>
+
     setBanStatus(user: User | string, isBanned: boolean): Promise<RestApiResult<UserResult>>
 
     /**
@@ -367,7 +369,7 @@ export interface IChatClient extends IUserConfigurable, ISportsTalkConfigurable 
      * @param type
      * @param limit
      */
-    searchUsers(search: string, type: UserSearchType, limit?:number): Promise<UserListResponse>
+    searchUsers(search: string, type: UserSearchType, limit?: number): Promise<UserListResponse>
 
     /**
      * Lists users.
@@ -379,13 +381,14 @@ export interface IChatClient extends IUserConfigurable, ISportsTalkConfigurable 
      * Deletes a user. Cannot be reversed.
      * @param user a User object with an id or a userid string
      */
-    deleteUser(user:User | string):Promise<UserDeletionResponse>
+    deleteUser(user: User | string): Promise<UserDeletionResponse>
 
     /**
      * Gets a fresh copy of a user from the server.
      * @param user
      */
     getUserDetails(user: User | string): Promise<UserResult>
+
     /**
      * Checks if the current user has already reported a message.
      * If no current user set or provided, throws an error;
@@ -393,7 +396,7 @@ export interface IChatClient extends IUserConfigurable, ISportsTalkConfigurable 
      * @param user optional. A user to check for reporting.
      * @return boolean true if reported by the given user.
      */
-    messageIsReported(event: EventResult, user?:User): Boolean
+    messageIsReported(event: EventResult, user?: User): Boolean
 
     /**
      * Bounces a user from a room, removing from room and banning them.
@@ -419,7 +422,22 @@ export interface IChatClient extends IUserConfigurable, ISportsTalkConfigurable 
      * @param reaction true or false.  Returns false if no user set.
      * @return boolean true if the message was reacted to by the current user. If no user set, always false.
      */
-    messageIsReactedTo(event: EventResult, reaction:Reaction | string): Boolean
+    messageIsReactedTo(event: EventResult, reaction: Reaction | string): Boolean
+
+    /**
+     * Manually set the cursor used to grab new updates.
+     * You may want to use this and setPreviousEventsCursor if you are scrolling through a large number of messages
+     * and wish to limit the number of events somehow to improve UI responsiveness.
+     * @param cursor
+     */
+    setUpdatesCursor(cursor: string)
+
+    /**
+     * Manually set the cursor holding the oldest event known, for scrollback.
+     * You may need to use this if you scroll back a lot
+     * @param cursor
+     */
+    setPreviousEventsCursor(cursor: string)
 }
 
 /**
