@@ -20,7 +20,7 @@ export enum EventType  {
     replace="replace",
     remove="remove",
     roomClosed= "roomclosed",
-    roomOpen="roomopen",
+    roomOpen="roomopened",
     action="action",
     reply="reply", // threaded replies
     quote= "quote",

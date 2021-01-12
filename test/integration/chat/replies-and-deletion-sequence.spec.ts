@@ -78,10 +78,14 @@ describe('REPLY & DELETE Chat Sequence', function() {
                     expect(chatHistories[0].events).to.have.lengthOf(2);
                     expect(chatHistories[1].events).to.have.lengthOf(2);
                     const reply = await client.sendQuotedReply(replyText, chatHistories[0].events[0].id);
+
                     // @ts-ignore
                     expect(reply.data.body).to.be.equal(replyText);
                     // @ts-ignore
                     expect(reply.data.eventtype).to.be.equal("quote")
+                    const otherreply = await client.sendThreadedReply(replyText, chatHistories[0].events[0])
+                    // @ts-ignore
+                    expect(otherreply.data.body).to.be.equal(replyText);
                     const event = await client.getEventById(chatHistories[0].events[0].id);
                     expect(event.id).to.be.equal(chatHistories[0].events[0].id);
                     await delay(1000); // clear internal updates cache.
