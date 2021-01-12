@@ -1,6 +1,6 @@
 import {IChatClient} from "../API/ChatAPI";
 import {
-    ListRequest,
+    ListRequest, NotificationListRequest,
     RestApiResult,
     SportsTalkConfig,
     User, UserDeletionResponse,
@@ -56,5 +56,10 @@ export class UserClient implements ISportsTalkConfigurable, IUserService {
 
     listUsersInModerationQueue = (request: UserModerationListRequest): Promise<any> => {
         return this._userService.listUsersInModerationQueue(request);
-}
+    }
+
+    listUserNotifications = (request: NotificationListRequest): Promise<RestApiResult<any>> => {
+        return this._userService.listUserNotifications(request)
+    }
+
 }

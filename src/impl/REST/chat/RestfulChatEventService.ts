@@ -16,7 +16,7 @@ import {
 } from "../../../models/ChatModels";
 import {DEFAULT_CONFIG, DELETE, GET, POST, PUT} from "../../constants/api";
 import {IChatEventService} from "../../../API/ChatAPI";
-import {buildAPI, getJSONHeaders, getUrlEncodedHeaders} from "../../utils";
+import {buildAPI, forceObjKeyOrString, getJSONHeaders, getUrlEncodedHeaders} from "../../utils";
 import {SettingsError} from "../../errors";
 import {NO_HANDLER_SET, NO_ROOM_SET, REQUIRE_ROOM_ID} from "../../constants/messages";
 import {stRequest} from '../../network'
@@ -673,5 +673,24 @@ export class RestfulChatEventService implements IChatEventService {
             headers: this._apiHeaders,
             data: params
         }).then(result=>result.data);
+    }
+
+    updateChatEvent = (event: EventResult | string, body: string, user?: string | User): Promise<EventResult> => {
+        //@ts-ignore
+        const userid = user ? user.userid || user : this._user.userid;
+        const eventid = forceObjKeyOrString(event, 'id');
+        if(!userid) {
+            throw new Error("Require a valid userid to update a Chat Event.");
+        }
+        const config:AxiosRequestConfig = {
+            method: PUT,
+            url: buildAPI(this._config, `/chat/rooms/${this._currentRoom.id}/events/${eventid}`),
+            headers: this._apiHeaders,
+            data:{
+                userid,
+                body
+            }
+        }
+        return stRequest(config).then(result=>result.data);
     }
 }

@@ -666,6 +666,10 @@ export class ChatClient implements IChatClient {
     setPreviousEventsCursor = (cursor:string) =>{
         this._eventService.setPreviousEventsCursor(cursor);
     }
+
+    updateChatEvent = (event: EventResult | string, body: string, user?: string | User): Promise<EventResult> => {
+        return this._eventService.updateChatEvent(event, body, user);
+    }
 }
 
 

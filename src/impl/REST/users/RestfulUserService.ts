@@ -192,7 +192,7 @@ export class RestfulUserService implements IUserService {
         });
     }
 
-    listUsersInModerationQueue = (request: UserModerationListRequest): Promise<any> => {
+    listUsersInModerationQueue = (request: UserModerationListRequest): Promise<RestApiResult<UserResult>> => {
         const config: AxiosRequestConfig = {
             method: POST,
             url: buildAPI(this._config, `user/moderation/queues/reportedusers`),
@@ -202,7 +202,7 @@ export class RestfulUserService implements IUserService {
         return stRequest(config).then(response=>response.data);
     }
 
-    listUserNotifications = (request: NotificationListRequest): Promise<any> => {
+    listUserNotifications = (request: NotificationListRequest): Promise<RestApiResult<any>> => {
         const defaults: Partial<NotificationListRequest> = {
             limit: 20,
             includeread: false,

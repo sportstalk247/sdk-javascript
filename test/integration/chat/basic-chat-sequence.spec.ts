@@ -70,18 +70,26 @@ describe('BASIC Chat Sequence', function() {
                 client.executeChatCommand("Hello!"),
                 client2.executeChatCommand("This is me!")
             ]).then(results => {
-                done()
+                done();
             }).catch(done);
         })
     })
     describe('GetUpdates fires', function () {
         it('Shows the same to users', function (done) {
+            let someEvent;
             Promise.all([em1.getUpdates(), em2.getUpdates()])
                 .then(chatHistories => {
                     expect(chatHistories[0].events).to.have.lengthOf(2);
                     expect(chatHistories[1].events).to.have.lengthOf(2);
+                    someEvent = chatHistories[0].events[0];
+                }).then(()=>{
+                    return client.updateChatEvent(someEvent, "Updated");
+                }).then((event)=>{
+                    expect(event.id).to.be.equal(someEvent.id);
                     done();
-                }).catch(done)
+            }).catch((e)=>{
+                done(e);
+            })
         })
     });
     describe("Get help", function(){
@@ -94,6 +102,7 @@ describe('BASIC Chat Sequence', function() {
                 }
             })
             const resp = await client.executeChatCommand("*help");
+
             expect(helpcalled).to.be.true;
         })
         it("Lets user issue admin command", async()=>{

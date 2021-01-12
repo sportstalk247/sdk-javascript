@@ -8,7 +8,12 @@ import {
     User,
     UserResult,
     Webhook,
-    ListRequest, UserListResponse, WebhookListResponse, UserDeletionResponse, UserModerationListRequest
+    ListRequest,
+    UserListResponse,
+    WebhookListResponse,
+    UserDeletionResponse,
+    UserModerationListRequest,
+    NotificationListRequest
 } from "../models/CommonModels";
 
 /**
@@ -45,6 +50,7 @@ export interface IUserService extends ISportsTalkConfigurable {
     deleteUser(user:User | string):Promise<UserDeletionResponse>
     getUserDetails(user: User | string): Promise<UserResult>
     listUsersInModerationQueue(request: UserModerationListRequest): Promise<any>
+    listUserNotifications(request: NotificationListRequest): Promise<RestApiResult<any>>
 }
 
 /**

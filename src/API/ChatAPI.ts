@@ -52,6 +52,7 @@ export interface IChatEventService extends ISportsTalkConfigurable, IUserConfigu
     listEventsHistory(cursor?:string, limit?: number): Promise<ChatUpdatesResult>
     setUpdateSpeed(speed: number);
     searchEventHistory(params: EventSearchParams): Promise<any>
+    updateChatEvent(event: EventResult | string, body: string, user?: string | User): Promise<EventResult>
 }
 
 /**
@@ -438,6 +439,7 @@ export interface IChatClient extends IUserConfigurable, ISportsTalkConfigurable 
      * @param cursor
      */
     setPreviousEventsCursor(cursor: string)
+    updateChatEvent(event: EventResult | string, body: string, user?: string | User): Promise<EventResult>
 }
 
 /**
