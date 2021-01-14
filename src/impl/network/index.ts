@@ -13,8 +13,6 @@ const makeRequest = async function makeRequest(config:Request | AxiosRequestConf
     }
     config.headers['Content-Type'] = 'application/json';
     // @ts-ignore
-    config.cors = 'no-cors';
-    // @ts-ignore
     return window.fetch(config.url, config).then((response:Response)=>{
         if(response.ok) {
             return response.json()

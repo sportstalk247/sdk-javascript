@@ -105,7 +105,6 @@ describe('BASIC Chat Sequence', function() {
                 }
             })
             const resp = await client.executeChatCommand("*help");
-
             expect(helpcalled).to.be.true;
         })
         it("Lets user issue admin command", async()=>{
