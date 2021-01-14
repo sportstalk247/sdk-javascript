@@ -130,7 +130,7 @@ describe('REPLY & DELETE Chat Sequence', function() {
         });
         it("deletes first event", async ()=>{
             const updates = await em1.getUpdates();
-            const deletion = await client.deleteEvent(updates.events[0]);
+            const deletion = await client.permanetlyDeleteEvent(updates.events[0]);
             await delay(1000);
             // expect(deletion.data.kind).to.be.equal(Kind.deletedcomment);
         });

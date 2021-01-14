@@ -514,7 +514,7 @@ export class ChatClient implements IChatClient {
      * @param event the event to be deleted.
      * @return the result of the API call.
      */
-    deleteEvent = (event: EventResult | string): Promise<MessageResult<null>> =>{
+    permanetlyDeleteEvent = (event: EventResult | string): Promise<MessageResult<null>> =>{
         return this._eventService.permanetlyDeleteEvent(this._user, event)
     }
 

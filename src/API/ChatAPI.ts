@@ -346,7 +346,7 @@ export interface IChatClient extends IUserConfigurable, ISportsTalkConfigurable 
      * @param event the event to be deleted.
      * @return the result of the API call.
      */
-    deleteEvent(event: EventResult | string): Promise<MessageResult<null>>
+    permanetlyDeleteEvent(event: EventResult | string): Promise<MessageResult<null>>
 
     setBanStatus(user: User | string, isBanned: boolean): Promise<RestApiResult<UserResult>>
 
