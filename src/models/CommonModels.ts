@@ -102,6 +102,11 @@ export interface RestApiResult<T> extends MessageResult<T> {
     code: number,  //e.g. 200, 400
 }
 
+
+export interface ErrorResult extends MessageResult<null>{
+    data: null
+}
+
 export enum Reaction {
     like = 'like'
 }

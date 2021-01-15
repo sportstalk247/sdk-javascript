@@ -13,7 +13,7 @@ import {
 
 import {ISportsTalkConfigurable, IUserConfigurable} from "./CommonAPI";
 import {
-    ChatModerationQueueListRequest,
+    ChatModerationQueueListRequest, ErrorResult,
     ListRequest,
     MessageResult,
     Reaction,
@@ -39,7 +39,7 @@ export interface IChatEventService extends ISportsTalkConfigurable, IUserConfigu
     setUpdatesCursor(cursor: string),
     setPreviousEventsCursor(cursor: string),
     reportMessage(event: EventResult | string, reason: ReportReason): Promise<MessageResult<null>>,
-    executeChatCommand(user:User, command: string, options?: CommandOptions):  Promise<MessageResult<CommandResponse>>
+    executeChatCommand(user: User, command: string, options?: CommandOptions): Promise<MessageResult<CommandResponse> | ErrorResult>;
     sendThreadedReply(user: User, message: string, replyto: EventResult | string, options?: CommandOptions): Promise<MessageResult<CommandResponse>>
     sendQuotedReply(user: User, message: string, replyto: EventResult |string, options?: CommandOptions): Promise<MessageResult<CommandResponse>>
     reactToEvent(user: User, reaction: Reaction | string, reactToMessage: EventResult | string, options?: CommandOptions): Promise<MessageResult<CommandResponse>>
@@ -170,7 +170,7 @@ export interface IChatClient extends IUserConfigurable, ISportsTalkConfigurable 
      * @param command
      * @param options
      */
-    sendAnnouncement(command: string, options?: CommandOptions): Promise<MessageResult<CommandResponse>>
+    sendAnnouncement(command:string, options?: CommandOptions): Promise<MessageResult<CommandResponse> | ErrorResult>;
 
     /**
      * React to an event

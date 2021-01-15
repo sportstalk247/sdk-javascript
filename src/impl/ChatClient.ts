@@ -25,7 +25,14 @@ import {
     ReportType,
     SportsTalkConfig,
     User,
-    UserResult, MessageResult, RestApiResult, UserSearchType, UserListResponse, ListRequest, UserDeletionResponse
+    UserResult,
+    MessageResult,
+    RestApiResult,
+    UserSearchType,
+    UserListResponse,
+    ListRequest,
+    UserDeletionResponse,
+    ErrorResult
 } from "../models/CommonModels";
 import {MISSING_ROOM, MUST_SET_USER} from "./constants/messages";
 import {IUserService} from "../API/CommonAPI";
@@ -436,7 +443,7 @@ export class ChatClient implements IChatClient {
      * @param command the chat string, which can also include admin or action commands by starting with `/` or `*`
      * @param options the custom parameters.  See CommandOptions interface for details.
      */
-    executeChatCommand = (command: string, options?: CommandOptions): Promise<MessageResult<CommandResponse>> => {
+    executeChatCommand = (command: string, options?: CommandOptions): Promise<MessageResult<CommandResponse> | ErrorResult> => {
         return this._eventService.executeChatCommand(this._user, command, options);
     }
 
@@ -445,7 +452,7 @@ export class ChatClient implements IChatClient {
      * @param command
      * @param options
      */
-    sendAnnouncement = (command:string, options?: CommandOptions): Promise<MessageResult<CommandResponse>> => {
+    sendAnnouncement = (command:string, options?: CommandOptions): Promise<MessageResult<CommandResponse> | ErrorResult> => {
         return this._eventService.executeChatCommand(this._user, command, Object.assign(options || {}, {eventtype: ChatOptionsEventType.announcement}))
     }
 
