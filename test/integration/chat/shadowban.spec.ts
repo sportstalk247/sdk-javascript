@@ -21,7 +21,7 @@ const delay = function(timer) {
     })
 }
 
-describe('Post moderation Sequence', function() {
+describe('Room shadowban', function() {
     let roomid;
     let eventlength = 1;
 
@@ -71,24 +71,13 @@ describe('Post moderation Sequence', function() {
        }).then(resp=> {
         //   console.log("GOT Moderation queue")
            expect(resp.events.length).to.be.equal(0);
-       }).then(()=>{
-           return client.getEventService().getUpdates()
-       }).then((result)=>{
-        //   console.log("GOT EVENTS");
-           const list: Array<EventResult> =  result.events || [];
-           eventlength = list.length;
-           return Promise.all(list.map(async function(event) {
-               await client.reportMessage(event, ReportType.abuse);
-               await client2.reportMessage(event, ReportType.abuse);
-               await client3.reportMessage(event, ReportType.abuse);
-           }))
-       }).then(events=> {
-           return delay(1000);
-       }).then(()=>{
-          // console.log("REPORTED all events");
-           return mod.listMessagesInModerationQueue()
-       }).then(resp=> {
-           expect(resp.events.length).to.be.greaterThan(0);
+           return client.shadowBanUserFromRoom(client3.getUser())
+       }).then((resp)=>{
+           expect(resp.shadowbannedusers).to.have.lengthOf(1);
+           expect(resp.shadowbannedusers[0]).to.be.equal(client3.getUser().userid);
+           return client.shadowBanUserFromRoom(client2.getUser(), 500, roomid)
+       }).then((resp)=>{
+           expect(resp.shadowbannedusers).to.have.lengthOf(2);
        }).then(()=>{
             rm.deleteRoom(roomid);
             done();

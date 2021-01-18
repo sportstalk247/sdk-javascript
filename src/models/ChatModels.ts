@@ -274,3 +274,9 @@ export interface EventSearchParams {
     cursor?: string,
     limit?: number
 }
+
+export interface ShadowbanUserApiData {
+    userid: string,
+    shadowban: boolean,
+    expireseconds?: number
+}

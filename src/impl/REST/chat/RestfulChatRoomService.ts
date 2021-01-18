@@ -5,7 +5,11 @@ import {
     ChatRoomResult,
     JoinChatRoomResponse,
     DeletedChatRoomResponse,
-    ChatRoomExitResult, ChatRoomListResponse, EventListResponse, BounceUserResult
+    ChatRoomExitResult,
+    ChatRoomListResponse,
+    EventListResponse,
+    BounceUserResult,
+    ShadowbanUserApiData
 } from "../../../models/ChatModels";
 import {stRequest} from '../../network';
 import {GET, DELETE, POST, API_SUCCESS_MESSAGE} from "../../constants/api";
@@ -362,5 +366,24 @@ export class RestfulChatRoomService implements IRoomService {
             }
         }
         return stRequest(config);
+    }
+
+    setUsersRoomShadowbanStatus = ( user: User | string, room: ChatRoomResult | string, shadowban: boolean, expiresSeconds?: number): Promise<ChatRoomResult> => {
+        const roomId = forceObjKeyOrString(room);
+        const userId = forceObjKeyOrString(user, 'userid');
+        const data:ShadowbanUserApiData = {
+            shadowban,
+            userid: userId
+        }
+        if(expiresSeconds && shadowban) {
+            data.expireseconds = expiresSeconds
+        }
+        const config: AxiosRequestConfig = {
+            method: POST,
+            url: buildAPI(this._config, `${this._apiExt}/${roomId}/shadowban`),
+            headers: this._jsonHeaders,
+            data
+        }
+        return stRequest(config).then(result=>result.data);
     }
 }

@@ -677,6 +677,14 @@ export class ChatClient implements IChatClient {
     updateChatEvent = (event: EventResult | string, body: string, user?: string | User): Promise<EventResult> => {
         return this._eventService.updateChatEvent(event, body, user);
     }
+
+    shadowBanUserFromRoom = (user: User | string, expiresSeconds?: number, room?: ChatRoomResult | string): Promise<any> => {
+        return this._roomService.setUsersRoomShadowbanStatus(user, room || this._currentRoom, true, expiresSeconds)
+    }
+
+    unShadowBanUserFromRoom = (user: User | string, room?: ChatRoomResult | string): Promise<any> => {
+        return this._roomService.setUsersRoomShadowbanStatus(user, room || this._currentRoom, false);
+    }
 }
 
 

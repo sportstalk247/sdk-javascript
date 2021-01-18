@@ -33,7 +33,10 @@ export class RestfulChatModerationService implements IChatModerationService {
     /**
      * Get the moderation queue of events.
      */
-    listMessagesInModerationQueue = (request: ChatModerationQueueListRequest): Promise<EventListResponse> => {
+    listMessagesInModerationQueue = (request: ChatModerationQueueListRequest = {}): Promise<EventListResponse> => {
+        if(!request) {
+            throw new Error("Must submit valid list request");
+        }
         const url:string = buildAPI(this._config, `${this._apiExt}?cursor=${request.cursor ? request.cursor : ''}&roomId=${request.roomId? request.roomId :''}&limit=${request.limit?request.limit :''}`);
         const config:AxiosRequestConfig = {
             method: 'GET',

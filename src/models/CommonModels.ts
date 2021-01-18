@@ -1,4 +1,5 @@
 import {EventType} from "./ChatModels";
+import {Comment} from './CommentsModels';
 
 export enum ModerationType {
     pre = "pre",
