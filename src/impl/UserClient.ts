@@ -28,13 +28,14 @@ export class UserClient implements ISportsTalkConfigurable, IUserService {
         this._userService = new RestfulUserService(this._config);
     }
 
-    setBanStatus = (user: User | string, isBanned: boolean): Promise<RestApiResult<UserResult>> => {
+    setBanStatus = (user: User | string, isBanned: boolean): Promise<UserResult> => {
         return this._userService.setBanStatus(user, isBanned);
     }
 
-    setShadowBanStatus = (user: User | string, isShadowBanned: boolean, expiryseconds?: number): Promise<RestApiResult<UserResult>> => {
+    setShadowBanStatus = (user: User | string, isShadowBanned: boolean, expiryseconds?: number): Promise<UserResult> => {
         return this._userService.setShadowBanStatus(user, isShadowBanned, expiryseconds);
     }
+
     createOrUpdateUser = (user: User): Promise<UserResult> => {
         return this._userService.createOrUpdateUser(user);
     }

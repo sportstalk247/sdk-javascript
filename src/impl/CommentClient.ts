@@ -323,7 +323,7 @@ export class CommentClient implements ICommentingClient {
         return this._conversationService.listConversations( filter);
     }
 
-    setBanStatus = (user: User | string, isBanned: boolean): Promise<RestApiResult<UserResult>> => {
+    setBanStatus = (user: User | string, isBanned: boolean): Promise<UserResult> => {
         return this._userService.setBanStatus(user, isBanned);
     }
 

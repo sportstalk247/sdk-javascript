@@ -368,7 +368,7 @@ export class RestfulChatRoomService implements IRoomService {
         return stRequest(config);
     }
 
-    setUsersRoomShadowbanStatus = ( user: User | string, room: ChatRoomResult | string, shadowban: boolean, expiresSeconds?: number): Promise<ChatRoomResult> => {
+    setRoomShadowbanStatus = (user: User | string, room: ChatRoomResult | string, shadowban: boolean, expiresSeconds?: number): Promise<ChatRoomResult> => {
         const roomId = forceObjKeyOrString(room);
         const userId = forceObjKeyOrString(user, 'userid');
         const data:ShadowbanUserApiData = {

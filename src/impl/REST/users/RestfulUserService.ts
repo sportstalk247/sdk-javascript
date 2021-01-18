@@ -73,7 +73,7 @@ export class RestfulUserService implements IUserService {
      * @param user || userid
      * @param isBanned
      */
-    setBanStatus = (user: User | string, isBanned: boolean): Promise<RestApiResult<UserResult>> => {
+    setBanStatus = (user: User | string, isBanned: boolean): Promise<UserResult> => {
         // @ts-ignore
         const userid = user.userid || user;
         const url = buildAPI(this._config,`${this._apiExt}/${userid}/ban`);
@@ -82,7 +82,7 @@ export class RestfulUserService implements IUserService {
             url: url,
             headers: this._jsonHeaders,
             data: {banned: ""+isBanned}
-        });
+        }).then(result=>result.data);
     }
 
     /**
@@ -92,7 +92,7 @@ export class RestfulUserService implements IUserService {
      * @param isShadowBanned
      * @param expireseconds
      */
-    setShadowBanStatus = (user:User | String, isShadowBanned: boolean, expireseconds?: number): Promise<RestApiResult<any>> => {
+    setShadowBanStatus = (user:User | String, isShadowBanned: boolean, expireseconds?: number): Promise<UserResult> => {
         // @ts-ignore
         const userid = user.userid || user;
         const url = buildAPI(this._config,`${this._apiExt}/${userid}/shadowban`);
@@ -108,7 +108,7 @@ export class RestfulUserService implements IUserService {
             url: url,
             headers: this._jsonHeaders,
             data
-        });
+        }).then(result=>result.data);
     }
 
     /**

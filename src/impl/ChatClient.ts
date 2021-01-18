@@ -560,11 +560,20 @@ export class ChatClient implements IChatClient {
         return this._roomService.deleteRoom(room);
     }
 
-    setBanStatus = (user: User | string, isBanned: boolean): Promise<RestApiResult<UserResult>> => {
+    setBanStatus = (user: User | string, isBanned: boolean): Promise<UserResult> => {
         return this._userService.setBanStatus(user, isBanned);
     }
 
-    setShadowBanStatus = (user: User | string, options: ShadowBanOptions): Promise<RestApiResult<UserResult>> => {
+    /**
+     * Adds or removes the shadowban status on the user.
+     * This method is global.  If a room is specified in options it will be ignored.
+     * @param user
+     * @param options
+     */
+    setShadowBanStatus = (user: User | string, options: ShadowBanOptions): Promise<UserResult | ChatRoomResult> => {
+        if(options && options.roomid) {
+            return this._roomService.setRoomShadowbanStatus(user, options.roomid || this._currentRoom, options.shadowban, options.expiryseconds)
+        }
         return this._userService.setShadowBanStatus(user, options.shadowban, options.expiryseconds);
     }
 
@@ -678,13 +687,6 @@ export class ChatClient implements IChatClient {
         return this._eventService.updateChatEvent(event, body, user);
     }
 
-    shadowBanUserFromRoom = (user: User | string, expiresSeconds?: number, room?: ChatRoomResult | string): Promise<any> => {
-        return this._roomService.setUsersRoomShadowbanStatus(user, room || this._currentRoom, true, expiresSeconds)
-    }
-
-    unShadowBanUserFromRoom = (user: User | string, room?: ChatRoomResult | string): Promise<any> => {
-        return this._roomService.setUsersRoomShadowbanStatus(user, room || this._currentRoom, false);
-    }
 }
 
 

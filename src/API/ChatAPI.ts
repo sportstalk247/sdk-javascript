@@ -131,7 +131,7 @@ export interface IRoomService extends ISportsTalkConfigurable {
     joinRoom(room: ChatRoom | string, user: User): Promise<JoinChatRoomResponse>
     joinRoomByCustomId( room: ChatRoom | string, user: User): Promise<JoinChatRoomResponse>
     exitRoom(user: User | string, room: ChatRoom | string): Promise<ChatRoomExitResult>
-    setUsersRoomShadowbanStatus(user: User | string, room: ChatRoomResult | string, shadowban: boolean, expiresSeconds?: number): Promise<ChatRoomResult>
+    setRoomShadowbanStatus(user: User | string, room: ChatRoomResult | string, shadowban: boolean, expiresSeconds?: number): Promise<ChatRoomResult>
 }
 
 /**
@@ -349,14 +349,14 @@ export interface IChatClient extends IUserConfigurable, ISportsTalkConfigurable 
      */
     permanetlyDeleteEvent(event: EventResult | string): Promise<MessageResult<null>>
 
-    setBanStatus(user: User | string, isBanned: boolean): Promise<RestApiResult<UserResult>>
+    setBanStatus(user: User | string, isBanned: boolean): Promise<UserResult>
 
     /**
      * Sets shadowban status for a user.
      * @param user
      * @param options
      */
-    setShadowBanStatus(user: User | string, options: ShadowBanOptions): Promise<RestApiResult<UserResult>>
+    setShadowBanStatus(user: User | string, options: ShadowBanOptions): Promise<UserResult | ChatRoomResult>
 
     /**
      * creates a new user, or updates a user if that userid already exists.
@@ -441,8 +441,7 @@ export interface IChatClient extends IUserConfigurable, ISportsTalkConfigurable 
      */
     setPreviousEventsCursor(cursor: string)
     updateChatEvent(event: EventResult | string, body: string, user?: string | User): Promise<EventResult>
-    shadowBanUserFromRoom(user: User | string, expiresSeconds?: number, room?: ChatRoomResult | string): Promise<ChatRoomResult>
-    unShadowBanUserFromRoom(user: User | string, room?: ChatRoomResult | string): Promise<ChatRoomResult>
+
 }
 
 /**

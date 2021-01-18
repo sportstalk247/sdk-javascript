@@ -84,7 +84,7 @@ export interface ICommentingClient extends ISportsTalkConfigurable, IUserConfigu
     getCommentReplies(comment:CommentResult, request?: CommentRequest): Promise<CommentListResponse>
     listComments(request?: CommentRequest, conversation?: Conversation): Promise<CommentListResponse>
     listConversations(filter?: ConversationRequest): Promise<ConversationListResponse>
-    setBanStatus(user: User | string, isBanned: boolean): Promise<RestApiResult<UserResult>>
+    setBanStatus(user: User | string, isBanned: boolean): Promise<UserResult>
     createOrUpdateUser(user: User): Promise<UserResult>
     searchUsers(search: string, type: UserSearchType, limit?:number): Promise<UserListResponse>
     listUsers(request?: ListRequest): Promise<UserListResponse>
