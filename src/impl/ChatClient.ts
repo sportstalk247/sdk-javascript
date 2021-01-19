@@ -232,6 +232,7 @@ export class ChatClient implements IChatClient {
      */
     setUser = (user:User):User => {
        this._user = user;
+       this._eventService.setUser(this._user);
        return this._user;
     }
 
