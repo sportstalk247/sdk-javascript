@@ -1,10 +1,13 @@
-import {IChatClient} from "../API/ChatAPI";
 import {
-    ListRequest, NotificationListRequest,
+    ListRequest,
+    NotificationListRequest,
+    ReportType,
     RestApiResult,
     SportsTalkConfig,
-    User, UserDeletionResponse,
-    UserListResponse, UserModerationListRequest,
+    User,
+    UserDeletionResponse,
+    UserListResponse,
+    UserModerationListRequest,
     UserResult,
     UserSearchType
 } from "../models/CommonModels";
@@ -63,4 +66,7 @@ export class UserClient implements ISportsTalkConfigurable, IUserService {
         return this._userService.listUserNotifications(request)
     }
 
+    reportUser = (userToReport: User | string, reportedBy: User | string, reportType: ReportType = ReportType.abuse): Promise<User> => {
+        return this._userService.reportUser(userToReport, reportedBy, reportType);
+    }
 }

@@ -239,7 +239,7 @@ export class ChatClient implements IChatClient {
     /**
      * Get the current user.
      */
-    getUser = (): User | undefined => {
+    getCurrentUser = (user?: string): User |undefined => {
         return this._user;
     }
 
@@ -268,13 +268,15 @@ export class ChatClient implements IChatClient {
      * Join a chat room
      * @param room
      */
-    joinRoom = (room: ChatRoomResult | string): Promise<JoinChatRoomResponse> => {
+    joinRoom = (room: ChatRoomResult | string, ignoreMessages: boolean = false): Promise<JoinChatRoomResponse> => {
         return this._roomService.joinRoom(room, this._user).then(async (response:JoinChatRoomResponse) => {
             this._currentRoom = response.room;
             this._eventService.setCurrentRoom(this._currentRoom);
             this._eventService.setPreviousEventsCursor(response.previouseventscursor || '');
             response.eventscursor.events.reverse();
-            await this._eventService.handleUpdates(response.eventscursor);
+            if(!ignoreMessages) {
+                await this._eventService.handleUpdates(response.eventscursor);
+            }
             return response;
         })
     }
@@ -284,12 +286,14 @@ export class ChatClient implements IChatClient {
      * @param user
      * @param room
      */
-    joinRoomByCustomId(room: ChatRoom | string): Promise<JoinChatRoomResponse> {
+    joinRoomByCustomId(room: ChatRoom | string, ignoreMessages: boolean = false): Promise<JoinChatRoomResponse> {
         return this._roomService.joinRoomByCustomId(room, this._user).then(async (response:JoinChatRoomResponse) => {
             this._currentRoom = response.room;
             this._eventService.setCurrentRoom(this._currentRoom);
             this._eventService.setPreviousEventsCursor(response.previouseventscursor || '');
-            this._eventService.handleUpdates(response.eventscursor);
+            if(!ignoreMessages) {
+                await this._eventService.handleUpdates(response.eventscursor);
+            }
             return response;
         })
     }
@@ -682,6 +686,10 @@ export class ChatClient implements IChatClient {
      */
     setPreviousEventsCursor = (cursor:string) =>{
         this._eventService.setPreviousEventsCursor(cursor);
+    }
+
+    reportUser = (userToReport: User | string, reportedBy: User | string, reportType: ReportType = ReportType.abuse): Promise<User> => {
+        return this._userService.reportUser(userToReport, reportedBy, reportType)
     }
 
     updateChatEvent = (event: EventResult | string, body: string, user?: string | User): Promise<EventResult> => {

@@ -22,7 +22,7 @@ describe("Conversation Client", function(){
             const handle = "handle";
             const client = CommentClient.init(DEFAULT_CONFIG);
             client.setUser({userid, handle});
-            const user:User = client.getUser();
+            const user:User = client.getCurrentUser();
             expect(user.handle).to.be.equal(handle);
             expect(user.userid).to.be.equal(userid);
         })

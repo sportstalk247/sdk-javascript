@@ -13,7 +13,7 @@ import {
     WebhookListResponse,
     UserDeletionResponse,
     UserModerationListRequest,
-    NotificationListRequest
+    NotificationListRequest, ReportType
 } from "../models/CommonModels";
 
 /**
@@ -35,7 +35,7 @@ export interface IConfigurable {
  */
 export interface IUserConfigurable {
     setUser(user: User):void;
-    getUser(): User | undefined | null;
+    getCurrentUser(): User | undefined | null;
 }
 
 /**
@@ -49,6 +49,7 @@ export interface IUserService extends ISportsTalkConfigurable {
     listUsers(request?: ListRequest): Promise<UserListResponse>
     deleteUser(user:User | string):Promise<UserDeletionResponse>
     getUserDetails(user: User | string): Promise<UserResult>
+    reportUser(userToReport: User | string, reportedBy: User | string, reportType?: ReportType): Promise<UserResult>
     listUsersInModerationQueue(request: UserModerationListRequest): Promise<any>
     listUserNotifications(request: NotificationListRequest): Promise<RestApiResult<any>>
 }

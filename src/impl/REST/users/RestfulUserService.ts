@@ -5,6 +5,7 @@ import {buildAPI, forceObjKeyOrString, formify, getJSONHeaders} from "../../util
 import {
     ListRequest,
     NotificationListRequest,
+    ReportType,
     RestApiResult,
     SportsTalkConfig,
     User,
@@ -190,6 +191,22 @@ export class RestfulUserService implements IUserService {
         return stRequest(config).then(response=>{
             return response.data;
         });
+    }
+
+    reportUser = (userToReport: User | string, reportedBy: User | string, reportType: ReportType = ReportType.abuse): Promise<User> => {
+        const id = forceObjKeyOrString(userToReport, 'userid');
+        const reporter = forceObjKeyOrString(reportedBy, 'userid');
+        const data = {
+            userid: reporter,
+            reporttype: reportType
+        }
+        const config: AxiosRequestConfig = {
+            method: POST,
+            url: buildAPI(this._config, `user/users/${id}/report`),
+            headers: this._jsonHeaders,
+            data: data
+        }
+        return stRequest(config).then(response=>response.data);
     }
 
     listUsersInModerationQueue = (request: UserModerationListRequest): Promise<RestApiResult<UserResult>> => {

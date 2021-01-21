@@ -138,7 +138,7 @@ export class RestfulChatEventService implements IChatEventService {
      * Get the user
      * @return User
      */
-    getUser = () => {
+    getCurrentUser = () => {
         return this._user;
     }
 

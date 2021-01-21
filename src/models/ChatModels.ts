@@ -97,7 +97,6 @@ export interface CommandOptions {
     eventtype?: ChatOptionsEventType,
     customtype?: string,
     customid?: string,
-    replyto?: string,
     custompayload?: string,
 }
 

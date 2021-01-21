@@ -14,6 +14,7 @@ describe("UserManager", function(){
     const RM = new RestfulChatRoomService(config);
     const userid = "107AC57E-85ED-4E1D-BDAF-2533CD3872EB"
     let user;
+    let reporter;
     describe("Creation", function() {
         it("Can create a user", done => {
             UM.createOrUpdateUser({
@@ -22,35 +23,41 @@ describe("UserManager", function(){
                 displayname: "someuser"
             }).then(u=>{
                 user=u;
-                done();
-            })
+                return UM.createOrUpdateUser({
+                    userid: 'reporter',
+                    handle: 'reporter'
+                });
+            }).then((reportinguser)=>{
+                reporter = reportinguser;
+                done()
+            }).catch(done);
         })
     });
     describe("Ban", function(){
         it("Can ban the user", done=>{
             UM.setBanStatus(user, true).then(res=>{
-                user = res.data;
+                user = res;
                 expect(user.banned).to.be.true;
                 done();
             }).catch(done);
         })
         it("Can unban the user", done=>{
             UM.setBanStatus(user, false).then(res=>{
-                user = res.data;
+                user = res;
                 expect(user.banned).to.be.false;
                 done();
             }).catch(done)
         })
         it("Can ban the user with id", done=>{
             UM.setBanStatus(userid, true).then(res=>{
-                user = res.data;
+                user = res;
                 expect(user.banned).to.be.true;
                 done();
             }).catch(done);
         })
         it("Can unban the user with id", done=>{
             UM.setBanStatus(userid, false).then(res=>{
-                user = res.data;
+                user = res;
                 expect(user.banned).to.be.false;
                 done();
             }).catch(done)
@@ -60,35 +67,35 @@ describe("UserManager", function(){
     describe("ShadowBan", function(){
         it("Can shadowban the user", done=>{
             UM.setShadowBanStatus(user, true).then(res=>{
-                user = res.data;
+                user = res;
                 expect(user.shadowbanned).to.be.true;
                 done();
             }).catch(done);
         })
         it("Can unshadowban the user", done=>{
             UM.setShadowBanStatus(user, false).then(res=>{
-                user = res.data;
+                user = res;
                 expect(user.shadowbanned).to.be.false;
                 done();
             }).catch(done)
         })
         it("Can shadowban the user with id", done=>{
             UM.setShadowBanStatus(userid, true).then(res=>{
-                user = res.data;
+                user = res;
                 expect(user.shadowbanned).to.be.true;
                 done();
             }).catch(done);
         })
         it("Can unshadowban the user with id", done=>{
             UM.setShadowBanStatus(userid, false).then(res=>{
-                user = res.data;
+                user = res;
                 expect(user.shadowbanned).to.be.false;
                 done();
             }).catch(done)
         })
         it("Can shadowban the user with an expiry time", done=>{
             UM.setShadowBanStatus(user, true, 90).then(res=>{
-                user = res.data;
+                user = res;
                 expect(user.shadowbanned).to.be.true;
                 const date: Date = new Date(user.shadowbanexpires);
                 expect(date).be.greaterThan(new Date());
@@ -122,6 +129,15 @@ describe("UserManager", function(){
         it("Won't find by bad userid", async()=>{
             const results = await UM.searchUsers("doesntexistuserid", UserSearchType.userid)
             expect(results.users.length).to.be.equal(0);
+        })
+    })
+
+    describe('Report user', function() {
+        it('Report a user', async() =>{
+            const reported = await UM.reportUser(user, reporter);
+            expect(reported.kind).to.be.equal('app.user');
+            expect(reported.userid).to.be.equal(user.userid);
+            expect(reported.reports).to.have.lengthOf(1);
         })
     })
 

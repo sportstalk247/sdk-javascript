@@ -111,7 +111,7 @@ export class CommentClient implements ICommentingClient {
     /**
      * Get the current user.
      */
-    public getUser = () => {
+    public getCurrentUser = () => {
         return this._user;
     }
 

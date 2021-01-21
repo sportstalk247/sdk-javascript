@@ -257,14 +257,14 @@ export interface IChatClient extends IUserConfigurable, ISportsTalkConfigurable 
      * @param room or room ID
      * @return Promise the JoinChatRoomResponse from the server.
      */
-    joinRoom(room: ChatRoomResult | string): Promise<JoinChatRoomResponse>;
+    joinRoom(room: ChatRoomResult | string, ignoreMessages?: boolean): Promise<JoinChatRoomResponse>;
 
     /**
      * Join a chat room
      * @param room or room customID
      * @return Promise the JoinChatRoomResponse from the server.
      */
-    joinRoomByCustomId(room: ChatRoom | string): Promise<JoinChatRoomResponse>;
+    joinRoomByCustomId(room: ChatRoom | string, ignoreMessages: boolean): Promise<JoinChatRoomResponse>;
 
     /**
      * Gets the current Chatroom.
@@ -391,6 +391,7 @@ export interface IChatClient extends IUserConfigurable, ISportsTalkConfigurable 
      */
     getUserDetails(user: User | string): Promise<UserResult>
 
+    reportUser(userToReport: User | string, reportedBy: User | string, reportType?: ReportType): Promise<User>
     /**
      * Checks if the current user has already reported a message.
      * If no current user set or provided, throws an error;
