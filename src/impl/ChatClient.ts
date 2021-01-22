@@ -268,13 +268,13 @@ export class ChatClient implements IChatClient {
      * Join a chat room
      * @param room
      */
-    joinRoom = (room: ChatRoomResult | string, ignoreMessages: boolean = false): Promise<JoinChatRoomResponse> => {
+    joinRoom = (room: ChatRoomResult | string, ignoreInitialMessages: boolean = false): Promise<JoinChatRoomResponse> => {
         return this._roomService.joinRoom(room, this._user).then(async (response:JoinChatRoomResponse) => {
             this._currentRoom = response.room;
             this._eventService.setCurrentRoom(this._currentRoom);
             this._eventService.setPreviousEventsCursor(response.previouseventscursor || '');
             response.eventscursor.events.reverse();
-            if(!ignoreMessages) {
+            if(!ignoreInitialMessages) {
                 await this._eventService.handleUpdates(response.eventscursor);
             }
             return response;
@@ -286,12 +286,12 @@ export class ChatClient implements IChatClient {
      * @param user
      * @param room
      */
-    joinRoomByCustomId(room: ChatRoom | string, ignoreMessages: boolean = false): Promise<JoinChatRoomResponse> {
+    joinRoomByCustomId(room: ChatRoom | string, ignoreInitialMessages: boolean = false): Promise<JoinChatRoomResponse> {
         return this._roomService.joinRoomByCustomId(room, this._user).then(async (response:JoinChatRoomResponse) => {
             this._currentRoom = response.room;
             this._eventService.setCurrentRoom(this._currentRoom);
             this._eventService.setPreviousEventsCursor(response.previouseventscursor || '');
-            if(!ignoreMessages) {
+            if(!ignoreInitialMessages) {
                 await this._eventService.handleUpdates(response.eventscursor);
             }
             return response;

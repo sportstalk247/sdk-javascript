@@ -46,8 +46,9 @@ describe('BASIC Chat Sequence', function() {
             }).then(room => {
                 theRoom = room;
                 return client.joinRoom(room)
-            }).then((resp) => {
+            }).then(async (resp) => {
                 expect(resp.room.id).to.be.not.null;
+                await client.executeChatCommand("Sending a message");
                 done()
             }).catch(e=>{
                 done(e);
@@ -56,7 +57,7 @@ describe('BASIC Chat Sequence', function() {
     });
     describe('User 2', function () {
         it('Joins room', function (done) {
-            client2.joinRoom(theRoom)
+            client2.joinRoom(theRoom, true)
                 .then((resp) => {
                     expect(resp.room.id).to.be.not.null;
                     done()
