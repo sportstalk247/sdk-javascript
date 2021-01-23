@@ -35,8 +35,8 @@ import {
     ErrorResult
 } from "../models/CommonModels";
 import {MISSING_ROOM, MUST_SET_USER} from "./constants/messages";
-import {IUserService} from "../API/CommonAPI";
 import {forceObjKeyOrString} from "./utils";
+import {IUserService} from "../API/Users";
 
 /**
  * ChatClient provides an interface to chat applications.
@@ -230,10 +230,10 @@ export class ChatClient implements IChatClient {
      * Set the chat user.
      * @param user
      */
-    setUser = (user:User):User => {
+    setUser = (user:User):ChatClient => {
        this._user = user;
        this._eventService.setUser(this._user);
-       return this._user;
+       return this;
     }
 
     /**
@@ -247,7 +247,7 @@ export class ChatClient implements IChatClient {
      * If the user exists, updates the user. Otherwise creates a new user.
      * @param user a User model.  The values of 'banned', 'handlelowercase' and 'kind' are ignored.
      */
-    createOrUpdateUser = (user: User, setDefault:boolean = true): Promise<User> => {
+    createOrUpdateUser = (user: User, setDefault:boolean = true): Promise<UserResult> => {
         return this._userService.createOrUpdateUser(user).then(user=>{
             if(setDefault) {
                 this._user = user;
@@ -268,7 +268,7 @@ export class ChatClient implements IChatClient {
      * Join a chat room
      * @param room
      */
-    joinRoom = (room: ChatRoomResult | string, ignoreInitialMessages: boolean = false): Promise<JoinChatRoomResponse> => {
+    joinRoom = (room: ChatRoomResult | string, ignoreInitialMessages:  boolean = false): Promise<JoinChatRoomResponse> => {
         return this._roomService.joinRoom(room, this._user).then(async (response:JoinChatRoomResponse) => {
             this._currentRoom = response.room;
             this._eventService.setCurrentRoom(this._currentRoom);

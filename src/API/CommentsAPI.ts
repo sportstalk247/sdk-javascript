@@ -1,6 +1,6 @@
 /* istanbul ignore file */
 
-import {IConfigurable, ISportsTalkConfigurable, IUserConfigurable} from "./CommonAPI";
+import {IConfigurable, ISportsTalkConfigurable} from "./CommonAPI";
 import {
     Comment,
     CommentDeletionResponse,
@@ -24,6 +24,7 @@ import {
     UserResult,
     UserSearchType, UserListResponse, ListRequest, UserDeletionResponse
 } from "../models/CommonModels";
+import {IUserConfigurable} from "./Users";
 
 /**
  * @interface

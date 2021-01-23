@@ -29,7 +29,7 @@ export interface ApiHeaders {
  */
 export interface User {
     userid: string, // Unique ID, defined by client application to use native IDs.
-    handle: string, // Allowed Characters:  "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890_"
+    handle?: string, // Allowed Characters:  "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890_"
     handlelowercase?: string, // an all lowercase version of the handle
     displayname?: string, // A friendly display name.  E.g. a user has a handle "jjsmithyperson" and their display name "John J. Smith"
     pictureurl?: string, // a full URL to a profile photo.
@@ -68,6 +68,7 @@ export enum Kind {
 
 export interface UserResult extends User {
     kind?: Kind.user
+    reports: []
 }
 
 /**

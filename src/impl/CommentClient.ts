@@ -25,8 +25,8 @@ import {RestfulConversationService} from "./REST/comments/RestfulConversationSer
 import {IConversationService, ICommentService, ICommentingClient} from "../API/CommentsAPI";
 import {DEFAULT_CONFIG} from "./constants/api";
 import {RestfulUserService} from "./REST/users/RestfulUserService";
-import {IUserService} from "../API/CommonAPI";
 import {forceObjKeyOrString} from "./utils";
+import {IUserService} from "../API/Users";
 
 /**
  * This is the API client for the Conversations feature.
@@ -228,7 +228,7 @@ export class CommentClient implements ICommentingClient {
      * If the user exists, updates the user. Otherwise creates a new user.
      * @param user a User model.  The values of 'banned', 'handlelowercase' and 'kind' are ignored.
      */
-    createOrUpdateUser = (user: User, setDefault:boolean = true): Promise<User> => {
+    createOrUpdateUser = (user: User, setDefault:boolean = true): Promise<UserResult> => {
         return this._userService.createOrUpdateUser(user).then(user=>{
             if(setDefault) {
                 this._user = user;

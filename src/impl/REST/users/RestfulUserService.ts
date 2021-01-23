@@ -16,8 +16,8 @@ import {
     UserSearchType
 } from "../../../models/CommonModels";
 import {EventType} from '../../../models/ChatModels';
-import {IUserService} from "../../../API/CommonAPI";
 import {SettingsError} from "../../errors";
+import {IUserService} from "../../../API/Users";
 
 /**
  * Class for handling user management via REST.
@@ -193,7 +193,7 @@ export class RestfulUserService implements IUserService {
         });
     }
 
-    reportUser = (userToReport: User | string, reportedBy: User | string, reportType: ReportType = ReportType.abuse): Promise<User> => {
+    reportUser = (userToReport: User | string, reportedBy: User | string, reportType: ReportType = ReportType.abuse): Promise<UserResult> => {
         const id = forceObjKeyOrString(userToReport, 'userid');
         const reporter = forceObjKeyOrString(reportedBy, 'userid');
         const data = {

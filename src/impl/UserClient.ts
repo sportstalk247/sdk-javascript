@@ -11,9 +11,10 @@ import {
     UserResult,
     UserSearchType
 } from "../models/CommonModels";
-import {ISportsTalkConfigurable, IUserService} from "../API/CommonAPI";
+import {ISportsTalkConfigurable} from "../API/CommonAPI";
 import {RestfulUserService} from "./REST/users/RestfulUserService";
 import {DEFAULT_CONFIG} from "./constants/api";
+import {IUserService} from "../API/Users";
 
 /**
  * A class used for managing users.  Typically used by custom management dashboards.
@@ -29,6 +30,12 @@ export class UserClient implements ISportsTalkConfigurable, IUserService {
     public setConfig(config:SportsTalkConfig) {
         this._config = Object.assign(DEFAULT_CONFIG, config);
         this._userService = new RestfulUserService(this._config);
+    }
+
+    public static init = (config:SportsTalkConfig) => {
+        const client = new UserClient();
+        client.setConfig(config);
+        return client;
     }
 
     setBanStatus = (user: User | string, isBanned: boolean): Promise<UserResult> => {
@@ -66,7 +73,7 @@ export class UserClient implements ISportsTalkConfigurable, IUserService {
         return this._userService.listUserNotifications(request)
     }
 
-    reportUser = (userToReport: User | string, reportedBy: User | string, reportType: ReportType = ReportType.abuse): Promise<User> => {
+    reportUser = (userToReport: User | string, reportedBy: User | string, reportType: ReportType = ReportType.abuse): Promise<UserResult> => {
         return this._userService.reportUser(userToReport, reportedBy, reportType);
     }
 }

@@ -11,6 +11,7 @@ import {
     ModerationType,
     ReportReason, Reaction
 } from "./CommonModels";
+import {ErrorHandlerFunction} from "../impl/network";
 
 export enum EventType  {
     speech= "speech",
@@ -62,7 +63,7 @@ export interface EventHandlerConfig {
     onPurgeEvent?(event:EventResult),
     onAdminCommand?(response: RestApiResult<Kind.api>),
     onHelp?(result: MessageResult<Event | CommandResponse | null>),
-    onNetworkError?(error: Error)
+    onNetworkError?:ErrorHandlerFunction<any>
     onRoomChange?(newRoom?:ChatRoom, oldRoom?:ChatRoom)
 }
 

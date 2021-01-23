@@ -399,8 +399,8 @@ export class RestfulChatEventService implements IChatEventService {
             headers: this._jsonHeaders,
             data: data
         };
-        // @ts-ignore
-        return stRequest(config).then(response=>{
+        const errorHandler =  this.eventHandlers && this.eventHandlers.onNetworkError;
+        return stRequest(config, errorHandler).then(response=>{
             return this._evaluateCommandResponse(command, response)
         });
     }

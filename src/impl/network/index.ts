@@ -31,12 +31,18 @@ const makeRequest = async function makeRequest(config:Request | AxiosRequestConf
  * Make request with axios on server
  * @param config
  */
-const makeAxiosRequest = async function makeAxiosRequest(config:AxiosRequestConfig) {
+const makeAxiosRequest = async function makeAxiosRequest(config:AxiosRequestConfig, errorHandlerfunction?: ErrorHandlerFunction<any>) {
     if(config && config.headers) {
         // @ts-ignore
         config.decompress=true
     }
-    return axios(config).then(result=>result.data);
+    return axios(config).then(result=>result.data).catch(e=>{
+        console.log("Network error", config);
+        if(errorHandlerfunction) {
+            return errorHandlerfunction(e);
+        }
+        throw e;
+    })
 }
 
 function getRequestLibrary() {
@@ -44,6 +50,10 @@ function getRequestLibrary() {
         return makeRequest;
     }
     return makeAxiosRequest
+}
+
+export interface ErrorHandlerFunction<T> {
+    (error: Error):T
 }
 
 export const stRequest = getRequestLibrary();

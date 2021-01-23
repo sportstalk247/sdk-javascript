@@ -4,7 +4,7 @@ import {RestfulChatRoomService} from "../../../src/impl/REST/chat/RestfulChatRoo
 import * as dotenv from 'dotenv';
 import {Kind, SportsTalkConfig} from "../../../src/models/CommonModels";
 import {API_SUCCESS_MESSAGE} from "../../../src/impl/constants/api";
-import {EventResult} from "../../../dist/models/ChatModels";
+import {EventResult, Event} from "../../../dist/models/ChatModels";
 dotenv.config();
 
 const { expect } = chai;
@@ -87,6 +87,7 @@ describe('BASIC Chat Sequence', function() {
                 }).then(()=>{
                     return client.updateChatEvent(someEvent, "Updated");
                 }).then(async (event)=>{
+                    // @ts-ignore
                     const newEvent: EventResult = await client.getEventById(event.id);
                     expect(newEvent.id).to.be.equal(someEvent.id);
                     expect(newEvent.body).to.be.equal("Updated");

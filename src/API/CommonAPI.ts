@@ -1,20 +1,6 @@
 /* istanbul ignore file */
 
-import {
-    RestApiResult,
-    ClientConfig,
-    UserSearchType,
-    SportsTalkConfig,
-    User,
-    UserResult,
-    Webhook,
-    ListRequest,
-    UserListResponse,
-    WebhookListResponse,
-    UserDeletionResponse,
-    UserModerationListRequest,
-    NotificationListRequest, ReportType
-} from "../models/CommonModels";
+import {ClientConfig, SportsTalkConfig, Webhook, WebhookListResponse} from "../models/CommonModels";
 
 /**
  * @interface
@@ -28,30 +14,6 @@ export interface ISportsTalkConfigurable {
  */
 export interface IConfigurable {
     setConfig(config: ClientConfig): void
-}
-
-/**
- * @interface
- */
-export interface IUserConfigurable {
-    setUser(user: User):void;
-    getCurrentUser(): User | undefined | null;
-}
-
-/**
- * @interface
- */
-export interface IUserService extends ISportsTalkConfigurable {
-    setBanStatus(user: User | string, isBanned: boolean): Promise<UserResult>
-    setShadowBanStatus(user:User | String, isShadowBanned: boolean, expireseconds?: number): Promise<UserResult>
-    createOrUpdateUser(user: User): Promise<UserResult>
-    searchUsers(search: string, type: UserSearchType, limit?:number): Promise<UserListResponse>
-    listUsers(request?: ListRequest): Promise<UserListResponse>
-    deleteUser(user:User | string):Promise<UserDeletionResponse>
-    getUserDetails(user: User | string): Promise<UserResult>
-    reportUser(userToReport: User | string, reportedBy: User | string, reportType?: ReportType): Promise<UserResult>
-    listUsersInModerationQueue(request: UserModerationListRequest): Promise<any>
-    listUserNotifications(request: NotificationListRequest): Promise<RestApiResult<any>>
 }
 
 /**
