@@ -22,32 +22,33 @@ function sendMessages(client): Promise<void> {
     let counter = 0;
     return new Promise((resolve, reject) => {
         const timeout = setInterval(function() {
-            const date = new Date().toISOString()
-            client.executeChatCommand(`${client.getCurrentUser().userid} - This is a chat command - ${date}`);
+            // const date = new Date().toISOString()
+            client.executeChatCommand(`${client.getCurrentUser().userid} - This is a chat command`);
             counter = counter++
             if(counter>100) {
                 resolve();
                 clearInterval(timeout);
             }
-        }, 2000)
+        }, 1000)
     })
 }
 
 async function spawnClient(user, room) {
     const client = ChatClient.init(config)
     client.setEventHandlers({
-        onChatEvent: (e)=>{console.log(e.body)},
+        onChatEvent: (e)=>{},
         onNetworkError: (error: Error) => {
-            console.log('Network error on getUpdates', error);
+            // @ts-ignore
+            console.log(`Network error on getUpdates `, error.response.data);
             return {};
         }
     })
     client.setUser(user);
-    await client.joinRoomByCustomId(room).catch(e=>{
+    const joined = await client.joinRoomByCustomId(room).catch(e=>{
         console.log('Could not join room', room);
         console.log(e);
     })
-    console.log(`Joined - ${user.userid}`);
+    console.log(`Joined - ${user.userid} -${JSON.stringify(joined)}`);
     client.startListeningToEventUpdates();
 
     if(Math.random()<0.1) {
