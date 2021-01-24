@@ -39,7 +39,7 @@ async function spawnClient(user, room) {
         onChatEvent: (e)=>{},
         onNetworkError: (error: Error) => {
             // @ts-ignore
-            console.log(`Network error on getUpdates `, error);
+            console.log(`Network error on getUpdates`);
             return {};
         }
     })
