@@ -15,23 +15,27 @@ const config = {
     appId: process.env.TEST_APP_ID,
     endpoint: process.env.TEST_ENDPOINT,
 };
+// numCPUs will be used to split users across different processes to do simultaneous load.
+// The more cores the more accurate to multiple users.
 const numCPUs = require('os').cpus().length;
-const userCreationLimit = Math.ceil((parseInt(process.env.USER_CREATION_LIMIT || '300', 10) / numCPUs));
+// The max number of users to simulate.  Will round up to make it a multiple of the # of cores you have.
+const userCreationLimit = Math.ceil((parseInt(process.env.USER_CREATION_LIMIT || '400', 10) / numCPUs));
+// Percentage of users that will start sending chat commands
 const speakerPercentage = parseFloat(process.env.SPEAKING_USER_LEVEL || '0.1');
+// For the users that send chat commands, this is how often they will send a message.
 const speakerEmitFrequency = parseInt(process.env.SPEAKING_FREQUENCY || '1000'); // in milliseconds. 1000 = one message/second
 
-
+let counter = 0;
 function sendMessages(client): Promise<void> {
     console.log(`${process.pid} is a speaker`);
-    let counter = 0;
     return new Promise((resolve, reject) => {
         const timeout = setInterval(function() {
             // const date = new Date().toISOString()
-            client.executeChatCommand(`${client.getCurrentUser().userid} - This is a chat command`);
-            counter = counter++
+            client.executeChatCommand(`${client.getCurrentUser().userid} - This is a chat command ${counter}`);
+            counter = counter+1;
             if(counter>100) {
-                resolve();
                 clearInterval(timeout);
+                resolve();
             }
         }, speakerEmitFrequency)
     })
@@ -40,7 +44,7 @@ function sendMessages(client): Promise<void> {
 async function spawnClient(user:User, room:ChatRoomResult) {
     const client = ChatClient.init(config)
     client.setEventHandlers({
-        onChatEvent: (e)=>{console.log('Received event: '+e.id)},
+        onChatEvent: (e)=>{console.log('Received event: "'+e.body+ '" from '+e.userid)},
         onNetworkError: (error: Error) => {
             // @ts-ignore
             console.log(`Network error on getUpdates`, error);
