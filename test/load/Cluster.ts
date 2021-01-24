@@ -21,7 +21,7 @@ const config = {
 // The more cores the more accurate to multiple users.
 const numCPUs = require('os').cpus().length;
 // The max number of users to simulate.  Will round up to make it a multiple of the # of cores you have.
-const userCreationLimit = Math.ceil((parseInt(process.env.USER_CREATION_LIMIT || '1000', 10) / numCPUs));
+const userCreationLimit = Math.ceil((parseInt(process.env.USER_CREATION_LIMIT || '5000', 10) / numCPUs));
 // Percentage of users that will start sending chat commands
 const speakerPercentage = parseFloat(process.env.SPEAKING_USER_LEVEL || '0.1');
 // For the users that send chat commands, this is how often they will send a message.
