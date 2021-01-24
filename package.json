@@ -10,7 +10,7 @@
     "web": "tsc --declaration && browserify ./dist/web.js -o ./dist/web-sdk.js",
     "web:prod": "npm run web && tsc --declaration && browserify ./dist/web.js -p tinyify -o ./dist/web-sdk.min.js",
     "deploy": "npm run build && npm run web && npm run web:prod && npm publish",
-    "loadtest": "tsc --declaration "
+    "loadtest": "npx ts-node ./test/load/Cluster.ts"
   },
   "author": "Sportstalk24/7",
   "license": "SEE LICENSE IN LICENSE.md",

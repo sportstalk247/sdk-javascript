@@ -39,7 +39,7 @@ async function spawnClient(user, room) {
         onChatEvent: (e)=>{},
         onNetworkError: (error: Error) => {
             // @ts-ignore
-            console.log(`Network error on getUpdates`);
+            console.log(`Network error on getUpdates`, error);
             return {};
         }
     })
@@ -48,7 +48,7 @@ async function spawnClient(user, room) {
         console.log('Could not join room', room);
         console.log(e);
     })
-    console.log(`Joined - ${user.userid} -${JSON.stringify(joined)}`);
+    console.log(`Joined - ${user.userid}`);
     client.startListeningToEventUpdates();
 
     if(Math.random()<0.1) {
@@ -56,12 +56,13 @@ async function spawnClient(user, room) {
         return sendMessages(client);
     }
     console.log(`${process.pid} is a listener`);
+    return client;
 }
 
 export async function joinRoomAndEmitChatLoadTest(room:ChatRoomResult) {
     const users: User[] = [];
     const clients = [];
-    const userPromises:Promise<void>[] = [];
+    const userPromises:Promise<ChatClient | void>[] = [];
     for(var i=0; i < userCreationLimit; i++) {
         const userid = Math.random().toString().substr(2, 12);
         const User = {
@@ -99,15 +100,20 @@ async function runMasterNode() {
     try {
         roomresult = await RM.createRoom(room);
     }catch(e) {
-        console.log("Could not create the room");
-        process.exit(1);
-    }
-    console.log(roomresult);
+        console.log("Could not create the room, canceling workers...");
+        cluster.disconnect(function(){
+            process.exit(1);
 
-    messages.send('roomcreated',{
-        type: 'roomcreated',
-        roomresult
-    })
+        })
+        return;
+    }
+    if(roomresult) {
+        console.log(roomresult);
+        messages.send('roomcreated', {
+            type: 'roomcreated',
+            roomresult
+        })
+    }
     cluster.on('exit', (worker, code, signal) => {
         console.log(`worker ${worker.process.pid} died`);
     });
@@ -121,12 +127,7 @@ if (cluster.isWorker) {
     messages.on('roomcreated', async function(message) {
         if (message.type === 'roomcreated' && message.roomresult) {
             const roomresult = message.roomresult
-            const RM = new RestfulChatRoomService(config);
-            try {
-                await joinRoomAndEmitChatLoadTest(roomresult)
-            } catch (e) {
-                RM.deleteRoom(roomresult);
-            }
+            await joinRoomAndEmitChatLoadTest(roomresult)
         }
         console.log('Worker ' + process.pid + ' received message from master.', message);
     });
