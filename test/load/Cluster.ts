@@ -4,6 +4,7 @@ import {RestfulChatRoomService} from '../../src/impl/REST/chat/RestfulChatRoomSe
 import {ChatClient} from "../../src";
 import {ChatRoomResult} from "../../dist/models/ChatModels";
 import {User} from "../../src/models/CommonModels";
+import {UserResult} from "../../dist/models/CommonModels";
 let ClusterMessages = require('cluster-messages');
 let messages = new ClusterMessages();
 
@@ -15,7 +16,10 @@ const config = {
     endpoint: process.env.TEST_ENDPOINT,
 };
 const numCPUs = require('os').cpus().length;
-const userCreationLimit = Math.ceil((parseInt(process.env.USER_CREATION_LIMIT || '1000', 10) / numCPUs));
+const userCreationLimit = Math.ceil((parseInt(process.env.USER_CREATION_LIMIT || '300', 10) / numCPUs));
+const speakerPercentage = parseFloat(process.env.SPEAKING_USER_LEVEL || '0.1');
+const speakerEmitFrequency = parseInt(process.env.SPEAKING_FREQUENCY || '1000'); // in milliseconds. 1000 = one message/second
+
 
 function sendMessages(client): Promise<void> {
     console.log(`${process.pid} is a speaker`);
@@ -29,14 +33,14 @@ function sendMessages(client): Promise<void> {
                 resolve();
                 clearInterval(timeout);
             }
-        }, 1000)
+        }, speakerEmitFrequency)
     })
 }
 
-async function spawnClient(user, room) {
+async function spawnClient(user:User, room:ChatRoomResult) {
     const client = ChatClient.init(config)
     client.setEventHandlers({
-        onChatEvent: (e)=>{},
+        onChatEvent: (e)=>{console.log('Received event: '+e.id)},
         onNetworkError: (error: Error) => {
             // @ts-ignore
             console.log(`Network error on getUpdates`, error);
@@ -51,8 +55,8 @@ async function spawnClient(user, room) {
     console.log(`Joined - ${user.userid}`);
     client.startListeningToEventUpdates();
 
-    if(Math.random()<0.1) {
-        console.log('sending');
+    if(Math.random()<=speakerPercentage) {
+        console.log('Worker ' + process.pid + ' is a speaker');
         return sendMessages(client);
     }
     console.log(`${process.pid} is a listener`);
@@ -63,6 +67,7 @@ export async function joinRoomAndEmitChatLoadTest(room:ChatRoomResult) {
     const users: User[] = [];
     const clients = [];
     const userPromises:Promise<ChatClient | void>[] = [];
+    console.log(`Thread is creating ${userCreationLimit} users and joining the room.`)
     for(var i=0; i < userCreationLimit; i++) {
         const userid = Math.random().toString().substr(2, 12);
         const User = {
@@ -85,6 +90,9 @@ export async function joinRoomAndEmitChatLoadTest(room:ChatRoomResult) {
 
 async function runMasterNode() {
     console.log(`Master ${process.pid} is running`);
+    console.log(`Max threads is ${numCPUs}`);
+    console.log(`Max users is ${numCPUs * userCreationLimit}`);
+    console.log(`Speaking % of users is ${speakerPercentage}`);
     const RM = new RestfulChatRoomService(config);
     // Fork workers.
     for (let i = 0; i < numCPUs; i++) {
@@ -92,7 +100,7 @@ async function runMasterNode() {
     }
 
     const room = {
-        name: "Test room",
+        name: "Test room" + new Date().toISOString(),
         customid: "chat-test-room" + new Date().getTime(),
     }
 
@@ -125,11 +133,12 @@ if (cluster.isMaster) {
 if (cluster.isWorker) {
     console.log('Worker ' + process.pid + ' has started.');
     messages.on('roomcreated', async function(message) {
+        console.log('Worker ' + process.pid + ' received "roomcreated" event from master.');
         if (message.type === 'roomcreated' && message.roomresult) {
             const roomresult = message.roomresult
             await joinRoomAndEmitChatLoadTest(roomresult)
         }
-        console.log('Worker ' + process.pid + ' received message from master.', message);
+
     });
 
 }
