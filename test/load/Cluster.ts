@@ -2,9 +2,9 @@ import * as cluster from 'cluster';
 import * as dotenv from 'dotenv';
 import {RestfulChatRoomService} from '../../src/impl/REST/chat/RestfulChatRoomService'
 import {ChatClient} from "../../src";
-import {ChatRoomResult} from "../../dist/models/ChatModels";
+import {ChatRoomResult} from "../../src/models/ChatModels";
 import {User} from "../../src/models/CommonModels";
-import {UserResult} from "../../dist/models/CommonModels";
+import {UserResult} from "../../src/models/CommonModels";
 let ClusterMessages = require('cluster-messages');
 let messages = new ClusterMessages();
 
