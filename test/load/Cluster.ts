@@ -64,7 +64,6 @@ async function spawnClient(user:User, room:ChatRoomResult) {
     })
     console.log(`Joined - ${user.userid}, took ${(new Date().getTime() - time.getTime())/1000} seconds`);
     client.startListeningToEventUpdates();
-
     if(Math.random()<=speakerPercentage) {
         console.log('Worker ' + process.pid + ' is a speaker');
         return sendMessages(client);
