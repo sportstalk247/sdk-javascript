@@ -15,6 +15,8 @@ const config = {
     appId: process.env.TEST_APP_ID,
     endpoint: process.env.TEST_ENDPOINT,
 };
+
+
 // numCPUs will be used to split users across different processes to do simultaneous load.
 // The more cores the more accurate to multiple users.
 const numCPUs = require('os').cpus().length;
@@ -23,7 +25,7 @@ const userCreationLimit = Math.ceil((parseInt(process.env.USER_CREATION_LIMIT ||
 // Percentage of users that will start sending chat commands
 const speakerPercentage = parseFloat(process.env.SPEAKING_USER_LEVEL || '0.1');
 // For the users that send chat commands, this is how often they will send a message.
-const speakerEmitFrequency = parseInt(process.env.SPEAKING_FREQUENCY || '1000'); // in milliseconds. 1000 = one message/second
+const speakerEmitFrequency = parseInt(process.env.SPEAKING_FREQUENCY || '4000'); // in milliseconds. 1000 = one message/second
 // How many messages a user will emit before quieting down
 const numberMessagesToEmit = parseInt(process.env.SPEAKING_EVENTS || '500');
 
@@ -97,11 +99,12 @@ export async function joinRoomAndEmitChatLoadTest(room:ChatRoomResult) {
 
 
 async function runMasterNode() {
+    console.log(config);
     console.log(`Master ${process.pid} is running`);
     console.log(`Max threads is ${numCPUs}`);
     console.log(`Max users is ${numCPUs * userCreationLimit}`);
-    console.log(`Speaking % of users is ${speakerPercentage * 100}`);
-    console.log(`Each speaking user will emit ${numberMessagesToEmit} chat commands`);
+    console.log(`Speaking users is ${speakerPercentage * 100}%`);
+    console.log(`Each speaking user will emit ${numberMessagesToEmit} chat commands, at a frequency of one per ${speakerEmitFrequency} ms`);
     const RM = new RestfulChatRoomService(config);
     // Fork workers.
     for (let i = 0; i < numCPUs; i++) {
@@ -147,7 +150,5 @@ if (cluster.isWorker) {
             const roomresult = message.roomresult
             await joinRoomAndEmitChatLoadTest(roomresult)
         }
-
     });
-
 }
