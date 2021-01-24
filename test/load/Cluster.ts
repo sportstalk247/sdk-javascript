@@ -54,11 +54,13 @@ async function spawnClient(user:User, room:ChatRoomResult) {
         }
     })
     client.setUser(user);
+    console.log(`User ${user.userid} starts trying to join the room`);
+    const time = new Date();
     const joined = await client.joinRoomByCustomId(room).catch(e=>{
-        console.log('Could not join room', room);
+        console.log(`${user.userid} Could not join room`, room);
         console.log(e);
     })
-    console.log(`Joined - ${user.userid}`);
+    console.log(`Joined - ${user.userid}, took ${(new Date().getTime() - time.getTime())/1000} seconds`);
     client.startListeningToEventUpdates();
 
     if(Math.random()<=speakerPercentage) {
