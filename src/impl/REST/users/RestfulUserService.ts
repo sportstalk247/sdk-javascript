@@ -78,12 +78,15 @@ export class RestfulUserService implements IUserService {
         // @ts-ignore
         const userid = user.userid || user;
         const url = buildAPI(this._config,`${this._apiExt}/${userid}/ban`);
-        return stRequest({
+        const config:AxiosRequestConfig = {
             method: POST,
             url: url,
             headers: this._jsonHeaders,
-            data: {banned: ""+isBanned}
-        }).then(result=>result.data);
+            data: {banned: isBanned}
+        }
+        return stRequest(config).then(result=>{
+            return result.data
+        });
     }
 
     /**
@@ -103,13 +106,15 @@ export class RestfulUserService implements IUserService {
         if(expireseconds && isShadowBanned) {
             data.expireseconds = Math.floor(expireseconds)
         }
-
-        return stRequest({
+        const config:AxiosRequestConfig = {
             method: POST,
             url: url,
             headers: this._jsonHeaders,
             data
-        }).then(result=>result.data);
+        }
+        return stRequest(config).then(result=> {
+            return result.data
+        });
     }
 
     /**

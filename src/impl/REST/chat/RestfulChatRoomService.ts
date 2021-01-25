@@ -329,7 +329,7 @@ export class RestfulChatRoomService implements IRoomService {
      * @param user User or userid string.
      * @param message The message to show the user explaining the bounce/unbounce.
      */
-    bounceUserFromRoom = (room: ChatRoomResult | string, user: UserResult | string, message?: string): Promise<RestApiResult<BounceUserResult>> => {
+    bounceUserFromRoom = (room: ChatRoomResult | string, user: User | string, message?: string): Promise<RestApiResult<BounceUserResult>> => {
         const roomId = forceObjKeyOrString(room, 'id');
         const userId = forceObjKeyOrString(user, 'userid');
         // @ts-ignore

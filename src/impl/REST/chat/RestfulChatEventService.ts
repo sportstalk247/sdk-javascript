@@ -416,13 +416,12 @@ export class RestfulChatEventService implements IChatEventService {
         // @ts-ignore
         const id = replyto.id || replyto;
         const data = Object.assign({
-            command: message,
+            body: message,
             userid: user.userid,
-            replyto: id
         }, options);
         const config:AxiosRequestConfig = {
             method: POST,
-            url: this._commandApi,
+            url: buildAPI(this._config, `chat/rooms/${this._currentRoom.id}/events/${id}/reply`),
             headers:this._jsonHeaders,
             data: data
         }

@@ -3,6 +3,7 @@ import {RestfulUserService} from "../../../src/impl/REST/users/RestfulUserServic
 import * as dotenv from 'dotenv';
 import {Kind, UserSearchType, SportsTalkConfig} from "../../../src/models/CommonModels";
 import {RestfulChatRoomService} from "../../../src/impl/REST/chat/RestfulChatRoomService";
+import {User} from "../../../src/models/CommonModels";
 
 dotenv.config();
 
@@ -13,7 +14,9 @@ describe("UserManager", function(){
     const UM = new RestfulUserService(config);
     const RM = new RestfulChatRoomService(config);
     const userid = "107AC57E-85ED-4E1D-BDAF-2533CD3872EB"
-    let user;
+    let user:User = {
+        userid,
+    };
     let reporter;
     describe("Creation", function() {
         it("Can create a user", done => {
@@ -33,28 +36,34 @@ describe("UserManager", function(){
             }).catch(done);
         })
     });
-    describe("Ban", function(){
-        it("Can ban the user", done=>{
-            UM.setBanStatus(user, true).then(res=>{
+    describe("Ban user", function() {
+        it("Can ban the user", done => {
+            UM.setBanStatus(user, true).then(res => {
                 user = res;
                 expect(user.banned).to.be.true;
                 done();
             }).catch(done);
         })
-        it("Can unban the user", done=>{
-            UM.setBanStatus(user, false).then(res=>{
+    });
+    describe('Unban user', function() {
+        it("Can unban the user", done => {
+            UM.setBanStatus(user, false).then(res => {
                 user = res;
                 expect(user.banned).to.be.false;
                 done();
             }).catch(done)
         })
-        it("Can ban the user with id", done=>{
-            UM.setBanStatus(userid, true).then(res=>{
+    });
+    describe('Ban with ID', function() {
+        it("Can ban the user with id", done => {
+            UM.setBanStatus(userid, true).then(res => {
                 user = res;
                 expect(user.banned).to.be.true;
                 done();
             }).catch(done);
         })
+    });
+    describe('Unban with ID', function(){
         it("Can unban the user with id", done=>{
             UM.setBanStatus(userid, false).then(res=>{
                 user = res;
@@ -62,7 +71,6 @@ describe("UserManager", function(){
                 done();
             }).catch(done)
         })
-
     })
     describe("ShadowBan", function(){
         it("Can shadowban the user", done=>{
@@ -97,6 +105,7 @@ describe("UserManager", function(){
             UM.setShadowBanStatus(user, true, 90).then(res=>{
                 user = res;
                 expect(user.shadowbanned).to.be.true;
+                //@ts-ignore
                 const date: Date = new Date(user.shadowbanexpires);
                 expect(date).be.greaterThan(new Date());
                 done();
