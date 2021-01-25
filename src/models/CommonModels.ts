@@ -241,3 +241,4 @@ export interface NotificationListRequest extends ListRequest{
     includeread?: boolean,
     filterNotificationTypes?: EventType[]
 }
+

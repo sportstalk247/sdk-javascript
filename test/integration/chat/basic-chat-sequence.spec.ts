@@ -97,6 +97,12 @@ describe('BASIC Chat Sequence', function() {
             })
         })
     });
+    describe('Notificaitons', function() {
+        it('Lists notifications', async ()=> {
+            const notifications = await client.listUserNotifications();
+            expect(notifications);
+        });
+    })
     describe("Get help", function(){
         it("Lets user ask for help", async()=>{
             let helpcalled = false;

@@ -11,7 +11,7 @@ import {
     CommandResponse,
     ChatRoomExitResult,
     ChatUpdatesResult,
-    ChatRoomListResponse, ChatOptionsEventType, BounceUserResult, ShadowBanOptions
+    ChatRoomListResponse, ChatOptionsEventType, BounceUserResult, ShadowBanOptions, EventType
 } from "../models/ChatModels";
 import {DEFAULT_CONFIG} from "./constants/api";
 import {IRoomService, IChatEventService, IChatClient} from "../API/ChatAPI";
@@ -32,7 +32,7 @@ import {
     UserListResponse,
     ListRequest,
     UserDeletionResponse,
-    ErrorResult
+    ErrorResult, NotificationListRequest
 } from "../models/CommonModels";
 import {MISSING_ROOM, MUST_SET_USER} from "./constants/messages";
 import {forceObjKeyOrString} from "./utils";
@@ -588,6 +588,15 @@ export class ChatClient implements IChatClient {
 
     listUsers = (request?: ListRequest): Promise<UserListResponse> => {
         return this._userService.listUsers(request);
+    }
+
+    listUserNotifications = (request: Partial<NotificationListRequest> = {}): Promise<any> => {
+        const requestedNotifications:NotificationListRequest = Object.assign({
+                limit : 50,
+                userid: this._user ? this._user.userid : '',
+                includeread: false,
+            }, request);
+        return this._userService.listUserNotifications(requestedNotifications)
     }
 
     deleteUser = (user:User | string):Promise<UserDeletionResponse> => {

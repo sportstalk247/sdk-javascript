@@ -71,11 +71,11 @@ describe('Room shadowban', function() {
        }).then(resp=> {
         //   console.log("GOT Moderation queue")
            expect(resp.events.length).to.be.equal(0);
-           return client.shadowBanUserFromRoom(client3.getUser())
+           return client.setShadowBanStatus(client3.getCurrentUser(), {roomid, shadowban: true})
        }).then((resp)=>{
            expect(resp.shadowbannedusers).to.have.lengthOf(1);
-           expect(resp.shadowbannedusers[0]).to.be.equal(client3.getUser().userid);
-           return client.shadowBanUserFromRoom(client2.getUser(), 500, roomid)
+           expect(resp.shadowbannedusers[0]).to.be.equal(client3.getCurrentUser().userid);
+           return client.setShadowBanStatus(client2.getCurrentUser(), {roomid, shadowban: true, expiryseconds: 500})
        }).then((resp)=>{
            expect(resp.shadowbannedusers).to.have.lengthOf(2);
        }).then(()=>{
