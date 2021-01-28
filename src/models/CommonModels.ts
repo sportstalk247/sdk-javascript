@@ -23,6 +23,12 @@ export interface ApiHeaders {
     'x-api-token'?: string
 }
 
+export enum UserRole {
+    admin="admin",
+    moderator="moderator",
+    user="user"
+}
+
 /**
  * A User is someone able to chat in chatrooms and make comments in conversations.
  * Users must be created before they can make comments or chat, and they must choice a chat room before they can participate.
@@ -36,6 +42,8 @@ export interface User {
     profileurl?: string, // a full URL to a profile url or personal webpage.
     banned?: boolean, // Only set by the server.  If true the user is currently banned.
     shadowbanned?: boolean // Set by server when admin mutes/shadowbans a user.
+    role?: UserRole,
+    customtags?: string[],
     shadowbanexpires?: string | null | undefined // Set by server to non-null value when the shadowban expires. Expiry date/time in ISO8601, e.g. 2020-11-11T14:29:04.5149528Z
 }
 
