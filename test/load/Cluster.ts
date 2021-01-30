@@ -21,9 +21,9 @@ const config = {
 // The more cores the more accurate to multiple users.
 const numCPUs = require('os').cpus().length;
 // The max number of users to simulate.  Will round up to make it a multiple of the # of cores you have.
-const userCreationLimit = Math.ceil((parseInt(process.env.USER_CREATION_LIMIT || '1200', 10) / numCPUs));
+const userCreationLimit = Math.ceil((parseInt(process.env.USER_CREATION_LIMIT || '2000', 10) / numCPUs));
 // Percentage of users that will start sending chat commands
-const speakerPercentage = parseFloat(process.env.SPEAKING_USER_LEVEL || '0.1');
+const speakerPercentage = parseFloat(process.env.SPEAKING_USER_LEVEL || '0.05');
 // For the users that send chat commands, this is how often they will send a message.
 const speakerEmitFrequency = parseInt(process.env.SPEAKING_FREQUENCY || '4000'); // in milliseconds. 1000 = one message/second
 // How many messages a user will emit before quieting down
@@ -135,10 +135,29 @@ async function runMasterNode() {
         name: "Test room" + new Date().toISOString(),
         customid: "chat-test-room" + new Date().getTime(),
     }
-
     let roomresult;
+    // let roomresult: any | ChatRoomResult = {
+    //     kind: 'chat.room',
+    //     id: '60124c429638270ef86e0a25',
+    //     appid: '600d35f1a0ba130bf4733b93',
+    //     ownerid: null,
+    //     name: 'Test room2021-01-28T05:30:53.828Z',
+    //     description: null,
+    //     pictureurl: '',
+    //     customtype: '',
+    //     customid: 'chat-test-room1611811853828',
+    //     custompayload: '',
+    //     customtags: [],
+    //     customfield1: '',
+    //     customfield2: '',
+    //     enableactions: false,
+    //     enableenterandexit: false,
+    //     open: true,
+    //     inroom: 0}
     try {
-        roomresult = await RM.createRoom(room);
+        if(!roomresult) {
+            roomresult = await RM.createRoom(room);
+        }
     }catch(e) {
         console.log("Could not create the room, canceling workers...");
         cluster.disconnect(function(){
