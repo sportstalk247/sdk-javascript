@@ -5,6 +5,7 @@ import axios, {AxiosRequestConfig} from "axios";
  * Axios default cors handling was not as flexible.
  * @param config
  */
+//@ts-ignore
 const makeRequest = async function makeRequest(config:Request | AxiosRequestConfig) {
     // @ts-ignore
     if(config.data) {
@@ -46,6 +47,7 @@ const makeAxiosRequest = async function makeAxiosRequest(config:AxiosRequestConf
 }
 
 function getRequestLibrary() {
+    //@ts-ignore
     if (typeof window !== "undefined" && window.fetch) {
         return makeRequest;
     }
