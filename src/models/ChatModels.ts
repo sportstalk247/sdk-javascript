@@ -51,20 +51,20 @@ export interface JoinChatRoomResponse {
  */
 export interface EventHandlerConfig {
     onChatStart?: Function;
-    onNetworkResponse?(response: any);
-    onChatEvent?(event: EventResult), // not mandatory but absolutely should be set in 99% of cases.
-    onGoalEvent?(event: EventResult),
-    onAdEvent?(event: EventResult),
-    onAnnouncement?(event: EventResult),
-    onReply?(event: EventResult),
-    onReplace?(event: EventResult),
-    onRemove?(event: EventResult),
-    onReaction?(event:EventResult),
-    onPurgeEvent?(event:EventResult),
-    onAdminCommand?(response: RestApiResult<Kind.api>),
-    onHelp?(result: MessageResult<Event | CommandResponse | null>),
-    onNetworkError?:ErrorHandlerFunction<any>
-    onRoomChange?(newRoom?:ChatRoom, oldRoom?:ChatRoom)
+    onNetworkResponse?(response: any): void;
+    onChatEvent?(event: EventResult):void, // not mandatory but absolutely should be set in 99% of cases.
+    onGoalEvent?(event: EventResult):void,
+    onAdEvent?(event: EventResult):void,
+    onAnnouncement?(event: EventResult):void,
+    onReply?(event: EventResult):void,
+    onReplace?(event: EventResult):void,
+    onRemove?(event: EventResult):void,
+    onReaction?(event:EventResult):void,
+    onPurgeEvent?(event:EventResult):void,
+    onAdminCommand?(response: RestApiResult<Kind.api>):void,
+    onHelp?(result: MessageResult<Event | CommandResponse | null>):void,
+    onNetworkError?:ErrorHandlerFunction<any>,
+    onRoomChange?(newRoom?:ChatRoom, oldRoom?:ChatRoom):void
 }
 
 export interface JoinRoomResponse {
