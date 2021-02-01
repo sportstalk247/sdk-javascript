@@ -106,18 +106,19 @@ export async function joinRoomAndEmitChatLoadTest(room:ChatRoomResult) {
         }
         users.push(User);
     }
-    console.log(`Worker ${process.pid} has created ${users.length} users.`);
+    // console.log(`Worker ${process.pid} has created ${users.length} users.`);
     for(var j=0; j<userCreationLimit; j++) {
         const user=users[j];
         userPromises.push(new Promise((resolve) => {
             const timeout = Math.ceil(Math.random() * joinTimeframe);
+            // console.log(`Timeout: ${timeout}`);
             // console.log(`Join timeout: ${timeout}`);
             setTimeout(function () {
+                //console.log(`Spawning client`);
                 resolve(spawnClient(user, room));
             }, timeout)
         }));
     }
-    console.log(`Worker ${process.pid} has created ${userPromises.length} Clients.`);
     return Promise.all(userPromises);
 }
 

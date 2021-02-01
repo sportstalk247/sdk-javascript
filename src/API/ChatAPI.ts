@@ -1,14 +1,26 @@
 /* istanbul ignore file */
 
 import {
-    AdvertisementOptions, ChatUpdatesResult,
-    CommandOptions, CommandResponse, DeletedChatRoomResponse,
-    EventHandlerConfig, EventListResponse,
+    AdvertisementOptions,
+    ChatUpdatesResult,
+    CommandOptions,
+    CommandResponse,
+    DeletedChatRoomResponse,
+    EventHandlerConfig,
+    EventListResponse,
     EventResult,
     GoalOptions,
-    ChatRoom, ChatRoomExitResult, ChatRoomListResponse,
+    ChatRoom,
+    ChatRoomExitResult,
+    ChatRoomListResponse,
     ChatRoomResult,
-    JoinChatRoomResponse, BounceUserResult, ShadowBanOptions, EventSearchParams
+    JoinChatRoomResponse,
+    BounceUserResult,
+    ShadowBanOptions,
+    EventSearchParams,
+    EventType,
+    ChatEventsList,
+    TimestampRequest
 } from "../models/ChatModels";
 
 import {ISportsTalkConfigurable} from "./CommonAPI";
@@ -54,6 +66,8 @@ export interface IChatEventService extends ISportsTalkConfigurable, IUserConfigu
     setUpdateSpeed(speed: number);
     searchEventHistory(params: EventSearchParams): Promise<any>
     updateChatEvent(event: EventResult | string, body: string, user?: string | User): Promise<EventResult>
+    listEventsByType(type:EventType): Promise<ChatEventsList>
+    listEventsByTimestamp(query: TimestampRequest): Promise<ChatEventsList>
 }
 
 /**
@@ -443,7 +457,8 @@ export interface IChatClient extends IUserConfigurable, ISportsTalkConfigurable 
      */
     setPreviousEventsCursor(cursor: string)
     updateChatEvent(event: EventResult | string, body: string, user?: string | User): Promise<EventResult>
-
+    listEventsByType(type:EventType): Promise<ChatEventsList>
+    listEventsByTimestamp(query: TimestampRequest): Promise<ChatEventsList>
 }
 
 /**

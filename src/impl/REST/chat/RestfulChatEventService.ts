@@ -12,7 +12,7 @@ import {
     QuoteCommandOptions,
     CustomEventTypes,
     ChatOptionsEventType,
-    EventSearchParams, ChatEventsList
+    EventSearchParams, ChatEventsList, TimestampRequest
 } from "../../../models/ChatModels";
 import {DEFAULT_CONFIG, DELETE, GET, POST, PUT} from "../../constants/api";
 import {IChatEventService} from "../../../API/ChatAPI";
@@ -674,6 +674,14 @@ export class RestfulChatEventService implements IChatEventService {
         }).then(result=>result.data);
     }
 
+    listEventsByType = (type:EventType): Promise<ChatEventsList> =>  {
+        return stRequest({
+            method: GET,
+            url: `${this._roomApi}/listeventsbytype?eventtype=${type}`,
+            headers: this._apiHeaders,
+        }).then(result=>result.data);
+    }
+
     updateChatEvent = (event: EventResult | string, body: string, user?: string | User): Promise<EventResult> => {
         //@ts-ignore
         const userid = user ? user.userid || user : this._user.userid;
@@ -689,6 +697,18 @@ export class RestfulChatEventService implements IChatEventService {
                 userid,
                 body
             }
+        }
+        return stRequest(config).then(result=>result.data);
+    }
+
+    listEventsByTimestamp = (query: TimestampRequest): Promise<ChatEventsList> => {
+        if(!query || !query.ts) {
+            throw new Error("Must provide a timestamp value to list events");
+        }
+        const config:AxiosRequestConfig = {
+            method: GET,
+            url: buildAPI(this._config, `/chat/rooms/${this._currentRoom.id}}/eventsbytimestamp/list/${query.ts}?limitolder=${query.limitolder? query.limitolder:0}&limitnewer=${query.limitnewer ? query.limitnewer:0}`),
+            headers: this._jsonHeaders,
         }
         return stRequest(config).then(result=>result.data);
     }

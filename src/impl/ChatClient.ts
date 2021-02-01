@@ -11,7 +11,13 @@ import {
     CommandResponse,
     ChatRoomExitResult,
     ChatUpdatesResult,
-    ChatRoomListResponse, ChatOptionsEventType, BounceUserResult, ShadowBanOptions, EventType
+    ChatRoomListResponse,
+    ChatOptionsEventType,
+    BounceUserResult,
+    ShadowBanOptions,
+    EventType,
+    ChatEventsList,
+    TimestampRequest
 } from "../models/ChatModels";
 import {DEFAULT_CONFIG} from "./constants/api";
 import {IRoomService, IChatEventService, IChatClient} from "../API/ChatAPI";
@@ -589,6 +595,9 @@ export class ChatClient implements IChatClient {
     listUsers = (request?: ListRequest): Promise<UserListResponse> => {
         return this._userService.listUsers(request);
     }
+    listEventsByType = (type:EventType): Promise<ChatEventsList> =>  {
+        return this._eventService.listEventsByType(type);
+    }
 
     listUserNotifications = (request: Partial<NotificationListRequest> = {}): Promise<any> => {
         const requestedNotifications:NotificationListRequest = Object.assign({
@@ -703,6 +712,9 @@ export class ChatClient implements IChatClient {
 
     updateChatEvent = (event: EventResult | string, body: string, user?: string | User): Promise<EventResult> => {
         return this._eventService.updateChatEvent(event, body, user);
+    }
+    listEventsByTimestamp = (query: TimestampRequest): Promise<ChatEventsList> => {
+        return this._eventService.listEventsByTimestamp(query);
     }
 
 }

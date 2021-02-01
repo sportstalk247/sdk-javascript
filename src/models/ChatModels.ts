@@ -248,6 +248,12 @@ export interface ChatEventsList {
     events: EventResult[]
 }
 
+export interface TimestampRequest {
+    ts: string | number,
+    limitolder?: number,
+    limitnewer?: number
+}
+
 /**
  * Result of getting chat updates.
  */
