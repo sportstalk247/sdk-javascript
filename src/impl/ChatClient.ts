@@ -43,6 +43,7 @@ import {
 import {MISSING_ROOM, MUST_SET_USER} from "./constants/messages";
 import {forceObjKeyOrString} from "./utils";
 import {IUserService} from "../API/Users";
+import {setTimeout} from "timers";
 
 /**
  * ChatClient provides an interface to chat applications.
@@ -65,6 +66,10 @@ export class ChatClient implements IChatClient {
      * @private
      */
     private _user: User = {userid: "", handle: ""};
+
+    private _lastCommand: string | null = null;
+    private _lastCommandTimeout;
+    private _lastCommandTimeoutDuration;
 
     /**
      * Holds the currently active chat room being observed by the client.
@@ -455,6 +460,14 @@ export class ChatClient implements IChatClient {
      * @param options the custom parameters.  See CommandOptions interface for details.
      */
     executeChatCommand = (command: string, options?: CommandOptions): Promise<MessageResult<CommandResponse> | ErrorResult> => {
+        if(command == this._lastCommand) {
+           this._lastCommandTimeout = setTimeout(function(){
+               this._lastCommand = null;
+           }, this._lastCommandTimeoutDuration)
+           throw new Error("405 - Not Allowed. Please wait to send this message again");
+        }
+        clearTimeout(this._lastCommandTimeout);
+        this._lastCommand = command;
         return this._eventService.executeChatCommand(this._user, command, options);
     }
 
