@@ -9,3 +9,4 @@ export const NO_ROOM_SET = 'No room set.  You must join a room before you can ge
 export const REQUIRE_ROOM_ID = 'Room must have an id';
 export const USER_NEEDS_HANDLE = "User requires a handle";
 export const USER_NEEDS_ID = "User needs an ID";
+export const THROTTLE_ERROR = "405 - Not Allowed. Please wait to send this message again"

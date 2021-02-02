@@ -4,6 +4,7 @@ import {RestfulChatRoomService} from "../../../src/impl/REST/chat/RestfulChatRoo
 import * as dotenv from 'dotenv';
 import {Kind, SportsTalkConfig} from "../../../src/models/CommonModels";
 import {EventResult} from "../../../src/models/ChatModels";
+import {THROTTLE_ERROR} from "../../../src/impl/constants/messages";
 dotenv.config();
 
 let client;
@@ -94,6 +95,18 @@ describe('REPLY & DELETE Chat Sequence', function() {
                 });
         })
     });
+    describe("Chat Even Throttle", function(){
+        it("Prevents sending the same message over and over", async function() {
+            const sameMessage = "This is the same message!";
+            try {
+                await Promise.all([client.executeChatCommand(sameMessage), client.executeChatCommand(sameMessage)]);
+            } catch (e) {
+                expect(e.message).to.be.equal(THROTTLE_ERROR)
+                return;
+            }
+            throw new Error("Should have throttled");
+        });
+    })
     describe('GetUpdates QuotedReply, Threaded Reply sequence', function () {
         let toDelete:EventResult;
         let toFlag: EventResult;

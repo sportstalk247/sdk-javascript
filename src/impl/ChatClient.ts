@@ -40,7 +40,7 @@ import {
     UserDeletionResponse,
     ErrorResult, NotificationListRequest
 } from "../models/CommonModels";
-import {MISSING_ROOM, MUST_SET_USER} from "./constants/messages";
+import {MISSING_ROOM, MUST_SET_USER, THROTTLE_ERROR} from "./constants/messages";
 import {forceObjKeyOrString} from "./utils";
 import {IUserService} from "../API/Users";
 import {setTimeout} from "timers";
@@ -114,7 +114,7 @@ export class ChatClient implements IChatClient {
             this._lastCommandTimeout = setTimeout(function(){
                 this._lastCommand = null;
             }, this._lastCommandTimeoutDuration)
-            throw new Error("405 - Not Allowed. Please wait to send this message again");
+            throw new Error(THROTTLE_ERROR);
         } else {
             clearTimeout(this._lastCommandTimeout);
             this._lastCommand = command;
