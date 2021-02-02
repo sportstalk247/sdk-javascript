@@ -109,6 +109,18 @@ export class ChatClient implements IChatClient {
         return JSON.stringify(this);
     }
 
+    private _throttle(command: string) {
+        if(command == this._lastCommand) {
+            this._lastCommandTimeout = setTimeout(function(){
+                this._lastCommand = null;
+            }, this._lastCommandTimeoutDuration)
+            throw new Error("405 - Not Allowed. Please wait to send this message again");
+        } else {
+            clearTimeout(this._lastCommandTimeout);
+            this._lastCommand = command;
+        }
+    }
+
     /**
      * Configures and creates a ChatClient
      * @param config
@@ -460,14 +472,7 @@ export class ChatClient implements IChatClient {
      * @param options the custom parameters.  See CommandOptions interface for details.
      */
     executeChatCommand = (command: string, options?: CommandOptions): Promise<MessageResult<CommandResponse> | ErrorResult> => {
-        if(command == this._lastCommand) {
-           this._lastCommandTimeout = setTimeout(function(){
-               this._lastCommand = null;
-           }, this._lastCommandTimeoutDuration)
-           throw new Error("405 - Not Allowed. Please wait to send this message again");
-        }
-        clearTimeout(this._lastCommandTimeout);
-        this._lastCommand = command;
+        this._throttle(command);
         return this._eventService.executeChatCommand(this._user, command, options);
     }
 
@@ -477,6 +482,7 @@ export class ChatClient implements IChatClient {
      * @param options
      */
     sendAnnouncement = (command:string, options?: CommandOptions): Promise<MessageResult<CommandResponse> | ErrorResult> => {
+        this._throttle(command);
         return this._eventService.executeChatCommand(this._user, command, Object.assign(options || {}, {eventtype: ChatOptionsEventType.announcement}))
     }
 
@@ -488,6 +494,7 @@ export class ChatClient implements IChatClient {
      * @param options custom options, will depend on your chat implementation
      */
     sendQuotedReply = (message: string, replyto: EventResult | string, options?: CommandOptions): Promise<MessageResult<CommandResponse | null>> => {
+        this._throttle(message);
         return this._eventService.sendQuotedReply(this._user, message, replyto, options);
     }
 
@@ -498,6 +505,7 @@ export class ChatClient implements IChatClient {
      * @param options custom options, will depend on your chat implementation
      */
     sendThreadedReply =(message: string, replyto: EventResult | string, options?: CommandOptions): Promise<MessageResult<CommandResponse | null>> => {
+        this._throttle(message);
         return this._eventService.sendThreadedReply(this._user, message, replyto, options);
     }
 
