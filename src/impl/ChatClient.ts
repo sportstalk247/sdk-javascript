@@ -121,6 +121,8 @@ export class ChatClient implements IChatClient {
         }
     }
 
+    private constructor() {}
+
     /**
      * Configures and creates a ChatClient
      * @param config

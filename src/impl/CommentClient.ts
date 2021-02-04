@@ -92,6 +92,8 @@ export class CommentClient implements ICommentingClient {
         return commentClient;
     }
 
+    private constructor() {}
+
     /**
      * Get the current configuration object
      * @return SportsTalkConfig

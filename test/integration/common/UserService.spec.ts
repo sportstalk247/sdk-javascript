@@ -4,6 +4,7 @@ import * as dotenv from 'dotenv';
 import {Kind, UserSearchType, SportsTalkConfig} from "../../../src/models/CommonModels";
 import {RestfulChatRoomService} from "../../../src/impl/REST/chat/RestfulChatRoomService";
 import {User} from "../../../src/models/CommonModels";
+import {UserClient} from "../../../dist";
 
 dotenv.config();
 
@@ -13,6 +14,8 @@ const config: SportsTalkConfig = {apiToken:process.env.TEST_KEY, appId: process.
 describe("UserManager", function(){
     const UM = new RestfulUserService(config);
     const RM = new RestfulChatRoomService(config);
+    const UC = UserClient.init(config);
+    const otherUC = new UserClient();
     const userid = "107AC57E-85ED-4E1D-BDAF-2533CD3872EB"
     let user:User = {
         userid,
