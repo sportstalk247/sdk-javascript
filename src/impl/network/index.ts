@@ -38,7 +38,6 @@ const makeAxiosRequest = async function makeAxiosRequest(config:AxiosRequestConf
         config.decompress=true
     }
     return axios(config).then(result=>result.data).catch(e=>{
-        console.log("Network error", config);
         if(errorHandlerfunction) {
             return errorHandlerfunction(e);
         }

@@ -248,8 +248,6 @@ export class RestfulChatEventService implements IChatEventService {
         return this.getUpdates(cursor).then(this.handleUpdates).catch(error=> {
             if(this.eventHandlers && this.eventHandlers.onNetworkError) {
                 this.eventHandlers.onNetworkError(error)
-            } else {
-                console.log(error);
             }
             this._fetching = false;
         });
@@ -351,7 +349,7 @@ export class RestfulChatEventService implements IChatEventService {
                     this.eventHandlers.onChatEvent(event);
                     continue;
                 }
-                console.log("Unhandled chat event:", event);
+
             }
         }
         this._fetching = false;

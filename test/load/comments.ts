@@ -13,7 +13,7 @@ const config = {
     endpoint: process.env.TEST_ENDPOINT,
 };
 
-console.log(config);
+
 
 const client = CommentClient.init(config);
 // @ts-ignore
