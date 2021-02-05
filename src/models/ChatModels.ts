@@ -243,11 +243,17 @@ export interface EventReaction {
 }
 
 export interface ChatEventsList {
+    events: EventResult[]
+    cursor?: string
+    more?: boolean
+    itemcount?: number
+}
+
+export interface ChatEventsListResult extends ChatEventsList {
     kind: Kind.chatlist,
     cursor: string
     more: boolean
     itemcount: number
-    events: EventResult[]
 }
 
 export interface TimestampRequest {
@@ -259,7 +265,7 @@ export interface TimestampRequest {
 /**
  * Result of getting chat updates.
  */
-export interface ChatUpdatesResult extends ChatEventsList {
+export interface ChatUpdatesResult extends ChatEventsListResult {
     room: ChatRoomResult,
 }
 

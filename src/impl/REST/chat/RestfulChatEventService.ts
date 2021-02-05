@@ -12,7 +12,7 @@ import {
     QuoteCommandOptions,
     CustomEventTypes,
     ChatOptionsEventType,
-    EventSearchParams, ChatEventsList, TimestampRequest
+    EventSearchParams, ChatEventsList, TimestampRequest, ChatEventsListResult
 } from "../../../models/ChatModels";
 import {DEFAULT_CONFIG, DELETE, GET, POST, PUT} from "../../constants/api";
 import {IChatEventService} from "../../../API/ChatAPI";
@@ -73,6 +73,7 @@ export class RestfulChatEventService implements IChatEventService {
      */
     private _pollFrequency: number =  800;
 
+    private _preRenderedMessages: Set<string>= new Set<string>();
 
     /**
      * @param config The SportsTalkConfig object
@@ -291,17 +292,23 @@ export class RestfulChatEventService implements IChatEventService {
      * @param update
      * @private
      */
-    public handleUpdates = (update: ChatUpdatesResult) => {
+    public handleUpdates = (update: ChatEventsList) => {
         if(!update) {
             return;
         }
         if(update.cursor) {
             this.lastCursor = update.cursor;
         }
+
         const events: Array<EventResult> = update.events;
         if(events && events.length) {
             for (var i = 0; i < events.length; i++) {
                 const event: EventResult = events[i];
+                // We already rendered this on send.
+                if(this._preRenderedMessages.has(event.id)) {
+                    this._preRenderedMessages.delete(event.id);
+                    continue;
+                }
                 const ts = event.ts;
                 if (!this.lastTimestamp || ts > this.lastTimestamp) {
                     this.lastTimestamp = ts;
@@ -377,6 +384,10 @@ export class RestfulChatEventService implements IChatEventService {
                 // @ts-ignore
                 adminCommand(response);
             }
+        }
+        if(response.data.speech) {
+            this.handleUpdates({events:[response.data.speech]})
+            this._preRenderedMessages.add(response.data.speech.id)
         }
         return response;
     }
