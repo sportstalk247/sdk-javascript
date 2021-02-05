@@ -176,6 +176,8 @@ export interface ChatRoomResult extends ChatRoom {
     bouncedusers?: string[], // will be a list of UserID strings.
     inroom?:number,
     shadowbannedusers?: string[]
+    flaggedusers?: [],
+    reportedusers?: [],
     added?: string, // ISO Date
     whenmodified?:string // ISO Date
 }
