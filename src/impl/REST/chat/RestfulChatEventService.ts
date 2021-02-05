@@ -48,7 +48,7 @@ export class RestfulChatEventService implements IChatEventService {
     private _fetching: boolean = false; // used to prevent a queue of requests if network is down.
     private _currentRoom: ChatRoomResult; // holds the current chat room.
     private _updatesApi: string; // caches the string computation of the updates API path.
-    private eventHandlers:EventHandlerConfig = {} // holds the event handler function references.
+    private _eventHandlers:EventHandlerConfig = {} // holds the event handler function references.
     // api endpoints
     private _roomApi: string | null; // holds the string of the room path
     private _commandApi: string; // holds the string of the chat command path.
@@ -116,14 +116,14 @@ export class RestfulChatEventService implements IChatEventService {
      * @param eventHandlers
      */
     setEventHandlers = (eventHandlers: EventHandlerConfig) => {
-        this.eventHandlers = eventHandlers;
+        this._eventHandlers = eventHandlers;
     }
 
     /**
      * Get current event handler callback functions
      */
     getEventHandlers = (): EventHandlerConfig => {
-        return this.eventHandlers || {};
+        return this._eventHandlers || {};
     }
 
     /**
@@ -180,8 +180,8 @@ export class RestfulChatEventService implements IChatEventService {
             this.firstMessageId = undefined;
             this.firstMessageTime = undefined;
             this._currentRoom = room;
-            if(this.eventHandlers.onRoomChange) {
-                this.eventHandlers.onRoomChange(this._currentRoom, oldRoom);
+            if(this._eventHandlers.onRoomChange) {
+                this._eventHandlers.onRoomChange(this._currentRoom, oldRoom);
             }
             if (this._currentRoom) {
                 this._roomApi = buildAPI(this._config, `chat/rooms/${this._currentRoom.id}`);
@@ -217,10 +217,10 @@ export class RestfulChatEventService implements IChatEventService {
         if(!this._updatesApi || !this._currentRoom) {
             throw new SettingsError(NO_ROOM_SET)
         }
-        if (this.eventHandlers.onChatStart) {
-            this.eventHandlers.onChatStart();
+        if (this._eventHandlers.onChatStart) {
+            this._eventHandlers.onChatStart();
         }
-        if(!this.eventHandlers.onChatEvent && !this.eventHandlers.onNetworkResponse) {
+        if(!this._eventHandlers.onChatEvent && !this._eventHandlers.onNetworkResponse) {
             throw new SettingsError(NO_HANDLER_SET)
         }
         if (
@@ -247,8 +247,8 @@ export class RestfulChatEventService implements IChatEventService {
         }
         this._fetching = true;
         return this.getUpdates(cursor).then(this.handleUpdates).catch(error=> {
-            if(this.eventHandlers && this.eventHandlers.onNetworkError) {
-                this.eventHandlers.onNetworkError(error)
+            if(this._eventHandlers && this._eventHandlers.onNetworkError) {
+                this._eventHandlers.onNetworkError(error)
             }
             this._fetching = false;
         });
@@ -276,9 +276,9 @@ export class RestfulChatEventService implements IChatEventService {
             headers: this._apiHeaders
         };
         return stRequest(request).then((result) => {
-            if(this.eventHandlers && this.eventHandlers.onNetworkResponse) {
+            if(this._eventHandlers && this._eventHandlers.onNetworkResponse) {
                 // @ts-ignore
-                this.eventHandlers.onNetworkResponse(result);
+                this._eventHandlers.onNetworkResponse(result);
             }
             if(result.data && result.data.cursor) {
                 this.lastCursor = result.data.cursor;
@@ -328,32 +328,32 @@ export class RestfulChatEventService implements IChatEventService {
                 if(event.shadowban && (!this._user || event.userid !== this._user.userid)) {
                     continue;
                 }
-                if (event.eventtype == EventType.purge && this.eventHandlers.onPurgeEvent) {
-                    this.eventHandlers.onPurgeEvent(event);
+                if (event.eventtype == EventType.purge && this._eventHandlers.onPurgeEvent) {
+                    this._eventHandlers.onPurgeEvent(event);
                     continue;
                 }
-                if (event.eventtype == EventType.reply && this.eventHandlers.onReply) {
-                    this.eventHandlers.onReply(event);
+                if (event.eventtype == EventType.reply && this._eventHandlers.onReply) {
+                    this._eventHandlers.onReply(event);
                     continue;
                 }
-                if (event.eventtype == EventType.reaction && this.eventHandlers.onReaction) {
-                    this.eventHandlers.onReaction(event);
+                if (event.eventtype == EventType.reaction && this._eventHandlers.onReaction) {
+                    this._eventHandlers.onReaction(event);
                     continue;
                 }
-                if(event.eventtype == EventType.replace && this.eventHandlers.onReplace) {
-                    this.eventHandlers.onReplace(event);
+                if(event.eventtype == EventType.replace && this._eventHandlers.onReplace) {
+                    this._eventHandlers.onReplace(event);
                     continue;
                 }
-                if(event.eventtype == EventType.remove && this.eventHandlers.onRemove) {
-                    this.eventHandlers.onRemove(event);
+                if(event.eventtype == EventType.remove && this._eventHandlers.onRemove) {
+                    this._eventHandlers.onRemove(event);
                     continue;
                 }
-                if(this.eventHandlers.onAnnouncement && (event.eventtype == EventType.announcement || event.customtype == EventType.announcement)) {
-                    this.eventHandlers.onAnnouncement(event);
+                if(this._eventHandlers.onAnnouncement && (event.eventtype == EventType.announcement || event.customtype == EventType.announcement)) {
+                    this._eventHandlers.onAnnouncement(event);
                     continue;
                 }
-                if (this.eventHandlers.onChatEvent) {
-                    this.eventHandlers.onChatEvent(event);
+                if (this._eventHandlers.onChatEvent) {
+                    this._eventHandlers.onChatEvent(event);
                     continue;
                 }
 
@@ -374,12 +374,12 @@ export class RestfulChatEventService implements IChatEventService {
      */
     private _evaluateCommandResponse = (command: string, response: RestApiResult<CommandResponse> ): RestApiResult<CommandResponse> => {
         if(command.startsWith('*')) {
-            const onHelp = this.eventHandlers.onHelp;
+            const onHelp = this._eventHandlers.onHelp;
             if( command.startsWith('*help') && onHelp  && onHelp instanceof Function ) {
                 onHelp(response);
                 return response;
             }
-            const adminCommand = this.eventHandlers.onAdminCommand;
+            const adminCommand = this._eventHandlers.onAdminCommand;
             if (adminCommand && adminCommand instanceof Function) {
                 // @ts-ignore
                 adminCommand(response);
@@ -408,7 +408,7 @@ export class RestfulChatEventService implements IChatEventService {
             headers: this._jsonHeaders,
             data: data
         };
-        const errorHandler =  this.eventHandlers && this.eventHandlers.onNetworkError;
+        const errorHandler =  this._eventHandlers && this._eventHandlers.onNetworkError;
         return stRequest(config, errorHandler).then(response=>{
             return this._evaluateCommandResponse(command, response)
         });
