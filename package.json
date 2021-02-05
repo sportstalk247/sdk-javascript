@@ -13,7 +13,7 @@
     "loadtest": "npm run build && npx ts-node ./test/load/Cluster.ts"
   },
   "bin": {
-    "tail": "./dist/util/tail.js"
+    "st-tail": "./dist/util/tail.js"
   },
   "author": "Sportstalk24/7",
   "license": "SEE LICENSE IN LICENSE.md",
