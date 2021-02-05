@@ -16,9 +16,9 @@ const gl_appid = args.appid;
 const gl_roomcustomid = args.roomcustomid;
 const gl_stendpoint = args.endpoint;
 
-let handle = 'tailbot';
-let userid = 'tailbot';
-let displayname = 'chattailbot';
+let handle = args.handle || 'tailbot' ;
+let userid = args.userid || 'tailbot';
+let displayname = args.displayname || 'chattailbot';
 
 // Our event handler
 var onHandleEvent = async function(ev) {
