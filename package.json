@@ -10,8 +10,10 @@
     "web": "tsc --declaration && browserify ./dist/web.js -o ./dist/web-sdk.js",
     "web:prod": "npm run web && tsc --declaration && browserify ./dist/web.js -p tinyify -o ./dist/web-sdk.min.js",
     "deploy": "npm run build && npm run web && npm run web:prod && npm publish",
-    "loadtest": "npm run build && npx ts-node ./test/load/Cluster.ts",
-    "tail": "npx ts-node ./src/util/tail.ts"
+    "loadtest": "npm run build && npx ts-node ./test/load/Cluster.ts"
+  },
+  "bin": {
+    "tail": "./dist/util/tail.js"
   },
   "author": "Sportstalk24/7",
   "license": "SEE LICENSE IN LICENSE.md",
@@ -22,6 +24,7 @@
     "@types/expect": "^24.3.0",
     "@types/mocha": "^5.2.7",
     "@types/node": "^12.12.20",
+    "@types/yargs": "^16.0.0",
     "awesome-typescript-loader": "^5.2.1",
     "axios-mock-adapter": "^1.17.0",
     "browserify": "^16.5.2",
@@ -38,7 +41,8 @@
     "tinyify": "^2.5.2",
     "ts-mocha": "^6.0.0",
     "ts-node": "^8.5.4",
-    "typescript": "^3.9.7"
+    "typescript": "^3.9.7",
+    "yargs": "^16.2.0"
   },
   "dependencies": {
     "axios": "^0.21.1"

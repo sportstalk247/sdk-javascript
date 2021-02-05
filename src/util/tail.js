@@ -1,6 +1,7 @@
-import {ChatClient} from "../impl/ChatClient";
-// Read command line parameters
+#!/usr/bin/env node
+const sdk = require('../index');
 
+// Read command line parameters
 const args = require('yargs')
     .usage('Usage: $0 --appid=<YOUR-APPID> --token=<YOUR-TOKEN> --roomcustomid=<ROOM-CUSTOMID>')
     .describe('appid', 'APPID from dasboard')
@@ -50,7 +51,11 @@ var catchupOnJoin = async function(events) {
 
 var go = async function() {
     // Initialize SportsTalk247 Chat Client
-    const chatClient = ChatClient.init({ appId : gl_appid, apiToken: gl_token, endpoint: gl_stendpoint });
+    const config = { appId : gl_appid, apiToken: gl_token }
+    if(gl_stendpoint) {
+        config.endpoint=gl_stendpoint
+    }
+    const chatClient = sdk.ChatClient.init(config);
 
     // Register event handlers
     chatClient.setEventHandlers({
@@ -74,7 +79,12 @@ var go = async function() {
         // Start listening for updates
         chatClient.startListeningToEventUpdates();
     }).catch(function(result) {
-        console.error(`${result.response.data.code} | ${result.response.data.message}`);
+        if(result.response && result.response.data) {
+            console.error(`${result.response.data.code} | ${result.response.data.message}`);
+        }else  {
+            console.error(result);
+        }
+
     });
 
 }
