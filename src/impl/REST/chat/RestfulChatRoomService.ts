@@ -14,7 +14,7 @@ import {
 import {stRequest} from '../../network';
 import {GET, DELETE, POST, API_SUCCESS_MESSAGE} from "../../constants/api";
 import {buildAPI, forceObjKeyOrString, getJSONHeaders, getUrlEncodedHeaders} from "../../utils";
-import {RestApiResult, SportsTalkConfig, User, UserResult} from "../../../models/CommonModels";
+import {ReportType, RestApiResult, SportsTalkConfig, User, UserResult} from "../../../models/CommonModels";
 import {AxiosRequestConfig} from "axios";
 import {SettingsError} from "../../errors";
 
@@ -383,6 +383,22 @@ export class RestfulChatRoomService implements IRoomService {
             url: buildAPI(this._config, `${this._apiExt}/${roomId}/shadowban`),
             headers: this._jsonHeaders,
             data
+        }
+        return stRequest(config).then(result=>result.data);
+    }
+
+    reportUser = (reported: User | string, reportedBy: User | string, reportType: ReportType = ReportType.abuse,  room?: ChatRoomResult | string): Promise<User> => {
+        const userid = forceObjKeyOrString(reported, 'userid');
+        const reporterid = forceObjKeyOrString(reportedBy, 'userid');
+        const roomid = forceObjKeyOrString(room, 'id');
+        const config: AxiosRequestConfig = {
+            method:POST,
+            url: buildAPI(this._config, `/chat/rooms/${roomid}/users/${userid}/report`),
+            headers: this._jsonHeaders,
+            data: {
+                userid: reporterid,
+                reporttype: reportType
+            }
         }
         return stRequest(config).then(result=>result.data);
     }

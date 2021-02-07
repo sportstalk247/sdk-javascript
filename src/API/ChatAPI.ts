@@ -147,6 +147,7 @@ export interface IRoomService extends ISportsTalkConfigurable {
     joinRoomByCustomId( room: ChatRoom | string, user: User): Promise<JoinChatRoomResponse>
     exitRoom(user: User | string, room: ChatRoom | string): Promise<ChatRoomExitResult>
     setRoomShadowbanStatus(user: User | string, room: ChatRoomResult | string, shadowban: boolean, expiresSeconds?: number): Promise<ChatRoomResult>
+    reportUser(reported: User | string, reportedBy: User | string, reportType?: ReportType,  room?: ChatRoomResult | string): Promise<User>
 }
 
 /**

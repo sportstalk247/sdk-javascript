@@ -729,7 +729,17 @@ export class ChatClient implements IChatClient {
         this._eventService.setPreviousEventsCursor(cursor);
     }
 
-    reportUser = (userToReport: User | string, reportedBy: User | string, reportType: ReportType = ReportType.abuse): Promise<User> => {
+    /**
+     * Reports a user.
+     * @param userToReport the user who is causing problems
+     * @param reportedBy The user who is reporting the bad behavior.
+     * @param reportType The type of report, either 'abuse' or 'spam'
+     * @param room if specified, will not report the user globally but only in the current room.
+     */
+    reportUser = (userToReport: User | string, reportedBy: User | string, reportType: ReportType = ReportType.abuse, room?: ChatRoomResult | string): Promise<User> => {
+        if(room) {
+            return this._roomService.reportUser(userToReport, reportedBy, reportType, room)
+        }
         return this._userService.reportUser(userToReport, reportedBy, reportType)
     }
 

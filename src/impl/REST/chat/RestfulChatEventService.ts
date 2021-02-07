@@ -26,7 +26,7 @@ import {
     ReportReason,
     SportsTalkConfig,
     User,
-    MessageResult, UserResult, ErrorResult
+    MessageResult, UserResult, ErrorResult, ReportType
 } from "../../../models/CommonModels";
 import {AxiosRequestConfig} from "axios";
 const INVALID_POLL_FREQUENCY = "Invalid poll _pollFrequency.  Must be between 250ms and 5000ms"
@@ -721,4 +721,6 @@ export class RestfulChatEventService implements IChatEventService {
         }
         return stRequest(config).then(result=>result.data);
     }
+
+
 }
