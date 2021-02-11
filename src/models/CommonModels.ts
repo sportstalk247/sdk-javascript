@@ -50,6 +50,7 @@ export interface User {
 export enum Kind {
     chat = "chat.event",
     room = "chat.room",
+    notification = "notification",
     bounce = "chat.bounceuser",
     user = "app.user",
     api = "api.result",
@@ -243,10 +244,42 @@ export interface UserModerationListRequest extends ListRequest {
     filterModerationState?: typeof UserModerationState
 }
 
-export interface NotificationListRequest extends ListRequest{
-    limit?: number,
+export interface Notification {
+    kind: Kind.notification,
+    id: string
+    added: string, //ISO 8601
+    userid: string
+    ts: number,
+    whenread: string // ISO 8601
+    isread: boolean,
+    notificationtype: EventType
+    chatroomid?: string,
+    chatroomcustomid?: string
+    commentconversationid?: string
+    commentconversationcustomid?: string
+    chateventid?: string
+    commentid?: string
+}
+
+
+export interface NotificationRequest {
+    userid: string,
+}
+
+export interface NotificationListRequest extends ListRequest, NotificationRequest {
     userid: string,
     includeread?: boolean,
     filterNotificationTypes?: EventType[]
 }
 
+export interface NotificationReadRequest extends NotificationRequest{
+    userid: string,
+    notificationid?: string
+    eventid?: string
+    read?: boolean
+}
+
+export interface DeleteNotificationRequest extends NotificationRequest {
+    notificationid?: string
+    eventid?
+}

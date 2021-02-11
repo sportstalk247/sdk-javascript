@@ -38,7 +38,7 @@ import {
     UserListResponse,
     ListRequest,
     UserDeletionResponse,
-    ErrorResult, NotificationListRequest
+    ErrorResult, NotificationListRequest, NotificationReadRequest
 } from "../models/CommonModels";
 import {MISSING_ROOM, MUST_SET_USER, THROTTLE_ERROR} from "./constants/messages";
 import {forceObjKeyOrString} from "./utils";
@@ -629,6 +629,10 @@ export class ChatClient implements IChatClient {
                 includeread: false,
             }, request);
         return this._userService.listUserNotifications(requestedNotifications)
+    }
+
+    setNotificationReadStatus = async (request:NotificationReadRequest): Promise<any> => {
+        return this._userService.setNotificationReadStatus(request);
     }
 
     deleteUser = (user:User | string):Promise<UserDeletionResponse> => {

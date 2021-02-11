@@ -1,10 +1,11 @@
 import {AxiosRequestConfig} from "axios";
 import {stRequest} from "../../network";
-import {DELETE, GET, POST} from "../../constants/api";
+import {DELETE, GET, POST, PUT} from "../../constants/api";
 import {buildAPI, forceObjKeyOrString, formify, getJSONHeaders} from "../../utils";
 import {
+    DeleteNotificationRequest,
     ListRequest,
-    NotificationListRequest,
+    NotificationListRequest, NotificationReadRequest,
     ReportType,
     RestApiResult,
     SportsTalkConfig,
@@ -214,7 +215,7 @@ export class RestfulUserService implements IUserService {
         return stRequest(config).then(response=>response.data);
     }
 
-    listUsersInModerationQueue = (request: UserModerationListRequest): Promise<RestApiResult<UserResult>> => {
+    listUsersInModerationQueue = (request: UserModerationListRequest): Promise<UserListResponse> => {
         const config: AxiosRequestConfig = {
             method: POST,
             url: buildAPI(this._config, `user/moderation/queues/reportedusers`),
@@ -224,7 +225,19 @@ export class RestfulUserService implements IUserService {
         return stRequest(config).then(response=>response.data);
     }
 
-    listUserNotifications = (request: NotificationListRequest): Promise<RestApiResult<any>> => {
+    private _validateNotificationRequest = (request) =>{
+        if(!request.userid){
+            throw new Error("Must specify userid to set notification status");
+        }
+        if(!request.notificationid && !request.eventid) {
+            throw Error("Must set either notificationid or eventid to delete a notification")
+        }
+        if(request.notificationid && request.eventid) {
+            throw Error("Set either notificationid or eventid, not both")
+        }
+    }
+
+    listUserNotifications = (request: NotificationListRequest): Promise<Notification> => {
         const defaults: Partial<NotificationListRequest> = {
             limit: 20,
             includeread: false,
@@ -248,4 +261,42 @@ export class RestfulUserService implements IUserService {
         }
         return stRequest(config).then(response=>response.data);
     }
+
+    setNotificationReadStatus = (request:NotificationReadRequest): Promise<Notification> => {
+        const defaults = {
+            read: true,
+        }
+        const finalRequest:NotificationReadRequest = Object.assign(defaults, request);
+        this._validateNotificationRequest(finalRequest)
+        const data:string = formify(finalRequest)
+        let url;
+        if(finalRequest.eventid) {
+            url= buildAPI(this._config,`${this._apiExt}/${finalRequest.userid}/notifications/notificationsbyid/chateventid/${finalRequest.eventid}/update?${data}`);
+        } else{
+            url = buildAPI(this._config, `${this._apiExt}/${finalRequest.userid}/notification/notifications/${finalRequest.notificationid}/update?${data}`);
+        }
+        const config:AxiosRequestConfig = {
+            method: PUT,
+            headers: this._jsonHeaders,
+            url
+        }
+        return stRequest(config).then(response=>response.data);
+    }
+
+    deleteNotification = async (request: DeleteNotificationRequest): Promise<Notification> => {
+        let url;
+        this._validateNotificationRequest(request)
+        if(request.eventid) {
+            url= buildAPI(this._config,`${this._apiExt}/${request.userid}/notifications/notificationsbyid/chateventid/${request.eventid}`);
+        } else{
+            url = buildAPI(this._config, `${this._apiExt}/${request.userid}/notification/notifications/${request.notificationid}`);
+        }
+        const config:AxiosRequestConfig = {
+            method: DELETE,
+            headers: this._jsonHeaders,
+            url: url
+        }
+        return stRequest(config).then(response=>response.data);
+    }
+
 }

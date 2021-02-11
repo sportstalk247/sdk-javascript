@@ -1,6 +1,6 @@
 import {
     ListRequest,
-    NotificationListRequest,
+    NotificationListRequest, NotificationReadRequest,
     ReportType,
     RestApiResult,
     SportsTalkConfig,
@@ -74,6 +74,10 @@ export class UserClient implements ISportsTalkConfigurable, IUserService {
     listUserNotifications = (request: NotificationListRequest): Promise<RestApiResult<any>> => {
         return this._userService.listUserNotifications(request)
     }
+
+    setNotificationReadStatus = (request:NotificationReadRequest):Promise<Notification> => {
+        return this._userService.setNotificationReadStatus(request);
+}
 
     reportUser = (userToReport: User | string, reportedBy: User | string, reportType: ReportType = ReportType.abuse): Promise<UserResult> => {
         return this._userService.reportUser(userToReport, reportedBy, reportType);
