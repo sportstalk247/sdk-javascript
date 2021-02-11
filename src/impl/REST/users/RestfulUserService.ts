@@ -7,14 +7,14 @@ import {
     ListRequest,
     NotificationListRequest, NotificationReadRequest,
     ReportType,
-    RestApiResult,
+    Notification,
     SportsTalkConfig,
     User,
     UserDeletionResponse,
     UserListResponse,
     UserModerationListRequest,
     UserResult,
-    UserSearchType
+    UserSearchType, NotificationListResult
 } from "../../../models/CommonModels";
 import {EventType} from '../../../models/ChatModels';
 import {SettingsError} from "../../errors";
@@ -237,7 +237,7 @@ export class RestfulUserService implements IUserService {
         }
     }
 
-    listUserNotifications = (request: NotificationListRequest): Promise<Notification> => {
+    listUserNotifications = (request: NotificationListRequest): Promise<NotificationListResult> => {
         const defaults: Partial<NotificationListRequest> = {
             limit: 20,
             includeread: false,

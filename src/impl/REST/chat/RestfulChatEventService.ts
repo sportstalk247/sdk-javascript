@@ -54,6 +54,7 @@ export class RestfulChatEventService implements IChatEventService {
     private _commandApi: string; // holds the string of the chat command path.
     // Holds a set of ignored userIDs.
     private _ignoreList: Set<string> = new Set();
+    private _improvePerceivedPerformance: boolean = true;
 
     private _user: User = {userid: "", handle: ""}; // current user.
 
@@ -73,7 +74,17 @@ export class RestfulChatEventService implements IChatEventService {
      */
     private _pollFrequency: number =  800;
 
+    /**
+     * Only used if improvePerceivedPerformance is true.
+     * Keeps a list of messages we already rendered so we can ignore them in getUpdates
+     * @private
+     */
     private _preRenderedMessages: Set<string>= new Set<string>();
+    /**
+     * Only used if improvePerceivedPerformance is true.
+     * @private
+     */
+    private _updateEmitFrequency: number = 0;
 
     /**
      * @param config The SportsTalkConfig object
@@ -83,13 +94,7 @@ export class RestfulChatEventService implements IChatEventService {
     constructor(config: SportsTalkConfig, eventHandlers: EventHandlerConfig = {}) {
         this.setConfig(config);
         this.setEventHandlers(eventHandlers);
-        try {
-            const frequency  = process.env.SPORTSTALK_POLL_FREQUENCY ? parseInt(process.env.SPORTSTALK_POLL_FREQUENCY): 800;
-            this._pollFrequency = frequency
-        } catch (e) {
-            console.log(e);
-            this._pollFrequency = 800;
-        }
+        
     }
 
     /**
@@ -152,6 +157,15 @@ export class RestfulChatEventService implements IChatEventService {
         this._user = Object.assign(this._user, this._config.user);
         this._apiHeaders = getUrlEncodedHeaders(this._config.apiToken);
         this._jsonHeaders = getJSONHeaders(this._config.apiToken);
+        this._improvePerceivedPerformance = this._config.improvePerceivedPerformance || this._improvePerceivedPerformance;
+        try {
+            const frequency  = process.env.SPORTSTALK_POLL_FREQUENCY ? parseInt(process.env.SPORTSTALK_POLL_FREQUENCY): 800;
+            this._pollFrequency = frequency
+        } catch (e) {
+            console.log(e);
+            this._pollFrequency = config.chatEventPollFrequency || 800;
+        }
+        this._updateEmitFrequency = Math.floor(this._pollFrequency/100)
     }
 
     /**
@@ -287,6 +301,52 @@ export class RestfulChatEventService implements IChatEventService {
         });
     }
 
+    private _handleUpdate(event) {
+        // ignore if shadowbanned.
+        if(event.shadowban && (!this._user || event.userid !== this._user.userid)) {
+            return;
+        }
+        if (event.eventtype == EventType.purge && this._eventHandlers.onPurgeEvent) {
+            this._eventHandlers.onPurgeEvent(event);
+            return;
+        }
+        if (event.eventtype == EventType.reply && this._eventHandlers.onReply) {
+            this._eventHandlers.onReply(event);
+            return;
+        }
+        if (event.eventtype == EventType.reaction && this._eventHandlers.onReaction) {
+            this._eventHandlers.onReaction(event);
+            return;
+        }
+        if(event.eventtype == EventType.replace && this._eventHandlers.onReplace) {
+            this._eventHandlers.onReplace(event);
+            return;
+        }
+        if(event.eventtype == EventType.remove && this._eventHandlers.onRemove) {
+            this._eventHandlers.onRemove(event);
+            return;
+        }
+        if(this._eventHandlers.onAnnouncement && (event.eventtype == EventType.announcement || event.customtype == EventType.announcement)) {
+            this._eventHandlers.onAnnouncement(event);
+            return
+        }
+        if (this._eventHandlers.onChatEvent) {
+            this._eventHandlers.onChatEvent(event);
+            return;
+        }
+    }
+
+    /**
+     * Spaces out the events so that we see a stream instead of an huge change all at once.
+     * @param event
+     * @param index
+     */
+    private _spacedUpdate = (event, index) => {
+        setTimeout(function(){
+            this._handleUpdate(event)
+        }, index*this._updateEmitFrequency)
+    }
+    
     /**
      * Route the updates to appropriate handers.
      * @param update
@@ -324,39 +384,11 @@ export class RestfulChatEventService implements IChatEventService {
                  */
                 // skip if user is ignored.
                 if(this._ignoreList.has(event.userid)) continue;
-                // ignore if shadowbanned.
-                if(event.shadowban && (!this._user || event.userid !== this._user.userid)) {
-                    continue;
+                if(this._improvePerceivedPerformance) {
+                    this._spacedUpdate(event, i);
+                } else {
+                    this._handleUpdate(event);
                 }
-                if (event.eventtype == EventType.purge && this._eventHandlers.onPurgeEvent) {
-                    this._eventHandlers.onPurgeEvent(event);
-                    continue;
-                }
-                if (event.eventtype == EventType.reply && this._eventHandlers.onReply) {
-                    this._eventHandlers.onReply(event);
-                    continue;
-                }
-                if (event.eventtype == EventType.reaction && this._eventHandlers.onReaction) {
-                    this._eventHandlers.onReaction(event);
-                    continue;
-                }
-                if(event.eventtype == EventType.replace && this._eventHandlers.onReplace) {
-                    this._eventHandlers.onReplace(event);
-                    continue;
-                }
-                if(event.eventtype == EventType.remove && this._eventHandlers.onRemove) {
-                    this._eventHandlers.onRemove(event);
-                    continue;
-                }
-                if(this._eventHandlers.onAnnouncement && (event.eventtype == EventType.announcement || event.customtype == EventType.announcement)) {
-                    this._eventHandlers.onAnnouncement(event);
-                    continue;
-                }
-                if (this._eventHandlers.onChatEvent) {
-                    this._eventHandlers.onChatEvent(event);
-                    continue;
-                }
-
             }
         }
         this._fetching = false;
@@ -386,8 +418,10 @@ export class RestfulChatEventService implements IChatEventService {
             }
         }
         if(response.data.speech) {
-            this.handleUpdates({events:[response.data.speech]})
-            this._preRenderedMessages.add(response.data.speech.id)
+            if(this._improvePerceivedPerformance) {
+                this.handleUpdates({events: [response.data.speech]})
+                this._preRenderedMessages.add(response.data.speech.id)
+            }
         }
         return response;
     }

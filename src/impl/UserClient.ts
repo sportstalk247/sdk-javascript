@@ -5,11 +5,13 @@ import {
     RestApiResult,
     SportsTalkConfig,
     User,
+    Notification,
+    NotificationListResult,
     UserDeletionResponse,
     UserListResponse,
     UserModerationListRequest,
     UserResult,
-    UserSearchType
+    UserSearchType, DeleteNotificationRequest
 } from "../models/CommonModels";
 import {ISportsTalkConfigurable} from "../API/CommonAPI";
 import {RestfulUserService} from "./REST/users/RestfulUserService";
@@ -71,7 +73,7 @@ export class UserClient implements ISportsTalkConfigurable, IUserService {
         return this._userService.listUsersInModerationQueue(request);
     }
 
-    listUserNotifications = (request: NotificationListRequest): Promise<RestApiResult<any>> => {
+    listUserNotifications = (request: NotificationListRequest): Promise<NotificationListResult> => {
         return this._userService.listUserNotifications(request)
     }
 
@@ -81,5 +83,9 @@ export class UserClient implements ISportsTalkConfigurable, IUserService {
 
     reportUser = (userToReport: User | string, reportedBy: User | string, reportType: ReportType = ReportType.abuse): Promise<UserResult> => {
         return this._userService.reportUser(userToReport, reportedBy, reportType);
+    }
+
+    deleteNotification = (request: DeleteNotificationRequest): Promise<Notification> => {
+        return this._userService.deleteNotification(request);
     }
 }

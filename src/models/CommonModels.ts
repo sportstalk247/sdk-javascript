@@ -95,6 +95,8 @@ export enum UserSearchType {
  */
 export interface SportsTalkConfig extends ClientConfig {
     user?: User,
+    improvePerceivedPerformance?: boolean
+    chatEventPollFrequency?: number
 }
 
 /**
@@ -261,6 +263,9 @@ export interface Notification {
     commentid?: string
 }
 
+export interface NotificationListResult extends ListResponse{
+    notifications: Notification[]
+}
 
 export interface NotificationRequest {
     userid: string,

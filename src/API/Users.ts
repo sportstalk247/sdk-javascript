@@ -1,6 +1,8 @@
 import {
     DeleteNotificationRequest,
     ListRequest, ListResponse,
+    NotificationListResult,
+    Notification,
     NotificationListRequest, NotificationReadRequest,
     ReportType,
     RestApiResult,
@@ -35,7 +37,7 @@ export interface IUserService extends ISportsTalkConfigurable {
 
     listUsersInModerationQueue(request: UserModerationListRequest): Promise<UserListResponse>
 
-    listUserNotifications(request: NotificationListRequest): Promise<RestApiResult<any>>
+    listUserNotifications(request: NotificationListRequest): Promise<NotificationListResult>
     setNotificationReadStatus(request: NotificationReadRequest): Promise<Notification>;
     deleteNotification(request: DeleteNotificationRequest): Promise<Notification>;
 }
