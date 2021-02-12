@@ -387,7 +387,7 @@ export class RestfulChatRoomService implements IRoomService {
         return stRequest(config).then(result=>result.data);
     }
 
-    reportUser = (reported: User | string, reportedBy: User | string, reportType: ReportType = ReportType.abuse,  room?: ChatRoomResult | string): Promise<User> => {
+    reportUser = (reported: User | string, reportedBy: User | string, reportType: ReportType = ReportType.abuse,  room?: ChatRoomResult | string): Promise<ChatRoomResult> => {
         const userid = forceObjKeyOrString(reported, 'userid');
         const reporterid = forceObjKeyOrString(reportedBy, 'userid');
         const roomid = forceObjKeyOrString(room, 'id');

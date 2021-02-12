@@ -77,15 +77,23 @@ export class UserClient implements ISportsTalkConfigurable, IUserService {
         return this._userService.listUserNotifications(request)
     }
 
-    setNotificationReadStatus = (request:NotificationReadRequest):Promise<Notification> => {
-        return this._userService.setNotificationReadStatus(request);
-}
+    setNotificationReadStatus = (notificationid: string, userid: string, read?:boolean):Promise<Notification> => {
+        return this._userService.setNotificationReadStatus(notificationid, userid, read)
+    }
+
+    setNotificationReadStatusByChatEventId(chateventid: string, userid: string, read?: boolean): Promise<Notification> {
+        return this._userService.setNotificationReadStatusByChatEventId(chateventid, userid, read);
+    }
 
     reportUser = (userToReport: User | string, reportedBy: User | string, reportType: ReportType = ReportType.abuse): Promise<UserResult> => {
         return this._userService.reportUser(userToReport, reportedBy, reportType);
     }
 
-    deleteNotification = (request: DeleteNotificationRequest): Promise<Notification> => {
-        return this._userService.deleteNotification(request);
+    deleteNotification = (notificationid: string, userid: string): Promise<Notification> => {
+        return this._userService.deleteNotification(notificationid, userid);
+    }
+
+    deleteNotificationByChatEventId = (chateventid: string, userid: string): Promise<Notification> => {
+        return this._userService.deleteNotificationByChatEventId(chateventid, userid);
     }
 }

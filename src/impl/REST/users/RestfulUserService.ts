@@ -3,7 +3,6 @@ import {stRequest} from "../../network";
 import {DELETE, GET, POST, PUT} from "../../constants/api";
 import {buildAPI, forceObjKeyOrString, formify, getJSONHeaders} from "../../utils";
 import {
-    DeleteNotificationRequest,
     ListRequest,
     NotificationListRequest, NotificationReadRequest,
     ReportType,
@@ -262,18 +261,39 @@ export class RestfulUserService implements IUserService {
         return stRequest(config).then(response=>response.data);
     }
 
-    setNotificationReadStatus = (request:NotificationReadRequest): Promise<Notification> => {
-        const defaults = {
-            read: true,
+    setNotificationReadStatus = (notificationid: string, userid: string, read:boolean = true): Promise<Notification> => {
+        const finalRequest:NotificationReadRequest = {
+            notificationid,
+            userid,
+            read:!!read
+        };
+        if(!finalRequest.notificationid) {
+            throw new Error("Must set notification ID to update notificaiton");
         }
-        const finalRequest:NotificationReadRequest = Object.assign(defaults, request);
+        const params:string = formify(finalRequest)
+        const url = buildAPI(this._config, `${this._apiExt}/${finalRequest.userid}/notification/notifications/${finalRequest.notificationid}/update?${params}`);
+        const config:AxiosRequestConfig = {
+            method: PUT,
+            headers: this._jsonHeaders,
+            url
+        }
+        return stRequest(config).then(response=>response.data);
+    }
+
+    setNotificationReadStatusByChatEventId = (chateventid: string, userid: string, read:boolean=true): Promise<Notification> => {
+
+        const finalRequest:NotificationReadRequest = {
+            chateventid,
+            userid,
+            read:!!read
+        };
         this._validateNotificationRequest(finalRequest)
-        const data:string = formify(finalRequest)
+        const params:string = formify(finalRequest)
         let url;
-        if(finalRequest.eventid) {
-            url= buildAPI(this._config,`${this._apiExt}/${finalRequest.userid}/notifications/notificationsbyid/chateventid/${finalRequest.eventid}/update?${data}`);
-        } else{
-            url = buildAPI(this._config, `${this._apiExt}/${finalRequest.userid}/notification/notifications/${finalRequest.notificationid}/update?${data}`);
+        if(finalRequest.chateventid) {
+            url = buildAPI(this._config, `${this._apiExt}/${finalRequest.userid}/notifications/notificationsbyid/chateventid/${finalRequest.chateventid}/update?${params}`);
+        } else {
+            throw new Error("Must include chateventid to set read status");
         }
         const config:AxiosRequestConfig = {
             method: PUT,
@@ -283,14 +303,8 @@ export class RestfulUserService implements IUserService {
         return stRequest(config).then(response=>response.data);
     }
 
-    deleteNotification = async (request: DeleteNotificationRequest): Promise<Notification> => {
-        let url;
-        this._validateNotificationRequest(request)
-        if(request.eventid) {
-            url= buildAPI(this._config,`${this._apiExt}/${request.userid}/notifications/notificationsbyid/chateventid/${request.eventid}`);
-        } else{
-            url = buildAPI(this._config, `${this._apiExt}/${request.userid}/notification/notifications/${request.notificationid}`);
-        }
+    deleteNotification = async (notificationid: string, userid: string): Promise<Notification> => {
+        const url = buildAPI(this._config, `${this._apiExt}/${userid}/notification/notifications/${notificationid}`);
         const config:AxiosRequestConfig = {
             method: DELETE,
             headers: this._jsonHeaders,
@@ -298,5 +312,16 @@ export class RestfulUserService implements IUserService {
         }
         return stRequest(config).then(response=>response.data);
     }
+
+    deleteNotificationByChatEventId = async (chateventid: string, userid: string): Promise<Notification> => {
+        const url = buildAPI(this._config,`${this._apiExt}/${userid}/notifications/notificationsbyid/chateventid/${chateventid}`);
+        const config:AxiosRequestConfig = {
+            method: DELETE,
+            headers: this._jsonHeaders,
+            url: url
+        }
+        return stRequest(config).then(response=>response.data);
+    }
+
 
 }

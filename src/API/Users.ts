@@ -38,8 +38,11 @@ export interface IUserService extends ISportsTalkConfigurable {
     listUsersInModerationQueue(request: UserModerationListRequest): Promise<UserListResponse>
 
     listUserNotifications(request: NotificationListRequest): Promise<NotificationListResult>
-    setNotificationReadStatus(request: NotificationReadRequest): Promise<Notification>;
-    deleteNotification(request: DeleteNotificationRequest): Promise<Notification>;
+    setNotificationReadStatus(notificationid: string, userid: string, read?:boolean): Promise<Notification>
+    setNotificationReadStatusByChatEventId(chateventid: string, userid: string, read?:boolean): Promise<Notification>
+    deleteNotification(notificationid: string, userid: string): Promise<Notification>;
+    deleteNotificationByChatEventId(chateventid: string, userid: string):Promise<Notification>;
+
 }
 
 /**

@@ -38,7 +38,7 @@ import {
     UserListResponse,
     ListRequest,
     UserDeletionResponse,
-    ErrorResult, NotificationListRequest, NotificationReadRequest
+    ErrorResult, NotificationListRequest, NotificationReadRequest, Notification
 } from "../models/CommonModels";
 import {MISSING_ROOM, MUST_SET_USER, THROTTLE_ERROR} from "./constants/messages";
 import {forceObjKeyOrString} from "./utils";
@@ -631,8 +631,24 @@ export class ChatClient implements IChatClient {
         return this._userService.listUserNotifications(requestedNotifications)
     }
 
-    setNotificationReadStatus = async (request:NotificationReadRequest): Promise<any> => {
-        return this._userService.setNotificationReadStatus(request);
+    setNotificationReadStatus = (notificationid: string, read?: boolean, userid?: string): Promise<Notification> => {
+        const finaluserid = userid || this._user ? this._user.userid : ''
+        return this._userService.setNotificationReadStatus(notificationid, finaluserid, read);
+    }
+
+    setNotificationReadStatusByChatEventId(chateventid: string, read?: boolean, userid?: string): Promise<Notification> {
+        const finaluserid = userid || this._user ? this._user.userid : ''
+        return this._userService.setNotificationReadStatusByChatEventId(chateventid, finaluserid, read)
+    }
+
+    deleteNotification = async (notificationid: string, userid?: string): Promise<Notification> => {
+        const finaluserid = userid || this._user ? this._user.userid : ''
+        return this._userService.deleteNotification(notificationid, finaluserid)
+    }
+
+    deleteNotificationByChatEventId = (chateventid: string, userid?: string): Promise<Notification> => {
+        const finaluserid = userid || this._user ? this._user.userid : ''
+        return this._userService.deleteNotificationByChatEventId(chateventid, finaluserid)
     }
 
     deleteUser = (user:User | string):Promise<UserDeletionResponse> => {
@@ -740,13 +756,13 @@ export class ChatClient implements IChatClient {
      * @param reportType The type of report, either 'abuse' or 'spam'
      * @param room if specified, will not report the user globally but only in the current room.
      */
-    reportUser = (userToReport: User | string, reportedBy: User | string, reportType: ReportType = ReportType.abuse, room?: ChatRoomResult | string): Promise<User> => {
-        if(room) {
-            return this._roomService.reportUser(userToReport, reportedBy, reportType, room)
-        }
+    reportUser = (userToReport: User | string, reportedBy: User | string, reportType: ReportType = ReportType.abuse): Promise<User> => {
         return this._userService.reportUser(userToReport, reportedBy, reportType)
     }
 
+    reportUserInRoom = (userToReport: User | string, reportedBy: User | string, reportType: ReportType = ReportType.abuse, room: ChatRoomResult | string): Promise<ChatRoomResult> => {
+        return this._roomService.reportUser(userToReport, reportedBy, reportType, room)
+    }
     updateChatEvent = (event: EventResult | string, body: string, user?: string | User): Promise<EventResult> => {
         return this._eventService.updateChatEvent(event, body, user);
     }

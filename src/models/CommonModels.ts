@@ -280,11 +280,11 @@ export interface NotificationListRequest extends ListRequest, NotificationReques
 export interface NotificationReadRequest extends NotificationRequest{
     userid: string,
     notificationid?: string
-    eventid?: string
+    chateventid?: string
     read?: boolean
 }
 
 export interface DeleteNotificationRequest extends NotificationRequest {
     notificationid?: string
-    eventid?
+    chateventid?
 }
