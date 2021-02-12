@@ -27,7 +27,7 @@ import {ISportsTalkConfigurable} from "./CommonAPI";
 import {
     ChatModerationQueueListRequest, ErrorResult,
     ListRequest,
-    MessageResult,
+    MessageResult, Notification,
     Reaction,
     ReportReason,
     ReportType,
@@ -460,6 +460,10 @@ export interface IChatClient extends IUserConfigurable, ISportsTalkConfigurable 
     updateChatEvent(event: EventResult | string, body: string, user?: string | User): Promise<EventResult>
     listEventsByType(type:EventType): Promise<ChatEventsList>
     listEventsByTimestamp(query: TimestampRequest): Promise<ChatEventsList>
+    setNotificationReadStatus(notificationid: string, read?: boolean, userid?: string): Promise<Notification>
+    setNotificationReadStatusByChatEventId(chateventid: string, read?: boolean, userid?: string): Promise<Notification>
+    deleteNotification(notificationid: string, userid?: string): Promise<Notification>
+    deleteNotificationByChatEventId(chateventid: string, userid?: string): Promise<Notification>
 }
 
 /**
