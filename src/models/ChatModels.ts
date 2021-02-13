@@ -159,10 +159,37 @@ export interface ChatRoom {
     throttle?: number //(optional) Defaults to 0. This is the number of seconds to delay new incomming messags so that the chat room doesn't scroll messages too fast.
 }
 
-export interface ShadowBanOptions {
-    shadowban: boolean,
-    expiryseconds?: number,
+export interface RoomOptional {
     roomid?: string
+}
+export interface Expires {
+    expireseconds?: number
+}
+
+export interface ShadowBanOptions extends Expires, RoomOptional {
+    shadowban: boolean,
+}
+
+export interface MuteOptions extends Expires, RoomOptional{
+    mute: boolean,
+}
+
+export interface UserEffect {
+    type: string,
+    expires: string,
+    userid: string
+}
+
+export interface RoomUserEffect {
+    user: UserResult,
+    effect: UserEffect
+}
+
+
+export interface ChatRoomEffectsList {
+    kind: Kind.roomusereffects
+    itemcount: number,
+    effects: RoomUserEffect[]
 }
 
 /**
@@ -289,8 +316,16 @@ export interface EventSearchParams {
     limit?: number
 }
 
-export interface ShadowbanUserApiData {
+export interface RoomEffectData {
     userid: string,
-    shadowban: boolean,
     expireseconds?: number
 }
+
+export interface ShadowbanUserApiData extends RoomEffectData {
+    shadowban: boolean,
+}
+
+export interface MuteUserApiData extends RoomEffectData {
+    mute: boolean
+}
+

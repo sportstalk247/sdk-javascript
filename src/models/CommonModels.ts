@@ -49,6 +49,7 @@ export interface User {
 
 export enum Kind {
     chat = "chat.event",
+    roomusereffects = "chat.list.roomusereffects",
     room = "chat.room",
     notification = "notification",
     bounce = "chat.bounceuser",

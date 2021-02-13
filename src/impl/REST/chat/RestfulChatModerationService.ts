@@ -1,7 +1,7 @@
-import {EventListResponse, EventResult} from "../../../models/ChatModels";
+import {ChatRoomEffectsList, ChatRoomResult, EventListResponse, EventResult} from "../../../models/ChatModels";
 import {stRequest} from '../../network';
-import {buildAPI, getJSONHeaders, getUrlEncodedHeaders} from "../../utils";
-import {DEFAULT_CONFIG, POST, } from "../../constants/api";
+import {buildAPI, getJSONHeaders, forceObjKeyOrString} from "../../utils";
+import {DEFAULT_CONFIG, GET, POST,} from "../../constants/api";
 import {IChatModerationService} from "../../../API/ChatAPI";
 import {ChatModerationQueueListRequest, RestApiResult, SportsTalkConfig, Webhook} from "../../../models/CommonModels";
 import {AxiosRequestConfig} from "axios";
@@ -60,5 +60,15 @@ export class RestfulChatModerationService implements IChatModerationService {
             data: {approve: !!approved + ""}
         }
         return stRequest(config).then(response=>response.data)
+    }
+
+    listRoomEffects = (room: ChatRoomResult | string): Promise<ChatRoomEffectsList> => {
+        const roomid:string = forceObjKeyOrString(room)
+        const config: AxiosRequestConfig = {
+            method: GET,
+            url: buildAPI(this._config, `/chat/rooms/${roomid}/effects`),
+            headers: this._jsonHeaders
+        }
+        return stRequest(config).then(response=>response.data);
     }
 }

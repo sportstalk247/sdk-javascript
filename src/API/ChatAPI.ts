@@ -20,7 +20,7 @@ import {
     EventSearchParams,
     EventType,
     ChatEventsList,
-    TimestampRequest
+    TimestampRequest, ChatRoomEffectsList
 } from "../models/ChatModels";
 
 import {ISportsTalkConfigurable} from "./CommonAPI";
@@ -138,7 +138,6 @@ export interface IRoomService extends ISportsTalkConfigurable {
      * @param message A message giving an explanation.
      */
     bounceUserFromRoom(room: ChatRoomResult | string, user: UserResult | string, message?: string): Promise<RestApiResult<BounceUserResult>>
-
     purgeUserMessagesFromRoom(room: ChatRoomResult | string, user: User | string): Promise<RestApiResult<any>>
     unbounceUserFromRoom(room: ChatRoomResult | string, user: UserResult | string, message?: string): Promise<RestApiResult<BounceUserResult>>
     listParticipants(room: ChatRoom, cursor?: string, maxresults?: number): Promise<Array<UserResult>>
@@ -147,6 +146,7 @@ export interface IRoomService extends ISportsTalkConfigurable {
     joinRoomByCustomId( room: ChatRoom | string, user: User): Promise<JoinChatRoomResponse>
     exitRoom(user: User | string, room: ChatRoom | string): Promise<ChatRoomExitResult>
     setRoomShadowbanStatus(user: User | string, room: ChatRoomResult | string, shadowban: boolean, expiresSeconds?: number): Promise<ChatRoomResult>
+    setRoomMuteStatus(user: User | string, room: ChatRoomResult | string, mute: boolean, expiresSeconds?: number): Promise<ChatRoomResult>
     reportUser(reported: User | string, reportedBy: User | string, reportType?: ReportType,  room?: ChatRoomResult | string): Promise<ChatRoomResult>
 }
 
@@ -464,6 +464,7 @@ export interface IChatClient extends IUserConfigurable, ISportsTalkConfigurable 
     setNotificationReadStatusByChatEventId(chateventid: string, read?: boolean, userid?: string): Promise<Notification>
     deleteNotification(notificationid: string, userid?: string): Promise<Notification>
     deleteNotificationByChatEventId(chateventid: string, userid?: string): Promise<Notification>
+    muteUserInRoom(user:User | string, mute: boolean, expireseconds?: number, room?: ChatRoomResult | string): Promise<ChatRoomResult>
 }
 
 /**
@@ -473,5 +474,6 @@ export interface IChatClient extends IUserConfigurable, ISportsTalkConfigurable 
 export interface IChatModerationService extends ISportsTalkConfigurable {
     listMessagesInModerationQueue(moderationQueueRequest: ChatModerationQueueListRequest): Promise<EventListResponse>
     moderateEvent(event: EventResult, approved: boolean): Promise<EventResult>
+    listRoomEffects(room: ChatRoomResult | string): Promise<ChatRoomEffectsList>
 }
 

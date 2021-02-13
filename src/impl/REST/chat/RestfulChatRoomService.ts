@@ -9,7 +9,7 @@ import {
     ChatRoomListResponse,
     EventListResponse,
     BounceUserResult,
-    ShadowbanUserApiData
+    ShadowbanUserApiData, MuteUserApiData
 } from "../../../models/ChatModels";
 import {stRequest} from '../../network';
 import {GET, DELETE, POST, API_SUCCESS_MESSAGE} from "../../constants/api";
@@ -372,15 +372,34 @@ export class RestfulChatRoomService implements IRoomService {
         const roomId = forceObjKeyOrString(room);
         const userId = forceObjKeyOrString(user, 'userid');
         const data:ShadowbanUserApiData = {
-            shadowban,
+            shadowban: !!shadowban,
             userid: userId
         }
-        if(expiresSeconds && shadowban) {
+        if(expiresSeconds && data.shadowban) {
             data.expireseconds = expiresSeconds
         }
         const config: AxiosRequestConfig = {
             method: POST,
             url: buildAPI(this._config, `${this._apiExt}/${roomId}/shadowban`),
+            headers: this._jsonHeaders,
+            data
+        }
+        return stRequest(config).then(result=>result.data);
+    }
+
+    setRoomMuteStatus = (user: User | string, room: ChatRoomResult | string, mute: boolean, expiresSeconds?: number): Promise<ChatRoomResult> => {
+        const roomId = forceObjKeyOrString(room);
+        const userId = forceObjKeyOrString(user, 'userid');
+        const data:MuteUserApiData = {
+            mute: !!mute,
+            userid: userId
+        }
+        if(expiresSeconds && data.mute) {
+            data.expireseconds = expiresSeconds
+        }
+        const config: AxiosRequestConfig = {
+            method: POST,
+            url: buildAPI(this._config, `${this._apiExt}/${roomId}/mute`),
             headers: this._jsonHeaders,
             data
         }

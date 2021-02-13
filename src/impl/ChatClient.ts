@@ -17,7 +17,7 @@ import {
     ShadowBanOptions,
     EventType,
     ChatEventsList,
-    TimestampRequest
+    TimestampRequest, MuteOptions
 } from "../models/ChatModels";
 import {DEFAULT_CONFIG} from "./constants/api";
 import {IRoomService, IChatEventService, IChatClient} from "../API/ChatAPI";
@@ -38,7 +38,7 @@ import {
     UserListResponse,
     ListRequest,
     UserDeletionResponse,
-    ErrorResult, NotificationListRequest, NotificationReadRequest, Notification
+    ErrorResult, NotificationListRequest, Notification
 } from "../models/CommonModels";
 import {MISSING_ROOM, MUST_SET_USER, THROTTLE_ERROR} from "./constants/messages";
 import {forceObjKeyOrString} from "./utils";
@@ -606,9 +606,14 @@ export class ChatClient implements IChatClient {
      */
     setShadowBanStatus = (user: User | string, options: ShadowBanOptions): Promise<UserResult | ChatRoomResult> => {
         if(options && options.roomid) {
-            return this._roomService.setRoomShadowbanStatus(user, options.roomid || this._currentRoom, options.shadowban, options.expiryseconds)
+            return this._roomService.setRoomShadowbanStatus(user, options.roomid || this._currentRoom, options.shadowban, options.expireseconds)
         }
-        return this._userService.setShadowBanStatus(user, options.shadowban, options.expiryseconds);
+        return this._userService.setShadowBanStatus(user, options.shadowban, options.expireseconds);
+    }
+
+    muteUserInRoom = (user:User | string, mute: boolean, expireseconds?: number, room?: ChatRoomResult | string): Promise<ChatRoomResult> => {
+        const targetRoom = room || this._currentRoom;
+        return this._roomService.setRoomMuteStatus(user, targetRoom, mute, expireseconds)
     }
 
     searchUsers = (search: string, type: UserSearchType, limit?:number): Promise<UserListResponse> => {
