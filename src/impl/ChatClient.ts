@@ -606,9 +606,9 @@ export class ChatClient implements IChatClient {
      */
     setShadowBanStatus = (user: User | string, options: EffectOptions): Promise<UserResult | ChatRoomResult> => {
         if(options && options.roomid) {
-            return this._roomService.setRoomShadowbanStatus(user, options.roomid || this._currentRoom, options.shadowban, options.expireseconds)
+            return this._roomService.setRoomShadowbanStatus(user, options.roomid || this._currentRoom, options.applyeffect, options.expireseconds)
         }
-        return this._userService.setShadowBanStatus(user, options.shadowban, options.expireseconds);
+        return this._userService.setShadowBanStatus(user, options.applyeffect, options.expireseconds);
     }
 
     muteUserInRoom = (user:User | string, mute: boolean, expireseconds?: number, room?: ChatRoomResult | string): Promise<ChatRoomResult> => {
