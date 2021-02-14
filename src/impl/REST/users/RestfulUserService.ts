@@ -18,6 +18,7 @@ import {
 import {EventType} from '../../../models/ChatModels';
 import {SettingsError} from "../../errors";
 import {IUserService} from "../../../API/Users";
+import {config} from "dotenv";
 
 /**
  * Class for handling user management via REST.
@@ -301,6 +302,16 @@ export class RestfulUserService implements IUserService {
             url
         }
         return stRequest(config).then(response=>response.data);
+    }
+
+    markAllNotificationsAsRead = (user: UserResult | string, deleteAll: boolean = true) => {
+        const userid = forceObjKeyOrString(user, 'userid');
+        const config: AxiosRequestConfig = {
+            method: PUT,
+            headers: this._jsonHeaders,
+            url: buildAPI(this._config, `/user/users/${userid}/notification/notifications_all/markread?delete=${deleteAll}`)
+        }
+        return stRequest(config).then(response=>response.data)
     }
 
     deleteNotification = async (notificationid: string, userid: string): Promise<Notification> => {

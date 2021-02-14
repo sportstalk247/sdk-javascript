@@ -636,6 +636,11 @@ export class ChatClient implements IChatClient {
         return this._userService.listUserNotifications(requestedNotifications)
     }
 
+    markAllNotificationsAsRead = (user?: User | string, deleteAll: boolean = true): Promise<any> => {
+        const targetuser = user || this._user;
+        return this._userService.markAllNotificationsAsRead(targetuser, deleteAll);
+    }
+
     setNotificationReadStatus = (notificationid: string, read?: boolean, userid?: string): Promise<Notification> => {
         const finaluserid = userid || this._user ? this._user.userid : ''
         return this._userService.setNotificationReadStatus(notificationid, finaluserid, read);

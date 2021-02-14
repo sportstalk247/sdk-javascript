@@ -96,4 +96,8 @@ export class UserClient implements ISportsTalkConfigurable, IUserService {
     deleteNotificationByChatEventId = (chateventid: string, userid: string): Promise<Notification> => {
         return this._userService.deleteNotificationByChatEventId(chateventid, userid);
     }
+
+    markAllNotificationsAsRead = (user: User | string, deleteAll: boolean = true): Promise<any> => {
+        return this._userService.markAllNotificationsAsRead(user, deleteAll);
+    }
 }
