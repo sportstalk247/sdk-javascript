@@ -14,7 +14,7 @@ import {
     ChatRoomListResponse,
     ChatOptionsEventType,
     BounceUserResult,
-    ShadowBanOptions,
+    EffectOptions,
     EventType,
     ChatEventsList,
     TimestampRequest, MuteOptions
@@ -604,7 +604,7 @@ export class ChatClient implements IChatClient {
      * @param user
      * @param options
      */
-    setShadowBanStatus = (user: User | string, options: ShadowBanOptions): Promise<UserResult | ChatRoomResult> => {
+    setShadowBanStatus = (user: User | string, options: EffectOptions): Promise<UserResult | ChatRoomResult> => {
         if(options && options.roomid) {
             return this._roomService.setRoomShadowbanStatus(user, options.roomid || this._currentRoom, options.shadowban, options.expireseconds)
         }

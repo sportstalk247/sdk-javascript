@@ -16,7 +16,7 @@ import {
     ChatRoomResult,
     JoinChatRoomResponse,
     BounceUserResult,
-    ShadowBanOptions,
+    EffectOptions,
     EventSearchParams,
     EventType,
     ChatEventsList,
@@ -372,7 +372,7 @@ export interface IChatClient extends IUserConfigurable, ISportsTalkConfigurable 
      * @param user
      * @param options
      */
-    setShadowBanStatus(user: User | string, options: ShadowBanOptions): Promise<UserResult | ChatRoomResult>
+    setShadowBanStatus(user: User | string, options: EffectOptions): Promise<UserResult | ChatRoomResult>
 
     /**
      * creates a new user, or updates a user if that userid already exists.

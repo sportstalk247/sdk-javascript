@@ -66,7 +66,7 @@ export class RestfulChatModerationService implements IChatModerationService {
         const roomid:string = forceObjKeyOrString(room)
         const config: AxiosRequestConfig = {
             method: GET,
-            url: buildAPI(this._config, `/chat/rooms/${roomid}/effects`),
+            url: buildAPI(this._config, `/chat/rooms/${roomid}/usereffects`),
             headers: this._jsonHeaders
         }
         return stRequest(config).then(response=>response.data);

@@ -166,8 +166,8 @@ export interface Expires {
     expireseconds?: number
 }
 
-export interface ShadowBanOptions extends Expires, RoomOptional {
-    shadowban: boolean,
+export interface EffectOptions extends Expires, RoomOptional {
+    applyeffect: boolean,
 }
 
 export interface MuteOptions extends Expires, RoomOptional{
@@ -319,13 +319,14 @@ export interface EventSearchParams {
 export interface RoomEffectData {
     userid: string,
     expireseconds?: number
+    applyeffect: boolean
 }
 
 export interface ShadowbanUserApiData extends RoomEffectData {
-    shadowban: boolean,
+    applyeffect: boolean,
 }
 
 export interface MuteUserApiData extends RoomEffectData {
-    mute: boolean
+    applyeffect: boolean
 }
 

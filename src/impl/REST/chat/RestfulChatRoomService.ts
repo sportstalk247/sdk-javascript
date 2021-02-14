@@ -372,10 +372,10 @@ export class RestfulChatRoomService implements IRoomService {
         const roomId = forceObjKeyOrString(room);
         const userId = forceObjKeyOrString(user, 'userid');
         const data:ShadowbanUserApiData = {
-            shadowban: !!shadowban,
+            applyeffect: !!shadowban,
             userid: userId
         }
-        if(expiresSeconds && data.shadowban) {
+        if(expiresSeconds && data.applyeffect) {
             data.expireseconds = expiresSeconds
         }
         const config: AxiosRequestConfig = {
@@ -391,10 +391,10 @@ export class RestfulChatRoomService implements IRoomService {
         const roomId = forceObjKeyOrString(room);
         const userId = forceObjKeyOrString(user, 'userid');
         const data:MuteUserApiData = {
-            mute: !!mute,
+            applyeffect: !!mute,
             userid: userId
         }
-        if(expiresSeconds && data.mute) {
+        if(expiresSeconds && data.applyeffect) {
             data.expireseconds = expiresSeconds
         }
         const config: AxiosRequestConfig = {
