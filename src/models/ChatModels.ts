@@ -192,6 +192,13 @@ export interface ChatRoomEffectsList {
     effects: RoomUserEffect[]
 }
 
+export interface UserReport {
+    userid: string
+    reportedbyuserid: string
+    reason: ReportReason
+    added: string
+}
+
 /**
  * The Model describing the API result of a created room. The key difference is that RoomResult objects will always have an ID, whereas Room objects do not have this guarantee.
  */
@@ -204,7 +211,7 @@ export interface ChatRoomResult extends ChatRoom {
     inroom?:number,
     shadowbannedusers?: string[]
     flaggedusers?: [],
-    reportedusers?: [],
+    reportedusers?: UserReport[],
     added?: string, // ISO Date
     whenmodified?:string // ISO Date
 }
