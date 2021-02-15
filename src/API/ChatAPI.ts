@@ -465,6 +465,7 @@ export interface IChatClient extends IUserConfigurable, ISportsTalkConfigurable 
     deleteNotification(notificationid: string, userid?: string): Promise<Notification>
     deleteNotificationByChatEventId(chateventid: string, userid?: string): Promise<Notification>
     muteUserInRoom(user:User | string, mute: boolean, expireseconds?: number, room?: ChatRoomResult | string): Promise<ChatRoomResult>
+    shadowBanUserFromRoom(user: User | string, expireseconds: number, roomid?: string):Promise<ChatRoomResult>
 }
 
 /**

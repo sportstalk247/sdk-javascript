@@ -301,9 +301,9 @@ export class RestfulChatEventService implements IChatEventService {
         });
     }
 
-    private _handleUpdate(event) {
+    private _handleUpdate = (event) => {
         // ignore if shadowbanned.
-        if(event.shadowban && (!this._user || event.userid !== this._user.userid)) {
+        if(event.shadowban && (event.userid !== this._user.userid || !this._user)) {
             return;
         }
         if (event.eventtype == EventType.purge && this._eventHandlers.onPurgeEvent) {
@@ -341,9 +341,9 @@ export class RestfulChatEventService implements IChatEventService {
      * @param event
      * @param index
      */
-    private _spacedUpdate = (event, index) => {
+    private _spacedUpdate = (event: EventResult, index:number, updateFunction: Function) => {
         setTimeout(function(){
-            this._handleUpdate(event)
+            updateFunction(event)
         }, index*this._updateEmitFrequency)
     }
     
@@ -385,7 +385,7 @@ export class RestfulChatEventService implements IChatEventService {
                 // skip if user is ignored.
                 if(this._ignoreList.has(event.userid)) continue;
                 if(this._improvePerceivedPerformance) {
-                    this._spacedUpdate(event, i);
+                    this._spacedUpdate(event, i, this._handleUpdate);
                 } else {
                     this._handleUpdate(event);
                 }

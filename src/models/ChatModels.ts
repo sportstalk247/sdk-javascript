@@ -323,6 +323,7 @@ export interface RoomEffectData {
 }
 
 export interface ShadowbanUserApiData extends RoomEffectData {
+    shadowban?: boolean,
     applyeffect: boolean,
 }
 

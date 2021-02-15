@@ -372,6 +372,7 @@ export class RestfulChatRoomService implements IRoomService {
         const roomId = forceObjKeyOrString(room);
         const userId = forceObjKeyOrString(user, 'userid');
         const data:ShadowbanUserApiData = {
+            shadowban: !!shadowban,
             applyeffect: !!shadowban,
             userid: userId
         }
