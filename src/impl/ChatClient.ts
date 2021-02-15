@@ -71,7 +71,7 @@ export class ChatClient implements IChatClient {
 
     private _lastCommand: string | null = null;
     private _lastCommandTime: number = 0;
-    private _lastCommandTimeoutDuration;
+    private _lastCommandTimeoutDuration = 3000;
 
     /**
      * Holds the currently active chat room being observed by the client.
@@ -120,7 +120,7 @@ export class ChatClient implements IChatClient {
     }
 
     private _throttle(command: string) {
-        if(command == this._lastCommand && (new Date().getTime()-this._lastCommandTime) > this._lastCommandTimeoutDuration) {
+        if(command == this._lastCommand && (new Date().getTime()-this._lastCommandTime) < this._lastCommandTimeoutDuration) {
             throw new Error(THROTTLE_ERROR);
         } else {
             this._lastCommandTime = new Date().getTime();
