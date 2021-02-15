@@ -42,8 +42,9 @@ import {
 } from "../models/CommonModels";
 import {MISSING_ROOM, MUST_SET_USER, THROTTLE_ERROR} from "./constants/messages";
 import {forceObjKeyOrString} from "./utils";
-import {IUserService} from "../API/Users";
+import {INotificationService, IUserService} from "../API/Users";
 import {setTimeout} from "timers";
+import {RestfulNotificationService} from "./REST/notifications/RestfulNotificationService";
 
 /**
  * ChatClient provides an interface to chat applications.
@@ -102,6 +103,8 @@ export class ChatClient implements IChatClient {
      */
     private _userService: IUserService;
 
+    private _notificationServce: INotificationService
+
     /**
      * Debugging method to grab the internal state and help debug.
      */
@@ -156,11 +159,14 @@ export class ChatClient implements IChatClient {
         if(this._userService) {
             this._userService.setConfig(this._config);
         }
+        if(this._notificationServce) {
+            this._notificationServce.setConfig(this._config);
+        }
 
         this._eventService = this._eventService || new RestfulChatEventService(this._config);
         this._roomService = this._roomService || new RestfulChatRoomService(this._config);
         this._userService = this._userService || new RestfulUserService(this._config);
-
+        this._notificationServce = this._notificationServce || new RestfulNotificationService(this._config);
         if(this._config.user){
             Object.assign(this._user, this._config.user);
         }
@@ -633,32 +639,32 @@ export class ChatClient implements IChatClient {
                 userid: this._user ? this._user.userid : '',
                 includeread: false,
             }, request);
-        return this._userService.listUserNotifications(requestedNotifications)
+        return this._notificationServce.listUserNotifications(requestedNotifications)
     }
 
     markAllNotificationsAsRead = (user?: User | string, deleteAll: boolean = true): Promise<any> => {
         const targetuser = user || this._user;
-        return this._userService.markAllNotificationsAsRead(targetuser, deleteAll);
+        return this._notificationServce.markAllNotificationsAsRead(targetuser, deleteAll);
     }
 
     setNotificationReadStatus = (notificationid: string, read?: boolean, userid?: string): Promise<Notification> => {
         const finaluserid = userid || this._user ? this._user.userid : ''
-        return this._userService.setNotificationReadStatus(notificationid, finaluserid, read);
+        return this._notificationServce.setNotificationReadStatus(notificationid, finaluserid, read);
     }
 
     setNotificationReadStatusByChatEventId(chateventid: string, read?: boolean, userid?: string): Promise<Notification> {
         const finaluserid = userid || this._user ? this._user.userid : ''
-        return this._userService.setNotificationReadStatusByChatEventId(chateventid, finaluserid, read)
+        return this._notificationServce.setNotificationReadStatusByChatEventId(chateventid, finaluserid, read)
     }
 
     deleteNotification = async (notificationid: string, userid?: string): Promise<Notification> => {
         const finaluserid = userid || this._user ? this._user.userid : ''
-        return this._userService.deleteNotification(notificationid, finaluserid)
+        return this._notificationServce.deleteNotification(notificationid, finaluserid)
     }
 
     deleteNotificationByChatEventId = (chateventid: string, userid?: string): Promise<Notification> => {
         const finaluserid = userid || this._user ? this._user.userid : ''
-        return this._userService.deleteNotificationByChatEventId(chateventid, finaluserid)
+        return this._notificationServce.deleteNotificationByChatEventId(chateventid, finaluserid)
     }
 
     deleteUser = (user:User | string):Promise<UserDeletionResponse> => {

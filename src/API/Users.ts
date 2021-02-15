@@ -28,6 +28,10 @@ export interface IUserService extends ISportsTalkConfigurable {
     getUserDetails(user: User | string): Promise<UserResult>
     reportUser(userToReport: User | string, reportedBy: User | string, reportType?: ReportType): Promise<UserResult>
     listUsersInModerationQueue(request: UserModerationListRequest): Promise<UserListResponse>
+
+}
+
+export interface INotificationService extends ISportsTalkConfigurable {
     listUserNotifications(request: NotificationListRequest): Promise<NotificationListResult>
     setNotificationReadStatus(notificationid: string, userid: string, read?:boolean): Promise<Notification>
     setNotificationReadStatusByChatEventId(chateventid: string, userid: string, read?:boolean): Promise<Notification>

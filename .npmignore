@@ -6,3 +6,4 @@ samples/
 .gitignore
 .readthedocs.yml
 docs/
+src/

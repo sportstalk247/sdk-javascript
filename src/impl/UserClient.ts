@@ -73,31 +73,7 @@ export class UserClient implements ISportsTalkConfigurable, IUserService {
         return this._userService.listUsersInModerationQueue(request);
     }
 
-    listUserNotifications = (request: NotificationListRequest): Promise<NotificationListResult> => {
-        return this._userService.listUserNotifications(request)
-    }
-
-    setNotificationReadStatus = (notificationid: string, userid: string, read?:boolean):Promise<Notification> => {
-        return this._userService.setNotificationReadStatus(notificationid, userid, read)
-    }
-
-    setNotificationReadStatusByChatEventId(chateventid: string, userid: string, read?: boolean): Promise<Notification> {
-        return this._userService.setNotificationReadStatusByChatEventId(chateventid, userid, read);
-    }
-
     reportUser = (userToReport: User | string, reportedBy: User | string, reportType: ReportType = ReportType.abuse): Promise<UserResult> => {
         return this._userService.reportUser(userToReport, reportedBy, reportType);
-    }
-
-    deleteNotification = (notificationid: string, userid: string): Promise<Notification> => {
-        return this._userService.deleteNotification(notificationid, userid);
-    }
-
-    deleteNotificationByChatEventId = (chateventid: string, userid: string): Promise<Notification> => {
-        return this._userService.deleteNotificationByChatEventId(chateventid, userid);
-    }
-
-    markAllNotificationsAsRead = (user: User | string, deleteAll: boolean = true): Promise<any> => {
-        return this._userService.markAllNotificationsAsRead(user, deleteAll);
     }
 }
