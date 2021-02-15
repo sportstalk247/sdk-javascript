@@ -477,5 +477,7 @@ export interface IChatModerationService extends ISportsTalkConfigurable {
     moderateEvent(event: EventResult, approved: boolean): Promise<EventResult>
     applyFlagModerationDecision(user: User | string, room:ChatRoomResult | string, approve: boolean)
     listRoomEffects(room: ChatRoomResult | string): Promise<ChatRoomEffectsList>
+    unMuteUserInRoom (user: User | string, room:ChatRoomResult | string): Promise<any>
+    muteUserInRoom (user: User | string, room:ChatRoomResult | string, expireseconds?:number): Promise<any>
 }
 

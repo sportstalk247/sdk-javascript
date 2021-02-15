@@ -1,4 +1,10 @@
-import {ChatRoomEffectsList, ChatRoomResult, EventListResponse, EventResult} from "../../../models/ChatModels";
+import {
+    ChatRoomEffectsList,
+    ChatRoomResult,
+    EventListResponse,
+    EventResult,
+    MuteOptions
+} from "../../../models/ChatModels";
 import {stRequest} from '../../network';
 import {buildAPI, getJSONHeaders, forceObjKeyOrString} from "../../utils";
 import {DEFAULT_CONFIG, GET, POST,} from "../../constants/api";
@@ -87,5 +93,41 @@ export class RestfulChatModerationService implements IChatModerationService {
             data: { approve: !!approve + "" }
         }
         return stRequest(config).then(response=>response.data);
+    }
+
+    muteUserInRoom =  (user: User | string, room:ChatRoomResult | string, expireseconds?: number) => {
+        const roomid:string = forceObjKeyOrString(room)
+        const userid:string = forceObjKeyOrString(user, 'userid');
+        const data: MuteOptions = {
+            userid,
+            mute: true
+        }
+        if(expireseconds) {
+            data.expireseconds = expireseconds
+        }
+        const config: AxiosRequestConfig = {
+            method:POST,
+            url: buildAPI(this._config, `/chat/rooms/${roomid}/mute`),
+            headers: this._jsonHeaders,
+            data
+        }
+        return stRequest(config).then(result=>result.data);
+    }
+
+    unMuteUserInRoom =  (user: User | string, room:ChatRoomResult | string) => {
+        const roomid:string = forceObjKeyOrString(room)
+        const userid:string = forceObjKeyOrString(user, 'userid');
+        const data: MuteOptions = {
+            userid,
+            mute: false
+        }
+
+        const config: AxiosRequestConfig = {
+            method:POST,
+            url: buildAPI(this._config, `/chat/rooms/${roomid}/mute`),
+            headers: this._jsonHeaders,
+            data
+        }
+        return stRequest(config).then(result=>result.data);
     }
 }
