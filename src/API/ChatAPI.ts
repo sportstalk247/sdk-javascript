@@ -475,6 +475,7 @@ export interface IChatClient extends IUserConfigurable, ISportsTalkConfigurable 
 export interface IChatModerationService extends ISportsTalkConfigurable {
     listMessagesInModerationQueue(moderationQueueRequest: ChatModerationQueueListRequest): Promise<EventListResponse>
     moderateEvent(event: EventResult, approved: boolean): Promise<EventResult>
+    applyFlagModerationDecision(user: User | string, room:ChatRoomResult | string, approve: boolean)
     listRoomEffects(room: ChatRoomResult | string): Promise<ChatRoomEffectsList>
 }
 

@@ -3,7 +3,13 @@ import {stRequest} from '../../network';
 import {buildAPI, getJSONHeaders, forceObjKeyOrString} from "../../utils";
 import {DEFAULT_CONFIG, GET, POST,} from "../../constants/api";
 import {IChatModerationService} from "../../../API/ChatAPI";
-import {ChatModerationQueueListRequest, RestApiResult, SportsTalkConfig, Webhook} from "../../../models/CommonModels";
+import {
+    ChatModerationQueueListRequest,
+    RestApiResult,
+    SportsTalkConfig,
+    User,
+    Webhook
+} from "../../../models/CommonModels";
 import {AxiosRequestConfig} from "axios";
 
 /**
@@ -13,7 +19,6 @@ import {AxiosRequestConfig} from "axios";
 export class RestfulChatModerationService implements IChatModerationService {
 
     private _config: SportsTalkConfig = {appId: ""};
-    private _apiHeaders;
     private _jsonHeaders;
     private _apiExt:string = 'chat/moderation/queues/events';
 
@@ -57,7 +62,7 @@ export class RestfulChatModerationService implements IChatModerationService {
             method: 'POST',
             url: buildAPI(this._config, `${this._apiExt}/${event.id}/applydecision`),
             headers: this._jsonHeaders,
-            data: {approve: !!approved + ""}
+            data: { approve: !!approved + "" }
         }
         return stRequest(config).then(response=>response.data)
     }
@@ -68,6 +73,18 @@ export class RestfulChatModerationService implements IChatModerationService {
             method: GET,
             url: buildAPI(this._config, `/chat/rooms/${roomid}/usereffects`),
             headers: this._jsonHeaders
+        }
+        return stRequest(config).then(response=>response.data);
+    }
+
+    applyFlagModerationDecision = (user: User | string, room:ChatRoomResult | string, approve: boolean) => {
+        const roomid:string = forceObjKeyOrString(room)
+        const userid:string = forceObjKeyOrString(user, 'userid');
+        const config: AxiosRequestConfig = {
+            method: POST,
+            url: buildAPI(this._config, `/chat/rooms/${roomid}/moderation/flaggedusers/${userid}/applydecision`),
+            headers: this._jsonHeaders,
+            data: { approve: !!approve + "" }
         }
         return stRequest(config).then(response=>response.data);
     }

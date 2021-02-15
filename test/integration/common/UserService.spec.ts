@@ -5,6 +5,7 @@ import {Kind, UserSearchType, SportsTalkConfig} from "../../../src/models/Common
 import {RestfulChatRoomService} from "../../../src/impl/REST/chat/RestfulChatRoomService";
 import {User} from "../../../src/models/CommonModels";
 import {UserClient} from "../../../dist";
+import {RestfulNotificationService} from "../../../dist/impl/REST/notifications/RestfulNotificationService";
 
 dotenv.config();
 
@@ -13,9 +14,10 @@ const { expect } = chai;
 const config: SportsTalkConfig = {apiToken:process.env.TEST_KEY, appId: process.env.TEST_APP_ID, endpoint: process.env.TEST_ENDPOINT};
 describe("UserManager", function(){
     const UM = new RestfulUserService(config);
+    const NS = new RestfulNotificationService(config);
     const RM = new RestfulChatRoomService(config);
     const UC = UserClient.init(config);
-    const otherUC = new UserClient();
+    const otherUC = UserClient.init();
     const userid = "107AC57E-85ED-4E1D-BDAF-2533CD3872EB"
     let user:User = {
         userid,
@@ -168,7 +170,7 @@ describe("UserManager", function(){
 
     describe("Can request notifications", function() {
         it("Can list notifications", async ()=> {
-            const response = await UM.listUserNotifications({
+            const response = await NS.listUserNotifications({
                 userid: user.userid,
             })
             expect(response);

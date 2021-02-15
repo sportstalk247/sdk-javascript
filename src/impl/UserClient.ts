@@ -36,9 +36,11 @@ export class UserClient implements ISportsTalkConfigurable, IUserService {
 
     private constructor() {}
 
-    public static init = (config:SportsTalkConfig) => {
+    public static init = (config?:SportsTalkConfig) => {
         const client = new UserClient();
-        client.setConfig(config);
+        if(config) {
+            client.setConfig(config);
+        }
         return client;
     }
 
