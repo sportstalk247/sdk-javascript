@@ -17,10 +17,10 @@ import {
     EffectOptions,
     EventType,
     ChatEventsList,
-    TimestampRequest, MuteOptions
+    TimestampRequest, MuteOptions, UserEffectFlags
 } from "../models/ChatModels";
 import {DEFAULT_CONFIG} from "./constants/api";
-import {IRoomService, IChatEventService, IChatClient} from "../API/ChatAPI";
+import {IRoomService, IChatEventService, IChatClient, IChatModerationService} from "../API/ChatAPI";
 import {SettingsError} from "./errors";
 import {RestfulChatEventService} from "./REST/chat/RestfulChatEventService"
 import {RestfulChatRoomService} from "./REST/chat/RestfulChatRoomService";
@@ -45,6 +45,7 @@ import {forceObjKeyOrString} from "./utils";
 import {INotificationService, IUserService} from "../API/Users";
 import {setTimeout} from "timers";
 import {RestfulNotificationService} from "./REST/notifications/RestfulNotificationService";
+import {RestfulChatModerationService} from "./REST/chat/RestfulChatModerationService";
 
 /**
  * ChatClient provides an interface to chat applications.
@@ -103,7 +104,13 @@ export class ChatClient implements IChatClient {
      */
     private _userService: IUserService;
 
+    /**
+     * Notification Service
+     * @private
+     */
     private _notificationServce: INotificationService
+
+    private _moderationService: IChatModerationService
 
     /**
      * Debugging method to grab the internal state and help debug.
@@ -162,11 +169,15 @@ export class ChatClient implements IChatClient {
         if(this._notificationServce) {
             this._notificationServce.setConfig(this._config);
         }
+        if(this._moderationService) {
+            this._moderationService.setConfig(this._config);
+        }
 
         this._eventService = this._eventService || new RestfulChatEventService(this._config);
         this._roomService = this._roomService || new RestfulChatRoomService(this._config);
         this._userService = this._userService || new RestfulUserService(this._config);
         this._notificationServce = this._notificationServce || new RestfulNotificationService(this._config);
+        this._moderationService = this._moderationService || new RestfulChatModerationService(this._config);
         if(this._config.user){
             Object.assign(this._user, this._config.user);
         }
@@ -426,6 +437,43 @@ export class ChatClient implements IChatClient {
         return false;
     }
 
+    getUserEffects = async(user?: User | string, forceRefresh?: boolean, room?: ChatRoomResult | string): Promise<UserEffectFlags> =>{
+        let chatroom: ChatRoomResult | string | null = room || this._currentRoom || null;
+        let finalUser: User | string = user || this._user
+        if(!chatroom) {
+            throw new Error("Need to specify or join a chat room to check user effects");
+        }
+        if(!finalUser){
+            throw new Error("Need to specify a user or set current user to get effects");
+        }
+        const userid:string = forceObjKeyOrString(finalUser, 'userid');
+        return this._moderationService.listRoomEffects(chatroom).then(results=>{
+            const activeEffects: UserEffectFlags = {
+                mute: false,
+                shadowban: false,
+                flag: false
+            }
+
+            results?.effects?.map(effect=>{
+                if(effect.user.userid == userid) {
+                    if(effect.effect.effecttype === 'flag') {
+                        activeEffects.flag = true
+                        return;
+                    }
+                    if(effect.effect.effecttype === 'mute') {
+                        activeEffects.mute = true;
+                        return;
+                    }
+                    if(effect.effect.effecttype === 'shadowban') {
+                        activeEffects.shadowban = true;
+                        return;
+                    }
+                }
+            });
+            return activeEffects;
+        })
+    }
+
     /**
      * Checks if a user is bounced from a room.  If forceRefresh is true, will always ask the server for fresh data.
      * Will also check the server if the current room is just an ID and not a full ChatRoomResult object.
@@ -619,6 +667,10 @@ export class ChatClient implements IChatClient {
 
     shadowBanUserFromRoom = (user: User | string, expireseconds: number, roomid?: string) => {
         return this._roomService.setRoomShadowbanStatus(user, roomid || this._currentRoom, true, expireseconds)
+    }
+
+    unShadowBanUserFromRoom = (user: User | string, expireseconds: number, roomid?: string) => {
+        return this._roomService.setRoomShadowbanStatus(user, roomid || this._currentRoom, false, expireseconds)
     }
 
     muteUserInRoom = (user:User | string, mute: boolean, expireseconds?: number, room?: ChatRoomResult | string): Promise<ChatRoomResult> => {

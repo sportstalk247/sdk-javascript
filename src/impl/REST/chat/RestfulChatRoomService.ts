@@ -9,7 +9,7 @@ import {
     ChatRoomListResponse,
     EventListResponse,
     BounceUserResult,
-    ShadowbanUserApiData, MuteUserApiData
+    ShadowbanUserApiData, MuteUserApiData, ChatRoomEffectsList
 } from "../../../models/ChatModels";
 import {stRequest} from '../../network';
 import {GET, DELETE, POST, API_SUCCESS_MESSAGE} from "../../constants/api";

@@ -175,7 +175,7 @@ export interface MuteOptions extends Expires, RoomOptional{
 }
 
 export interface UserEffect {
-    type: string,
+    effecttype: 'flag' | 'mute' | 'shadowban',
     expires: string,
     userid: string
 }
@@ -197,6 +197,12 @@ export interface UserReport {
     reportedbyuserid: string
     reason: ReportReason
     added: string
+}
+
+export interface UserEffectFlags {
+    mute: boolean,
+    shadowban: boolean,
+    flag: boolean
 }
 
 /**
