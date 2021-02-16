@@ -100,7 +100,8 @@ export class RestfulChatModerationService implements IChatModerationService {
         const userid:string = forceObjKeyOrString(user, 'userid');
         const data: MuteOptions = {
             userid,
-            mute: true
+            mute: true,
+            applyeffect: true
         }
         if(expireseconds) {
             data.expireseconds = expireseconds
@@ -119,7 +120,8 @@ export class RestfulChatModerationService implements IChatModerationService {
         const userid:string = forceObjKeyOrString(user, 'userid');
         const data: MuteOptions = {
             userid,
-            mute: false
+            mute: false,
+            applyeffect: false
         }
 
         const config: AxiosRequestConfig = {

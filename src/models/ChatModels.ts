@@ -170,7 +170,7 @@ export interface EffectOptions extends Expires, RoomOptional {
     applyeffect: boolean,
 }
 
-export interface MuteOptions extends Expires, RoomOptional {
+export interface MuteOptions extends EffectOptions {
     userid: string,
     mute: boolean,
 }
