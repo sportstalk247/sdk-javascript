@@ -79,6 +79,13 @@ export enum Kind {
 export interface UserResult extends User {
     kind?: Kind.user
     reports: []
+    muted: boolean,
+    flagged: boolean,
+    muteexpires: string,
+    banned: boolean
+    banexpires?: string,
+    shadowbanned: boolean
+    shadowbanexpires?: string
 }
 
 /**
