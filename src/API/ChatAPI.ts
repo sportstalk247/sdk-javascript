@@ -479,5 +479,8 @@ export interface IChatModerationService extends ISportsTalkConfigurable {
     listRoomEffects(room: ChatRoomResult | string): Promise<ChatRoomEffectsList>
     unMuteUserInRoom (user: User | string, room:ChatRoomResult | string): Promise<any>
     muteUserInRoom (user: User | string, room:ChatRoomResult | string, expireseconds?:number): Promise<any>
+    shadowbanUserInRoom(user: User | string, room: ChatRoomResult | string, expiresSeconds?: number): Promise<ChatRoomResult>
+    unShadowbanUserInRoom(user: User | string, room: ChatRoomResult | string): Promise<ChatRoomResult>
+    purgeMessagesInRoom(user: User | string, room: ChatRoomResult | string): Promise<any>
 }
 

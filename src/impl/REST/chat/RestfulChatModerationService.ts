@@ -3,7 +3,7 @@ import {
     ChatRoomResult,
     EventListResponse,
     EventResult,
-    MuteOptions
+    MuteOptions, ShadowbanUserApiData
 } from "../../../models/ChatModels";
 import {stRequest} from '../../network';
 import {buildAPI, getJSONHeaders, forceObjKeyOrString} from "../../utils";
@@ -130,4 +130,54 @@ export class RestfulChatModerationService implements IChatModerationService {
         }
         return stRequest(config).then(result=>result.data);
     }
+
+
+    shadowbanUserInRoom = (user: User | string, room: ChatRoomResult | string, expiresSeconds?: number): Promise<ChatRoomResult> => {
+        const roomId = forceObjKeyOrString(room);
+        const userId = forceObjKeyOrString(user, 'userid');
+        const data:ShadowbanUserApiData = {
+            shadowban: true,
+            applyeffect: true,
+            userid: userId
+        }
+        if(expiresSeconds && data.applyeffect) {
+            data.expireseconds = expiresSeconds
+        }
+        const config: AxiosRequestConfig = {
+            method: POST,
+            url: buildAPI(this._config, `${this._apiExt}/${roomId}/shadowban`),
+            headers: this._jsonHeaders,
+            data
+        }
+        return stRequest(config).then(result=>result.data);
+    }
+
+    unShadowbanUserInRoom = (user: User | string, room: ChatRoomResult | string): Promise<ChatRoomResult> => {
+        const roomId = forceObjKeyOrString(room);
+        const userId = forceObjKeyOrString(user, 'userid');
+        const data:ShadowbanUserApiData = {
+            shadowban: false,
+            applyeffect: false,
+            userid: userId
+        }
+        const config: AxiosRequestConfig = {
+            method: POST,
+            url: buildAPI(this._config, `${this._apiExt}/${roomId}/shadowban`),
+            headers: this._jsonHeaders,
+            data
+        }
+        return stRequest(config).then(result=>result.data);
+    }
+
+    purgeMessagesInRoom = (user: User | string, room: ChatRoomResult | string): Promise<any> => {
+        const roomId = forceObjKeyOrString(room);
+        const userId = forceObjKeyOrString(user, 'userid');
+        const config: AxiosRequestConfig = {
+            method: POST,
+            url: buildAPI(this._config, `/chat/rooms/${roomId}/commands/purge/${userId}`),
+            headers: this._jsonHeaders
+        }
+        return stRequest(config).then(result=>result.data)
+    }
+
 }
