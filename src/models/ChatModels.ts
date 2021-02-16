@@ -343,5 +343,6 @@ export interface ShadowbanUserApiData extends RoomEffectData {
 
 export interface MuteUserApiData extends RoomEffectData {
     applyeffect: boolean
+    mute?: boolean
 }
 

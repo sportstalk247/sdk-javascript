@@ -838,7 +838,6 @@ export class ChatClient implements IChatClient {
     listEventsByTimestamp = (query: TimestampRequest): Promise<ChatEventsList> => {
         return this._eventService.listEventsByTimestamp(query);
     }
-
 }
 
 

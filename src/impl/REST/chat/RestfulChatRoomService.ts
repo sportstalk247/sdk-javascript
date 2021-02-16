@@ -393,6 +393,7 @@ export class RestfulChatRoomService implements IRoomService {
         const userId = forceObjKeyOrString(user, 'userid');
         const data:MuteUserApiData = {
             applyeffect: !!mute,
+            mute: !!mute,
             userid: userId
         }
         if(expiresSeconds && data.applyeffect) {
