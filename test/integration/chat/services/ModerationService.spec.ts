@@ -19,6 +19,6 @@ const ModerationService = new RestfulChatModerationService(config);
 describe("Chat Moderation Service", ()=>{
     it("Can query the moderation queue without filters", async (done)=>{
         const queue = await ModerationService.listMessagesInModerationQueue({});
-        expect(queue);
+        expect(queue.events.length).to.be.eq(0);
     })
 })

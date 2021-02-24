@@ -121,7 +121,9 @@ export class ChatClient implements IChatClient {
 
     private _throttle(command: string) {
         if(command == this._lastCommand && (new Date().getTime()-this._lastCommandTime) < this._lastCommandTimeoutDuration) {
-            throw new Error(THROTTLE_ERROR);
+            const throttleError = new Error(THROTTLE_ERROR);
+            // @ts-ignore
+            throttleError.code = 405;
         } else {
             this._lastCommandTime = new Date().getTime();
             this._lastCommand = command
