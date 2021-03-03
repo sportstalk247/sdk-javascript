@@ -67,6 +67,8 @@ export class RestfulChatEventService implements IChatEventService {
     private firstMessageId:string | undefined;
     private firstMessageTime: number | undefined;
 
+    private _updatesLimit:number = 100;
+
     /**
      * How often to poll for updates. can be set by ENV variable of SPORTSTALK_POLL_FREQUENCY on the server side.
      * Can also be set with setUpdateSpeed()
@@ -222,7 +224,10 @@ export class RestfulChatEventService implements IChatEventService {
     /**
      * Start the chat polling
      */
-    startEventUpdates = () => {
+    startEventUpdates = (updatesLimit?: number) => {
+        if(updatesLimit) {
+            this._updatesLimit = updatesLimit
+        }
         if(this._polling) {
             console.log("ALREADY CONNECTED TO TALK");
             return;
@@ -260,7 +265,7 @@ export class RestfulChatEventService implements IChatEventService {
             return Promise.resolve();
         }
         this._fetching = true;
-        return this.getUpdates(cursor).then(this.handleUpdates).catch(error=> {
+        return this.getUpdates(cursor, this._updatesLimit).then(this.handleUpdates).catch(error=> {
             if(this._eventHandlers && this._eventHandlers.onNetworkError) {
                 this._eventHandlers.onNetworkError(error)
             }

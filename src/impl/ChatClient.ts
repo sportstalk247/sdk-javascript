@@ -688,6 +688,13 @@ export class ChatClient implements IChatClient {
         return this._eventService.listEventsByType(type);
     }
 
+    /**
+     * Requests user notifications.
+     * Max limit is 100. Requests over this limit will return a maximum of 100 notifications.
+     * Calling the API without any parameters will request 50 notifications for the current user.
+     * if no user is set, will throw an error.
+     * @param request {userid?:string, limit?:number, includeread?:boolean, cursor?: string}
+     */
     listUserNotifications = (request: Partial<NotificationListRequest> = {}): Promise<any> => {
         const requestedNotifications:NotificationListRequest = Object.assign({
                 limit : 50,
