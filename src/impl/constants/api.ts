@@ -6,7 +6,8 @@ export const API_SUCCESS_MESSAGE = "Success";
 export const CONTENT_TYPE = 'Content-Type';
 
 export const DEFAULT_CONFIG = {
-    endpoint: DEFAULT_ENDPOINT
+    endpoint: DEFAULT_ENDPOINT,
+    smoothEventUpdates: true
 }
 
 export const POST = 'POST'

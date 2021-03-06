@@ -103,30 +103,30 @@ describe('BASIC Chat Sequence', function() {
             expect(notifications);
         });
     })
-    describe("Get help", function(){
-        it("Lets user ask for help", async()=>{
-            let helpcalled = false;
-            let admincalled = false
-            client.setEventHandlers({
-                onHelp:function() {
-                    helpcalled = true;
-                }
-            })
-            const resp = await client.executeChatCommand("*help");
-            expect(helpcalled).to.be.true;
-        })
-        it("Lets user issue admin command", async()=>{
-
-            let admincalled = false
-            client.setEventHandlers({
-                onAdminCommand: function() {
-                    admincalled=true;
-                }
-            })
-            const resp = await client.executeChatCommand("*ban");
-            expect(admincalled).to.be.true;
-        })
-    })
+    // describe("Get help", function(){
+    //     it("Lets user ask for help", async()=>{
+    //         let helpcalled = false;
+    //         let admincalled = false
+    //         client.setEventHandlers({
+    //             onHelp:function() {
+    //                 helpcalled = true;
+    //             }
+    //         })
+    //         const resp = await client.executeChatCommand("*help");
+    //         expect(helpcalled).to.be.true;
+    //     })
+    //     it("Lets user issue admin command", async()=>{
+    //
+    //         let admincalled = false
+    //         client.setEventHandlers({
+    //             onAdminCommand: function() {
+    //                 admincalled=true;
+    //             }
+    //         })
+    //         const resp = await client.executeChatCommand("*ban");
+    //         expect(admincalled).to.be.true;
+    //     })
+    // })
     describe("leave room", function(){
         it("Leaves the room", async function() {
             const exit = await client.exitRoom();

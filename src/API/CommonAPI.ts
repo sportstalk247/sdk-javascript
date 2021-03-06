@@ -1,12 +1,16 @@
 /* istanbul ignore file */
 
-import {ClientConfig, SportsTalkConfig, Webhook, WebhookListResponse} from "../models/CommonModels";
+import {ChatClientConfig, ClientConfig, SportsTalkConfig, Webhook, WebhookListResponse} from "../models/CommonModels";
 
 /**
  * @interface
  */
 export interface ISportsTalkConfigurable {
     setConfig(config: SportsTalkConfig):void
+}
+
+export interface IChatClientConfigurable {
+    setConfig(config: ChatClientConfig): void
 }
 
 /**

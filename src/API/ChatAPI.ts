@@ -23,7 +23,7 @@ import {
     TimestampRequest, ChatRoomEffectsList
 } from "../models/ChatModels";
 
-import {ISportsTalkConfigurable} from "./CommonAPI";
+import {IChatClientConfigurable, ISportsTalkConfigurable} from "./CommonAPI";
 import {
     ChatModerationQueueListRequest, ErrorResult,
     ListRequest,
@@ -41,7 +41,7 @@ import {IUserConfigurable} from "./Users";
  * Interface for the EventService, which handles chat events and any polling.
  * @interface
  */
-export interface IChatEventService extends ISportsTalkConfigurable, IUserConfigurable  {
+export interface IChatEventService extends IChatClientConfigurable, IUserConfigurable  {
     startEventUpdates(),
     stopEventUpdates(),
     handleUpdates(results: ChatUpdatesResult);

@@ -103,8 +103,13 @@ export enum UserSearchType {
  */
 export interface SportsTalkConfig extends ClientConfig {
     user?: User,
-    improvePerceivedPerformance?: boolean
+
+}
+
+export interface ChatClientConfig extends SportsTalkConfig {
+    smoothEventUpdates?: boolean
     chatEventPollFrequency?: number
+    updateEmitFrequency?: number
 }
 
 /**

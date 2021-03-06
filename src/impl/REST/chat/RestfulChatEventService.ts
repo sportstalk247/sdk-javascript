@@ -26,7 +26,7 @@ import {
     ReportReason,
     SportsTalkConfig,
     User,
-    MessageResult, UserResult, ErrorResult, ReportType
+    MessageResult, UserResult, ErrorResult, ReportType, ChatClientConfig
 } from "../../../models/CommonModels";
 import {AxiosRequestConfig} from "axios";
 const INVALID_POLL_FREQUENCY = "Invalid poll _pollFrequency.  Must be between 250ms and 5000ms"
@@ -41,7 +41,7 @@ const INVALID_POLL_FREQUENCY = "Invalid poll _pollFrequency.  Must be between 25
  */
 export class RestfulChatEventService implements IChatEventService {
 
-    private _config: SportsTalkConfig = {appId: ""};
+    private _config: ChatClientConfig = {appId: ""};
     private _polling: any; // holds the timer reference.
     private _apiHeaders = {} // holds the API headers
     private _jsonHeaders = {}
@@ -54,7 +54,7 @@ export class RestfulChatEventService implements IChatEventService {
     private _commandApi: string; // holds the string of the chat command path.
     // Holds a set of ignored userIDs.
     private _ignoreList: Set<string> = new Set();
-    private _smoothEventUpdates: boolean = true;
+    private _smoothEventUpdates: boolean;
 
     private _user: User = {userid: "", handle: ""}; // current user.
 
@@ -86,14 +86,14 @@ export class RestfulChatEventService implements IChatEventService {
      * Only used if improvePerceivedPerformance is true.
      * @private
      */
-    private _updateEmitFrequency: number = 100;
+    private _updateEmitFrequency: number = 200;
 
     /**
      * @param config The SportsTalkConfig object
      * @param eventHandlers A set of event handlers that will deal with chat events received from polling.
      * @constructor
      */
-    constructor(config: SportsTalkConfig, eventHandlers: EventHandlerConfig = {}) {
+    constructor(config: ChatClientConfig, eventHandlers: EventHandlerConfig = {}) {
         this.setConfig(config);
         this.setEventHandlers(eventHandlers);
         
@@ -154,12 +154,12 @@ export class RestfulChatEventService implements IChatEventService {
      * Set the config
      * @param config
      */
-    setConfig = (config:SportsTalkConfig) => {
+    setConfig = (config:ChatClientConfig) => {
         this._config = Object.assign(DEFAULT_CONFIG, config);
         this._user = Object.assign(this._user, this._config.user);
         this._apiHeaders = getUrlEncodedHeaders(this._config.apiToken);
         this._jsonHeaders = getJSONHeaders(this._config.apiToken);
-        this._smoothEventUpdates = this._config.improvePerceivedPerformance || this._smoothEventUpdates;
+        this._smoothEventUpdates = !!(this._config.smoothEventUpdates || this._smoothEventUpdates);
         try {
             const frequency  = process.env.SPORTSTALK_POLL_FREQUENCY ? parseInt(process.env.SPORTSTALK_POLL_FREQUENCY): 800;
             this._pollFrequency = frequency
@@ -167,7 +167,7 @@ export class RestfulChatEventService implements IChatEventService {
             console.log(e);
             this._pollFrequency = config.chatEventPollFrequency || 800;
         }
-        this._updateEmitFrequency = Math.floor(this._pollFrequency/100)
+        this._updateEmitFrequency = config.updateEmitFrequency || Math.floor(this._pollFrequency/100)
     }
 
     /**
@@ -348,12 +348,13 @@ export class RestfulChatEventService implements IChatEventService {
      * @param event
      * @param index
      */
-    private _spacedUpdate = (event: EventResult, index:number, updateFunction: Function): Promise<boolean> => {
+    private _spacedUpdate = (event: EventResult, index:number, updateFunction: Function, frequency?: number): Promise<boolean> => {
+        const speed = frequency || this._updateEmitFrequency;
         return new Promise((resolve, reject) => {
             setTimeout(function () {
                 updateFunction(event)
                 resolve(true)
-            }, index * this._updateEmitFrequency)
+            }, index * speed)
         })
     }
     
