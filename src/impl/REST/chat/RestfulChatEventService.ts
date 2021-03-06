@@ -54,7 +54,7 @@ export class RestfulChatEventService implements IChatEventService {
     private _commandApi: string; // holds the string of the chat command path.
     // Holds a set of ignored userIDs.
     private _ignoreList: Set<string> = new Set();
-    private _improvePerceivedPerformance: boolean = true;
+    private _smoothEventUpdates: boolean = true;
 
     private _user: User = {userid: "", handle: ""}; // current user.
 
@@ -86,7 +86,7 @@ export class RestfulChatEventService implements IChatEventService {
      * Only used if improvePerceivedPerformance is true.
      * @private
      */
-    private _updateEmitFrequency: number = 0;
+    private _updateEmitFrequency: number = 100;
 
     /**
      * @param config The SportsTalkConfig object
@@ -159,7 +159,7 @@ export class RestfulChatEventService implements IChatEventService {
         this._user = Object.assign(this._user, this._config.user);
         this._apiHeaders = getUrlEncodedHeaders(this._config.apiToken);
         this._jsonHeaders = getJSONHeaders(this._config.apiToken);
-        this._improvePerceivedPerformance = this._config.improvePerceivedPerformance || this._improvePerceivedPerformance;
+        this._smoothEventUpdates = this._config.improvePerceivedPerformance || this._smoothEventUpdates;
         try {
             const frequency  = process.env.SPORTSTALK_POLL_FREQUENCY ? parseInt(process.env.SPORTSTALK_POLL_FREQUENCY): 800;
             this._pollFrequency = frequency
@@ -260,14 +260,16 @@ export class RestfulChatEventService implements IChatEventService {
      * non-debug reasons.
      */
     public _fetchUpdatesAndTriggerCallbacks = () => {
-        const cursor = this.lastCursor
         if(this._fetching) {
             return Promise.resolve();
         }
+        const cursor = this.lastCursor
         this._fetching = true;
         return this.getUpdates(cursor, this._updatesLimit).then(this.handleUpdates).catch(error=> {
             if(this._eventHandlers && this._eventHandlers.onNetworkError) {
                 this._eventHandlers.onNetworkError(error)
+            } else {
+                console.log(error);
             }
             this._fetching = false;
         });
@@ -346,10 +348,13 @@ export class RestfulChatEventService implements IChatEventService {
      * @param event
      * @param index
      */
-    private _spacedUpdate = (event: EventResult, index:number, updateFunction: Function) => {
-        setTimeout(function(){
-            updateFunction(event)
-        }, index*this._updateEmitFrequency)
+    private _spacedUpdate = (event: EventResult, index:number, updateFunction: Function): Promise<boolean> => {
+        return new Promise((resolve, reject) => {
+            setTimeout(function () {
+                updateFunction(event)
+                resolve(true)
+            }, index * this._updateEmitFrequency)
+        })
     }
     
     /**
@@ -357,7 +362,7 @@ export class RestfulChatEventService implements IChatEventService {
      * @param update
      * @private
      */
-    public handleUpdates = (update: ChatEventsList) => {
+    public handleUpdates = async (update: ChatEventsList) => {
         if(!update) {
             return;
         }
@@ -389,8 +394,13 @@ export class RestfulChatEventService implements IChatEventService {
                  */
                 // skip if user is ignored.
                 if(this._ignoreList.has(event.userid)) continue;
-                if(this._improvePerceivedPerformance) {
-                    this._spacedUpdate(event, i, this._handleUpdate);
+                if(this._smoothEventUpdates) {
+                   await this._spacedUpdate(event, i, this._handleUpdate).catch(error=>{
+                       if(this._eventHandlers && this._eventHandlers.onNetworkError) {
+                           return this._eventHandlers.onNetworkError(error)
+                       }
+                       console.log(error);
+                   })
                 } else {
                     this._handleUpdate(event);
                 }
@@ -409,7 +419,7 @@ export class RestfulChatEventService implements IChatEventService {
      * @param response
      * @private
      */
-    private _evaluateCommandResponse = (command: string, response: RestApiResult<CommandResponse> ): RestApiResult<CommandResponse> => {
+    private _evaluateCommandResponse = async (command: string, response: RestApiResult<CommandResponse> ): Promise<RestApiResult<CommandResponse>> => {
         if(command.startsWith('*')) {
             const onHelp = this._eventHandlers.onHelp;
             if( command.startsWith('*help') && onHelp  && onHelp instanceof Function ) {
@@ -423,8 +433,8 @@ export class RestfulChatEventService implements IChatEventService {
             }
         }
         if(response.data.speech) {
-            if(this._improvePerceivedPerformance) {
-                this.handleUpdates({events: [response.data.speech]})
+            if(this._smoothEventUpdates) {
+                await this.handleUpdates({events: [response.data.speech]})
                 this._preRenderedMessages.add(response.data.speech.id)
             }
         }

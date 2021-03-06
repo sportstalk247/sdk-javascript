@@ -9,9 +9,7 @@
     "build": "tsc --declaration",
     "web": "tsc --declaration && browserify ./dist/web.js -o ./dist/web-sdk.js",
     "web:prod": "npm run web && tsc --declaration && browserify ./dist/web.js -p tinyify -o ./dist/web-sdk.min.js",
-    "deploy": "npm run build && npm run web && npm run web:prod && npm publish",
-    "loadtest": "npm run build && npx ts-node ./test/load/Cluster.ts",
-    "tail": "node ./src/util/tail.js"
+    "deploy": "npm run build && npm run web && npm run web:prod && npm publish"
   },
   "author": "Sportstalk24/7",
   "license": "SEE LICENSE IN LICENSE.md",
