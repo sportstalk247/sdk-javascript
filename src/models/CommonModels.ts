@@ -108,6 +108,7 @@ export interface SportsTalkConfig extends ClientConfig {
 
 export interface ChatClientConfig extends SportsTalkConfig {
     smoothEventUpdates?: boolean
+    maxEventBufferSize?: number
     chatEventPollFrequency?: number
     updateEmitFrequency?: number
 }

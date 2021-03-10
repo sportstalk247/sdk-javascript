@@ -67,7 +67,11 @@ export class RestfulChatEventService implements IChatEventService {
     private firstMessageId:string | undefined;
     private firstMessageTime: number | undefined;
 
-    private _updatesLimit:number = 100;
+    // Holds the size of the updates we we will request.
+    private _maxEventsPerUpdateLimit:number = 100;
+
+    // Holds the size of the event buffer we will accept before displaying everything in order to catch up.
+    private _maxEventBufferSize:number = 30;
 
     /**
      * How often to poll for updates. can be set by ENV variable of SPORTSTALK_POLL_FREQUENCY on the server side.
@@ -77,16 +81,16 @@ export class RestfulChatEventService implements IChatEventService {
     private _pollFrequency: number =  800;
 
     /**
-     * Only used if improvePerceivedPerformance is true.
+     * Only used if event smoothing is enabled.
      * Keeps a list of messages we already rendered so we can ignore them in getUpdates
      * @private
      */
     private _preRenderedMessages: Set<string>= new Set<string>();
     /**
-     * Only used if improvePerceivedPerformance is true.
+     * Only used if event smoothing is enabled;
      * @private
      */
-    private _updateEmitFrequency: number = 200;
+    private _eventSpacingMs: number = 200;
 
     /**
      * @param config The SportsTalkConfig object
@@ -160,6 +164,7 @@ export class RestfulChatEventService implements IChatEventService {
         this._apiHeaders = getUrlEncodedHeaders(this._config.apiToken);
         this._jsonHeaders = getJSONHeaders(this._config.apiToken);
         this._smoothEventUpdates = !!(this._config.smoothEventUpdates || this._smoothEventUpdates);
+        this._maxEventBufferSize = this._config.maxEventBufferSize || this._maxEventBufferSize;
         try {
             const frequency  = process.env.SPORTSTALK_POLL_FREQUENCY ? parseInt(process.env.SPORTSTALK_POLL_FREQUENCY): 800;
             this._pollFrequency = frequency
@@ -167,7 +172,7 @@ export class RestfulChatEventService implements IChatEventService {
             console.log(e);
             this._pollFrequency = config.chatEventPollFrequency || 800;
         }
-        this._updateEmitFrequency = config.updateEmitFrequency || Math.floor(this._pollFrequency/100)
+        this._eventSpacingMs = config.updateEmitFrequency || Math.floor(this._pollFrequency/100)
     }
 
     /**
@@ -226,7 +231,7 @@ export class RestfulChatEventService implements IChatEventService {
      */
     startEventUpdates = (updatesLimit?: number) => {
         if(updatesLimit) {
-            this._updatesLimit = updatesLimit
+            this._maxEventsPerUpdateLimit = updatesLimit
         }
         if(this._polling) {
             console.log("ALREADY CONNECTED TO TALK");
@@ -265,7 +270,7 @@ export class RestfulChatEventService implements IChatEventService {
         }
         const cursor = this.lastCursor
         this._fetching = true;
-        return this.getUpdates(cursor, this._updatesLimit).then(this.handleUpdates).catch(error=> {
+        return this.getUpdates(cursor, this._maxEventsPerUpdateLimit).then(this.handleUpdates).catch(error=> {
             if(this._eventHandlers && this._eventHandlers.onNetworkError) {
                 this._eventHandlers.onNetworkError(error)
             } else {
@@ -344,12 +349,13 @@ export class RestfulChatEventService implements IChatEventService {
     }
 
     /**
+     * Used if message smoothing is enabled.
      * Spaces out the events so that we see a stream instead of an huge change all at once.
      * @param event
      * @param index
      */
     private _spacedUpdate = (event: EventResult, index:number, updateFunction: Function, frequency?: number): Promise<boolean> => {
-        const speed = frequency || this._updateEmitFrequency;
+        const speed = frequency || this._eventSpacingMs;
         return new Promise((resolve, reject) => {
             setTimeout(function () {
                 updateFunction(event)
@@ -395,7 +401,10 @@ export class RestfulChatEventService implements IChatEventService {
                  */
                 // skip if user is ignored.
                 if(this._ignoreList.has(event.userid)) continue;
-                if(this._smoothEventUpdates) {
+
+                // If smoothing is enabled, render events with some spacing.
+                // However, if we have a massive batch, we want to catch up, so we do not put spacing and just jump ahead.
+                if(this._smoothEventUpdates && events.length < this._maxEventBufferSize) {
                    await this._spacedUpdate(event, i, this._handleUpdate).catch(error=>{
                        if(this._eventHandlers && this._eventHandlers.onNetworkError) {
                            return this._eventHandlers.onNetworkError(error)
