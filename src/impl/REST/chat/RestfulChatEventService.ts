@@ -90,7 +90,7 @@ export class RestfulChatEventService implements IChatEventService {
      * Only used if event smoothing is enabled;
      * @private
      */
-    private _eventSpacingMs: number = 200;
+    private _eventSpacingMs: number = 100;
 
     /**
      * @param config The SportsTalkConfig object
