@@ -20,7 +20,7 @@ import {
     EventSearchParams,
     EventType,
     ChatEventsList,
-    TimestampRequest, ChatRoomEffectsList
+    TimestampRequest, ChatRoomEffectsList, ChatRoomExtendedDetailsRequest, ChatRoomExtendedDetailsResponse
 } from "../models/ChatModels";
 
 import {IChatClientConfigurable, ISportsTalkConfigurable} from "./CommonAPI";
@@ -93,6 +93,12 @@ export interface IRoomService extends ISportsTalkConfigurable {
      * @returns the ChatRoomResult or null, if no room found.  If there is no customid set on the ChatRoomResult object, this will return null.
      */
     getRoomDetailsByCustomId(room:ChatRoomResult | string): Promise<ChatRoomResult | null>
+
+    /**
+     * @param request object with properties `roomids`
+     *
+     */
+    getRoomExtendedDetails(request:ChatRoomExtendedDetailsRequest): Promise<ChatRoomExtendedDetailsResponse>
 
     /**
      *

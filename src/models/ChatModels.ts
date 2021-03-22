@@ -346,3 +346,20 @@ export interface MuteUserApiData extends RoomEffectData {
     mute?: boolean
 }
 
+export enum ChatRoomEntityNames {
+    room = 'room',
+    numparticipants = 'numparticipants',
+    lastmessagetime = 'lastmessagetime'
+}
+
+export interface ChatRoomExtendedDetailsRequest {
+    roomids: string[],
+    customids: string[],
+    entities: ChatRoomEntityNames[],
+}
+
+export interface ChatRoomExtendedDetailsResponse {
+    room?: ChatRoomResult,
+    mostrecentmessagetime?: string, // ISO 8601 date
+    inroom?: number
+}

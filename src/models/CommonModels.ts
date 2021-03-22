@@ -73,7 +73,8 @@ export enum Kind {
     roomlist = "list.chatrooms",
     userlist = "list.users",
     repliesbyparentidlist = "list.repliesbyparentid",
-    commentreplygrouplist = "list.commentreplygroup"
+    commentreplygrouplist = "list.commentreplygroup",
+    chatroomextendeddetails = "chat.room.list.extendeddetails"
 }
 
 export interface UserResult extends User {

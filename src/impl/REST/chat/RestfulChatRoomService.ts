@@ -9,11 +9,15 @@ import {
     ChatRoomListResponse,
     EventListResponse,
     BounceUserResult,
-    ShadowbanUserApiData, MuteUserApiData, ChatRoomEffectsList
+    ShadowbanUserApiData,
+    MuteUserApiData,
+    ChatRoomEffectsList,
+    ChatRoomExtendedDetailsRequest,
+    ChatRoomExtendedDetailsResponse
 } from "../../../models/ChatModels";
 import {stRequest} from '../../network';
 import {GET, DELETE, POST, API_SUCCESS_MESSAGE} from "../../constants/api";
-import {buildAPI, forceObjKeyOrString, getJSONHeaders, getUrlEncodedHeaders} from "../../utils";
+import {buildAPI, forceObjKeyOrString, getJSONHeaders, getUrlEncodedHeaders, formify} from "../../utils";
 import {ReportType, RestApiResult, SportsTalkConfig, User, UserResult} from "../../../models/CommonModels";
 import {AxiosRequestConfig} from "axios";
 import {SettingsError} from "../../errors";
@@ -95,10 +99,10 @@ export class RestfulChatRoomService implements IRoomService {
 
     /**
      *
-     * @param user
-     * @param room
-     * @param cursor
-     * @param limit
+     * @param {User | string} user - the userobject with userid or just the userid string
+     * @param {ChatRoom | string} room - the ChatRoom object with id or just the chatroom roomid.
+     * @param {string} cursor - cursor, optional
+     * @param {number} limit - result limit, optiona.  Default 100.
      */
     // @ts-ignore
     listUserMessages = (user: User | string, room: ChatRoom | string, cursor: string = "", limit: number = 100): Promise<EventListResponse> => {
@@ -118,8 +122,8 @@ export class RestfulChatRoomService implements IRoomService {
 
     /*
     * List the participants in a room
-    * @param cursor
-    * @param maxresults
+    * @param {string} cursor
+    * @param {number} maxresults
     */
     listParticipants = (room: ChatRoom, cursor?: string, maxresults: number = 200): Promise<Array<UserResult>> => {
         const config:AxiosRequestConfig = {
@@ -132,8 +136,8 @@ export class RestfulChatRoomService implements IRoomService {
 
     /**
      * Join a room
-     * @param user
-     * @param room
+     * @param {string | User} user
+     * @param {ChatRoomResult | string} room
      */
     joinRoom = (room: ChatRoomResult | string, user: User): Promise<JoinChatRoomResponse> => {
         // @ts-ignore
@@ -348,9 +352,9 @@ export class RestfulChatRoomService implements IRoomService {
     }
     /**
      * Removes a user from the room's bounce list
-     * @param room ChatRoomResult or ChatRoom ID
-     * @param user User or userid string.
-     * @param message The message to show the user explaining the bounce/unbounce.
+     * @param {string | ChatRoomResult} room ChatRoomResult or ChatRoom ID
+     * @param {string | User} user User or userid string.
+     * @param {string} message The message to show the user explaining the bounce/unbounce.
      */
     unbounceUserFromRoom = (room: ChatRoomResult | string, user: User | string, message?: string): Promise<RestApiResult<BounceUserResult>> => {
         const roomId = forceObjKeyOrString(room);
@@ -366,6 +370,23 @@ export class RestfulChatRoomService implements IRoomService {
             }
         }
         return stRequest(config);
+    }
+
+    /**
+     * Gets the extended details of a room
+     * @param {ChatRoomExtendedDetailsRequest} request ChatRoomExtendedDetailsRequest properties roomids, customids, entities
+     * @return {ChatRoomExtendedDetailsResponse}
+     */
+    getRoomExtendedDetails = (request:ChatRoomExtendedDetailsRequest): Promise<ChatRoomExtendedDetailsResponse> => {
+        // extract only fields we want in case they send too much.
+        const {roomids, customids, entities } = request;
+        const query = formify({roomids, customids, entities});
+        const config: AxiosRequestConfig = {
+            method: GET,
+            url: buildAPI(this._config, `${this._apiExt}/batch/details?${query}`),
+            headers: this._jsonHeaders
+        }
+        return stRequest(config).then(result=>result.data);
     }
 
     setRoomShadowbanStatus = (user: User | string, room: ChatRoomResult | string, shadowban: boolean, expiresSeconds?: number): Promise<ChatRoomResult> => {
