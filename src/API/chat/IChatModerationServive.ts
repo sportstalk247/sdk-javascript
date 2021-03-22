@@ -1,4 +1,4 @@
-import {ISportsTalkConfigurable} from "../CommonAPI";
+import {ISportsTalkConfigurable} from "../Configuration";
 import {ChatModerationQueueListRequest, User} from "../../models/CommonModels";
 import {ChatRoomEffectsList, ChatRoomResult, EventListResponse, EventResult} from "../../models/ChatModels";
 

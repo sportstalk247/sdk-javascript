@@ -22,11 +22,13 @@ import {
 } from "../models/CommentsModels";
 import {RestfulCommentService} from "./REST/comments/RestfulCommentService";
 import {RestfulConversationService} from "./REST/comments/RestfulConversationService";
-import {IConversationService, ICommentService, ICommentingClient} from "../API/CommentsAPI";
 import {DEFAULT_CONFIG} from "./constants/api";
 import {RestfulUserService} from "./REST/users/RestfulUserService";
 import {forceObjKeyOrString} from "./utils";
-import {IUserService} from "../API/Users";
+import {ICommentService} from "../API/comments/ICommentService";
+import {IConversationService} from "../API/comments/IConversationService";
+import {ICommentingClient} from "../API/comments/ICommentingClient";
+import {IUserService} from "../API/users/IUserService";
 
 /**
  * This is the API client for the Conversations feature.

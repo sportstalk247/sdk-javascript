@@ -8,9 +8,9 @@ import {
 } from "../../../models/CommentsModels";
 import {GET, POST, DELETE} from "../../constants/api";
 import {getUrlEncodedHeaders, getJSONHeaders, buildAPI, formify} from "../../utils";
-import {IConversationService} from "../../../API/CommentsAPI";
 import {getUrlConversationId} from "./ConversationUtils";
 import {stRequest} from "../../network";
+import {IConversationService} from "../../../API/comments/IConversationService";
 
 /**
  * This is the class that governs the lifecycle of conversations.

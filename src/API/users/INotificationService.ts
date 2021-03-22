@@ -1,0 +1,16 @@
+import {ISportsTalkConfigurable} from "../Configuration";
+import {Notification, NotificationListRequest, NotificationListResult, User} from "../../models/CommonModels";
+
+export interface INotificationService extends ISportsTalkConfigurable {
+    listUserNotifications(request: NotificationListRequest): Promise<NotificationListResult>
+
+    setNotificationReadStatus(notificationid: string, userid: string, read?: boolean): Promise<Notification>
+
+    setNotificationReadStatusByChatEventId(chateventid: string, userid: string, read?: boolean): Promise<Notification>
+
+    deleteNotification(notificationid: string, userid: string): Promise<Notification>;
+
+    deleteNotificationByChatEventId(chateventid: string, userid: string): Promise<Notification>;
+
+    markAllNotificationsAsRead(user: User | string, deleteAll?: boolean): Promise<any>
+}

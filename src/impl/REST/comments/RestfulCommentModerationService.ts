@@ -4,9 +4,9 @@ import {stRequest} from '../../network';
 import {Comment, CommentListResponse, CommentResult} from "../../../models/CommentsModels";
 import {DEFAULT_CONFIG, GET, POST} from "../../constants/api";
 import {getUrlEncodedHeaders, getJSONHeaders, buildAPI, formify} from "../../utils";
-import {ICommentModerationService} from "../../../API/CommentsAPI";
 import {SettingsError} from "../../errors";
 import {MUST_SET_APPID} from "../../constants/messages";
+import {ICommentModerationService} from "../../../API/comments/ICommentModerationService";
 
 /**
  * Primary REST class for moderating comments.

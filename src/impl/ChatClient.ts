@@ -41,13 +41,14 @@ import {
 } from "../models/CommonModels";
 import {MISSING_ROOM, THROTTLE_ERROR} from "./constants/messages";
 import {forceObjKeyOrString} from "./utils";
-import {INotificationService, IUserService} from "../API/Users";
 import {RestfulNotificationService} from "./REST/notifications/RestfulNotificationService";
 import {RestfulChatModerationService} from "./REST/chat/RestfulChatModerationService";
 import {IChatModerationService} from "../API/chat/IChatModerationServive";
 import {IChatClient} from "../API/chat/IChatClient";
 import {IChatEventService} from "../API/chat/IEventService";
 import {IChatRoomService} from "../API/chat/IChatRoomService";
+import {IUserService} from "../API/users/IUserService";
+import {INotificationService} from "../API/users/INotificationService";
 
 /**
  * ChatClient provides an interface to chat applications.

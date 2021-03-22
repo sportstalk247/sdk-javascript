@@ -17,7 +17,6 @@ import {DELETE, GET, POST, PUT} from "../../constants/api";
 import {getUrlEncodedHeaders, getJSONHeaders, buildAPI, formify} from "../../utils";
 import {getUrlCommentId, getUrlConversationId} from "./ConversationUtils";
 import {RequireUserError, SettingsError, ValidationError} from "../../errors";
-import {ICommentService} from "../../../API/CommentsAPI";
 import {
     MISSING_REPLYTO_ID,
     MUST_SET_USER,
@@ -28,6 +27,7 @@ import {
 
 import {AxiosRequestConfig} from "axios";
 import {stRequest} from "../../network";
+import {ICommentService} from "../../../API/comments/ICommentService";
 
 /**
  * This is the primary comment service, which handles posting and responding to comments.

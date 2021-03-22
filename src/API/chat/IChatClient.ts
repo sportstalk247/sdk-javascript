@@ -1,5 +1,4 @@
-import {IUserConfigurable} from "../Users";
-import {ISportsTalkConfigurable} from "../CommonAPI";
+import {ISportsTalkConfigurable,IUserConfigurable} from "../Configuration";
 import {
     AdvertisementOptions,
     BounceUserResult,

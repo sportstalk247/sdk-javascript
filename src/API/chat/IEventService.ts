@@ -1,5 +1,4 @@
-import {IChatClientConfigurable} from "../CommonAPI";
-import {IUserConfigurable} from "../Users";
+import {IChatClientConfigurable,IUserConfigurable} from "../Configuration";
 import {
     AdvertisementOptions,
     ChatEventsList,
@@ -16,6 +15,7 @@ import {
     TimestampRequest
 } from "../../models/ChatModels";
 import {ErrorResult, MessageResult, Reaction, ReportReason, RestApiResult, User} from "../../models/CommonModels";
+
 
 /**
  * Interface for the EventService, which handles chat events and any polling.

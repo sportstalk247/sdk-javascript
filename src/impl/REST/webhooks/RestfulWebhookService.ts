@@ -8,9 +8,9 @@ import {
     WebhookListResponse,
     WebhookLogResponse
 } from "../../../models/CommonModels";
-import {IWebhookService} from "../../../API/CommonAPI";
 import {ValidationError} from "../../errors";
 import {stRequest} from "../../network";
+import {IWebhookService} from "../../../API/webhooks/IWebhookService";
 
 const MISSING_ID = "Missing webhook or webhook missing ID";
 

@@ -379,8 +379,12 @@ export class RestfulChatRoomService implements IChatRoomService {
      */
     getRoomExtendedDetails = (request:ChatRoomExtendedDetailsRequest): Promise<ChatRoomExtendedDetailsResponse> => {
         // extract only fields we want in case they send too much.
-
-        const query = formify(request);
+        const {roomids, entities, customids} = request;
+        const query = formify({
+            roomid: roomids,
+            entity: entities,
+            customid: customids
+        });
         const config: AxiosRequestConfig = {
             method: GET,
             url: buildAPI(this._config, `${this._apiExt}/batch/details?${query}`),

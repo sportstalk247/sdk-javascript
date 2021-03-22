@@ -6,6 +6,10 @@ export function formify(data) {
     const formBody: Array<String> = []
     for (const property in data) {
         const encodedKey = property;
+        // If null/undefined/empty value, skip this.  Need careful check in case value is a number and is zero.
+        if(data[property] === undefined || data[property] === null || data[property] === NaN) {
+            continue;
+        }
         const  encodedValue = encodeURIComponent(data[property]);
         formBody.push(`${encodedKey}=${encodedValue}`);
     }

@@ -1,4 +1,4 @@
-import {ISportsTalkConfigurable} from "../CommonAPI";
+import {ISportsTalkConfigurable} from "../Configuration";
 import {
     BounceUserResult,
     ChatRoom,

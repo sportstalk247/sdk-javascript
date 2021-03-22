@@ -10,7 +10,7 @@ import {SettingsError} from "../../errors";
 import {AxiosRequestConfig} from "axios";
 import {DELETE, GET, PUT} from "../../constants/api";
 import {stRequest} from "../../network";
-import {INotificationService} from "../../../API/Users";
+import {INotificationService} from "../../../API/users/INotificationService";
 
 export class RestfulNotificationService implements INotificationService{
     private _config: SportsTalkConfig;

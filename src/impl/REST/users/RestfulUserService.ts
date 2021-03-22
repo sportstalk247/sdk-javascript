@@ -17,8 +17,8 @@ import {
 } from "../../../models/CommonModels";
 import {EventType} from '../../../models/ChatModels';
 import {SettingsError} from "../../errors";
-import {IUserService} from "../../../API/Users";
 import {config} from "dotenv";
+import {IUserService} from "../../../API/users/IUserService";
 
 /**
  * Class for handling user management via REST.
