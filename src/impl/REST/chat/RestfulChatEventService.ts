@@ -15,7 +15,6 @@ import {
     EventSearchParams, ChatEventsList, TimestampRequest, ChatEventsListResult
 } from "../../../models/ChatModels";
 import {DEFAULT_CONFIG, DELETE, GET, POST, PUT} from "../../constants/api";
-import {IChatEventService} from "../../../API/ChatAPI";
 import {buildAPI, forceObjKeyOrString, getJSONHeaders, getUrlEncodedHeaders} from "../../utils";
 import {SettingsError} from "../../errors";
 import {NO_HANDLER_SET, NO_ROOM_SET, REQUIRE_ROOM_ID} from "../../constants/messages";
@@ -29,6 +28,7 @@ import {
     MessageResult, UserResult, ErrorResult, ReportType, ChatClientConfig
 } from "../../../models/CommonModels";
 import {AxiosRequestConfig} from "axios";
+import {IChatEventService} from "../../../API/chat/IEventService";
 const INVALID_POLL_FREQUENCY = "Invalid poll _pollFrequency.  Must be between 250ms and 5000ms"
 
 /**

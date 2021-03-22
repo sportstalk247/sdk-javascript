@@ -17,10 +17,9 @@ import {
     EffectOptions,
     EventType,
     ChatEventsList,
-    TimestampRequest, MuteOptions, UserEffectFlags
+    TimestampRequest, MuteOptions, UserEffectFlags, ChatRoomExtendedDetailsRequest, ChatRoomExtendedDetailsResponse
 } from "../models/ChatModels";
 import {DEFAULT_CONFIG} from "./constants/api";
-import {IRoomService, IChatEventService, IChatClient, IChatModerationService} from "../API/ChatAPI";
 import {SettingsError} from "./errors";
 import {RestfulChatEventService} from "./REST/chat/RestfulChatEventService"
 import {RestfulChatRoomService} from "./REST/chat/RestfulChatRoomService";
@@ -40,12 +39,15 @@ import {
     UserDeletionResponse,
     ErrorResult, NotificationListRequest, Notification
 } from "../models/CommonModels";
-import {MISSING_ROOM, MUST_SET_USER, THROTTLE_ERROR} from "./constants/messages";
+import {MISSING_ROOM, THROTTLE_ERROR} from "./constants/messages";
 import {forceObjKeyOrString} from "./utils";
 import {INotificationService, IUserService} from "../API/Users";
-import {setTimeout} from "timers";
 import {RestfulNotificationService} from "./REST/notifications/RestfulNotificationService";
 import {RestfulChatModerationService} from "./REST/chat/RestfulChatModerationService";
+import {IChatModerationService} from "../API/chat/IChatModerationServive";
+import {IChatClient} from "../API/chat/IChatClient";
+import {IChatEventService} from "../API/chat/IEventService";
+import {IChatRoomService} from "../API/chat/IChatRoomService";
 
 /**
  * ChatClient provides an interface to chat applications.
@@ -97,7 +99,7 @@ export class ChatClient implements IChatClient {
      * @private
      */
 
-    private _roomService: IRoomService;
+    private _roomService: IChatRoomService;
     /**
      * Holds the UserService used by the ChatClient
      * @private
@@ -226,9 +228,9 @@ export class ChatClient implements IChatClient {
 
     /**
      * Get the current room service.
-     * @return IRoomService
+     * @return IChatRoomService
      */
-    getRoomService = ():IRoomService => {
+    getRoomService = ():IChatRoomService => {
         return this._roomService;
     }
 
@@ -755,6 +757,10 @@ export class ChatClient implements IChatClient {
             return !!isReported;
         }
         return false;
+    }
+
+    getRoomExtendedDetails = (request:ChatRoomExtendedDetailsRequest): Promise<ChatRoomExtendedDetailsResponse> => {
+        return this._roomService.getRoomExtendedDetails(request);
     }
 
     /**

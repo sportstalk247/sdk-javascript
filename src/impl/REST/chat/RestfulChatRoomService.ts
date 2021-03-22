@@ -1,4 +1,3 @@
-import {IRoomService} from "../../../API/ChatAPI";
 import {
     EventResult,
     ChatRoom,
@@ -21,6 +20,7 @@ import {buildAPI, forceObjKeyOrString, getJSONHeaders, getUrlEncodedHeaders, for
 import {ReportType, RestApiResult, SportsTalkConfig, User, UserResult} from "../../../models/CommonModels";
 import {AxiosRequestConfig} from "axios";
 import {SettingsError} from "../../errors";
+import {IChatRoomService} from "../../../API/chat/IChatRoomService";
 
 /**
  * This room uses REST to manage sportstalk chat rooms.
@@ -29,7 +29,7 @@ import {SettingsError} from "../../errors";
  * You should ensure that ALL operations that return promises have a catch block or handle errors in some way.
  * @class
  */
-export class RestfulChatRoomService implements IRoomService {
+export class RestfulChatRoomService implements IChatRoomService {
     private _config: SportsTalkConfig;
     private _apiHeaders = {};
     private _jsonHeaders = {}

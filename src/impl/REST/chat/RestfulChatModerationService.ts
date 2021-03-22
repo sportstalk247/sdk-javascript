@@ -8,7 +8,6 @@ import {
 import {stRequest} from '../../network';
 import {buildAPI, getJSONHeaders, forceObjKeyOrString} from "../../utils";
 import {DEFAULT_CONFIG, GET, POST,} from "../../constants/api";
-import {IChatModerationService} from "../../../API/ChatAPI";
 import {
     ChatModerationQueueListRequest,
     RestApiResult,
@@ -17,6 +16,7 @@ import {
     Webhook
 } from "../../../models/CommonModels";
 import {AxiosRequestConfig} from "axios";
+import {IChatModerationService} from "../../../API/chat/IChatModerationServive";
 
 /**
  * This class is for moderating chat events.  Most clients will not need this unless you are building a custom moderation UI.
