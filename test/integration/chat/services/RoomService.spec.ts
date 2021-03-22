@@ -2,6 +2,8 @@ import {RestfulChatRoomService} from "../../../../src/impl/REST/chat/RestfulChat
 import * as chai from 'chai';
 import * as dotenv from 'dotenv';
 import {Kind, ModerationType, SportsTalkConfig} from "../../../../src/models/CommonModels";
+import {ChatRoomEntityNames} from "../../../../src/models/ChatModels";
+
 dotenv.config();
 
 const { expect } = chai;
@@ -173,6 +175,31 @@ describe("RoomService", function(){
                 console.log(e);
                 throw e;
             }
+        })
+    })
+    describe("Extended details", function() {
+        it("Can get extended room details by id", async (done) =>{
+            const room = await RM.createRoom({
+                name: "ROOMService Test Room",
+                slug: "RM-test-room"
+            });
+            try {
+                const results = await RM.getRoomExtendedDetails({roomids:[room.id], entities:[ChatRoomEntityNames.lastmessagetime, ChatRoomEntityNames.numparticipants, ChatRoomEntityNames.room]})
+                expect(results.details.length).to.be.equal(1);
+                const details = results.details[0];
+                expect(details.inroom).to.be.equal(0);
+                expect(details.mostrecentmessagetime).to.be.null;
+                expect(details.room).to.be.not.null;
+                // @ts-ignore
+                expect(details.room.id).to.be.equal(room.id)
+                const deleted = await RM.deleteRoom(room);
+                return deleted;
+            }catch(e) {
+                const deleted = await RM.deleteRoom(room);
+                console.log(e);
+                throw e;
+            }
+            done();
         })
     })
 })

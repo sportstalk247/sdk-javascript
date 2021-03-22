@@ -353,13 +353,17 @@ export enum ChatRoomEntityNames {
 }
 
 export interface ChatRoomExtendedDetailsRequest {
-    roomids: string[],
-    customids: string[],
-    entities: ChatRoomEntityNames[],
+    roomids?: string[],
+    customids?: string[],
+    entities?: ChatRoomEntityNames[],
 }
 
-export interface ChatRoomExtendedDetailsResponse {
+export interface ChatRoomExtendedDetails {
     room?: ChatRoomResult,
     mostrecentmessagetime?: string, // ISO 8601 date
     inroom?: number
+}
+
+export interface ChatRoomExtendedDetailsResponse {
+    details: ChatRoomExtendedDetails[]
 }
