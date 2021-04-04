@@ -1,5 +1,5 @@
-import {Webhook, WebhookListResponse} from "../../models/CommonModels";
 import {ISportsTalkConfigurable} from "../Configuration";
+import {Webhook, WebhookListResponse} from "../../models/webhooks/Webhooks";
 
 /**
  * @interface

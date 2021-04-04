@@ -3,8 +3,9 @@ import {EventResult, EventType} from "../../../src/models/ChatModels";
 import * as chai from 'chai';
 import {RestfulChatModerationService} from "../../../src/impl/REST/chat/RestfulChatModerationService";
 import * as dotenv from 'dotenv';
-import {ModerationType, SportsTalkConfig} from "../../../src/models/CommonModels";
+import {SportsTalkConfig} from "../../../src/models/CommonModels";
 import {RestfulChatRoomService} from "../../../src/impl/REST/chat/RestfulChatRoomService";
+import {ModerationType} from "../../../src/models/Moderation";
 dotenv.config();
 
 const { expect } = chai;

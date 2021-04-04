@@ -2,7 +2,7 @@ import {CommentClient} from '../../../src/impl/CommentClient';
 import {Kind} from '../../../src/models/CommonModels';
 import * as chai from 'chai';
 import * as dotenv from 'dotenv';
-import {ModerationType} from "../../../src/models/CommonModels";
+import {ModerationType} from "../../../src/models/Moderation";
 
 dotenv.config();
 

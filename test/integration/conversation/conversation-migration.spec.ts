@@ -1,7 +1,7 @@
 import * as chai from 'chai';
 import * as dotenv from 'dotenv';
-import {ModerationType, SportsTalkConfig, User} from "../../../src/models/CommonModels";
-import {Conversation, Comment} from "../../../src/models/CommentsModels";
+import {SportsTalkConfig} from "../../../src/models/CommonModels";
+import {Conversation, Comment, User, ModerationType} from "../../../src/models/CommentsModels";
 import {RestfulConversationService} from "../../../src/impl/REST/comments/RestfulConversationService";
 import {RestfulCommentService} from "../../../src/impl/REST/comments/RestfulCommentService";
 

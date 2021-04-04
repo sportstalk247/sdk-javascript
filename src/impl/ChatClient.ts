@@ -3,21 +3,15 @@ import {
     CommandOptions,
     GoalOptions,
     EventHandlerConfig,
-    ChatRoomResult,
-    ChatRoom,
-    JoinChatRoomResponse,
     EventResult,
-    DeletedChatRoomResponse,
     CommandResponse,
-    ChatRoomExitResult,
     ChatUpdatesResult,
-    ChatRoomListResponse,
     ChatOptionsEventType,
     BounceUserResult,
     EffectOptions,
     EventType,
     ChatEventsList,
-    TimestampRequest, MuteOptions, UserEffectFlags, ChatRoomExtendedDetailsRequest, ChatRoomExtendedDetailsResponse
+    TimestampRequest, MuteOptions, UserEffectFlags
 } from "../models/ChatModels";
 import {DEFAULT_CONFIG} from "./constants/api";
 import {SettingsError} from "./errors";
@@ -26,18 +20,11 @@ import {RestfulChatRoomService} from "./REST/chat/RestfulChatRoomService";
 import {RestfulUserService} from "./REST/users/RestfulUserService";
 import {
     Reaction,
-    ReportReason,
-    ReportType,
     SportsTalkConfig,
-    User,
-    UserResult,
     MessageResult,
     RestApiResult,
-    UserSearchType,
-    UserListResponse,
     ListRequest,
-    UserDeletionResponse,
-    ErrorResult, NotificationListRequest, Notification
+    ErrorResult
 } from "../models/CommonModels";
 import {MISSING_ROOM, THROTTLE_ERROR} from "./constants/messages";
 import {forceObjKeyOrString} from "./utils";
@@ -49,6 +36,15 @@ import {IChatEventService} from "../API/chat/IEventService";
 import {IChatRoomService} from "../API/chat/IChatRoomService";
 import {IUserService} from "../API/users/IUserService";
 import {INotificationService} from "../API/users/INotificationService";
+import {
+    ChatRoom, ChatRoomExitResult,
+    ChatRoomExtendedDetailsRequest,
+    ChatRoomExtendedDetailsResponse,
+    ChatRoomListResponse, ChatRoomResult, DeletedChatRoomResponse, JoinChatRoomResponse
+} from "../models/chat/ChatRoom";
+import {User, UserDeletionResponse, UserListResponse, UserResult, UserSearchType} from "../models/user/User";
+import {Notification, NotificationListRequest} from "../models/user/Notifications";
+import {ReportReason, ReportType} from "../models/Moderation";
 
 /**
  * ChatClient provides an interface to chat applications.
@@ -183,6 +179,13 @@ export class ChatClient implements IChatClient {
         if(this._config.user){
             Object.assign(this._user, this._config.user);
         }
+    }
+
+    /**
+     * Gets the current config.
+     */
+    getConfig = () => {
+        return this._config;
     }
 
     /**

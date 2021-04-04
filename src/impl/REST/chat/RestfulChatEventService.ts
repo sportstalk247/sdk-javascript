@@ -7,8 +7,6 @@ import {
     EventResult,
     EventType,
     GoalOptions,
-    ChatRoom,
-    ChatRoomResult,
     QuoteCommandOptions,
     CustomEventTypes,
     ChatOptionsEventType,
@@ -22,13 +20,14 @@ import {stRequest} from '../../network'
 import {
     RestApiResult,
     Reaction,
-    ReportReason,
     SportsTalkConfig,
-    User,
-    MessageResult, UserResult, ErrorResult, ReportType, ChatClientConfig
+    MessageResult, ErrorResult, ChatClientConfig
 } from "../../../models/CommonModels";
 import {AxiosRequestConfig} from "axios";
 import {IChatEventService} from "../../../API/chat/IEventService";
+import {ChatRoom, ChatRoomResult} from "../../../models/chat/ChatRoom";
+import {User, UserResult} from "../../../models/user/User";
+import {ReportReason, ReportType} from "../../../models/Moderation";
 const INVALID_POLL_FREQUENCY = "Invalid poll _pollFrequency.  Must be between 250ms and 5000ms"
 
 /**
@@ -173,6 +172,16 @@ export class RestfulChatEventService implements IChatEventService {
             this._pollFrequency = config.chatEventPollFrequency || 800;
         }
         this._eventSpacingMs = config.updateEmitFrequency || Math.floor(this._pollFrequency/100)
+    }
+
+    /**
+     * Set event smoothing directly.
+     * @param smoothing
+     */
+    setEventSmoothingMs = (smoothing: number) => {
+        if(smoothing && typeof smoothing === "number") {
+            this._eventSpacingMs = smoothing
+        }
     }
 
     /**

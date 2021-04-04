@@ -1,18 +1,21 @@
 import {
     ListRequest,
-    ReportType,
-    SportsTalkConfig,
-    User,
-    UserDeletionResponse,
-    UserListResponse,
-    UserModerationListRequest,
-    UserResult,
-    UserSearchType, DeleteNotificationRequest
+    SportsTalkConfig
 } from "../models/CommonModels";
 import {ISportsTalkConfigurable} from "../API/Configuration";
 import {RestfulUserService} from "./REST/users/RestfulUserService";
 import {DEFAULT_CONFIG} from "./constants/api";
 import {IUserService} from "../API/users/IUserService";
+import {
+    User,
+    UserDeletionResponse,
+    UserListResponse,
+    UserModerationListRequest,
+    UserResult,
+    UserSearchType
+} from "../models/user/User";
+import {DeleteNotificationRequest} from "../models/user/Notifications";
+import {ReportType} from "../models/Moderation";
 
 /**
  * A class used for managing users.  Typically used by custom management dashboards.

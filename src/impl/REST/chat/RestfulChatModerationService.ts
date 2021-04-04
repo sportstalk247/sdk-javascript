@@ -1,6 +1,4 @@
 import {
-    ChatRoomEffectsList,
-    ChatRoomResult,
     EventListResponse,
     EventResult,
     MuteOptions, ShadowbanUserApiData
@@ -9,14 +7,15 @@ import {stRequest} from '../../network';
 import {buildAPI, getJSONHeaders, forceObjKeyOrString} from "../../utils";
 import {DEFAULT_CONFIG, GET, POST,} from "../../constants/api";
 import {
-    ChatModerationQueueListRequest,
     RestApiResult,
-    SportsTalkConfig,
-    User,
-    Webhook
+    SportsTalkConfig
 } from "../../../models/CommonModels";
 import {AxiosRequestConfig} from "axios";
 import {IChatModerationService} from "../../../API/chat/IChatModerationServive";
+import {ChatRoomEffectsList, ChatRoomResult} from "../../../models/chat/ChatRoom";
+import {User} from "../../../models/user/User";
+import {Webhook} from "../../../models/webhooks/Webhooks";
+import {ChatModerationQueueListRequest} from "../../../models/Moderation";
 
 /**
  * This class is for moderating chat events.  Most clients will not need this unless you are building a custom moderation UI.

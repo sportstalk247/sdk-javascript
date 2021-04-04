@@ -1,7 +1,8 @@
 import * as chai from 'chai';
 import {RestfulWebhookService} from "../../../src/impl/REST/webhooks/RestfulWebhookService";
 import * as dotenv from 'dotenv';
-import {Kind, SportsTalkConfig, Webhook, WebhookEvent, WebhookType} from "../../../src/models/CommonModels";
+import {Kind, SportsTalkConfig} from "../../../src/models/CommonModels";
+import {Webhook, WebhookEvent, WebhookType} from "../../../src/models/webhooks/Webhooks";
 
 dotenv.config();
 

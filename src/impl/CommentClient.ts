@@ -1,11 +1,8 @@
 import {
     Reaction,
     SportsTalkConfig,
-    User,
-    ReportType,
     RestApiResult,
-    UserResult,
-    UserSearchType, UserListResponse, ListRequest, UserDeletionResponse
+    ListRequest
 } from "../models/CommonModels";
 import {
     Conversation,
@@ -18,7 +15,7 @@ import {
     CommentDeletionResponse,
     ConversationRequest,
     ConversationListResponse,
-    SimpleComment, RepliesBatchResponse, CommentResult
+    SimpleComment, RepliesBatchResponse, CommentResult, User
 } from "../models/CommentsModels";
 import {RestfulCommentService} from "./REST/comments/RestfulCommentService";
 import {RestfulConversationService} from "./REST/comments/RestfulConversationService";
@@ -29,6 +26,8 @@ import {ICommentService} from "../API/comments/ICommentService";
 import {IConversationService} from "../API/comments/IConversationService";
 import {ICommentingClient} from "../API/comments/ICommentingClient";
 import {IUserService} from "../API/users/IUserService";
+import {UserDeletionResponse, UserListResponse, UserResult, UserSearchType} from "../models/user/User";
+import {ReportType} from "../models/Moderation";
 
 /**
  * This is the API client for the Conversations feature.

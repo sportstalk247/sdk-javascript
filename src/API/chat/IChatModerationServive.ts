@@ -1,6 +1,8 @@
 import {ISportsTalkConfigurable} from "../Configuration";
-import {ChatModerationQueueListRequest, User} from "../../models/CommonModels";
-import {ChatRoomEffectsList, ChatRoomResult, EventListResponse, EventResult} from "../../models/ChatModels";
+import {EventListResponse, EventResult} from "../../models/ChatModels";
+import {ChatRoomEffectsList, ChatRoomResult} from "../../models/chat/ChatRoom";
+import {User} from "../../models/user/User";
+import {ChatModerationQueueListRequest} from "../../models/Moderation";
 
 /**
  * Interface for Chat Moderation Services.

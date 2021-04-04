@@ -1,5 +1,6 @@
 import {ISportsTalkConfigurable} from "../Configuration";
-import {Notification, NotificationListRequest, NotificationListResult, User} from "../../models/CommonModels";
+import {User} from "../../models/user/User";
+import {Notification, NotificationListRequest, NotificationListResult} from "../../models/user/Notifications";
 
 export interface INotificationService extends ISportsTalkConfigurable {
     listUserNotifications(request: NotificationListRequest): Promise<NotificationListResult>

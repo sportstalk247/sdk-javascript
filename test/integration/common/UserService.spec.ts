@@ -1,11 +1,11 @@
 import * as chai from 'chai';
 import {RestfulUserService} from "../../../src/impl/REST/users/RestfulUserService";
 import * as dotenv from 'dotenv';
-import {Kind, UserSearchType, SportsTalkConfig} from "../../../src/models/CommonModels";
+import {Kind, SportsTalkConfig} from "../../../src/models/CommonModels";
 import {RestfulChatRoomService} from "../../../src/impl/REST/chat/RestfulChatRoomService";
-import {User} from "../../../src/models/CommonModels";
 import {UserClient} from "../../../dist";
 import {RestfulNotificationService} from "../../../dist/impl/REST/notifications/RestfulNotificationService";
+import {User, UserSearchType} from "../../../src/models/user/User";
 
 dotenv.config();
 

@@ -1,8 +1,9 @@
 import {RestfulChatRoomService} from "../../../../src/impl/REST/chat/RestfulChatRoomService";
 import * as chai from 'chai';
 import * as dotenv from 'dotenv';
-import {Kind, ModerationType, SportsTalkConfig} from "../../../../src/models/CommonModels";
-import {ChatRoomEntityNames} from "../../../../src/models/ChatModels";
+import {Kind, SportsTalkConfig} from "../../../../src/models/CommonModels";
+import {ChatRoomEntityNames} from "../../../../src/models/chat/ChatRoom";
+import {ModerationType} from "../../../../src/models/Moderation";
 
 dotenv.config();
 

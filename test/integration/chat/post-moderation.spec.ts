@@ -3,8 +3,9 @@ import {EventResult} from "../../../src/models/ChatModels";
 import * as chai from 'chai';
 import {RestfulChatModerationService} from "../../../src/impl/REST/chat/RestfulChatModerationService";
 import * as dotenv from 'dotenv';
-import {ModerationType, ReportType, SportsTalkConfig} from "../../../src/models/CommonModels";
+import {SportsTalkConfig} from "../../../src/models/CommonModels";
 import {RestfulChatRoomService} from "../../../src/impl/REST/chat/RestfulChatRoomService";
+import {ModerationType, ReportType} from "../../../src/models/Moderation";
 
 dotenv.config();
 

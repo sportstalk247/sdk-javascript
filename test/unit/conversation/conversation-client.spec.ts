@@ -1,9 +1,10 @@
 import {CommentClient} from '../../../src/impl/CommentClient';
-import {Kind, ModerationType, Reaction, ReportType, SportsTalkConfig} from '../../../src/models/CommonModels';
+import {Kind, Reaction, SportsTalkConfig} from '../../../src/models/CommonModels';
 import * as chai from 'chai';
 import * as dotenv from 'dotenv';
 import {DEFAULT_CONFIG} from "../../../src/impl/constants/api";
-import {User} from "../../../src/models/CommonModels";
+import {User} from "../../../src/models/user/User";
+import {ModerationType, ReportType} from "../../../src/models/Moderation";
 dotenv.config();
 
 const { expect } = chai;

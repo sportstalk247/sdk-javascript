@@ -3,11 +3,6 @@ import {
     AdvertisementOptions,
     BounceUserResult,
     ChatEventsList,
-    ChatRoom,
-    ChatRoomExtendedDetailsRequest,
-    ChatRoomExtendedDetailsResponse,
-    ChatRoomListResponse,
-    ChatRoomResult,
     ChatUpdatesResult,
     CommandOptions,
     CommandResponse,
@@ -16,23 +11,24 @@ import {
     EventResult,
     EventType,
     GoalOptions,
-    JoinChatRoomResponse,
     TimestampRequest
 } from "../../models/ChatModels";
 import {
     ErrorResult,
     ListRequest,
     MessageResult,
-    Notification,
     Reaction,
-    ReportType,
-    RestApiResult,
-    User,
-    UserDeletionResponse,
-    UserListResponse,
-    UserResult,
-    UserSearchType
+    RestApiResult
 } from "../../models/CommonModels";
+import {
+    ChatRoom,
+    ChatRoomExtendedDetailsRequest,
+    ChatRoomExtendedDetailsResponse,
+    ChatRoomListResponse, ChatRoomResult, JoinChatRoomResponse
+} from "../../models/chat/ChatRoom";
+import {User, UserDeletionResponse, UserListResponse, UserResult, UserSearchType} from "../../models/user/User";
+import {Notification} from "../../models/user/Notifications";
+import {ReportType} from "../../models/Moderation";
 
 /**
  * Interface for ChatClient.

@@ -3,14 +3,12 @@ import {buildAPI, forceObjKeyOrString, getJSONHeaders} from "../../utils";
 import {DEFAULT_CONFIG, DELETE, GET, POST, PUT} from "../../constants/api";
 import {
     ListRequest,
-    SportsTalkConfig,
-    Webhook,
-    WebhookListResponse,
-    WebhookLogResponse
+    SportsTalkConfig
 } from "../../../models/CommonModels";
 import {ValidationError} from "../../errors";
 import {stRequest} from "../../network";
 import {IWebhookService} from "../../../API/webhooks/IWebhookService";
+import {Webhook, WebhookListResponse, WebhookLogResponse} from "../../../models/webhooks/Webhooks";
 
 const MISSING_ID = "Missing webhook or webhook missing ID";
 

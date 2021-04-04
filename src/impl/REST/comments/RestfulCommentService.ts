@@ -2,8 +2,6 @@ import {
     ApiHeaders,
     Reaction,
     SportsTalkConfig,
-    User,
-    ReportType,
     ClientConfig,
     Kind
 } from "../../../models/CommonModels";
@@ -11,7 +9,7 @@ import {
     Comment, CommentListResponse, CommentDeletionResponse,
     CommentRequest,
     Conversation,
-    Vote, RepliesBatchResponse, CommentResult
+    Vote, RepliesBatchResponse, CommentResult, User
 } from "../../../models/CommentsModels";
 import {DELETE, GET, POST, PUT} from "../../constants/api";
 import {getUrlEncodedHeaders, getJSONHeaders, buildAPI, formify} from "../../utils";
@@ -28,6 +26,7 @@ import {
 import {AxiosRequestConfig} from "axios";
 import {stRequest} from "../../network";
 import {ICommentService} from "../../../API/comments/ICommentService";
+import {ReportType} from "../../../models/Moderation";
 
 /**
  * This is the primary comment service, which handles posting and responding to comments.

@@ -11,7 +11,8 @@ import {
     User,
     Vote
 } from "../../models/CommentsModels";
-import {Reaction, ReportType} from "../../models/CommonModels";
+import {Reaction} from "../../models/CommonModels";
+import {ReportType} from "../../models/Moderation";
 
 /**
  * @interface

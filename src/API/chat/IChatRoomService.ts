@@ -1,17 +1,17 @@
 import {ISportsTalkConfigurable} from "../Configuration";
 import {
     BounceUserResult,
-    ChatRoom,
-    ChatRoomExitResult,
+    EventResult
+} from "../../models/ChatModels";
+import {RestApiResult} from "../../models/CommonModels";
+import {
+    ChatRoom, ChatRoomExitResult,
     ChatRoomExtendedDetailsRequest,
     ChatRoomExtendedDetailsResponse,
-    ChatRoomListResponse,
-    ChatRoomResult,
-    DeletedChatRoomResponse,
-    EventResult,
-    JoinChatRoomResponse
-} from "../../models/ChatModels";
-import {ReportType, RestApiResult, User, UserResult} from "../../models/CommonModels";
+    ChatRoomListResponse, ChatRoomResult, DeletedChatRoomResponse, JoinChatRoomResponse
+} from "../../models/chat/ChatRoom";
+import {User, UserResult} from "../../models/user/User";
+import {ReportType} from "../../models/Moderation";
 
 /**
  * Interface for room management

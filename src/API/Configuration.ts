@@ -1,6 +1,7 @@
 /* istanbul ignore file */
 
-import {ChatClientConfig, ClientConfig, SportsTalkConfig, User} from "../models/CommonModels";
+import {ChatClientConfig, ClientConfig, SportsTalkConfig} from "../models/CommonModels";
+import {User} from "../models/user/User";
 
 /**
  * @interface

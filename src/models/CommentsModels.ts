@@ -1,4 +1,6 @@
-import {Kind, ListRequest, ListResponse, ModerationType, ReportReason, User} from "./CommonModels";
+import {Kind, ListRequest, ListResponse} from "./CommonModels";
+import {User} from "./user/User";
+import {ModerationType, ReportReason} from "./Moderation";
 
 export {
     Kind,
@@ -123,6 +125,7 @@ export interface Comment extends User {
     replycount?: number,
     reactions?: Array<any>,
     active?: boolean,
+    parentid?: string,
     added?: string,
     modified?: number,
     deleted?: boolean,

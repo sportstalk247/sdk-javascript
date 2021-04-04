@@ -1,5 +1,5 @@
 import {CommentClient} from '../../../src/impl/CommentClient';
-import {Kind, ModerationType, Reaction, ReportType} from '../../../src/models/CommonModels';
+import {Kind, Reaction} from '../../../src/models/CommonModels';
 import * as chai from 'chai';
 import * as dotenv from 'dotenv';
 import {RestfulCommentModerationService} from "../../../src/impl/REST/comments/RestfulCommentModerationService";
@@ -7,12 +7,13 @@ import {
     Comment,
     CommentListResponse,
     CommentModeration,
-    CommentResult,
+    CommentResult, ModerationType,
     Vote
 } from "../../../src/models/CommentsModels";
 import {RestfulCommentService} from "../../../src/impl/REST/comments/RestfulCommentService";
 import {RequireUserError, SettingsError, ValidationError} from "../../../src/impl/errors";
 import {MISSING_REPLYTO_ID, NO_CONVERSATION_SET, USER_NEEDS_ID} from "../../../src/impl/constants/messages";
+import {ReportType} from "../../../src/models/Moderation";
 
 dotenv.config();
 

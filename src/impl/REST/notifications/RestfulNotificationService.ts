@@ -1,8 +1,5 @@
 import {
-    Notification,
-    NotificationListRequest,
-    NotificationListResult, NotificationReadRequest,
-    SportsTalkConfig, UserResult
+    SportsTalkConfig
 } from "../../../models/CommonModels";
 import {buildAPI, forceObjKeyOrString, formify, getJSONHeaders} from "../../utils";
 import {EventType} from "../../../models/ChatModels";
@@ -11,6 +8,13 @@ import {AxiosRequestConfig} from "axios";
 import {DELETE, GET, PUT} from "../../constants/api";
 import {stRequest} from "../../network";
 import {INotificationService} from "../../../API/users/INotificationService";
+import {UserResult} from "../../../models/user/User";
+import {
+    Notification,
+    NotificationListRequest,
+    NotificationListResult,
+    NotificationReadRequest
+} from "../../../models/user/Notifications";
 
 export class RestfulNotificationService implements INotificationService{
     private _config: SportsTalkConfig;

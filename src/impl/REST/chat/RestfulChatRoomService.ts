@@ -1,26 +1,26 @@
 import {
     EventResult,
-    ChatRoom,
-    ChatRoomResult,
-    JoinChatRoomResponse,
-    DeletedChatRoomResponse,
-    ChatRoomExitResult,
-    ChatRoomListResponse,
     EventListResponse,
     BounceUserResult,
     ShadowbanUserApiData,
-    MuteUserApiData,
-    ChatRoomEffectsList,
-    ChatRoomExtendedDetailsRequest,
-    ChatRoomExtendedDetailsResponse
+    MuteUserApiData
 } from "../../../models/ChatModels";
 import {stRequest} from '../../network';
 import {GET, DELETE, POST, API_SUCCESS_MESSAGE} from "../../constants/api";
 import {buildAPI, forceObjKeyOrString, getJSONHeaders, getUrlEncodedHeaders, formify} from "../../utils";
-import {ReportType, RestApiResult, SportsTalkConfig, User, UserResult} from "../../../models/CommonModels";
+import {RestApiResult, SportsTalkConfig} from "../../../models/CommonModels";
 import {AxiosRequestConfig} from "axios";
 import {SettingsError} from "../../errors";
 import {IChatRoomService} from "../../../API/chat/IChatRoomService";
+import {
+    ChatRoom,
+    ChatRoomEffectsList, ChatRoomExitResult,
+    ChatRoomExtendedDetailsRequest,
+    ChatRoomExtendedDetailsResponse,
+    ChatRoomListResponse, ChatRoomResult, DeletedChatRoomResponse, JoinChatRoomResponse
+} from "../../../models/chat/ChatRoom";
+import {User, UserResult} from "../../../models/user/User";
+import {ReportType} from "../../../models/Moderation";
 
 /**
  * This room uses REST to manage sportstalk chat rooms.

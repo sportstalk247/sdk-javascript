@@ -4,21 +4,27 @@ import {DELETE, GET, POST, PUT} from "../../constants/api";
 import {buildAPI, forceObjKeyOrString, formify, getJSONHeaders} from "../../utils";
 import {
     ListRequest,
-    NotificationListRequest, NotificationReadRequest,
-    ReportType,
-    Notification,
-    SportsTalkConfig,
-    User,
-    UserDeletionResponse,
-    UserListResponse,
-    UserModerationListRequest,
-    UserResult,
-    UserSearchType, NotificationListResult
+    SportsTalkConfig
 } from "../../../models/CommonModels";
 import {EventType} from '../../../models/ChatModels';
 import {SettingsError} from "../../errors";
 import {config} from "dotenv";
 import {IUserService} from "../../../API/users/IUserService";
+import {
+    User,
+    UserDeletionResponse,
+    UserListResponse,
+    UserModerationListRequest,
+    UserResult,
+    UserSearchType
+} from "../../../models/user/User";
+import {
+    Notification,
+    NotificationListRequest,
+    NotificationListResult,
+    NotificationReadRequest
+} from "../../../models/user/Notifications";
+import {ReportType} from "../../../models/Moderation";
 
 /**
  * Class for handling user management via REST.

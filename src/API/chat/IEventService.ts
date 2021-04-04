@@ -2,8 +2,6 @@ import {IChatClientConfigurable,IUserConfigurable} from "../Configuration";
 import {
     AdvertisementOptions,
     ChatEventsList,
-    ChatRoom,
-    ChatRoomResult,
     ChatUpdatesResult,
     CommandOptions,
     CommandResponse,
@@ -14,7 +12,10 @@ import {
     GoalOptions,
     TimestampRequest
 } from "../../models/ChatModels";
-import {ErrorResult, MessageResult, Reaction, ReportReason, RestApiResult, User} from "../../models/CommonModels";
+import {ErrorResult, MessageResult, Reaction, RestApiResult} from "../../models/CommonModels";
+import {ChatRoom, ChatRoomResult} from "../../models/chat/ChatRoom";
+import {User} from "../../models/user/User";
+import {ReportReason} from "../../models/Moderation";
 
 
 /**

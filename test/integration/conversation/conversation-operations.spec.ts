@@ -1,10 +1,11 @@
 import {CommentClient} from '../../../src/impl/CommentClient';
-import {Kind, ModerationType, Reaction, ReportType} from '../../../src/models/CommonModels';
+import {Kind, Reaction} from '../../../src/models/CommonModels';
 import * as chai from 'chai';
 import * as dotenv from 'dotenv';
 import {RestfulCommentModerationService} from "../../../src/impl/REST/comments/RestfulCommentModerationService";
-import {Conversation} from "../../../src/models/CommentsModels";
+import {Conversation, ModerationType} from "../../../src/models/CommentsModels";
 import {DEFAULT_CONFIG} from "../../../src/impl/constants/api";
+import {ReportType} from "../../../src/models/Moderation";
 
 
 dotenv.config();

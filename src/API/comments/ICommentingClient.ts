@@ -2,13 +2,7 @@ import {ISportsTalkConfigurable, IUserConfigurable} from "../Configuration";
 import {
     ListRequest,
     Reaction,
-    ReportType,
-    SportsTalkConfig,
-    User,
-    UserDeletionResponse,
-    UserListResponse,
-    UserResult,
-    UserSearchType
+    SportsTalkConfig
 } from "../../models/CommonModels";
 import {ICommentService} from "./ICommentService";
 import {IConversationService} from "./IConversationService";
@@ -24,9 +18,11 @@ import {
     ConversationRequest,
     ConversationResponse,
     RepliesBatchResponse,
-    SimpleComment,
+    SimpleComment, User,
     Vote
 } from "../../models/CommentsModels";
+import {UserDeletionResponse, UserListResponse, UserResult, UserSearchType} from "../../models/user/User";
+import {ReportType} from "../../models/Moderation";
 
 /**
  * @interface

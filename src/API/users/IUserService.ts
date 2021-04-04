@@ -1,14 +1,16 @@
 import {ISportsTalkConfigurable} from "../Configuration";
 import {
-    ListRequest,
-    ReportType,
+    ListRequest
+} from "../../models/CommonModels";
+import {
     User,
     UserDeletionResponse,
     UserListResponse,
     UserModerationListRequest,
     UserResult,
     UserSearchType
-} from "../../models/CommonModels";
+} from "../../models/user/User";
+import {ReportType} from "../../models/Moderation";
 
 /**
  * @interface
