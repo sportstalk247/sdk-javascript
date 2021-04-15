@@ -379,13 +379,13 @@ export class RestfulChatEventService implements IChatEventService {
      * @private
      */
     public handleUpdates = async (update: ChatEventsList) => {
+        this._fetching = false;
         if(!update) {
             return;
         }
         if(update.cursor) {
             this.lastCursor = update.cursor;
         }
-
         const events: Array<EventResult> = update.events;
         if(events && events.length) {
             for (var i = 0; i < events.length; i++) {
@@ -425,7 +425,6 @@ export class RestfulChatEventService implements IChatEventService {
                 }
             }
         }
-        this._fetching = false;
     }
 
     /**

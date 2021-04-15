@@ -30,6 +30,7 @@ export interface Webhook {
     enabled: boolean,
     type: WebhookType,
     events: WebhookEvent[]
+    requireallcustomtags?: string[]
 }
 
 export interface WebhookListResponse extends ListResponse {
