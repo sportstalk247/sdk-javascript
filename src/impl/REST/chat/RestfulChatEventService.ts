@@ -66,6 +66,10 @@ export class RestfulChatEventService implements IChatEventService {
     private firstMessageId:string | undefined;
     private firstMessageTime: number | undefined;
 
+    // Maintain room connection.
+    private _keepAliveFunction: Function;
+    private _keepAliveInterval;
+
     // Holds the size of the updates we we will request.
     private _maxEventsPerUpdateLimit:number = 100;
 
@@ -185,6 +189,33 @@ export class RestfulChatEventService implements IChatEventService {
     }
 
     /**
+     *
+     * @param roomid
+     * @param userid
+     */
+    _startKeepAlive = (roomid, userid) => {
+        const config: AxiosRequestConfig = {
+            method: POST,
+            url: buildAPI(this._config, `/chat/rooms/${roomid}/sessions/${userid}/touch`),
+            headers: this._apiHeaders
+        }
+        this._keepAliveFunction = function keepAliveFunction() {
+            return stRequest(config);
+        }
+        this._endKeepAlive();
+        this._keepAliveInterval = setInterval(this._keepAliveFunction, 1000);
+    }
+
+    /**
+     * Ends keepAlive.
+     */
+    _endKeepAlive = () => {
+        if(this._keepAliveInterval) {
+            clearInterval(this._keepAliveInterval);
+        }
+    }
+
+    /**
      * Get current room, if set.
      * @return ChatRoomResult
      */
@@ -239,9 +270,11 @@ export class RestfulChatEventService implements IChatEventService {
      * Start the chat polling
      */
     startEventUpdates = (updatesLimit?: number) => {
+        this._startKeepAlive(this._currentRoom.id, this._user.userid || "anonymous");
         if(updatesLimit) {
             this._maxEventsPerUpdateLimit = updatesLimit
         }
+
         if(this._polling) {
             console.log("ALREADY CONNECTED TO TALK");
             return;
@@ -250,12 +283,15 @@ export class RestfulChatEventService implements IChatEventService {
         if(!this._updatesApi || !this._currentRoom) {
             throw new SettingsError(NO_ROOM_SET)
         }
+
         if (this._eventHandlers.onChatStart) {
             this._eventHandlers.onChatStart();
         }
+
         if(!this._eventHandlers.onChatEvent && !this._eventHandlers.onNetworkResponse) {
             throw new SettingsError(NO_HANDLER_SET)
         }
+        
         if (
             !this._pollFrequency ||
             isNaN(this._pollFrequency) ||
@@ -293,6 +329,7 @@ export class RestfulChatEventService implements IChatEventService {
      * Stop event polling
      */
     public stopEventUpdates = () => {
+        this._endKeepAlive();
         if(this._polling) {
             clearInterval(this._polling);
         }
@@ -372,7 +409,8 @@ export class RestfulChatEventService implements IChatEventService {
             }, index * speed)
         })
     }
-    
+
+
     /**
      * Route the updates to appropriate handers.
      * @param update
