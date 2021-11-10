@@ -112,10 +112,8 @@ describe('REPLY & DELETE Chat Sequence', function() {
         let toFlag: EventResult;
         let threadedReplyTargetId: string;
         it('Shows Quoted reply', function (done) {
-
             Promise.all([em1.getUpdates(), em2.getUpdates()])
                 .then(async (chatHistories) => {
-
                     expect(chatHistories[0].events).to.have.lengthOf(chatHistories[0].itemcount);
                     expect(chatHistories[1].events).to.have.lengthOf(chatHistories[1].itemcount);
                     const quote = chatHistories[0].events.find(event=>event.eventtype==='quote');

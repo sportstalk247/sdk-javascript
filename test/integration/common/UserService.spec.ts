@@ -3,8 +3,8 @@ import {RestfulUserService} from "../../../src/impl/REST/users/RestfulUserServic
 import * as dotenv from 'dotenv';
 import {Kind, SportsTalkConfig} from "../../../src/models/CommonModels";
 import {RestfulChatRoomService} from "../../../src/impl/REST/chat/RestfulChatRoomService";
-import {UserClient} from "../../../dist";
-import {RestfulNotificationService} from "../../../dist/impl/REST/notifications/RestfulNotificationService";
+import {UserClient} from "../../../src";
+import {RestfulNotificationService} from "../../../src/impl/REST/notifications/RestfulNotificationService";
 import {User, UserSearchType} from "../../../src/models/user/User";
 
 dotenv.config();

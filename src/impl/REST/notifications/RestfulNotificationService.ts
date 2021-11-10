@@ -53,7 +53,7 @@ export class RestfulNotificationService implements INotificationService{
         const config: AxiosRequestConfig = {
             method: GET,
             headers:this._jsonHeaders,
-            url: buildAPI(this._config, `/user/users/${finalRequest.userid}/notifications/list?userid=${finalRequest.userid}${typeString}&limit=${finalRequest.limit}&includeread=${finalRequest.includeread}`)
+            url: buildAPI(this._config, `user/users/${finalRequest.userid}/notification/listnotifications?${typeString}&limit=${finalRequest.limit}&includeread=${finalRequest.includeread}`)
         }
         return stRequest(config).then(response=>response.data);
     }
@@ -100,7 +100,7 @@ export class RestfulNotificationService implements INotificationService{
         const params:string = formify(finalRequest)
         let url;
         if(finalRequest.chateventid) {
-            url = buildAPI(this._config, `/user/users/${finalRequest.userid}/notifications/notificationsbyid/chateventid/${finalRequest.chateventid}/update?${params}`);
+            url = buildAPI(this._config, `/user/users/${finalRequest.userid}/notification/notifications/${finalRequest.chateventid}/update?${params}`);
         } else {
             throw new Error("Must include chateventid to set read status");
         }

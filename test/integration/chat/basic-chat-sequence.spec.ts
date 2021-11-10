@@ -4,7 +4,7 @@ import {RestfulChatRoomService} from "../../../src/impl/REST/chat/RestfulChatRoo
 import * as dotenv from 'dotenv';
 import {Kind, SportsTalkConfig} from "../../../src/models/CommonModels";
 import {API_SUCCESS_MESSAGE} from "../../../src/impl/constants/api";
-import {EventResult, Event} from "../../../dist/models/ChatModels";
+import {EventResult, Event} from "../../../src/models/ChatModels";
 dotenv.config();
 
 const { expect } = chai;
