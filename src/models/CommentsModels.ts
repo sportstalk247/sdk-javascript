@@ -12,6 +12,14 @@ export interface HasConversationID {
     conversationid: string,
 }
 
+export interface CustomFields {
+    customtags? : string[]
+    customtype?: string,
+    custompayload?: string
+    customfield1?: string,
+    customfield2?: string
+}
+
 export interface Conversation {
     conversationid: string,
     customid?: string,
@@ -24,11 +32,7 @@ export interface Conversation {
     maxcommentlen?: number,
     enableprofanityfilter?: boolean,
     open?: boolean
-    customtags? : string[]
-    customtype?: string,
-    custompayload?: string
-    customfield1?: string,
-    customfield2?: string
+
 }
 
 export interface CommentListResponse extends ListResponse {
@@ -115,7 +119,7 @@ export interface CommentResult extends Comment {
     kind: Kind.comment
     id: string
 }
-export interface Comment extends User {
+export interface Comment extends User, CustomFields {
     kind?: Kind.comment
     id?: string;
     conversationid?: string
