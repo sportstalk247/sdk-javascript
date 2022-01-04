@@ -252,7 +252,7 @@ export class RestfulCommentService implements ICommentService {
      * Update a comment
      * @param comment
      */
-    public updateComment = ( conversationId: string, comment: Comment): Promise<CommentResult> => {
+    public updateComment = ( conversationId: string, comment: CommentResult): Promise<CommentResult> => {
         this._requireConversationId(conversationId);
         const id = getUrlCommentId(comment);
         return stRequest({

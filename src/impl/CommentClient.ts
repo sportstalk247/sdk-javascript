@@ -210,10 +210,10 @@ export class CommentClient implements ICommentingClient {
 
     /**
      *
-     * @param comment The comment string.
+     * @param comment The comment string or Comment object
      * @param replyto either the comment object to reply to or the ID as a string
      */
-    public publishComment = (comment: string | SimpleComment, replyto?: Comment | string): Promise<CommentResult> => {
+    public publishComment = (comment: string | Comment, replyto?: Comment | string): Promise<CommentResult> => {
         const conversationid = forceObjKeyOrString(this._currentConversation, 'conversationid')
         return this._commentService.publishComment(conversationid, comment, this._user, replyto);
     }
@@ -255,7 +255,7 @@ export class CommentClient implements ICommentingClient {
      * Update a comment that already exists
      * @param comment
      */
-    public updateComment = (comment:CommentResult): Promise<Comment> => {
+    public updateComment = (comment: CommentResult): Promise<Comment> => {
         // @ts-ignore
         const conversationid = forceObjKeyOrString(this._currentConversation, 'conversationid')
         return this._commentService.updateComment(conversationid, comment, this._user);

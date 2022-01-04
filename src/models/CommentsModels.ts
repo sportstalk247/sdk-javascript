@@ -20,7 +20,7 @@ export interface CustomFields {
     customfield2?: string
 }
 
-export interface Conversation {
+export interface Conversation extends CustomFields {
     conversationid: string,
     customid?: string,
     property: string,
@@ -115,11 +115,11 @@ export interface SimpleComment  {
     replyto?: string
 }
 
-export interface CommentResult extends Comment {
+export interface CommentResult extends FullComment {
     kind: Kind.comment
     id: string
 }
-export interface Comment extends User, CustomFields {
+export interface Comment extends CustomFields {
     kind?: Kind.comment
     id?: string;
     conversationid?: string
@@ -139,6 +139,10 @@ export interface Comment extends User, CustomFields {
     moderation?: CommentModeration,
     votes?: Array<Vote>,
     reports?: Array<ReportReason>
+}
+
+export interface FullComment extends Comment, User {
+
 }
 
 export interface ShortComment {

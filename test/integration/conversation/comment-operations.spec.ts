@@ -53,8 +53,6 @@ describe('Comment Operations', function() {
         "maxcommentlen": 512,
         "open" : true,
         "tags" : ["taga", "tagb"],
-        "udf1" : "/sample/userdefined1",
-        "udf2" : "/sample/userdefined2/äöüÄÖÜß"
     }
 
     describe('Setup Conversation', function () {
@@ -75,8 +73,16 @@ describe('Comment Operations', function() {
         it("React to a comment", async ()=>{
             try {
                 const conv = await client2.createConversation(conversation, true)
-                resp = await client2.publishComment("This is my comment")
+                resp = await client2.publishComment({
+                    body:"This is my comment",
+                    customfield1: "CF1",
+                    customfield2: "CF2",
+                    customtags: ["customtag1", "customtag2"]
+                })
                 expect(resp.body).to.be.equal("This is my comment");
+                expect(resp.customfield1).to.be.equal("CF1");
+                expect(resp.customfield2).to.be.equal("CF2");
+                expect(resp.customtags).to.have.length(2)
                 // @ts-ignore
                 const response:CommentResult = await client.reactToComment(resp, Reaction.like);
                 expect(response.kind).to.be.equal(Kind.comment);
@@ -295,7 +301,7 @@ describe('Comment Operations', function() {
        it("Throws error on updateComment if no conversation set", ()=>{
            const commentManager = new RestfulCommentService();
            try {
-               const comment = commentManager.updateComment('', {userid: "fake", handle:"fake", body: "some body", id:"fakeid"});
+               const comment = commentManager.updateComment('', {userid: "fake", handle:"fake", body: "some body", id:"fakeid", kind: Kind.comment});
                throw new Error("should have failed")
            }catch(e) {
                expect(e instanceof ValidationError).to.be.true;

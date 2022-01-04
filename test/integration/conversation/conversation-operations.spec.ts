@@ -44,8 +44,6 @@ describe('Conversation Operations', function() {
         "maxcommentlen": 512,
         "open" : true,
         "tags" : ["taga", "tagb"],
-        "udf1" : "/sample/userdefined1",
-        "udf2" : "/sample/userdefined2/äöüÄÖÜß"
     }
     const conversation2 = {
         "conversationid": "TEST_ITEM_UNIQUE",
@@ -57,8 +55,6 @@ describe('Conversation Operations', function() {
         "maxcommentlen": 512,
         "open" : true,
         "tags" : ["taga", "tagb"],
-        "udf1" : "/sample/userdefined1",
-        "udf2" : "/sample/userdefined2/äöüÄÖÜß"
     }
     describe("Moderation Manager", function() {
         it("Can configure with constructor", async()=>{
