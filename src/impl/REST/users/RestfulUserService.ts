@@ -81,15 +81,21 @@ export class RestfulUserService implements IUserService {
      * @param user || userid
      * @param isBanned
      */
-    setBanStatus = (user: User | string, isBanned: boolean): Promise<UserResult> => {
+    setBanStatus = (user: User | string, isBanned: boolean, expireseconds?: number): Promise<UserResult> => {
         // @ts-ignore
         const userid = user.userid || user;
         const url = buildAPI(this._config,`${this._apiExt}/${userid}/ban`);
+        const data:any = {
+            applyeffect: ""+isBanned
+        }
+        if(expireseconds && isBanned) {
+            data.expireseconds = Math.floor(expireseconds)
+        }
         const config:AxiosRequestConfig = {
             method: POST,
             url: url,
             headers: this._jsonHeaders,
-            data: {banned: isBanned}
+            data,
         }
         return stRequest(config).then(result=>{
             return result.data
@@ -108,7 +114,8 @@ export class RestfulUserService implements IUserService {
         const userid = user.userid || user;
         const url = buildAPI(this._config,`${this._apiExt}/${userid}/shadowban`);
         const data:any = {
-            shadowban: ""+isShadowBanned
+            shadowban: ""+isShadowBanned,
+            applyeffect: ""+isShadowBanned
         }
         if(expireseconds && isShadowBanned) {
             data.expireseconds = Math.floor(expireseconds)
@@ -177,7 +184,7 @@ export class RestfulUserService implements IUserService {
     listUsers = (request?: ListRequest): Promise<UserListResponse> => {
         let query = "?";
         if(request) {
-            query = query+ formify(request);
+            query = query + formify(request);
         }
         const config:AxiosRequestConfig = {
             method: GET,

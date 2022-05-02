@@ -129,7 +129,13 @@ export class ChatClient implements IChatClient {
         }
     }
 
-    private constructor() {}
+    /**
+     * Creates a chat client and detects the current domain.
+     * @private
+     */
+    private constructor(config: SportsTalkConfig) {
+
+    }
 
     /**
      * Configures and creates a ChatClient
@@ -138,7 +144,7 @@ export class ChatClient implements IChatClient {
      * @return SportsTalkClient.  Currently only a REST based client is supported.  Future SDK versions will implement other options such as firebase messaging and websockets
      */
     static init = (config: SportsTalkConfig = {appId: ""}, eventHandlers?: EventHandlerConfig): ChatClient => {
-        const client = new ChatClient();
+        const client = new ChatClient(config);
         client.setConfig(config);
         if(eventHandlers) {
             client.setEventHandlers(eventHandlers);
