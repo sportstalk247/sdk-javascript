@@ -33,4 +33,4 @@ customers or contractors utilizing the SDK to implement chat or their organizati
 or service of Sportstalk, including but not limited to live chat, match chat, or a commenting api.
 
 Your right to use this software is governed by the MSA between your organization and SportsTalk 247.
-(c) Copyright 2020 Talk Labs, Inc. DBA Sportstalk247, all rights reserved.
+(c) Copyright 2022 Talk Labs, Inc. DBA Sportstalk247, all rights reserved.

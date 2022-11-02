@@ -47,7 +47,7 @@ export enum Kind {
  */
 export interface SportsTalkConfig extends ClientConfig {
     user?: User,
-
+    user_token?: string
 }
 
 export interface ChatClientConfig extends SportsTalkConfig {

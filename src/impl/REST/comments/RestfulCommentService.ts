@@ -60,8 +60,8 @@ export class RestfulCommentService implements ICommentService {
      */
     public setConfig = (config: SportsTalkConfig): SportsTalkConfig => {
         this._config = config;
-        this._apiHeaders = getUrlEncodedHeaders(this._config.apiToken)
-        this._jsonHeaders = getJSONHeaders(this._config.apiToken);
+        this._apiHeaders = getUrlEncodedHeaders(this._config.apiToken, this._config.user_token)
+        this._jsonHeaders = getJSONHeaders(this._config.apiToken, this._config.user_token);
         return config;
     }
 

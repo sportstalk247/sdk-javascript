@@ -10,6 +10,7 @@ import {ReportReason} from "./Moderation";
 export enum EventType  {
     speech= "speech",
     purge= "purge",
+    mute = "mute",
     bounce = "bounce",
     reaction= "reaction",
     replace="replace",
@@ -42,6 +43,8 @@ export interface EventHandlerConfig {
     onChatEvent?(event: EventResult):void, // not mandatory but absolutely should be set in 99% of cases.
     onGoalEvent?(event: EventResult):void,
     onAdEvent?(event: EventResult):void,
+    onBounce?(event:EventResult):void,
+    onMute?(event:EventResult): void,
     onAnnouncement?(event: EventResult):void,
     onReply?(event: EventResult):void,
     onReplace?(event: EventResult):void,

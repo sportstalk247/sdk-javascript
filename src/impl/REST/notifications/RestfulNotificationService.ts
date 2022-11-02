@@ -30,7 +30,7 @@ export class RestfulNotificationService implements INotificationService{
      */
     setConfig = (config: SportsTalkConfig) => {
         this._config = config;
-        this._jsonHeaders = getJSONHeaders(this._config.apiToken);
+        this._jsonHeaders = getJSONHeaders(this._config.apiToken, this._config.user_token);
     }
 
     listUserNotifications = (request: NotificationListRequest): Promise<NotificationListResult> => {

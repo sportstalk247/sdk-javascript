@@ -1,4 +1,4 @@
-import {ApiHeaders, ClientConfig} from "../../../models/CommonModels";
+import {ApiHeaders, ClientConfig, SportsTalkConfig} from "../../../models/CommonModels";
 import axios, {AxiosRequestConfig} from "axios";
 import {
     Conversation,
@@ -21,7 +21,7 @@ import {IConversationService} from "../../../API/comments/IConversationService";
  */
 export class RestfulConversationService implements IConversationService {
 
-    _config: ClientConfig;
+    _config: SportsTalkConfig;
     _apiHeaders: ApiHeaders;
     _jsonHeaders: ApiHeaders;
     _apiExt:string = 'comment/conversations'
@@ -30,7 +30,7 @@ export class RestfulConversationService implements IConversationService {
      * Create a new comments service
      * @param config
      */
-    constructor(config?:ClientConfig) {
+    constructor(config?:SportsTalkConfig) {
         if(config) {
             this.setConfig(config);
         }
@@ -40,10 +40,10 @@ export class RestfulConversationService implements IConversationService {
      * Set configuraiton
      * @param config
      */
-    public setConfig = (config: ClientConfig) => {
+    public setConfig = (config: SportsTalkConfig) => {
         this._config = config;
-        this._apiHeaders = getUrlEncodedHeaders(this._config.apiToken);
-        this._jsonHeaders = getJSONHeaders(this._config.apiToken);
+        this._apiHeaders = getUrlEncodedHeaders(this._config.apiToken, this._config.user_token);
+        this._jsonHeaders = getJSONHeaders(this._config.apiToken, this._config.user_token);
     }
 
     /**

@@ -134,7 +134,7 @@ export class ChatClient implements IChatClient {
      * @private
      */
     private constructor(config: SportsTalkConfig) {
-
+        return ChatClient.init(config);
     }
 
     /**

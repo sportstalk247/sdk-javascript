@@ -16,6 +16,7 @@ import {
     UserListResponse,
     UserModerationListRequest,
     UserResult,
+    UserRole,
     UserSearchType
 } from "../../../models/user/User";
 import {
@@ -48,7 +49,7 @@ export class RestfulUserService implements IUserService {
      */
     setConfig = (config: SportsTalkConfig) => {
         this._config = config;
-        this._jsonHeaders = getJSONHeaders(this._config.apiToken);
+        this._jsonHeaders = getJSONHeaders(this._config.apiToken, this._config.user_token);
     }
 
     /**
@@ -70,7 +71,8 @@ export class RestfulUserService implements IUserService {
                 handle: user.handle,
                 displayname: user.displayname,
                 pictureurl: user.pictureurl,
-                profileurl: user.profileurl
+                profileurl: user.profileurl,
+                role: user.role || UserRole.user
             }
         };
         return stRequest(config).then(response=>response.data);
