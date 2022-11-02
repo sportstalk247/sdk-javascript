@@ -37,7 +37,7 @@ export class RestfulChatModerationService implements IChatModerationService {
      */
     public setConfig(config: SportsTalkConfig) {
         this._config = Object.assign(DEFAULT_CONFIG, config);
-        this._jsonHeaders = getJSONHeaders(this._config.apiToken, this._config.user_token);
+        this._jsonHeaders = getJSONHeaders(this._config.apiToken, this._config.userToken);
     }
 
     /**

@@ -164,7 +164,7 @@ export class RestfulChatEventService implements IChatEventService {
     setConfig = (config:ChatClientConfig) => {
         this._config = Object.assign(DEFAULT_CONFIG, config);
         this._user = Object.assign(this._user, this._config.user);
-        this._apiHeaders = getUrlEncodedHeaders(this._config.apiToken, this._config.user_token);
+        this._apiHeaders = getUrlEncodedHeaders(this._config.apiToken, this._config.userToken);
         this._jsonHeaders = getJSONHeaders(this._config.apiToken);
         this._smoothEventUpdates = !!(this._config.smoothEventUpdates || this._smoothEventUpdates);
         this._maxEventBufferSize = this._config.maxEventBufferSize || this._maxEventBufferSize;

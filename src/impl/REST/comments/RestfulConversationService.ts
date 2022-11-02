@@ -42,8 +42,8 @@ export class RestfulConversationService implements IConversationService {
      */
     public setConfig = (config: SportsTalkConfig) => {
         this._config = config;
-        this._apiHeaders = getUrlEncodedHeaders(this._config.apiToken, this._config.user_token);
-        this._jsonHeaders = getJSONHeaders(this._config.apiToken, this._config.user_token);
+        this._apiHeaders = getUrlEncodedHeaders(this._config.apiToken, this._config.userToken);
+        this._jsonHeaders = getJSONHeaders(this._config.apiToken, this._config.userToken);
     }
 
     /**

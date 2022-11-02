@@ -20,7 +20,7 @@ See a simple WEB example below.  To use this, you will need to get the web sdk u
 .. code-block:: javascript
 
     // first create a client
-    const client = ChatClient.init({apiToken:'YourApiTokenHere'},  {...EventHandlerConfig});
+    const client = ChatClient.init({apiToken:'YourApiTokenHere', : 'user jwt here'},  {...EventHandlerConfig});
 
     // You can set the event handlers as part of the factory or with the setEventhandlers method.
     client.setEventHandlers({

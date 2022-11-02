@@ -28,28 +28,28 @@ export function buildAPI(config: SportsTalkConfig, ext: string, request?: Object
  * Without the token, most requests do not require CORS, however you will need to provide a token injection proxy.
  * @param apiKey
  */
-export function getUrlEncodedHeaders(apiKey?: string, user_token?: string): ApiHeaders {
+export function getUrlEncodedHeaders(apiKey?: string, userToken?: string): ApiHeaders {
     const headers  = {
       'Content-Type':FORM_ENCODED,
     }
     if(apiKey) {
         headers[API_TOKEN_HEADER] = apiKey
     }
-    if(user_token) {
-        headers[USER_TOKEN_HEADER] = user_token;
+    if(userToken) {
+        headers[USER_TOKEN_HEADER] = userToken;
     }
     return headers;
 }
 
-export function getJSONHeaders(apiKey?: string, user_token?: string): ApiHeaders {
+export function getJSONHeaders(apiKey?: string, userToken?: string): ApiHeaders {
     const headers  = {
         // 'Content-Type': APPLICATION_JSON // causes issues in browsers with cors, but not necessary for server.
     }
     if(apiKey) {
         headers[API_TOKEN_HEADER] = apiKey
     }
-    if(user_token) {
-        headers[USER_TOKEN_HEADER] = user_token;
+    if(userToken) {
+        headers[USER_TOKEN_HEADER] = userToken;
     }
     return headers;
 }

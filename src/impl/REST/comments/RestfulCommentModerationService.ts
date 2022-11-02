@@ -49,8 +49,8 @@ export class RestfulCommentModerationService implements ICommentModerationServic
      */
     public setConfig = (config: SportsTalkConfig = {}) => {
         this._config = Object.assign({}, DEFAULT_CONFIG, config);
-        this._apiHeaders = getUrlEncodedHeaders(this._config.apiToken, this._config.user_token);
-        this._jsonHeaders = getJSONHeaders(this._config.apiToken, this._config.user_token);
+        this._apiHeaders = getUrlEncodedHeaders(this._config.apiToken, this._config.userToken);
+        this._jsonHeaders = getJSONHeaders(this._config.apiToken, this._config.userToken);
     }
 
     /**
