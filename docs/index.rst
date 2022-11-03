@@ -45,6 +45,7 @@ Clients and services require a SportsTalkConfig object, which looks like so:
     {
         appId: 'yourappID-from-the-dashboard',
         apiToken: 'yourApiToken-from-the-dashboard', // NOTE: you should use a proxy to hide your token and restrict behavior to specific domains on the web.
+        userToken: 'user-specific-jwt', // OPTIONAL: this JWT must be generated using a shared secret on your server. It provides a higher level of security.
         endpoint: 'custom-endpoint' // OPTIONAL Use this to set a proxy on the web, or if you have an on-prem install of sportstalk at a custom location.
     }
 
