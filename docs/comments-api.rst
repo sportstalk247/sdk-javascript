@@ -11,14 +11,14 @@ If you are looking to build a custom conversation, you will the need the `Commen
 .. code-block:: typescript
 
     import { CommentClient } from 'sportstalk-sdk'
-    const commentClient = CommentClient.init({appId:..., apiToken:...});
+    const commentClient = CommentClient.init({appId:..., apiToken:..., userToken: 'user jwt here',  tokenRefreshURL: 'https://yourRefreshUrl'});
 
 **Using Require:**
 
 .. code-block:: javascript
 
     const sdk =  require('sportstalk-sdk')
-    const commentClient = sdk.CommentClient.init({appId:..., apiToken:...});
+    const commentClient = sdk.CommentClient.init({appId:..., CommentClient.init({appId:..., apiToken:..., userToken: 'user jwt here',  tokenRefreshURL: 'https://yourRefreshUrl'});
 
 
 Creating a user
@@ -29,7 +29,7 @@ To create a user, you can use either the chat or comment clients, or a UserServi
 .. code-block:: javascript
 
     const commentClient = sdk.CommentClient.init({...});
-    commentClient.createOrUpdateUser({userid: "definedByYourSystem-MustBeUnique", handle: "Must-Be-Unique-String"})
+    commentClient.createOrUpdateUser({userid: "definedByYourSystem-MustBeUnique", userToken: 'yourUserJWT', handle: "Must-Be-Unique-String"})
         .then(function(user) {
             // user has been created.
         }).catch(function(error) {
@@ -70,7 +70,7 @@ Once you have a user, joining a conversation is simple:
 
     async function showJoinConversation() {
 
-        const user = await commentClient.createOrUpdateUser({userid: "definedByYourSystem-MustBeUnique", handle: "Must-Be-Unique-String"})
+        const user = await commentClient.createOrUpdateUser({userid: "definedByYourSystem-MustBeUnique", handle: "Must-Be-Unique-String", userToken:'User_jwt_token'})
         // this will automatically set the user, but you can also set the user manually
         commentClient.setUser(user);
 

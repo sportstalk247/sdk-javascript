@@ -20,7 +20,7 @@ See a simple WEB example below.  To use this, you will need to get the web sdk u
 .. code-block:: javascript
 
     // first create a client
-    const client = ChatClient.init({apiToken:'YourApiTokenHere', : 'user jwt here'},  {...EventHandlerConfig});
+    const client = ChatClient.init({apiToken:'YourApiTokenHere', userToken: 'user jwt here. Can also be set as part of setUser',  tokenRefreshURL: 'https://yourRefreshUrl'},  {...EventHandlerConfig});
 
     // You can set the event handlers as part of the factory or with the setEventhandlers method.
     client.setEventHandlers({
@@ -37,7 +37,8 @@ See a simple WEB example below.  To use this, you will need to get the web sdk u
     // Set the user, if logged in.
     client.setUser({
       userid:UserId,
-      handle:Handle
+      handle:Handle,
+      userToken: 'User_jwt_token'
     });
 
     // List rooms, join a room, and then start talking!
@@ -192,7 +193,7 @@ To create a user, you can use either the chat or comment clients, or a :ref:`Use
 .. code-block:: javascript
 
     const chatClient = sdk.ChatClient.init({...});
-    chatClient.createOrUpdateUser({userid: "definedByYourSystem-MustBeUnique", handle: "Must-Be-Unique-String"})
+    chatClient.createOrUpdateUser({userid: "definedByYourSystem-MustBeUnique", handle: "Must-Be-Unique-String", userToken:"userJWTToken"})
         .then(function(user) {
             // user has been created.
         }).catch(function(error) {
@@ -283,7 +284,7 @@ To join a room as an authenticated user, set the current user for the client.  T
 
 .. code-block:: javascript
 
-    chatClient.setUser({userid: 'a-user-id', handle:'user-handle'});
+    chatClient.setUser({userid: 'a-user-id', handle:'user-handle', userToken:'User_jwt_token'});
     chatClient.joinRoom('a-room-id').then(function(roomDetailsAndUpdates){
         // the response will include room details and also the latest chat events.
     })
@@ -331,7 +332,7 @@ When you want to send a message, you should first set a user and then use
 
 .. code-block:: javascript
 
-    chatClient.setUser({userid: 'a-user-id', handle:'user-handle'});
+    chatClient.setUser({userid: 'a-user-id', handle:'user-handle', userToken:'User_jwt_token'});
     chatClient.executeChatCommand('A simple chat message').then(function(serverResponse){
         // The result will be the raw server response in JSON to 'executeChatCommand'
     })
@@ -342,7 +343,7 @@ Send a reply
 
 .. code-block:: javascript
 
-    chatClient.setUser({userid: 'a-user-id', handle:'user-handle'});
+    chatClient.setUser({userid: 'a-user-id', handle:'user-handle', userToken:'User_jwt_token'});
     chatClient.sendQuotedReply('A reply', originalMessageIdOrObject).then(function(serverResponse){
         // The result will be the raw server response in JSON.
     })
@@ -352,7 +353,7 @@ Send a Reaction
 
 .. code-block:: javascript
 
-    chatClient.setUser({userid: 'a-user-id', handle:'user-handle'});
+    chatClient.setUser({userid: 'a-user-id', handle:'user-handle', userToken:'User_jwt_token'});
     chatClient.reactToEvent('like', originalMessageIdOrObject).then(function(serverResponse){
         // The result will be the raw server response in JSON.
     })
