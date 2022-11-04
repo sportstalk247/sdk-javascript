@@ -47,10 +47,13 @@ Clients and services require a SportsTalkConfig object, which looks like so:
         apiToken: 'yourApiToken-from-the-dashboard', // NOTE: you should use a proxy to hide your token and restrict behavior to specific domains on the web.
         userToken: 'user-specific-jwt', // OPTIONAL: this JWT must be generated using a shared secret on your server. It provides a higher level of security.
         endpoint: 'custom-endpoint' // OPTIONAL Use this to set a proxy on the web, or if you have an on-prem install of sportstalk at a custom location.
+        userTokenRefreshEndpoint: 'http://your-refresh-endpoint' // OPTIONAL used to refresh a user token if it's going to expire.
     }
 
 
 If you are using a proxy, the only mandatory data for a SportstalkConfig object is the `appId` and `endpoint`. Otherwise you will need to provide the `appId` and `apiToken`
+We generally suggest creating a userToken JWT containing the `userid` with your SHARED_SECRET.  If you provide a userToken, you may also provide a refresh endpoint. The SDK will call this endpoint if the userToken is within 10 seconds of expiration (with exp claim), in order to refresh the JWT.
+Using userToken JWT and refresh endpoint is the most secure way of integrating with SportsTalk 24/7.
 
 Using the SDK on the Web
 ------------------------
