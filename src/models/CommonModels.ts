@@ -48,7 +48,7 @@ export enum Kind {
 export interface SportsTalkConfig extends ClientConfig {
     user?: User,
     userToken?: string
-    tokenRefreshURL?: string,
+    userTokenRefreshFunction?: string,
 }
 
 export interface ChatClientConfig extends SportsTalkConfig {
