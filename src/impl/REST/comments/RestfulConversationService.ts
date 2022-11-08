@@ -1,4 +1,4 @@
-import {ApiHeaders, ClientConfig, SportsTalkConfig} from "../../../models/CommonModels";
+import {ApiHeaders, ClientConfig, SportsTalkConfig, UserTokenRefreshFunction} from "../../../models/CommonModels";
 import axios, {AxiosRequestConfig} from "axios";
 import {
     Conversation,
@@ -44,6 +44,24 @@ export class RestfulConversationService implements IConversationService {
         this._config = config;
         this._apiHeaders = getUrlEncodedHeaders(this._config.apiToken, this._config.userToken);
         this._jsonHeaders = getJSONHeaders(this._config.apiToken, this._config.userToken);
+    }
+
+    /**
+     * Sets the user's JWT access token
+     * @param userToken
+     */
+    public setUserToken = (userToken:string) => {
+        this._config.userToken = userToken;
+        this.setConfig(this._config);
+    }
+
+    /**
+     * Sets a refreshFunction for the user's JWT token.
+     * @param refreshFunction
+     */
+    public setUserTokenRefreshFunction = (refreshFunction: UserTokenRefreshFunction) => {
+        this._config.userTokenRefreshFunction = refreshFunction;
+        this.setConfig(this._config);
     }
 
     /**

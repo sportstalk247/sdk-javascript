@@ -21,13 +21,14 @@ import {RestfulUserService} from "./REST/users/RestfulUserService";
 import {
     Reaction,
     SportsTalkConfig,
+    UserTokenRefreshFunction,
     MessageResult,
     RestApiResult,
     ListRequest,
     ErrorResult
 } from "../models/CommonModels";
 import {MISSING_ROOM, THROTTLE_ERROR} from "./constants/messages";
-import {forceObjKeyOrString} from "./utils";
+import {forceObjKeyOrString, CallBackDelegate} from "./utils";
 import {RestfulNotificationService} from "./REST/notifications/RestfulNotificationService";
 import {RestfulChatModerationService} from "./REST/chat/RestfulChatModerationService";
 import {IChatModerationService} from "../API/chat/IChatModerationServive";
@@ -62,6 +63,7 @@ export class ChatClient implements IChatClient {
      * @private
      */
     private _config: SportsTalkConfig = {appId: ""};
+    private _callBackDelegate: CallBackDelegate;
     /**
      * Holds the current user for the client.
      * @private
@@ -133,8 +135,7 @@ export class ChatClient implements IChatClient {
      * Creates a chat client and detects the current domain.
      * @private
      */
-    private constructor(config: SportsTalkConfig) {
-        return ChatClient.init(config);
+    private constructor() {
     }
 
     /**
@@ -144,12 +145,42 @@ export class ChatClient implements IChatClient {
      * @return SportsTalkClient.  Currently only a REST based client is supported.  Future SDK versions will implement other options such as firebase messaging and websockets
      */
     static init = (config: SportsTalkConfig = {appId: ""}, eventHandlers?: EventHandlerConfig): ChatClient => {
-        const client = new ChatClient(config);
+        const client = new ChatClient();
         client.setConfig(config);
         if(eventHandlers) {
             client.setEventHandlers(eventHandlers);
         }
         return client;
+    }
+
+    setUserTokenRefreshFunction = (userTokenRefreshFunction: UserTokenRefreshFunction) => {
+        if(this._callBackDelegate) {
+            this._callBackDelegate.setCallback(userTokenRefreshFunction);
+        } else {
+            this._callBackDelegate = new CallBackDelegate(this, userTokenRefreshFunction);
+        }
+        this._config.userTokenRefreshFunction = this._callBackDelegate.callback;
+        this.setConfig(this._config);
+    }
+
+    setUserToken = (userToken: string) => {
+        this._config.userToken = userToken;
+        this.setConfig(this._config);
+    }
+    getUserToken = async ():Promise<string> => {
+        return this._config.userToken || '';
+    }
+
+    refreshUserToken = async (): Promise<string> => {
+        if(!this._config.userToken) {
+            throw new Error('You must set a user token before you can refresh it.  Also ensure that you set a refresh function');
+        }
+        if(!this._config.userTokenRefreshFunction) {
+            throw new Error('You must set a refresh function in order to refresh a userToken. Also ensure that the user token JWT is properly set.')
+        }
+        const newToken = await this._config.userTokenRefreshFunction(this._config.userToken);
+        this.setUserToken(newToken);
+        return newToken;
     }
 
     /**
@@ -158,7 +189,17 @@ export class ChatClient implements IChatClient {
      */
     setConfig = (config:SportsTalkConfig) => {
         this._config = Object.assign(DEFAULT_CONFIG, config);
+        if(this._config.userTokenRefreshFunction) {
+            if(!this._callBackDelegate) {
+                this._callBackDelegate = new CallBackDelegate(this, this._config.userTokenRefreshFunction);
 
+            } else {
+                if(this._config.userTokenRefreshFunction != this._config.userTokenRefreshFunction) {
+                    this._callBackDelegate.setCallback(this._config.userTokenRefreshFunction);
+                }
+            }
+            this._config.userTokenRefreshFunction = this._callBackDelegate.callback;
+        }
         if(this._eventService) {
             this._eventService.setConfig(this._config);
         }
@@ -448,6 +489,9 @@ export class ChatClient implements IChatClient {
         return false;
     }
 
+    getUserService = () => {
+        return this._userService;
+    }
     getUserEffects = async(user?: User | string, forceRefresh?: boolean, room?: ChatRoomResult | string): Promise<UserEffectFlags> =>{
         let chatroom: ChatRoomResult | string | null = room || this._currentRoom || null;
         let finalUser: User | string = user || this._user

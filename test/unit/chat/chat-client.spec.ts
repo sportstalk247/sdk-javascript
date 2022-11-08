@@ -41,5 +41,6 @@ describe("Chat Client", function(){
         isLiked = client.messageIsReactedTo(event, Reaction.like);
         expect(isLiked).to.be.false
     })
+    it('Can set a userToken callback')
 
 })

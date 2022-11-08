@@ -2,7 +2,8 @@ import {
     Reaction,
     SportsTalkConfig,
     RestApiResult,
-    ListRequest
+    UserTokenRefreshFunction,
+    ListRequest,
 } from "../models/CommonModels";
 import {
     Conversation,
@@ -21,7 +22,7 @@ import {RestfulCommentService} from "./REST/comments/RestfulCommentService";
 import {RestfulConversationService} from "./REST/comments/RestfulConversationService";
 import {DEFAULT_CONFIG} from "./constants/api";
 import {RestfulUserService} from "./REST/users/RestfulUserService";
-import {forceObjKeyOrString} from "./utils";
+import {forceObjKeyOrString, CallBackDelegate} from "./utils";
 import {ICommentService} from "../API/comments/ICommentService";
 import {IConversationService} from "../API/comments/IConversationService";
 import {ICommentingClient} from "../API/comments/ICommentingClient";
@@ -43,6 +44,13 @@ export class CommentClient implements ICommentingClient {
      * @private
      */
     private _config: SportsTalkConfig
+
+    /**
+     * Used to create a holder for callbacks that will propagate to sub-modules.
+     * @private
+     */
+    private _callbackDelegate: CallBackDelegate;
+
     /**
      * Holds the ConversationService powering the client
      * @private
@@ -103,12 +111,63 @@ export class CommentClient implements ICommentingClient {
         return this._config;
     }
 
+
+    /**
+     * Gets the user's access token. If unset returns an empty string.
+     */
+    public getUserToken = async ():Promise<string> => {
+        return this._config.userToken || '';
+    }
+
+    /**
+     * Sets the user's JWT access token
+     * @param userToken
+     */
+    public setUserToken = (userToken:string) => {
+        this._config.userToken = userToken;
+        this.setConfig(this._config);
+    }
+
+    /**
+     * Sets a refreshFunction for the user's JWT token.
+     * @param refreshFunction
+     */
+    setUserTokenRefreshFunction = (userTokenRefreshFunction: UserTokenRefreshFunction) => {
+        if(this._callbackDelegate) {
+            this._callbackDelegate.setCallback(userTokenRefreshFunction);
+        } else {
+            this._callbackDelegate = new CallBackDelegate(this, userTokenRefreshFunction);
+        }
+        this._config.userTokenRefreshFunction = this._callbackDelegate.callback;
+        this.setConfig(this._config);
+    }
+
+    /**
+     * Refreshes the user's access token.  You MUST have already set a user access token AND registered a refresh function.
+     * If the refresh function fails to refresh the token, there is no token, or there is an error, this will not refresh the token and throws an error.
+     */
+    refreshUserToken = async (): Promise<string> => {
+        if(!this._config.userToken) {
+            throw new Error('You must set a user token before you can refresh it.  Also ensure that you set a refresh function');
+        }
+        if(!this._config.userTokenRefreshFunction) {
+            throw new Error('You must set a refresh function in order to refresh a userToken. Also ensure that the user token JWT is properly set.')
+        }
+        const newToken = await this._config.userTokenRefreshFunction(this._config.userToken);
+        this.setUserToken(newToken);
+        return newToken;
+    }
+
     /**
      * Set the current user for commands
      * @param user
      */
-    public setUser = (user:User) => {
+    public setUser = (user:User, userToken?: string) => {
         this._user = user;
+        if(userToken) {
+            this._config.userToken = userToken
+            this.setConfig(this._config);
+        }
     }
 
     /**

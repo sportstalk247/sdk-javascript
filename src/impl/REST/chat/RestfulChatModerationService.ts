@@ -25,7 +25,9 @@ export class RestfulChatModerationService implements IChatModerationService {
 
     private _config: SportsTalkConfig = {appId: ""};
     private _jsonHeaders;
+    private _refreshFn;
     private _apiExt:string = 'chat/moderation/queues/events';
+    private _handleRefresh = ()=>{}
 
     constructor(config: SportsTalkConfig) {
         this.setConfig(config);
@@ -37,7 +39,11 @@ export class RestfulChatModerationService implements IChatModerationService {
      */
     public setConfig(config: SportsTalkConfig) {
         this._config = Object.assign(DEFAULT_CONFIG, config);
+        this._refreshFn = config.userTokenRefreshFunction;
         this._jsonHeaders = getJSONHeaders(this._config.apiToken, this._config.userToken);
+        if(this._config.userTokenRefreshFunction) {
+            
+        }
     }
 
     /**
@@ -53,7 +59,8 @@ export class RestfulChatModerationService implements IChatModerationService {
             url,
             headers: this._jsonHeaders
         }
-        return stRequest(config).then(result => {
+        
+        return stRequest(config, this._refreshFn).then(result => {
             return result.data
         });
     }

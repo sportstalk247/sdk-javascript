@@ -4,6 +4,7 @@ import {DELETE, GET, POST, PUT} from "../../constants/api";
 import {buildAPI, forceObjKeyOrString, formify, getJSONHeaders} from "../../utils";
 import {
     ListRequest,
+    UserTokenRefreshFunction,
     SportsTalkConfig
 } from "../../../models/CommonModels";
 import {EventType} from '../../../models/ChatModels';
@@ -50,6 +51,24 @@ export class RestfulUserService implements IUserService {
     setConfig = (config: SportsTalkConfig) => {
         this._config = config;
         this._jsonHeaders = getJSONHeaders(this._config.apiToken, this._config.userToken);
+    }
+
+    /**
+     * Sets the user's JWT access token
+     * @param userToken
+     */
+    public setUserToken = (userToken:string) => {
+        this._config.userToken = userToken;
+        this.setConfig(this._config);
+    }
+
+    /**
+     * Sets a refreshFunction for the user's JWT token.
+     * @param refreshFunction
+     */
+    public setUserTokenRefreshFunction = (refreshFunction: UserTokenRefreshFunction) => {
+        this._config.userTokenRefreshFunction = refreshFunction;
+        this.setConfig(this._config);
     }
 
     /**

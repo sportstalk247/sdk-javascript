@@ -1,7 +1,7 @@
 import * as chai from 'chai';
 import * as dotenv from 'dotenv';
 import {SportsTalkConfig} from "../../../src/models/CommonModels";
-import {Conversation, Comment, User, ModerationType} from "../../../src/models/CommentsModels";
+import {Conversation, Comment, FullComment, User, ModerationType} from "../../../src/models/CommentsModels";
 import {RestfulConversationService} from "../../../src/impl/REST/comments/RestfulConversationService";
 import {RestfulCommentService} from "../../../src/impl/REST/comments/RestfulCommentService";
 
@@ -27,7 +27,7 @@ const sampleUser:User = {
     handle: 'handle1'
 }
 
-let commentList:Comment[] = [
+let commentList:FullComment[] = [
     {
         userid: "myuserid",
         handle: "userhandle",

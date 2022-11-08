@@ -1,6 +1,7 @@
 import {
     ListRequest,
-    SportsTalkConfig
+    SportsTalkConfig,
+    UserTokenRefreshFunction
 } from "../models/CommonModels";
 import {ISportsTalkConfigurable} from "../API/Configuration";
 import {RestfulUserService} from "./REST/users/RestfulUserService";
@@ -31,6 +32,24 @@ export class UserClient implements ISportsTalkConfigurable, IUserService {
     public setConfig(config:SportsTalkConfig) {
         this._config = Object.assign(DEFAULT_CONFIG, config);
         this._userService = new RestfulUserService(this._config);
+    }
+
+    /**
+     * Sets the user's JWT access token
+     * @param userToken
+     */
+    public setUserToken = (userToken:string) => {
+        this._config.userToken = userToken;
+        this.setConfig(this._config);
+    }
+
+    /**
+     * Sets a refreshFunction for the user's JWT token.
+     * @param refreshFunction
+     */
+    public setUserTokenRefreshFunction = (refreshFunction: UserTokenRefreshFunction) => {
+        this._config.userTokenRefreshFunction = refreshFunction;
+        this.setConfig(this._config);
     }
 
     private constructor() {}

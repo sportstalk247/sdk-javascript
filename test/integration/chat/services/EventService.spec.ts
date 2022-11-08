@@ -7,9 +7,18 @@ import {Reaction, SportsTalkConfig} from "../../../../src/models/CommonModels";
 import {RestfulChatEventService} from "../../../../src/impl/REST/chat/RestfulChatEventService";
 dotenv.config();
 
-
+const USER_TOKEN:string = process.env.USER_JWT || '';
+const REFRESHED:string = "refreshed"
 const { expect } = chai;
-const config: SportsTalkConfig = {apiToken:process.env.TEST_KEY, appId: process.env.TEST_APP_ID || "", endpoint: process.env.TEST_ENDPOINT};
+const config: SportsTalkConfig = {apiToken:process.env.TEST_KEY,
+    appId: process.env.TEST_APP_ID || "",
+    endpoint: process.env.TEST_ENDPOINT,
+    userToken: USER_TOKEN,
+    userTokenRefreshFunction: async (jwt) => {
+        console.log("Refreshing token");
+        return REFRESHED
+    }
+};
 const delay = function(timer) {
     return new Promise(function(accept, reject){
         const timeout = setTimeout(accept, timer)
@@ -17,11 +26,12 @@ const delay = function(timer) {
 }
 let chatMessage;
 
-describe("Event Service", ()=>{
+describe("Event Service", () => {
     let reactionTriggered = false;
     let replyTriggered = false;
     // @ts-ignore
     const client = <ChatClient> ChatClient.init(config)
+    const US = client.getUserService();
     const EM = client.getEventService();
     const RM = client.getRoomService();
     const onChatStart = sinon.fake();
@@ -42,6 +52,22 @@ describe("Event Service", ()=>{
         onReaction
     });
     let room;
+
+    describe("User token handling", function() {
+        it("Refresh function is delegated, refreshing any token refreshes all", async function () {
+            client.setUserToken(USER_TOKEN);
+            let userToken = await client.getUserToken();
+            expect(USER_TOKEN).to.be.equal(userToken);
+            await EM.refreshUserToken();
+            let updatedToken = await client.getUserToken();
+            let emToken = await EM.getUserToken()
+            expect(REFRESHED).to.be.equal(emToken)
+            expect(emToken).to.be.equal(updatedToken);
+            client.setUserToken(USER_TOKEN);
+            emToken = await EM.getUserToken()
+            expect(emToken).to.be.equal(USER_TOKEN)
+        })
+    })
 
     describe("Triggers callbacks", function() {
         this.timeout(5000);

@@ -58,4 +58,6 @@ export interface ErrorHandlerFunction<T> {
 }
 
 export const stRequest = getRequestLibrary();
-
+export const bindTokenRefresh = async (target, refreshTokenFn) => {
+    const refreshToken = target.getUserToken? target.getUserToken() : target._userToken || '';
+}

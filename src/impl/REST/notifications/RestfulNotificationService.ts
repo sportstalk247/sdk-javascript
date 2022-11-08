@@ -1,5 +1,6 @@
 import {
-    SportsTalkConfig
+    SportsTalkConfig,
+    UserTokenRefreshFunction
 } from "../../../models/CommonModels";
 import {buildAPI, forceObjKeyOrString, formify, getJSONHeaders} from "../../utils";
 import {EventType} from "../../../models/ChatModels";
@@ -24,6 +25,7 @@ export class RestfulNotificationService implements INotificationService{
         this.setConfig(config);
     }
 
+
     /**
      * Sets the config
      * @param config
@@ -31,6 +33,24 @@ export class RestfulNotificationService implements INotificationService{
     setConfig = (config: SportsTalkConfig) => {
         this._config = config;
         this._jsonHeaders = getJSONHeaders(this._config.apiToken, this._config.userToken);
+    }
+
+    /**
+     * Sets the user's JWT access token
+     * @param userToken
+     */
+    public setUserToken = (userToken:string) => {
+        this._config.userToken = userToken;
+        this.setConfig(this._config);
+    }
+
+    /**
+     * Sets a refreshFunction for the user's JWT token.
+     * @param refreshFunction
+     */
+    public setUserTokenRefreshFunction = (refreshFunction: UserTokenRefreshFunction) => {
+        this._config.userTokenRefreshFunction = refreshFunction;
+        this.setConfig(this._config);
     }
 
     listUserNotifications = (request: NotificationListRequest): Promise<NotificationListResult> => {
@@ -90,7 +110,6 @@ export class RestfulNotificationService implements INotificationService{
     }
 
     setNotificationReadStatusByChatEventId = (chateventid: string, userid: string, read:boolean=true): Promise<Notification> => {
-
         const finalRequest:NotificationReadRequest = {
             chateventid,
             userid,

@@ -1,6 +1,7 @@
 import {API_TOKEN_HEADER, USER_TOKEN_HEADER, APPLICATION_JSON, DEFAULT_CONFIG, FORM_ENCODED} from "./constants/api";
-import {ApiHeaders, ListRequest, SportsTalkConfig} from "../models/CommonModels";
+import {ApiHeaders, ListRequest, SportsTalkConfig, UserTokenRefreshFunction} from "../models/CommonModels";
 import {ValidationError} from "./errors";
+import {IUserConfigurable} from "../API/Configuration";
 
 export function formify(data) {
     const formBody: Array<String> = []
@@ -60,4 +61,25 @@ export function forceObjKeyOrString(obj, key = 'id'): string{
         return val;
     }
     throw new ValidationError(`Missing required string property ${key}`);
+}
+
+
+export class CallBackDelegate {
+    _func: UserTokenRefreshFunction
+    _target: IUserConfigurable
+
+    constructor(target: IUserConfigurable, func:UserTokenRefreshFunction) {
+        this._target=target;
+        this._func=func;
+    }
+
+    callback = async (jwt:string):Promise<string> => {
+        const token = await this._func.call(this._target, jwt)
+        this._target.setUserToken(token);
+        return token;
+    }
+
+    setCallback = (func:UserTokenRefreshFunction) => {
+        this._func = func;
+    }
 }

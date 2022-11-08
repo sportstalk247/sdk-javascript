@@ -3,6 +3,7 @@ import {
     Reaction,
     SportsTalkConfig,
     ClientConfig,
+    UserTokenRefreshFunction,
     Kind
 } from "../../../models/CommonModels";
 import {
@@ -63,6 +64,24 @@ export class RestfulCommentService implements ICommentService {
         this._apiHeaders = getUrlEncodedHeaders(this._config.apiToken, this._config.userToken)
         this._jsonHeaders = getJSONHeaders(this._config.apiToken, this._config.userToken);
         return config;
+    }
+
+    /**
+     * Sets the user's JWT access token
+     * @param userToken
+     */
+    public setUserToken = (userToken:string) => {
+        this._config.userToken = userToken;
+        this.setConfig(this._config);
+    }
+
+    /**
+     * Sets a refreshFunction for the user's JWT token.
+     * @param refreshFunction
+     */
+    public setUserTokenRefreshFunction = (refreshFunction: UserTokenRefreshFunction) => {
+        this._config.userTokenRefreshFunction = refreshFunction;
+        this.setConfig(this._config);
     }
 
     /**

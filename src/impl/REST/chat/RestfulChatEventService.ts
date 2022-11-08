@@ -21,6 +21,7 @@ import {
     RestApiResult,
     Reaction,
     SportsTalkConfig,
+    UserTokenRefreshFunction,
     MessageResult, ErrorResult, ChatClientConfig
 } from "../../../models/CommonModels";
 import {AxiosRequestConfig} from "axios";
@@ -39,7 +40,7 @@ const INVALID_POLL_FREQUENCY = "Invalid poll _pollFrequency.  Must be between 25
  * @class
  */
 export class RestfulChatEventService implements IChatEventService {
-
+    private
     private _config: ChatClientConfig = {appId: ""};
     private _polling: any; // holds the timer reference.
     private _apiHeaders = {} // holds the API headers
@@ -157,6 +158,31 @@ export class RestfulChatEventService implements IChatEventService {
         return this._user;
     }
 
+    setUserToken = (token:string) => {
+        this._config.userToken = token;
+        this.setConfig(this._config);
+    }
+
+    getUserToken = async () => {
+        return this._config.userToken || "";
+    }
+
+    setUserTokenRefreshFunction = (refreshFunction:UserTokenRefreshFunction) => {
+        this._config.userTokenRefreshFunction=refreshFunction;
+    }
+
+    refreshUserToken = async (): Promise<string> => {
+        if(!this._config.userToken) {
+            throw new Error('You must set a user token before you can refresh it.  Also ensure that you set a refresh function');
+        }
+        if(!this._config.userTokenRefreshFunction) {
+            throw new Error('You must set a refresh function in order to refresh a userToken. Also ensure that the user token JWT is properly set.')
+        }
+        const newToken = await this._config.userTokenRefreshFunction(this._config.userToken);
+        this.setUserToken(newToken);
+        return newToken;
+    }
+
     /**
      * Set the config
      * @param config
@@ -165,7 +191,7 @@ export class RestfulChatEventService implements IChatEventService {
         this._config = Object.assign(DEFAULT_CONFIG, config);
         this._user = Object.assign(this._user, this._config.user);
         this._apiHeaders = getUrlEncodedHeaders(this._config.apiToken, this._config.userToken);
-        this._jsonHeaders = getJSONHeaders(this._config.apiToken);
+        this._jsonHeaders = getJSONHeaders(this._config.apiToken, this._config.userToken);
         this._smoothEventUpdates = !!(this._config.smoothEventUpdates || this._smoothEventUpdates);
         this._maxEventBufferSize = this._config.maxEventBufferSize || this._maxEventBufferSize;
         try {

@@ -1,9 +1,11 @@
 import {User} from "./user/User";
-
 export interface ClientConfig {
     appId?: string,
     apiToken?: string,
     endpoint?: string,
+}
+export interface UserTokenRefreshFunction {
+    (token:string): Promise<string>
 }
 
 export interface ApiHeaders {
@@ -48,7 +50,7 @@ export enum Kind {
 export interface SportsTalkConfig extends ClientConfig {
     user?: User,
     userToken?: string
-    userTokenRefreshFunction?: string,
+    userTokenRefreshFunction?: UserTokenRefreshFunction,
 }
 
 export interface ChatClientConfig extends SportsTalkConfig {

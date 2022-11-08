@@ -1,4 +1,4 @@
-import {ApiHeaders, RestApiResult, SportsTalkConfig} from "../../../models/CommonModels";
+import {ApiHeaders, RestApiResult, SportsTalkConfig, UserTokenRefreshFunction} from "../../../models/CommonModels";
 import {AxiosRequestConfig} from "axios";
 import {stRequest} from '../../network';
 import {Comment, CommentListResponse, CommentResult} from "../../../models/CommentsModels";
@@ -51,6 +51,24 @@ export class RestfulCommentModerationService implements ICommentModerationServic
         this._config = Object.assign({}, DEFAULT_CONFIG, config);
         this._apiHeaders = getUrlEncodedHeaders(this._config.apiToken, this._config.userToken);
         this._jsonHeaders = getJSONHeaders(this._config.apiToken, this._config.userToken);
+    }
+
+    /**
+     * Sets the user's JWT access token
+     * @param userToken
+     */
+    public setUserToken = (userToken:string) => {
+        this._config.userToken = userToken;
+        this.setConfig(this._config);
+    }
+
+    /**
+     * Sets a refreshFunction for the user's JWT token.
+     * @param refreshFunction
+     */
+    public setUserTokenRefreshFunction = (refreshFunction: UserTokenRefreshFunction) => {
+        this._config.userTokenRefreshFunction = refreshFunction;
+        this.setConfig(this._config);
     }
 
     /**
