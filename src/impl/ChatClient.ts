@@ -139,7 +139,7 @@ export class ChatClient implements IChatClient {
     }
 
     getTokenExp(): number {
-        throw new Error("Method not implemented.");
+        return 0;
     }
 
     /**

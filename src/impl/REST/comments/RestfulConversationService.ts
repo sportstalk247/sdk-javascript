@@ -50,7 +50,7 @@ export class RestfulConversationService implements IConversationService, IUserCo
        return '';
     }
     getTokenExp(): number {
-        throw new Error("Method not implemented.");
+        return 0;
     }
 
     public setUser = (user: User) => {

@@ -104,7 +104,7 @@ export class CommentClient implements ICommentingClient {
     private constructor() {}
 
     getTokenExp(): number {
-        throw new Error("Method not implemented.");
+       return 0;
     }
 
     /**
