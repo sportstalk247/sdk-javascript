@@ -16,7 +16,7 @@ import {DEFAULT_CONFIG, DELETE, GET, POST, PUT} from "../../constants/api";
 import {buildAPI, forceObjKeyOrString, getJSONHeaders, getUrlEncodedHeaders} from "../../utils";
 import {SettingsError} from "../../errors";
 import {NO_HANDLER_SET, NO_ROOM_SET, REQUIRE_ROOM_ID} from "../../constants/messages";
-import {stRequest} from '../../network'
+import {stRequest, NetworkRequest, bindJWTUpdates} from '../../network'
 import {
     RestApiResult,
     Reaction,
@@ -55,6 +55,8 @@ export class RestfulChatEventService implements IChatEventService {
     // Holds a set of ignored userIDs.
     private _ignoreList: Set<string> = new Set();
     private _smoothEventUpdates: boolean;
+    private _tokenExp: number;
+    private request: NetworkRequest = bindJWTUpdates(this);
 
     private _user: User = {userid: "", handle: ""}; // current user.
 
@@ -76,7 +78,7 @@ export class RestfulChatEventService implements IChatEventService {
 
     // Holds the size of the event buffer we will accept before displaying everything in order to catch up.
     private _maxEventBufferSize:number = 30;
-
+    private NetworkRequest:NetworkRequest = bindJWTUpdates(this);
     /**
      * How often to poll for updates. can be set by ENV variable of SPORTSTALK_POLL_FREQUENCY on the server side.
      * Can also be set with setUpdateSpeed()
@@ -148,6 +150,10 @@ export class RestfulChatEventService implements IChatEventService {
     setUser = (user: User) => {
         this._config.user = Object.assign(this._user, user);
         this._user = this._config.user;
+    }
+
+    getTokenExp = ()=>{
+        return this._tokenExp;
     }
 
     /**

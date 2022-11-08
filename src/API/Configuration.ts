@@ -35,4 +35,5 @@ export interface IUserConfigurable {
     getUserToken(): Promise<string>;
     setUserTokenRefreshFunction(userRefreshFunction: UserTokenRefreshFunction): void;
     refreshUserToken(): Promise<string>;
+    getTokenExp(): number;
 }

@@ -4,13 +4,14 @@ import {
     Conversation,
     ConversationResponse,
     ConversationDeletionResponse,
-    ConversationRequest, ConversationListResponse
+    ConversationRequest, ConversationListResponse, User
 } from "../../../models/CommentsModels";
 import {GET, POST, DELETE} from "../../constants/api";
 import {getUrlEncodedHeaders, getJSONHeaders, buildAPI, formify} from "../../utils";
 import {getUrlConversationId} from "./ConversationUtils";
-import {stRequest} from "../../network";
+import {bindJWTUpdates, NetworkRequest, stRequest} from "../../network";
 import {IConversationService} from "../../../API/comments/IConversationService";
+import { IUserConfigurable } from "../../../API/Configuration";
 
 /**
  * This is the class that governs the lifecycle of conversations.
@@ -19,13 +20,13 @@ import {IConversationService} from "../../../API/comments/IConversationService";
  * You should ensure that ALL operations that return promises have a catch block or handle errors in some way.
  * @class
  */
-export class RestfulConversationService implements IConversationService {
+export class RestfulConversationService implements IConversationService, IUserConfigurable {
 
     _config: SportsTalkConfig;
     _apiHeaders: ApiHeaders;
     _jsonHeaders: ApiHeaders;
     _apiExt:string = 'comment/conversations'
-
+    private request: NetworkRequest = bindJWTUpdates(this);
     /**
      * Create a new comments service
      * @param config
@@ -36,6 +37,25 @@ export class RestfulConversationService implements IConversationService {
         }
     }
 
+    getCurrentUser = (): User | null | undefined => {
+       return this._config.user
+    }
+    getUserToken = async (): Promise<string> => {
+       return this._config.userToken || ''
+    }
+    refreshUserToken = async (): Promise<string> => {
+       if(this._config.userTokenRefreshFunction) {
+           return this._config.userTokenRefreshFunction(this._config.userToken || '');
+       }
+       return '';
+    }
+    getTokenExp(): number {
+        throw new Error("Method not implemented.");
+    }
+
+    public setUser = (user: User) => {
+        this._config.user = user;
+    }
     /**
      * Set configuraiton
      * @param config
@@ -64,6 +84,8 @@ export class RestfulConversationService implements IConversationService {
         this.setConfig(this._config);
     }
 
+
+
     /**
      * Create a comments
      * @param settings
@@ -75,7 +97,7 @@ export class RestfulConversationService implements IConversationService {
             headers: this._jsonHeaders,
             data: settings,
         };
-        return stRequest(config).then(result=>{
+        return this.request(config).then(result=>{
            return result.data
         });
     }
@@ -92,7 +114,7 @@ export class RestfulConversationService implements IConversationService {
             url: buildAPI(this._config, `${this._apiExt}/${id}`),
             headers: this._jsonHeaders,
         }
-        return stRequest(config).then(result=>{
+        return this.request(config).then(result=>{
             return result.data
         });
     }
@@ -108,7 +130,7 @@ export class RestfulConversationService implements IConversationService {
             url: buildAPI(this._config, `comment/find/conversation/bycustomid?customid=${id}`),
             headers: this._jsonHeaders,
         }
-        return stRequest(config).then(result=>{
+        return this.request(config).then(result=>{
             return result.data
         });
     }
@@ -125,7 +147,7 @@ export class RestfulConversationService implements IConversationService {
             url: buildAPI(this._config, `${this._apiExt}/${id}`),
             headers: this._jsonHeaders,
         }
-        return stRequest(config);
+        return this.request(config);
     }
 
     /**
@@ -142,6 +164,6 @@ export class RestfulConversationService implements IConversationService {
             url: buildAPI(this._config, `${this._apiExt}/${query}`),
             headers: this._jsonHeaders,
         }
-        return stRequest(config).then(response=>response.data);
+        return this.request(config).then(response=>response.data);
     }
 }

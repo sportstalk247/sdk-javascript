@@ -1,5 +1,9 @@
 import axios, {AxiosRequestConfig} from "axios";
+import {IUserConfigurable} from '../../API/Configuration';
 
+export interface NetworkRequest {
+    (config:AxiosRequestConfig, errorHandlerfunction?: ErrorHandlerFunction<any>):any
+}
 /**
  * Make request with fetch. Originally axios was used everywhere for compatibility but this caused more errors with modern browsers as
  * Axios default cors handling was not as flexible.
@@ -45,7 +49,7 @@ const makeAxiosRequest = async function makeAxiosRequest(config:AxiosRequestConf
     })
 }
 
-function getRequestLibrary() {
+function getRequestLibrary(): NetworkRequest {
     //@ts-ignore
     if (typeof window !== "undefined" && window.fetch) {
         return makeRequest;
@@ -58,6 +62,11 @@ export interface ErrorHandlerFunction<T> {
 }
 
 export const stRequest = getRequestLibrary();
-export const bindTokenRefresh = async (target, refreshTokenFn) => {
-    const refreshToken = target.getUserToken? target.getUserToken() : target._userToken || '';
+
+export const bindJWTUpdates = (target: IUserConfigurable): NetworkRequest => async (config:AxiosRequestConfig, errorHandlerfunction?: ErrorHandlerFunction<any>) => {
+    const exp = target.getTokenExp();
+    if(exp && exp < new Date().getTime()-20) {
+        await target.refreshUserToken();
+    }
+    return stRequest(config, errorHandlerfunction)
 }

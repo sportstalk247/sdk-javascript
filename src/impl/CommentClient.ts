@@ -103,6 +103,10 @@ export class CommentClient implements ICommentingClient {
 
     private constructor() {}
 
+    getTokenExp(): number {
+        throw new Error("Method not implemented.");
+    }
+
     /**
      * Get the current configuration object
      * @return SportsTalkConfig

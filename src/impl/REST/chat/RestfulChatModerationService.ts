@@ -3,7 +3,7 @@ import {
     EventResult,
     MuteOptions, ShadowbanUserApiData
 } from "../../../models/ChatModels";
-import {stRequest} from '../../network';
+import {bindJWTUpdates, NetworkRequest, stRequest} from '../../network';
 import {buildAPI, getJSONHeaders, forceObjKeyOrString} from "../../utils";
 import {DEFAULT_CONFIG, GET, POST,} from "../../constants/api";
 import {

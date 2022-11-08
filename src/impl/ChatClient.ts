@@ -138,6 +138,10 @@ export class ChatClient implements IChatClient {
     private constructor() {
     }
 
+    getTokenExp(): number {
+        throw new Error("Method not implemented.");
+    }
+
     /**
      * Configures and creates a ChatClient
      * @param config
