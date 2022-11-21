@@ -3,9 +3,6 @@ Sportstalk 247 Javascript SDK
 =============================
 My using this SDK you agree to the license located in LICENSE.md
 
-STATUS: STABLE BETA
-This SDK is used in production successfully and is considered stable.  At the same time, the SDK is under active development and improvement. We are also very open to feedback if you experience pain points while using the SDK.
-
 .. autoclass::
 .. autofunction::
 .. autoexception::
