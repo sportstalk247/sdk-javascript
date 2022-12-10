@@ -1,5 +1,5 @@
 import axios, {AxiosRequestConfig} from "axios";
-import {IUserConfigurable} from '../../API/Configuration';
+import {IUserConfigurable, NetworkRequestOptions} from '../../API/Configuration';
 
 export interface NetworkRequest {
     (config:AxiosRequestConfig, errorHandlerfunction?: ErrorHandlerFunction<any>):any
@@ -69,4 +69,32 @@ export const bindJWTUpdates = (target: IUserConfigurable): NetworkRequest => asy
         await target.refreshUserToken();
     }
     return stRequest(config, errorHandlerfunction)
+}
+
+
+
+export class NetworkHandler {
+    _jsonHeaders
+    _formHeaders
+    _apiKey
+    Authorization
+
+    constructor({headers, apiKey, Authorization}) {
+        this._apiKey = apiKey;
+        this.Authorization = Authorization;
+    }
+
+    post = (url:string, data, onError, options: NetworkRequestOptions) => {
+
+    }
+    get = (url:string, query, onError, options: NetworkRequestOptions) => {
+
+    }
+    put = (url:string, data, options: NetworkRequestOptions) => {
+
+    }
+    delete = (url: string, data, options:NetworkRequestOptions) => {
+
+    }
+
 }
