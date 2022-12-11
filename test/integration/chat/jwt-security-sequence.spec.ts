@@ -43,10 +43,6 @@ describe('Security Tests', function() {
 
     const client:ChatClient = ChatClient.init(user1config);
     const client2:ChatClient = ChatClient.init(user2config);
-    const rm = new RestfulChatRoomService({
-       ...config
-    });
-    const em1 = client.getEventService();
 
     let theRoom;
     describe('Signed User', function () {
@@ -97,14 +93,13 @@ describe('Security Tests', function() {
     describe("leave room", function(){
         it("Leaves the room", async function() {
             const exit = await client.exitRoom();
-            const exit2 = await client2.exitRoom();
             expect(exit).to.equal(API_SUCCESS_MESSAGE);
         })
     })
 
     describe('Kill test room', function () {
         it('Test room can be deleted', function (done) {
-            rm.deleteRoom(theRoom)
+            client.deleteRoom(theRoom)
                 .then(success => {
                     expect(success.kind).to.be.equal(Kind.deletedroom);
                     done()
