@@ -92,6 +92,22 @@ export interface ChatRoomListResponse extends ListResponse {
     rooms: Array<ChatRoomResult>,
 }
 
+export interface UserChatroomSubscription {
+    kind: Kind.chatsubscription,
+    id: string,
+    roomid: string,
+    roomcustomid?: string,
+    userid: string,
+    updated: string, // ISO 8601
+    added: string, // ISO 8601
+}
+export interface UserSubscriptionListResponse extends ListResponse {
+    kind: Kind.userroomsubscriptions,
+    subscriptions: Array<UserChatroomSubscription>,
+}
+
+
+
 export interface RoomEffectData {
     userid: string,
     expireseconds?: number

@@ -164,7 +164,6 @@ describe("UserManager Service", function(){
             await UM.createOrUpdateUser({userid:"fakeforTesting", handle:"fakefortesting"});
             const response = await UM.listUsers({limit:1});
             expect(response.users.length).to.be.equal(1);
-
         })
     })
 
@@ -174,6 +173,12 @@ describe("UserManager Service", function(){
                 userid: user.userid,
             })
             expect(response);
+        })
+    })
+    describe('Subscriptions', function(){
+        it('Can get user chat subscriptions', async()=>{
+            const response = await UM.listUserSubscribedRooms(user)
+            expect(response.kind).to.be.equal(Kind.userroomsubscriptions)
         })
     })
 

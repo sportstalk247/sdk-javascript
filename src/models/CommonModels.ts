@@ -15,8 +15,10 @@ export interface ApiHeaders {
 
 export enum Kind {
     chat = "chat.event",
+    chatsubscription = "chat.subscription",
     roomusereffects = "chat.list.roomusereffects",
     room = "chat.room",
+    userroomsubscriptions = "list.userroomsubscriptions",
     notification = "notification",
     bounce = "chat.bounceuser",
     user = "app.user",

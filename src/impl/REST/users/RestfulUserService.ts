@@ -5,7 +5,7 @@ import {buildAPI, forceObjKeyOrString, formify, getJSONHeaders} from "../../util
 import {
     ListRequest,
     UserTokenRefreshFunction,
-    SportsTalkConfig
+    SportsTalkConfig, Kind
 } from "../../../models/CommonModels";
 import {EventType} from '../../../models/ChatModels';
 import {SettingsError} from "../../errors";
@@ -27,6 +27,11 @@ import {
     NotificationReadRequest
 } from "../../../models/user/Notifications";
 import {ReportType} from "../../../models/Moderation";
+import {
+    ChatRoomListResponse,
+    UserChatroomSubscription,
+    UserSubscriptionListResponse
+} from "../../../models/chat/ChatRoom";
 
 /**
  * Class for handling user management via REST.
@@ -195,7 +200,9 @@ export class RestfulUserService implements IUserService {
             url: buildAPI(this._config,`${this._apiExt}/${id}`),
             headers: this._jsonHeaders,
         };
-        return stRequest(config).then(response=>response.data);
+        return stRequest(config).then(response=>response.data).catch(e=>{
+            throw new Error(`${e.response.status} ${e.response.data && e.response.data.message ? e.response.data.message : e.response.statusText} - ${e.message}`);
+        })
     }
 
     /**
@@ -214,7 +221,9 @@ export class RestfulUserService implements IUserService {
         };
         return stRequest(config).then(response=>{
             return response.data;
-        });
+        }).catch(e=>{
+            throw new Error(`${e.response.status} ${e.response.data && e.response.data.message ? e.response.data.message : e.response.statusText} - ${e.message}`);
+        })
     }
 
     /**
@@ -230,7 +239,9 @@ export class RestfulUserService implements IUserService {
         };
         return stRequest(config).then(response=>{
             return response.data;
-        });
+        }).catch(e=>{
+            throw new Error(`${e.response.status} ${e.response.data && e.response.data.message ? e.response.data.message : e.response.statusText} - ${e.message}`);
+        })
     }
 
     reportUser = (userToReport: User | string, reportedBy: User | string, reportType: ReportType = ReportType.abuse): Promise<UserResult> => {
@@ -251,6 +262,19 @@ export class RestfulUserService implements IUserService {
         })
     }
 
+    listUserSubscribedRooms = (user: User | string, cursor?: string): Promise<UserSubscriptionListResponse> => {
+        const userid = forceObjKeyOrString(user, 'userid');
+        const query =  formify({cursor: cursor|| ''})
+        const config: AxiosRequestConfig = {
+            method: GET,
+            url: buildAPI(this._config, `chat/user/${userid}/subscriptions?${query}`),
+            headers: this._jsonHeaders,
+        }
+        return stRequest(config).then(response=>response.data).catch(e=>{
+            throw new Error(`${e.response.status} ${e.response.data && e.response.data.message ? e.response.data.message : e.response.statusText} - ${e.message}`);
+        })
+    }
+
     listUsersInModerationQueue = (request: UserModerationListRequest): Promise<UserListResponse> => {
         const config: AxiosRequestConfig = {
             method: POST,
@@ -258,7 +282,9 @@ export class RestfulUserService implements IUserService {
             headers: this._jsonHeaders,
             data: request
         }
-        return stRequest(config).then(response=>response.data);
+        return stRequest(config).then(response=>response.data).catch(e=>{
+            throw new Error(`${e.response.status} ${e.response.data && e.response.data.message ? e.response.data.message : e.response.statusText} - ${e.message}`);
+        })
     }
 
 

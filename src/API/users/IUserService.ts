@@ -11,6 +11,7 @@ import {
     UserSearchType
 } from "../../models/user/User";
 import {ReportType} from "../../models/Moderation";
+import {UserSubscriptionListResponse} from "../../models/chat/ChatRoom";
 
 /**
  * @interface
@@ -33,5 +34,7 @@ export interface IUserService extends ISportsTalkConfigurable {
     reportUser(userToReport: User | string, reportedBy: User | string, reportType?: ReportType): Promise<UserResult>
 
     listUsersInModerationQueue(request: UserModerationListRequest): Promise<UserListResponse>
+
+    listUserSubscribedRooms(user: User | string, cursor?: string): Promise<UserSubscriptionListResponse>
 
 }

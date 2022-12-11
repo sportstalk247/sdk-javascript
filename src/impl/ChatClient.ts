@@ -41,7 +41,7 @@ import {
     ChatRoom, ChatRoomExitResult,
     ChatRoomExtendedDetailsRequest,
     ChatRoomExtendedDetailsResponse,
-    ChatRoomListResponse, ChatRoomResult, DeletedChatRoomResponse, JoinChatRoomResponse
+    ChatRoomListResponse, ChatRoomResult, DeletedChatRoomResponse, JoinChatRoomResponse, UserSubscriptionListResponse
 } from "../models/chat/ChatRoom";
 import {User, UserDeletionResponse, UserListResponse, UserResult, UserSearchType} from "../models/user/User";
 import {Notification, NotificationListRequest} from "../models/user/Notifications";
@@ -314,6 +314,7 @@ export class ChatClient implements IChatClient {
     listRooms = (cursor?: string, limit?: number): Promise<ChatRoomListResponse> => {
         return this._roomService.listRooms(cursor, limit);
     }
+
     /**
      * List all participants in a room.  Must have joined a room first.
      * @param cursor The cursor, used if you need to scroll through all users and there are over <maxresults> in the room.
@@ -326,6 +327,14 @@ export class ChatClient implements IChatClient {
         return this._roomService.listParticipants(this._currentRoom, cursor, maxresults);
     }
 
+    /**
+     * Lists chatroom subscriptions for a user.
+     * @param user
+     * @param cursor
+     */
+    listUserSubscribedRooms = (user: User | string, cursor?): Promise<UserSubscriptionListResponse> => {
+        return this._userService.listUserSubscribedRooms(user, cursor);
+    }
     /**
      * Set the chat user.
      * @param user

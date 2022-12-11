@@ -17,6 +17,7 @@ import {
 } from "../models/user/User";
 import {DeleteNotificationRequest} from "../models/user/Notifications";
 import {ReportType} from "../models/Moderation";
+import {UserSubscriptionListResponse} from "../models/chat/ChatRoom";
 
 /**
  * A class used for managing users.  Typically used by custom management dashboards.
@@ -64,6 +65,10 @@ export class UserClient implements ISportsTalkConfigurable, IUserService {
 
     setBanStatus = (user: User | string, isBanned: boolean): Promise<UserResult> => {
         return this._userService.setBanStatus(user, isBanned);
+    }
+
+    listUserSubscribedRooms = (user: User | string, cursor?): Promise<UserSubscriptionListResponse> => {
+        return this._userService.listUserSubscribedRooms(user, cursor);
     }
 
     setShadowBanStatus = (user: User | string, isShadowBanned: boolean, expiryseconds?: number): Promise<UserResult> => {
