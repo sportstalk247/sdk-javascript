@@ -179,7 +179,7 @@ describe("RoomService", function(){
         })
     })
     describe("Extended details", function() {
-        it("Can get extended room details by id", async (done) =>{
+        it("Can get extended room details by id", async () =>{
             const room = await RM.createRoom({
                 name: "ROOMService Test Room",
                 slug: "RM-test-room"
@@ -188,19 +188,18 @@ describe("RoomService", function(){
                 const results = await RM.getRoomExtendedDetails({roomids:[room.id], entities:[ChatRoomEntityNames.lastmessagetime, ChatRoomEntityNames.numparticipants, ChatRoomEntityNames.room]})
                 expect(results.details.length).to.be.equal(1);
                 const details = results.details[0];
-                expect(details.inroom).to.be.equal(0);
+                expect(details.room.inroom).to.be.equal(0);
                 expect(details.mostrecentmessagetime).to.be.null;
                 expect(details.room).to.be.not.null;
                 // @ts-ignore
                 expect(details.room.id).to.be.equal(room.id)
                 const deleted = await RM.deleteRoom(room);
-                return deleted;
             }catch(e) {
                 const deleted = await RM.deleteRoom(room);
                 console.log(e);
                 throw e;
             }
-            done();
+            return;
         })
     })
 })

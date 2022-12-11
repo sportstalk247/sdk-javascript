@@ -246,7 +246,9 @@ export class RestfulUserService implements IUserService {
             headers: this._jsonHeaders,
             data: data
         }
-        return stRequest(config).then(response=>response.data);
+        return stRequest(config).then(response=>response.data).catch(e=>{
+            throw new Error(`${e.response.status} ${e.response.data && e.response.data.message ? e.response.data.message : e.response.statusText} - ${e.message}`);
+        })
     }
 
     listUsersInModerationQueue = (request: UserModerationListRequest): Promise<UserListResponse> => {

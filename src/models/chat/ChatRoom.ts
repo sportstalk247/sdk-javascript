@@ -111,7 +111,7 @@ export interface ChatRoomExtendedDetailsRequest {
 }
 
 export interface ChatRoomExtendedDetails {
-    room?: ChatRoomResult,
+    room: ChatRoomResult,
     mostrecentmessagetime?: string, // ISO 8601 date
     inroom?: number
 }
