@@ -1,3 +1,4 @@
+import {decode} from 'jsonwebtoken'
 import {
     SportsTalkConfig,
     UserTokenRefreshFunction
@@ -9,7 +10,7 @@ import {AxiosRequestConfig} from "axios";
 import {DELETE, GET, PUT} from "../../constants/api";
 import {stRequest} from "../../network";
 import {INotificationService} from "../../../API/users/INotificationService";
-import {UserResult} from "../../../models/user/User";
+import {UserResult, User} from "../../../models/user/User";
 import {
     Notification,
     NotificationListRequest,
@@ -17,12 +18,54 @@ import {
     NotificationReadRequest
 } from "../../../models/user/Notifications";
 
-export class RestfulNotificationService implements INotificationService{
+export class RestfulNotificationService implements INotificationService {
     private _config: SportsTalkConfig;
     private _jsonHeaders = {}
+    private _user;
+    private _tokenExpiry: number | void;
 
-    constructor(config:SportsTalkConfig) {
+    constructor(config: SportsTalkConfig) {
         this.setConfig(config);
+    }
+
+    getTokenExp(): number | void {
+        return this._tokenExpiry;
+    }
+
+    setUser(user: User): void {
+        this._user = user;
+    }
+
+    getCurrentUser = () => {
+        return this._user;
+    }
+
+    setUserToken = (token:string) => {
+        const decoded = decode(token);
+        if(decoded.exp) {
+            this._tokenExpiry = decoded.exp;
+        } else {
+            this._tokenExpiry = undefined;
+        }
+        this._config.userToken = token;
+
+        this.setConfig(this._config);
+    }
+
+    getUserToken = async () => {
+        return this._config.userToken || "";
+    }
+
+    refreshUserToken = async (): Promise<string> => {
+        if(!this._config.userToken) {
+            throw new Error('You must set a user token before you can refresh it.  Also ensure that you set a refresh function');
+        }
+        if(!this._config.userTokenRefreshFunction) {
+            throw new Error('You must set a refresh function in order to refresh a userToken. Also ensure that the user token JWT is properly set.')
+        }
+        const newToken = await this._config.userTokenRefreshFunction(this._config.userToken);
+        this.setUserToken(newToken);
+        return newToken;
     }
 
 
@@ -33,15 +76,6 @@ export class RestfulNotificationService implements INotificationService{
     setConfig = (config: SportsTalkConfig) => {
         this._config = config;
         this._jsonHeaders = getJSONHeaders(this._config.apiToken, this._config.userToken);
-    }
-
-    /**
-     * Sets the user's JWT access token
-     * @param userToken
-     */
-    public setUserToken = (userToken:string) => {
-        this._config.userToken = userToken;
-        this.setConfig(this._config);
     }
 
     /**
@@ -160,4 +194,6 @@ export class RestfulNotificationService implements INotificationService{
         }
         return stRequest(config).then(response=>response.data);
     }
+
+
 }

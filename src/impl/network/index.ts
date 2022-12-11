@@ -1,5 +1,5 @@
 import axios, {AxiosRequestConfig} from "axios";
-import {IUserConfigurable} from '../../API/Configuration';
+import {IUserConfigurable, NetworkRequestOptions} from '../../API/Configuration';
 
 export interface NetworkRequest {
     (config:AxiosRequestConfig, errorHandlerfunction?: ErrorHandlerFunction<any>):any
@@ -66,7 +66,39 @@ export const stRequest = getRequestLibrary();
 export const bindJWTUpdates = (target: IUserConfigurable): NetworkRequest => async (config:AxiosRequestConfig, errorHandlerfunction?: ErrorHandlerFunction<any>) => {
     const exp = target.getTokenExp();
     if(exp && exp < new Date().getTime()-20) {
-        await target.refreshUserToken();
+        // Should refresh for future api calls but we patch it here because config is not dynamically updated.
+        const token = await target.refreshUserToken();
+        if(token) {
+            config.headers['Authorization'] = `Bearer ${token}`
+        }
     }
     return stRequest(config, errorHandlerfunction)
+}
+
+
+
+export class NetworkHandler {
+    _jsonHeaders
+    _formHeaders
+    _apiKey
+    Authorization
+
+    constructor({headers, apiKey, Authorization}) {
+        this._apiKey = apiKey;
+        this.Authorization = Authorization;
+    }
+
+    post = (url:string, data, onError, options: NetworkRequestOptions) => {
+
+    }
+    get = (url:string, query, onError, options: NetworkRequestOptions) => {
+
+    }
+    put = (url:string, data, options: NetworkRequestOptions) => {
+
+    }
+    delete = (url: string, data, options:NetworkRequestOptions) => {
+
+    }
+
 }

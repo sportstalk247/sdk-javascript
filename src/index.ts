@@ -17,6 +17,7 @@ import {RestfulCommentModerationService} from "./impl/REST/comments/RestfulComme
 import {RestfulCommentService} from './impl/REST/comments/RestfulCommentService'
 import {RestfulWebhookService} from "./impl/REST/webhooks/RestfulWebhookService";
 
+import * as util from './util';
 
 const Chat = {
     RestfulChatModerationService,
@@ -81,5 +82,6 @@ export {
     CommonModels,
     Constants,
     Types,
-    SportsTalkConfig
+    SportsTalkConfig,
+    util
 }
