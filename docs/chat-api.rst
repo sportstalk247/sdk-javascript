@@ -402,3 +402,13 @@ Unbounce a user from a room
         // User will be unbounced from the room.  Their ID will be removed from the room's bounced users list.
     }
 
+
+
+List chatroom subscriptions for a user
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: javascript
+
+    chatClient.listUserSubscribedRooms('userID string or UserResult Object', 'cursor').then(function(result)) {
+        // list of room subscriptions
+    }

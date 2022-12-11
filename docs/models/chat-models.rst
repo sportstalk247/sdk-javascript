@@ -301,6 +301,36 @@ ChatRoom List Response
         rooms: Array<ChatRoomResult>,
     }
 
+
+ChatRoomSubscription List Response
+~~~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: javascript
+
+    /**
+     * The response for any room subscription queries.
+     */
+    export interface ChatRoomListResponse extends ListResponse {
+         kind: Kind.userroomsubscriptions,
+         subscriptions: Array<UserChatroomSubscription>,
+    }
+
+
+.. code-block:: javascript
+
+    /**
+     * The data model for room subscription list query entries.
+     */
+    export interface UserChatroomSubscription {
+        kind: Kind.chatsubscription,
+        id: string,
+        roomid: string,
+        roomcustomid?: string,
+        userid: string,
+        updated: string, // ISO 8601
+        added: string, // ISO 8601
+    }
+
 Event List Response
 ~~~~~~~~~~~~~~~~~~~
 

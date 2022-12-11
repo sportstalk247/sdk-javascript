@@ -54,7 +54,7 @@ Using userToken JWT and refresh functionis the most secure way of integrating wi
 
 Using the SDK on the Web
 ------------------------
-To use directly, we host the web SDK on our website.
+To use directly, pull directly from our Gitlab.
 
 * Latest version: https://www.sportstalk247.com/dist/sdk/latest/web-sdk.js
 * Latest minified version: https://www.sportstalk247.com/dist/sdk/latest/web-sdk.min.js
