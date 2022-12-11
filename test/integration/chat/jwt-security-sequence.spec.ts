@@ -18,7 +18,7 @@ const { expect } = chai;
 const config: SportsTalkConfig = {
     apiToken:process.env.SECURE_KEY,
     appId: process.env.SECURE_APP_ID || "",
-    endpoint: process.env.TEST_ENDPOINT
+    endpoint: process.env.SECURE_ENDPOINT
 };
 
 const userToken = createUserToken({  userid: 'testuser1'}, process.env.APP_SECRET || '');

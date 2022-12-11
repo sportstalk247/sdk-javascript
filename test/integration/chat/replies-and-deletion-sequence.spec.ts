@@ -5,6 +5,7 @@ import * as dotenv from 'dotenv';
 import {Kind, SportsTalkConfig} from "../../../src/models/CommonModels";
 import {EventResult} from "../../../src/models/ChatModels";
 import {THROTTLE_ERROR} from "../../../src/impl/constants/messages";
+import {User} from "../../../src/models/user/User";
 dotenv.config();
 
 let client;
@@ -75,7 +76,8 @@ describe('REPLY & DELETE Chat Sequence', function() {
             this.timeout(5000);
             return Promise.all([em1.getUpdates(), em2.getUpdates()])
                 .then(async chatHistories => {
-                    const replyText = "This is my reply"
+                    const replyText = "This is my threaded reply";
+                    const quoteText = "this is my quoted reply";
                     expect(chatHistories[0].events).to.have.lengthOf(2);
                     expect(chatHistories[1].events).to.have.lengthOf(2);
                     const reply = await client.sendQuotedReply(replyText, chatHistories[0].events[0].id);
@@ -84,14 +86,14 @@ describe('REPLY & DELETE Chat Sequence', function() {
                     expect(reply.data.body).to.be.equal(replyText);
                     // @ts-ignore
                     expect(reply.data.eventtype).to.be.equal("quote")
-                    const otherreply = await client.sendThreadedReply(replyText, chatHistories[0].events[0])
+                    const otherreply = await client.sendThreadedReply(quoteText, chatHistories[0].events[0])
                     // @ts-ignore
-                    expect(otherreply.data.body).to.be.equal(replyText);
+                    expect(otherreply.data.body).to.be.equal(quoteText);
                     const event = await client.getEventById(chatHistories[0].events[0].id);
                     expect(event.id).to.be.equal(chatHistories[0].events[0].id);
                     await delay(1000); // clear internal updates cache.
                     const updates = await em1.getUpdates();
-                    expect(updates.events.length).to.be.equal(3);
+                    expect(updates.events.length).to.be.equal(4);
                 });
         })
     });
@@ -99,7 +101,9 @@ describe('REPLY & DELETE Chat Sequence', function() {
         it("Prevents sending the same message over and over", async function() {
             const sameMessage = "This is the same message!";
             try {
-                await Promise.all([client.executeChatCommand(sameMessage), client.executeChatCommand(sameMessage)]);
+                await client.executeChatCommand(sameMessage);
+                await client.executeChatCommand(sameMessage);
+                await client.executeChatCommand(sameMessage);
             } catch (e) {
                 expect(e.message).to.be.equal(THROTTLE_ERROR)
                 return;
@@ -148,10 +152,14 @@ describe('REPLY & DELETE Chat Sequence', function() {
         it("Flags an event for deletion", async()=>{
             try {
                 const updates = await em1.getUpdates();
-                const flagged = await client.flagEventLogicallyDeleted(updates.events[0]);
+                //@ts-ignore
+                const currentUser:string = client.getCurrentUser().userid || '';
+                const eventsToUpdate = updates.events.filter(event => event.userid == currentUser);
+                const flagged = await client.flagEventLogicallyDeleted(eventsToUpdate[0]);
             }catch(e){
                 console.log(e);
             }
+            return;
             // expect(flagged.data.kind).to.be.equal(Kind.deletedcomment);
         })
     });

@@ -81,8 +81,8 @@ describe('BASIC Chat Sequence', function() {
             let someEvent;
             Promise.all([em1.getUpdates(), em2.getUpdates()])
                 .then(chatHistories => {
-                    expect(chatHistories[0].events).to.have.lengthOf(2);
-                    expect(chatHistories[1].events).to.have.lengthOf(2);
+                    expect(chatHistories[0].events).to.have.lengthOf(3);
+                    expect(chatHistories[1].events).to.have.lengthOf(3);
                     someEvent = chatHistories[0].events[0];
                 }).then(()=>{
                     return client.updateChatEvent(someEvent, "Updated");

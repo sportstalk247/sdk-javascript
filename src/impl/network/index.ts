@@ -43,7 +43,7 @@ const makeAxiosRequest = async function makeAxiosRequest(config:AxiosRequestConf
     }
     return axios(config).then(result=>result.data).catch(e=>{
         if(errorHandlerfunction) {
-            return errorHandlerfunction(e);
+            return errorHandlerfunction(e, config);
         }
         throw e;
     })
@@ -58,7 +58,7 @@ function getRequestLibrary(): NetworkRequest {
 }
 
 export interface ErrorHandlerFunction<T> {
-    (error: Error):T
+    (error: Error, config?: AxiosRequestConfig):T
 }
 
 export const stRequest = getRequestLibrary();
