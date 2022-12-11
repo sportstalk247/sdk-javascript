@@ -35,5 +35,14 @@ export interface IUserConfigurable {
     getUserToken(): Promise<string>;
     setUserTokenRefreshFunction(userRefreshFunction: UserTokenRefreshFunction): void;
     refreshUserToken(): Promise<string>;
-    getTokenExp(): number;
+    getTokenExp(): number | void;
+}
+
+export interface NetworkRequestOptions {
+    format: 'json' | 'form'
+    headers: object
+}
+
+export interface IUserTokenOptions {
+    exp: Date,
 }

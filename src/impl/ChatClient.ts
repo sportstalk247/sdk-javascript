@@ -192,7 +192,8 @@ export class ChatClient implements IChatClient {
      * @param config
      */
     setConfig = (config:SportsTalkConfig) => {
-        this._config = Object.assign(DEFAULT_CONFIG, config);
+        const finalConfig = Object.assign({}, DEFAULT_CONFIG, config);
+        this._config = finalConfig;
         if(this._config.userTokenRefreshFunction) {
             if(!this._callBackDelegate) {
                 this._callBackDelegate = new CallBackDelegate(this, this._config.userTokenRefreshFunction);

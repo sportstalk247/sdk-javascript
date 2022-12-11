@@ -1,7 +1,8 @@
-import {API_TOKEN_HEADER, USER_TOKEN_HEADER, APPLICATION_JSON, DEFAULT_CONFIG, FORM_ENCODED} from "./constants/api";
+import {API_TOKEN_HEADER, AUTHORIZATION_HEADER, APPLICATION_JSON, DEFAULT_CONFIG, FORM_ENCODED} from "./constants/api";
 import {ApiHeaders, ListRequest, SportsTalkConfig, UserTokenRefreshFunction} from "../models/CommonModels";
 import {ValidationError} from "./errors";
 import {IUserConfigurable} from "../API/Configuration";
+import {User} from "../models/user/User";
 
 export function formify(data) {
     const formBody: Array<String> = []
@@ -37,7 +38,7 @@ export function getUrlEncodedHeaders(apiKey?: string, userToken?: string): ApiHe
         headers[API_TOKEN_HEADER] = apiKey
     }
     if(userToken) {
-        headers[USER_TOKEN_HEADER] = userToken;
+        headers[AUTHORIZATION_HEADER] = userToken;
     }
     return headers;
 }
@@ -50,7 +51,7 @@ export function getJSONHeaders(apiKey?: string, userToken?: string): ApiHeaders 
         headers[API_TOKEN_HEADER] = apiKey
     }
     if(userToken) {
-        headers[USER_TOKEN_HEADER] = userToken;
+        headers[AUTHORIZATION_HEADER] = `Bearer ${userToken}`;
     }
     return headers;
 }
@@ -83,3 +84,4 @@ export class CallBackDelegate {
         this._func = func;
     }
 }
+
