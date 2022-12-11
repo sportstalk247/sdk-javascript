@@ -152,11 +152,9 @@ var RestfulChatModerationService = /** @class */ (function () {
      * @param config
      */
     RestfulChatModerationService.prototype.setConfig = function (config) {
-        this._config = Object.assign(api_1.DEFAULT_CONFIG, config);
+        this._config = Object.assign({}, api_1.DEFAULT_CONFIG, config);
         this._refreshFn = config.userTokenRefreshFunction;
         this._jsonHeaders = utils_1.getJSONHeaders(this._config.apiToken, this._config.userToken);
-        if (this._config.userTokenRefreshFunction) {
-        }
     };
     return RestfulChatModerationService;
 }());

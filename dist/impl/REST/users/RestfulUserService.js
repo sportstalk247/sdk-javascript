@@ -160,7 +160,9 @@ var RestfulUserService = /** @class */ (function () {
                 url: utils_1.buildAPI(_this._config, _this._apiExt + "/" + id),
                 headers: _this._jsonHeaders,
             };
-            return network_1.stRequest(config).then(function (response) { return response.data; });
+            return network_1.stRequest(config).then(function (response) { return response.data; }).catch(function (e) {
+                throw new Error(e.response.status + " " + (e.response.data && e.response.data.message ? e.response.data.message : e.response.statusText) + " - " + e.message);
+            });
         };
         /**
          * Returns a list of users.  You can provide a ListRequest object to customize the query.
@@ -178,6 +180,8 @@ var RestfulUserService = /** @class */ (function () {
             };
             return network_1.stRequest(config).then(function (response) {
                 return response.data;
+            }).catch(function (e) {
+                throw new Error(e.response.status + " " + (e.response.data && e.response.data.message ? e.response.data.message : e.response.statusText) + " - " + e.message);
             });
         };
         /**
@@ -193,6 +197,8 @@ var RestfulUserService = /** @class */ (function () {
             };
             return network_1.stRequest(config).then(function (response) {
                 return response.data;
+            }).catch(function (e) {
+                throw new Error(e.response.status + " " + (e.response.data && e.response.data.message ? e.response.data.message : e.response.statusText) + " - " + e.message);
             });
         };
         this.reportUser = function (userToReport, reportedBy, reportType) {
@@ -209,7 +215,21 @@ var RestfulUserService = /** @class */ (function () {
                 headers: _this._jsonHeaders,
                 data: data
             };
-            return network_1.stRequest(config).then(function (response) { return response.data; });
+            return network_1.stRequest(config).then(function (response) { return response.data; }).catch(function (e) {
+                throw new Error(e.response.status + " " + (e.response.data && e.response.data.message ? e.response.data.message : e.response.statusText) + " - " + e.message);
+            });
+        };
+        this.listUserSubscribedRooms = function (user, cursor) {
+            var userid = utils_1.forceObjKeyOrString(user, 'userid');
+            var query = utils_1.formify({ cursor: cursor || '' });
+            var config = {
+                method: api_1.GET,
+                url: utils_1.buildAPI(_this._config, "chat/user/" + userid + "/subscriptions?" + query),
+                headers: _this._jsonHeaders,
+            };
+            return network_1.stRequest(config).then(function (response) { return response.data; }).catch(function (e) {
+                throw new Error(e.response.status + " " + (e.response.data && e.response.data.message ? e.response.data.message : e.response.statusText) + " - " + e.message);
+            });
         };
         this.listUsersInModerationQueue = function (request) {
             var config = {
@@ -218,7 +238,9 @@ var RestfulUserService = /** @class */ (function () {
                 headers: _this._jsonHeaders,
                 data: request
             };
-            return network_1.stRequest(config).then(function (response) { return response.data; });
+            return network_1.stRequest(config).then(function (response) { return response.data; }).catch(function (e) {
+                throw new Error(e.response.status + " " + (e.response.data && e.response.data.message ? e.response.data.message : e.response.statusText) + " - " + e.message);
+            });
         };
         this.setConfig(config);
     }

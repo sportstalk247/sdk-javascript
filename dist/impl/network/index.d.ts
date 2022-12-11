@@ -4,7 +4,7 @@ export interface NetworkRequest {
     (config: AxiosRequestConfig, errorHandlerfunction?: ErrorHandlerFunction<any>): any;
 }
 export interface ErrorHandlerFunction<T> {
-    (error: Error): T;
+    (error: Error, config?: AxiosRequestConfig): T;
 }
 export declare const stRequest: NetworkRequest;
 export declare const bindJWTUpdates: (target: IUserConfigurable) => NetworkRequest;

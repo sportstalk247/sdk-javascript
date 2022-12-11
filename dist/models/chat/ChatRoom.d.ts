@@ -81,6 +81,19 @@ export interface ChatRoomListResponse extends ListResponse {
     kind: Kind.roomlist;
     rooms: Array<ChatRoomResult>;
 }
+export interface UserChatroomSubscription {
+    kind: Kind.chatsubscription;
+    id: string;
+    roomid: string;
+    roomcustomid?: string;
+    userid: string;
+    updated: string;
+    added: string;
+}
+export interface UserSubscriptionListResponse extends ListResponse {
+    kind: Kind.userroomsubscriptions;
+    subscriptions: Array<UserChatroomSubscription>;
+}
 export interface RoomEffectData {
     userid: string;
     expireseconds?: number;
@@ -97,7 +110,7 @@ export interface ChatRoomExtendedDetailsRequest {
     entities?: ChatRoomEntityNames[];
 }
 export interface ChatRoomExtendedDetails {
-    room?: ChatRoomResult;
+    room: ChatRoomResult;
     mostrecentmessagetime?: string;
     inroom?: number;
 }

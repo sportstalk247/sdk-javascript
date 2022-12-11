@@ -83,7 +83,7 @@ var makeAxiosRequest = function makeAxiosRequest(config, errorHandlerfunction) {
             }
             return [2 /*return*/, axios_1.default(config).then(function (result) { return result.data; }).catch(function (e) {
                     if (errorHandlerfunction) {
-                        return errorHandlerfunction(e);
+                        return errorHandlerfunction(e, config);
                     }
                     throw e;
                 })];
@@ -99,7 +99,7 @@ function getRequestLibrary() {
 }
 exports.stRequest = getRequestLibrary();
 exports.bindJWTUpdates = function (target) { return function (config, errorHandlerfunction) { return __awaiter(void 0, void 0, void 0, function () {
-    var exp;
+    var exp, token;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
@@ -107,7 +107,10 @@ exports.bindJWTUpdates = function (target) { return function (config, errorHandl
                 if (!(exp && exp < new Date().getTime() - 20)) return [3 /*break*/, 2];
                 return [4 /*yield*/, target.refreshUserToken()];
             case 1:
-                _a.sent();
+                token = _a.sent();
+                if (token) {
+                    config.headers['Authorization'] = "Bearer " + token;
+                }
                 _a.label = 2;
             case 2: return [2 /*return*/, exports.stRequest(config, errorHandlerfunction)];
         }

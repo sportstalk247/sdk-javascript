@@ -1,6 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Types = exports.Constants = exports.CommonModels = exports.CommentModels = exports.ChatModels = exports.impl = exports.Services = exports.UserClient = exports.CommentClient = exports.ChatClient = void 0;
+exports.util = exports.Types = exports.Constants = exports.CommonModels = exports.CommentModels = exports.ChatModels = exports.impl = exports.Services = exports.UserClient = exports.CommentClient = exports.ChatClient = void 0;
 var ChatClient_1 = require("./impl/ChatClient");
 Object.defineProperty(exports, "ChatClient", { enumerable: true, get: function () { return ChatClient_1.ChatClient; } });
 var CommentClient_1 = require("./impl/CommentClient");
@@ -25,6 +25,8 @@ var RestfulConversationService_1 = require("./impl/REST/comments/RestfulConversa
 var RestfulCommentModerationService_1 = require("./impl/REST/comments/RestfulCommentModerationService");
 var RestfulCommentService_1 = require("./impl/REST/comments/RestfulCommentService");
 var RestfulWebhookService_1 = require("./impl/REST/webhooks/RestfulWebhookService");
+var util = require("./util");
+exports.util = util;
 var Chat = {
     RestfulChatModerationService: RestfulChatModerationService_1.RestfulChatModerationService,
     RestfulChatEventService: RestfulChatEventService_1.RestfulChatEventService,

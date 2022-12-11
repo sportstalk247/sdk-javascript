@@ -74,7 +74,7 @@ function getUrlEncodedHeaders(apiKey, userToken) {
         headers[api_1.API_TOKEN_HEADER] = apiKey;
     }
     if (userToken) {
-        headers[api_1.USER_TOKEN_HEADER] = userToken;
+        headers[api_1.AUTHORIZATION_HEADER] = userToken;
     }
     return headers;
 }
@@ -87,7 +87,7 @@ function getJSONHeaders(apiKey, userToken) {
         headers[api_1.API_TOKEN_HEADER] = apiKey;
     }
     if (userToken) {
-        headers[api_1.USER_TOKEN_HEADER] = "Bearer " + userToken;
+        headers[api_1.AUTHORIZATION_HEADER] = "Bearer " + userToken;
     }
     return headers;
 }

@@ -179,8 +179,8 @@ var RestfulChatEventService = /** @class */ (function () {
          * @param config
          */
         this.setConfig = function (config) {
-            _this._config = Object.assign(api_1.DEFAULT_CONFIG, config);
-            _this._user = Object.assign(_this._user, _this._config.user);
+            _this._config = Object.assign({}, api_1.DEFAULT_CONFIG, config);
+            _this._user = Object.assign({}, _this._user, _this._config.user);
             _this._apiHeaders = utils_1.getUrlEncodedHeaders(_this._config.apiToken, _this._config.userToken);
             _this._jsonHeaders = utils_1.getJSONHeaders(_this._config.apiToken, _this._config.userToken);
             _this._smoothEventUpdates = !!(_this._config.smoothEventUpdates || _this._smoothEventUpdates);
@@ -539,6 +539,8 @@ var RestfulChatEventService = /** @class */ (function () {
             var errorHandler = _this._eventHandlers && _this._eventHandlers.onNetworkError;
             return network_1.stRequest(config, errorHandler).then(function (response) {
                 return _this._evaluateCommandResponse(command, response);
+            }).catch(function (e) {
+                throw new Error(e.response.status + " " + (e.response.data && e.response.data.message ? e.response.data.message : e.response.statusText) + " - " + e.message);
             });
         };
         /**
@@ -717,7 +719,7 @@ var RestfulChatEventService = /** @class */ (function () {
             return network_1.stRequest(config).then(function (result) {
                 return result;
             }).catch(function (e) {
-                throw e;
+                throw new Error(e.response.status + " " + (e.response.data && e.response.data.message ? e.response.data.message : e.response.statusText) + " - " + e.message);
             });
         };
         /**
@@ -747,7 +749,7 @@ var RestfulChatEventService = /** @class */ (function () {
             return network_1.stRequest(config).then(function (result) {
                 return result;
             }).catch(function (e) {
-                throw e;
+                throw new Error(e.response.status + " " + (e.response.data && e.response.data.message ? e.response.data.message : e.response.statusText) + " - " + e.message);
             });
         };
         /**

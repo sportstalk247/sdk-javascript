@@ -100,7 +100,7 @@ var RestfulWebhookService = /** @class */ (function () {
      * @param config
      */
     RestfulWebhookService.prototype.setConfig = function (config) {
-        this._config = Object.assign(api_1.DEFAULT_CONFIG, config);
+        this._config = Object.assign({}, api_1.DEFAULT_CONFIG, config);
         this._apiHeaders = utils_1.getJSONHeaders(this._config.apiToken, this._config.userToken);
     };
     return RestfulWebhookService;

@@ -4,7 +4,7 @@ import { IChatClient } from "../API/chat/IChatClient";
 import { IChatEventService } from "../API/chat/IEventService";
 import { IChatRoomService } from "../API/chat/IChatRoomService";
 import { IUserService } from "../API/users/IUserService";
-import { ChatRoom, ChatRoomExitResult, ChatRoomExtendedDetailsRequest, ChatRoomExtendedDetailsResponse, ChatRoomListResponse, ChatRoomResult, DeletedChatRoomResponse, JoinChatRoomResponse } from "../models/chat/ChatRoom";
+import { ChatRoom, ChatRoomExitResult, ChatRoomExtendedDetailsRequest, ChatRoomExtendedDetailsResponse, ChatRoomListResponse, ChatRoomResult, DeletedChatRoomResponse, JoinChatRoomResponse, UserSubscriptionListResponse } from "../models/chat/ChatRoom";
 import { User, UserDeletionResponse, UserListResponse, UserResult, UserSearchType } from "../models/user/User";
 import { Notification, NotificationListRequest } from "../models/user/Notifications";
 import { ReportType } from "../models/Moderation";
@@ -145,6 +145,12 @@ export declare class ChatClient implements IChatClient {
      * @param maxresults The maximum number of results, defaults to 200.
      */
     listParticipants: (cursor?: string | undefined, maxresults?: number) => Promise<Array<UserResult>>;
+    /**
+     * Lists chatroom subscriptions for a user.
+     * @param user
+     * @param cursor
+     */
+    listUserSubscribedRooms: (user: User | string, cursor?: any) => Promise<UserSubscriptionListResponse>;
     /**
      * Set the chat user.
      * @param user

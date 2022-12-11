@@ -126,7 +126,8 @@ var ChatClient = /** @class */ (function () {
          * @param config
          */
         this.setConfig = function (config) {
-            _this._config = Object.assign(api_1.DEFAULT_CONFIG, config);
+            var finalConfig = Object.assign({}, api_1.DEFAULT_CONFIG, config);
+            _this._config = finalConfig;
             if (_this._config.userTokenRefreshFunction) {
                 if (!_this._callBackDelegate) {
                     _this._callBackDelegate = new utils_1.CallBackDelegate(_this, _this._config.userTokenRefreshFunction);
@@ -245,6 +246,14 @@ var ChatClient = /** @class */ (function () {
                 throw new errors_1.SettingsError(messages_1.MISSING_ROOM);
             }
             return _this._roomService.listParticipants(_this._currentRoom, cursor, maxresults);
+        };
+        /**
+         * Lists chatroom subscriptions for a user.
+         * @param user
+         * @param cursor
+         */
+        this.listUserSubscribedRooms = function (user, cursor) {
+            return _this._userService.listUserSubscribedRooms(user, cursor);
         };
         /**
          * Set the chat user.
@@ -810,6 +819,7 @@ var ChatClient = /** @class */ (function () {
             var throttleError = new Error(messages_1.THROTTLE_ERROR);
             // @ts-ignore
             throttleError.code = 405;
+            throw throttleError;
         }
         else {
             this._lastCommandTime = new Date().getTime();

@@ -16,6 +16,7 @@ import { RestfulConversationService } from "./impl/REST/comments/RestfulConversa
 import { RestfulCommentModerationService } from "./impl/REST/comments/RestfulCommentModerationService";
 import { RestfulCommentService } from './impl/REST/comments/RestfulCommentService';
 import { RestfulWebhookService } from "./impl/REST/webhooks/RestfulWebhookService";
+import * as util from './util';
 declare const Services: {
     ChatModerationService: typeof RestfulChatModerationService;
     ChatEventService: typeof RestfulChatEventService;
@@ -53,4 +54,4 @@ declare const Types: {
     Errors: typeof Errors;
     Messages: typeof Messages;
 };
-export { ChatClient, CommentClient, UserClient, Services, impl, ChatModels, CommentModels, CommonModels, Constants, Types, SportsTalkConfig };
+export { ChatClient, CommentClient, UserClient, Services, impl, ChatModels, CommentModels, CommonModels, Constants, Types, SportsTalkConfig, util };

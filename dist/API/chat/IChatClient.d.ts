@@ -1,7 +1,7 @@
 import { ISportsTalkConfigurable, IUserConfigurable } from "../Configuration";
 import { AdvertisementOptions, BounceUserResult, ChatEventsList, ChatUpdatesResult, CommandOptions, CommandResponse, EffectOptions, EventHandlerConfig, EventResult, EventType, GoalOptions, TimestampRequest } from "../../models/ChatModels";
 import { ErrorResult, ListRequest, MessageResult, Reaction, RestApiResult } from "../../models/CommonModels";
-import { ChatRoom, ChatRoomExtendedDetailsRequest, ChatRoomExtendedDetailsResponse, ChatRoomListResponse, ChatRoomResult, JoinChatRoomResponse } from "../../models/chat/ChatRoom";
+import { ChatRoom, ChatRoomExtendedDetailsRequest, ChatRoomExtendedDetailsResponse, ChatRoomListResponse, ChatRoomResult, JoinChatRoomResponse, UserSubscriptionListResponse } from "../../models/chat/ChatRoom";
 import { User, UserDeletionResponse, UserListResponse, UserResult, UserSearchType } from "../../models/user/User";
 import { Notification } from "../../models/user/Notifications";
 import { ReportType } from "../../models/Moderation";
@@ -95,6 +95,12 @@ export interface IChatClient extends IUserConfigurable, ISportsTalkConfigurable 
      * @param limit
      */
     listRooms(cursor?: string, limit?: number): Promise<ChatRoomListResponse>;
+    /**
+     * Lists the rooms that a user has joined.
+     * @param user the User object or the userid
+     * @param cursor used to cursor through longer lists.
+     */
+    listUserSubscribedRooms(user: User | string, cursor?: string): Promise<UserSubscriptionListResponse>;
     /**
      * Create a new chatroom
      * @param room the Room object describing the room

@@ -134,6 +134,8 @@ var RestfulChatRoomService = /** @class */ (function () {
             }
             return network_1.stRequest(config).then(function (response) {
                 return response.data;
+            }).catch(function (e) {
+                throw new Error(e);
             });
         };
         /**

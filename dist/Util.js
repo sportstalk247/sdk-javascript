@@ -5,18 +5,17 @@ var jsonwebtoken_1 = require("jsonwebtoken");
 exports.createUserToken = function (user, secret, options) {
     if (options === void 0) { options = {}; }
     var userid = user.userid, role = user.role;
-    var iat = options.iat, exp = options.exp, applicationid = options.applicationid;
+    var expiresIn = options.expiresIn, audience = options.audience;
     var jwtSettings = {
-        iat: iat || Date.now() / 1000,
-        iss: applicationid,
-        exp: exp
+        audience: audience,
+        expiresIn: expiresIn
     };
-    if (!exp) {
-        delete jwtSettings.exp;
+    if (!audience) {
+        delete jwtSettings.audience;
     }
-    if (!applicationid) {
-        delete jwtSettings.iss;
+    if (!expiresIn) {
+        delete jwtSettings.expiresIn;
     }
     return jsonwebtoken_1.sign({ userid: userid, role: role }, secret, jwtSettings);
 };
-//# sourceMappingURL=Util.js.map
+//# sourceMappingURL=util.js.map

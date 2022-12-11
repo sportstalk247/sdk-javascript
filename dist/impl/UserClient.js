@@ -32,6 +32,9 @@ var UserClient = /** @class */ (function () {
         this.setBanStatus = function (user, isBanned) {
             return _this._userService.setBanStatus(user, isBanned);
         };
+        this.listUserSubscribedRooms = function (user, cursor) {
+            return _this._userService.listUserSubscribedRooms(user, cursor);
+        };
         this.setShadowBanStatus = function (user, isShadowBanned, expiryseconds) {
             return _this._userService.setShadowBanStatus(user, isShadowBanned, expiryseconds);
         };
@@ -59,7 +62,7 @@ var UserClient = /** @class */ (function () {
         };
     }
     UserClient.prototype.setConfig = function (config) {
-        this._config = Object.assign(api_1.DEFAULT_CONFIG, config);
+        this._config = Object.assign({}, api_1.DEFAULT_CONFIG, config);
         this._userService = new RestfulUserService_1.RestfulUserService(this._config);
     };
     UserClient.init = function (config) {

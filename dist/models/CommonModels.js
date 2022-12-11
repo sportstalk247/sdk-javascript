@@ -4,8 +4,10 @@ exports.WebStatusString = exports.WebStatusCode = exports.Reaction = exports.Kin
 var Kind;
 (function (Kind) {
     Kind["chat"] = "chat.event";
+    Kind["chatsubscription"] = "chat.subscription";
     Kind["roomusereffects"] = "chat.list.roomusereffects";
     Kind["room"] = "chat.room";
+    Kind["userroomsubscriptions"] = "list.userroomsubscriptions";
     Kind["notification"] = "notification";
     Kind["bounce"] = "chat.bounceuser";
     Kind["user"] = "app.user";

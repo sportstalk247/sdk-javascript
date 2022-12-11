@@ -2,6 +2,7 @@ import { ListRequest, UserTokenRefreshFunction, SportsTalkConfig } from "../../.
 import { IUserService } from "../../../API/users/IUserService";
 import { User, UserDeletionResponse, UserListResponse, UserModerationListRequest, UserResult, UserSearchType } from "../../../models/user/User";
 import { ReportType } from "../../../models/Moderation";
+import { UserSubscriptionListResponse } from "../../../models/chat/ChatRoom";
 /**
  * Class for handling user management via REST.
  *
@@ -74,5 +75,6 @@ export declare class RestfulUserService implements IUserService {
      */
     getUserDetails: (user: User | string) => Promise<UserResult>;
     reportUser: (userToReport: User | string, reportedBy: User | string, reportType?: ReportType) => Promise<UserResult>;
+    listUserSubscribedRooms: (user: User | string, cursor?: string | undefined) => Promise<UserSubscriptionListResponse>;
     listUsersInModerationQueue: (request: UserModerationListRequest) => Promise<UserListResponse>;
 }

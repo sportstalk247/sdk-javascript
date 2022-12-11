@@ -3,6 +3,7 @@ import { ISportsTalkConfigurable } from "../API/Configuration";
 import { IUserService } from "../API/users/IUserService";
 import { User, UserDeletionResponse, UserListResponse, UserModerationListRequest, UserResult, UserSearchType } from "../models/user/User";
 import { ReportType } from "../models/Moderation";
+import { UserSubscriptionListResponse } from "../models/chat/ChatRoom";
 /**
  * A class used for managing users.  Typically used by custom management dashboards.
  * @class
@@ -24,6 +25,7 @@ export declare class UserClient implements ISportsTalkConfigurable, IUserService
     private constructor();
     static init: (config?: SportsTalkConfig | undefined) => UserClient;
     setBanStatus: (user: User | string, isBanned: boolean) => Promise<UserResult>;
+    listUserSubscribedRooms: (user: User | string, cursor?: any) => Promise<UserSubscriptionListResponse>;
     setShadowBanStatus: (user: User | string, isShadowBanned: boolean, expiryseconds?: number | undefined) => Promise<UserResult>;
     createOrUpdateUser: (user: User) => Promise<UserResult>;
     searchUsers: (search: string, type: UserSearchType, limit?: number | undefined) => Promise<UserListResponse>;
