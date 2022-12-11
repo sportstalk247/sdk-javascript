@@ -56,8 +56,8 @@ Using the SDK on the Web
 ------------------------
 To use directly, pull directly from our Gitlab.
 
-* Latest version: https://www.sportstalk247.com/dist/sdk/latest/web-sdk.js
-* Latest minified version: https://www.sportstalk247.com/dist/sdk/latest/web-sdk.min.js
+* Latest version: https://gitlab.com/sportstalk247/sdk-javascript/-/blob/master/dist/web-sdk.js
+* Latest minified version: https://gitlab.com/sportstalk247/sdk-javascript/-/blob/master/dist/web-sdk.min.js
 
 You can also look inside the Sportstalk package at `/dist/web-sdk.js` or use the minified version at `/dist/web-sdk.min.js`
 
