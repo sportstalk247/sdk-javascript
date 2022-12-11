@@ -739,8 +739,8 @@ export class RestfulChatEventService implements IChatEventService {
         return stRequest(config).then(result=>{
             return result;
         }).catch(e=>{
-            throw e;
-        });
+            throw new Error(`${e.response.status} ${e.response.data && e.response.data.message ? e.response.data.message : e.response.statusText} - ${e.message}`);
+        })
     }
 
     /**
@@ -769,8 +769,8 @@ export class RestfulChatEventService implements IChatEventService {
         return stRequest(config).then(result=>{
             return result;
         }).catch(e=>{
-            throw e;
-        });
+            throw new Error(`${e.response.status} ${e.response.data && e.response.data.message ? e.response.data.message : e.response.statusText} - ${e.message}`);
+        })
     }
 
     /**
