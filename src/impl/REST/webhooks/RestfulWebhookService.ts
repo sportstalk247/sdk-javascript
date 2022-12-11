@@ -33,7 +33,7 @@ export class RestfulWebhookService implements IWebhookService {
      * @param config
      */
     public setConfig(config: SportsTalkConfig) {
-        this._config = Object.assign(DEFAULT_CONFIG, config);
+        this._config = Object.assign({},DEFAULT_CONFIG, config);
         this._apiHeaders = getJSONHeaders(this._config.apiToken, this._config.userToken);
     }
 

@@ -30,7 +30,7 @@ export class UserClient implements ISportsTalkConfigurable, IUserService {
     private _userService: IUserService;
 
     public setConfig(config:SportsTalkConfig) {
-        this._config = Object.assign(DEFAULT_CONFIG, config);
+        this._config = Object.assign({}, DEFAULT_CONFIG, config);
         this._userService = new RestfulUserService(this._config);
     }
 
