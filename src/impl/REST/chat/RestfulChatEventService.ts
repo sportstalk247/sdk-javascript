@@ -552,7 +552,9 @@ export class RestfulChatEventService implements IChatEventService {
         const errorHandler =  this._eventHandlers && this._eventHandlers.onNetworkError;
         return stRequest(config, errorHandler).then(response=>{
             return this._evaluateCommandResponse(command, response)
-        });
+        }).catch(e=>{
+            throw new Error(`${e.response.status} ${e.response.data && e.response.data.message ? e.response.data.message : e.response.statusText} - ${e.message}`);
+        })
     }
 
     /**

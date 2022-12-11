@@ -158,6 +158,8 @@ export class RestfulChatRoomService implements IChatRoomService {
         }
         return stRequest(config).then(response => {
             return response.data;
+        }).catch(e=>{
+            throw new Error(e);
         })
     }
 

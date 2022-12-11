@@ -21,7 +21,7 @@ const config: SportsTalkConfig = {
     endpoint: process.env.SECURE_ENDPOINT
 };
 
-const userToken = createUserToken({  userid: 'testuser1'}, process.env.APP_SECRET || '');
+const userToken = createUserToken({  userid: 'testuser1'}, process.env.APP_SECRET || '', {audience: config.appId});
 
 
 

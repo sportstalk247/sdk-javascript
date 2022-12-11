@@ -1,10 +1,11 @@
-import { ChatClient } from '../../../../src/impl/ChatClient';
-import {EventHandlerConfig} from "../../../../src/models/ChatModels";
+import {ChatClient} from '../../../../src/impl/ChatClient';
 import * as chai from 'chai';
 import * as sinon from 'sinon';
 import * as dotenv from 'dotenv';
 import {Reaction, SportsTalkConfig} from "../../../../src/models/CommonModels";
 import {RestfulChatEventService} from "../../../../src/impl/REST/chat/RestfulChatEventService";
+import {UserRole} from "../../../../src/models/user/User";
+
 dotenv.config();
 
 const USER_TOKEN:string = process.env.USER_JWT || '';
@@ -81,7 +82,7 @@ describe("Event Service", () => {
         });
         describe("onChatEvent", () => {
             it("Will trigger onChatEvent", async () => {
-                const user = await client.createOrUpdateUser({userid:"chatEventUser", handle: "chatEventUser"});
+                const user = await client.createOrUpdateUser({userid:"chatEventUser", handle: "chatEventUser", role: UserRole.admin});
                 client.setUser(user);
                 const join = await client.joinRoom(room);
                 const response = await client.executeChatCommand("This is a chat event command");
@@ -122,9 +123,7 @@ describe("Event Service", () => {
 
         describe("onAdmin", ()=>{
             it("Will trigger onAdminCommand", async()=>{
-                const purge = await client.executeChatCommand("*purge zola chatEventUser");
-                const eventService = <RestfulChatEventService> await client.getEventService()
-                await eventService._fetchUpdatesAndTriggerCallbacks();
+                const purge = await client.executeChatCommand("*purge chatEventUser");
                 expect(onAdminCommand.callCount).to.be.greaterThan(0);
             })
         })
