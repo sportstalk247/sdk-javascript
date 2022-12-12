@@ -16,12 +16,12 @@ dotenv.config();
 const { expect } = chai;
 // @ts-ignore
 const config: SportsTalkConfig = {
-    apiToken:process.env.SECURE_KEY,
+    apiToken:process.env.SECURE_KEY || process.env.TEST_KEY,
     appId: process.env.SECURE_APP_ID || "",
-    endpoint: process.env.SECURE_ENDPOINT
+    endpoint: process.env.SECURE_ENDPOINT || 'https://api.sportstalk247.com/api/v3'
 };
 
-const userToken = createUserToken({  userid: 'testuser1'}, process.env.APP_SECRET || '', {audience: config.appId});
+const userToken = createUserToken({  userid: 'testuser1'}, process.env.APP_SECRET || '1234567', {audience: config.appId});
 
 
 
@@ -68,6 +68,7 @@ describe('Security Tests', function() {
                     done(new Error("Should not be able to access room"))
                 }
             ).catch(e=>{
+                expect(e.message.contains("401"));
                 done()
             })
         })

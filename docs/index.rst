@@ -191,3 +191,32 @@ Commenting Client
 These clients handle most common operation while hiding the backing APIs and simplifying some operations and will manage state for you.
 
 However, you may want to use the APIs directly, in which case there are a set of backing REST services that you can use:
+
+Security
+---------------
+You can enable additional security as an Organization setting using the management API.  In most cases, the SportsTalk team will enable this for you.
+
+With additional security enabled, Applications will require a signed JWT to be sent in the `Authorization` header as part of requests.
+That JWT is signed with a secret you can get from the security settings API.
+
+Sample code to generate a signed JWT:
+
+.. code-block:: javascript
+
+    const jwt = require('jsonwebtoken');
+
+    function createUserToken(userid, SHARED_SECRET, durationMinutes, applicationIDs) {
+        const options = {
+            algorithm: 'HS256'
+        }
+        const payload = {
+            userid,
+            exp: Math.floor(Date.now() / 1000) + (60 * (durationMinutes || 60)),
+        }
+        // if you specify application IDs, the JWT will be limited to those applications.
+        if(applicationIDs) {
+            payload.aud = [].concat(applicationIDs);
+        }
+        const user_token = jwt.sign(payload, SHARED_SECRET, options);
+        return user_token
+    }
