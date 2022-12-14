@@ -205,7 +205,7 @@ Sample code to generate a signed JWT:
 
     const jwt = require('jsonwebtoken');
 
-    function createUserToken(userid, SHARED_SECRET, durationMinutes, applicationIDs) {
+    function createUserToken(userid, SHARED_SECRET, durationMinutes, applicationID) {
         const options = {
             algorithm: 'HS256'
         }
@@ -215,8 +215,9 @@ Sample code to generate a signed JWT:
         }
         // if you specify application IDs, the JWT will be limited to those applications.
         if(applicationIDs) {
-            payload.aud = [].concat(applicationIDs);
+            payload.aud = applicationID;
         }
         const user_token = jwt.sign(payload, SHARED_SECRET, options);
         return user_token
     }
+
