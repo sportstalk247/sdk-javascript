@@ -5,14 +5,11 @@ var jsonwebtoken_1 = require("jsonwebtoken");
 exports.createUserToken = function (user, secret, options) {
     if (options === void 0) { options = {}; }
     var userid = user.userid, role = user.role;
-    var expiresIn = options.expiresIn, audience = options.audience;
+    var expiresIn = options.expiresIn;
     var jwtSettings = {
-        audience: audience,
+        algorithm: 'HS256',
         expiresIn: expiresIn
     };
-    if (!audience) {
-        delete jwtSettings.audience;
-    }
     if (!expiresIn) {
         delete jwtSettings.expiresIn;
     }
