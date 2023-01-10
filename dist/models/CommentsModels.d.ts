@@ -82,6 +82,10 @@ export interface ConversationDeletionResponse extends HasConversationID {
     deletedConversations: number;
     deletedComments: number;
 }
+export interface ConversationDetailsListResponse extends ListResponse {
+    kind: Kind.conversationdetailslist;
+    conversations: Conversation[];
+}
 export declare enum CommentModeration {
     flagged = "flagged",
     rejected = "rejected",

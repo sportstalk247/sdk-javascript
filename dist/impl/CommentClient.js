@@ -352,6 +352,10 @@ var CommentClient = /** @class */ (function () {
         this.getUserDetails = function (user) {
             return _this._userService.getUserDetails(user);
         };
+        this.getConversationBatchDetails = function (conversations) {
+            //@ts-ignore
+            return _this._conversationService.getConversationBatchDetails(conversations);
+        };
     }
     /**
      * Creates a new Conversation Client

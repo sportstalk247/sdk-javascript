@@ -21,6 +21,7 @@ const config: SportsTalkConfig = {
     endpoint: process.env.SECURE_ENDPOINT || 'https://api.sportstalk247.com/api/v3'
 };
 
+// @ts-ignore
 const userToken = createUserToken({  userid: 'testuser1'}, process.env.APP_SECRET || '1234567', {audience: config.appId});
 
 

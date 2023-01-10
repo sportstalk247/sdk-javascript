@@ -1,5 +1,5 @@
 import { ApiHeaders, SportsTalkConfig, UserTokenRefreshFunction } from "../../../models/CommonModels";
-import { Conversation, ConversationResponse, ConversationDeletionResponse, ConversationRequest, ConversationListResponse, User } from "../../../models/CommentsModels";
+import { Conversation, ConversationResponse, ConversationDeletionResponse, ConversationRequest, ConversationListResponse, User, ConversationDetailsListResponse } from "../../../models/CommentsModels";
 import { IConversationService } from "../../../API/comments/IConversationService";
 import { IUserConfigurable } from "../../../API/Configuration";
 /**
@@ -64,4 +64,5 @@ export declare class RestfulConversationService implements IConversationService,
      * @param filter
      */
     listConversations: (filter?: ConversationRequest | undefined) => Promise<ConversationListResponse>;
+    getConversationBatchDetails(conversations: Conversation[] | string[]): Promise<ConversationDetailsListResponse>;
 }

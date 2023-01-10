@@ -32,6 +32,7 @@ var Kind;
     Kind["repliesbyparentidlist"] = "list.repliesbyparentid";
     Kind["commentreplygrouplist"] = "list.commentreplygroup";
     Kind["chatroomextendeddetails"] = "chat.room.list.extendeddetails";
+    Kind["conversationdetailslist"] = "list.comment.conversation.details";
 })(Kind = exports.Kind || (exports.Kind = {}));
 var Reaction;
 (function (Reaction) {

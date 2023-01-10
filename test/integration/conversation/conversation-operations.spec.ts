@@ -87,8 +87,10 @@ describe('Conversation Operations', function() {
 
     describe('list conversations', function() {
         let conversation:Conversation;
+        let conversations: Conversation[];
         it("Can list all conversations", async () => {
             const response = await client.listConversations();
+            conversations = response.conversations;
             expect(response.conversations.length).to.be.greaterThan(1);
             conversation = response.conversations[0];
         });
@@ -103,6 +105,13 @@ describe('Conversation Operations', function() {
         it("Can get comments by conversationid string", async()=>{
             const requestedConversation = await client.getConversation(conversation.conversationid);
             expect(requestedConversation.conversationid).to.be.equal(conversation.conversationid);
+        })
+        it("Can get conversations in a Batch", async ()=>{
+            const conversationDetails = await client.getConversationBatchDetails(conversations);
+            expect(conversationDetails).to.be.not.null;
+            expect(conversationDetails.conversations).to.be.not.null;
+            expect(conversationDetails.conversations.length).to.be.greaterThan(0);
+            expect(conversationDetails.itemcount).to.be.equal(conversationDetails.conversations.length);
         })
     })
 

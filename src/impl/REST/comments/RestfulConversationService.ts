@@ -4,7 +4,7 @@ import {
     Conversation,
     ConversationResponse,
     ConversationDeletionResponse,
-    ConversationRequest, ConversationListResponse, User
+    ConversationRequest, ConversationListResponse, User, ConversationDetailsListResponse
 } from "../../../models/CommentsModels";
 import {GET, POST, DELETE} from "../../constants/api";
 import {getUrlEncodedHeaders, getJSONHeaders, buildAPI, formify} from "../../utils";
@@ -166,4 +166,21 @@ export class RestfulConversationService implements IConversationService, IUserCo
         }
         return this.request(config).then(response=>response.data);
     }
+
+
+    getConversationBatchDetails(conversations: Conversation[] | string[]): Promise<ConversationDetailsListResponse> {
+        //@ts-ignore
+        const ids = [].concat(conversations).map(conversation => {
+            //@ts-ignore
+            return conversation.conversationid ? conversation.conversationid : conversation;
+        })
+        const config: AxiosRequestConfig = {
+            method: GET,
+            url: buildAPI(this._config, `${this._apiExt}/details/batch?ids=${ids.join(',')}`),
+            headers: this._jsonHeaders
+        }
+        return this.request(config).then(response=>response.data);
+    }
+
+
 }

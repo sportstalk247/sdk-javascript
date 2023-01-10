@@ -1,5 +1,5 @@
 import { Reaction, SportsTalkConfig, UserTokenRefreshFunction, ListRequest } from "../models/CommonModels";
-import { Conversation, Vote, Comment, CommentRequest, ConversationDeletionResponse, ConversationResponse, CommentListResponse, CommentDeletionResponse, ConversationRequest, ConversationListResponse, RepliesBatchResponse, CommentResult, User } from "../models/CommentsModels";
+import { Conversation, Vote, Comment, CommentRequest, ConversationDeletionResponse, ConversationResponse, CommentListResponse, CommentDeletionResponse, ConversationRequest, ConversationListResponse, RepliesBatchResponse, CommentResult, User, ConversationDetailsListResponse } from "../models/CommentsModels";
 import { ICommentService } from "../API/comments/ICommentService";
 import { IConversationService } from "../API/comments/IConversationService";
 import { ICommentingClient } from "../API/comments/ICommentingClient";
@@ -205,4 +205,5 @@ export declare class CommentClient implements ICommentingClient {
     listUsers: (request?: ListRequest | undefined) => Promise<UserListResponse>;
     deleteUser: (user: User | string) => Promise<UserDeletionResponse>;
     getUserDetails: (user: User | string) => Promise<UserResult>;
+    getConversationBatchDetails: (conversations: (Conversation | string)[]) => Promise<ConversationDetailsListResponse>;
 }

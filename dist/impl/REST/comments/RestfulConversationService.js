@@ -185,6 +185,19 @@ var RestfulConversationService = /** @class */ (function () {
     RestfulConversationService.prototype.getTokenExp = function () {
         return 0;
     };
+    RestfulConversationService.prototype.getConversationBatchDetails = function (conversations) {
+        //@ts-ignore
+        var ids = [].concat(conversations).map(function (conversation) {
+            //@ts-ignore
+            return conversation.conversationid ? conversation.conversationid : conversation;
+        });
+        var config = {
+            method: api_1.GET,
+            url: utils_1.buildAPI(this._config, this._apiExt + "/details/batch?ids=" + ids.join(',')),
+            headers: this._jsonHeaders
+        };
+        return this.request(config).then(function (response) { return response.data; });
+    };
     return RestfulConversationService;
 }());
 exports.RestfulConversationService = RestfulConversationService;

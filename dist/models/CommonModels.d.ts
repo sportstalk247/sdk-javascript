@@ -40,7 +40,8 @@ export declare enum Kind {
     userlist = "list.users",
     repliesbyparentidlist = "list.repliesbyparentid",
     commentreplygrouplist = "list.commentreplygroup",
-    chatroomextendeddetails = "chat.room.list.extendeddetails"
+    chatroomextendeddetails = "chat.room.list.extendeddetails",
+    conversationdetailslist = "list.comment.conversation.details"
 }
 /**
  * Used as an optional part of the constructor for a SportsTalk client.

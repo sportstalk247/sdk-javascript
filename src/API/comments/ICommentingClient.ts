@@ -13,7 +13,7 @@ import {
     CommentRequest,
     CommentResult,
     Conversation,
-    ConversationDeletionResponse,
+    ConversationDeletionResponse, ConversationDetailsListResponse,
     ConversationListResponse,
     ConversationRequest,
     ConversationResponse,
@@ -79,4 +79,6 @@ export interface ICommentingClient extends ISportsTalkConfigurable, IUserConfigu
     getUserDetails(user: User | string): Promise<UserResult>
 
     listRepliesBatch(parentids: string[], limit: number): Promise<RepliesBatchResponse>
+
+    getConversationBatchDetails(conversation: Conversation[] | string[]): Promise<ConversationDetailsListResponse>
 }

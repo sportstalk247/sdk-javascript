@@ -2,7 +2,7 @@ import { ISportsTalkConfigurable, IUserConfigurable } from "../Configuration";
 import { ListRequest, Reaction, SportsTalkConfig } from "../../models/CommonModels";
 import { ICommentService } from "./ICommentService";
 import { IConversationService } from "./IConversationService";
-import { Comment, CommentDeletionResponse, CommentListResponse, CommentRequest, CommentResult, Conversation, ConversationDeletionResponse, ConversationListResponse, ConversationRequest, ConversationResponse, RepliesBatchResponse, SimpleComment, User, Vote } from "../../models/CommentsModels";
+import { Comment, CommentDeletionResponse, CommentListResponse, CommentRequest, CommentResult, Conversation, ConversationDeletionResponse, ConversationDetailsListResponse, ConversationListResponse, ConversationRequest, ConversationResponse, RepliesBatchResponse, SimpleComment, User, Vote } from "../../models/CommentsModels";
 import { UserDeletionResponse, UserListResponse, UserResult, UserSearchType } from "../../models/user/User";
 import { ReportType } from "../../models/Moderation";
 /**
@@ -35,4 +35,5 @@ export interface ICommentingClient extends ISportsTalkConfigurable, IUserConfigu
     deleteUser(user: User | string): Promise<UserDeletionResponse>;
     getUserDetails(user: User | string): Promise<UserResult>;
     listRepliesBatch(parentids: string[], limit: number): Promise<RepliesBatchResponse>;
+    getConversationBatchDetails(conversation: Conversation[] | string[]): Promise<ConversationDetailsListResponse>;
 }
