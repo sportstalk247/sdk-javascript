@@ -107,7 +107,7 @@ describe('Conversation Operations', function() {
             expect(requestedConversation.conversationid).to.be.equal(conversation.conversationid);
         })
         it("Can get conversations in a Batch", async ()=>{
-            const conversationDetails = await client.getConversationBatchDetails(conversations);
+            const conversationDetails = await client.getConversationBatchDetails(conversations, {entities:['likecount'], cid:[]});
             expect(conversationDetails).to.be.not.null;
             expect(conversationDetails.conversations).to.be.not.null;
             expect(conversationDetails.conversations.length).to.be.greaterThan(0);

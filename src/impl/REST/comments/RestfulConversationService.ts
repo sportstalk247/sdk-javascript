@@ -4,7 +4,7 @@ import {
     Conversation,
     ConversationResponse,
     ConversationDeletionResponse,
-    ConversationRequest, ConversationListResponse, User, ConversationDetailsListResponse
+    ConversationRequest, ConversationListResponse, User, ConversationDetailsListResponse, ConversationBatchListOptions
 } from "../../../models/CommentsModels";
 import {GET, POST, DELETE} from "../../constants/api";
 import {getUrlEncodedHeaders, getJSONHeaders, buildAPI, formify} from "../../utils";
@@ -168,15 +168,18 @@ export class RestfulConversationService implements IConversationService, IUserCo
     }
 
 
-    getConversationBatchDetails(conversations: Conversation[] | string[]): Promise<ConversationDetailsListResponse> {
+    getConversationBatchDetails(conversations: Conversation[] | string[], options?:ConversationBatchListOptions): Promise<ConversationDetailsListResponse> {
         //@ts-ignore
         const ids = [].concat(conversations).map(conversation => {
             //@ts-ignore
             return conversation.conversationid ? conversation.conversationid : conversation;
         })
+        const requestOptions:ConversationBatchListOptions = Object.assign({} as ConversationBatchListOptions, options || {});
+        const cids = ([] as string[]).concat(requestOptions.cid as string[]).join(',');
+        const entities = ([] as string[]).concat(requestOptions.entities as string[]).join(',');
         const config: AxiosRequestConfig = {
             method: GET,
-            url: buildAPI(this._config, `${this._apiExt}/details/batch?ids=${ids.join(',')}`),
+            url: buildAPI(this._config, `${this._apiExt}/details/batch?ids=${ids.join(',')}${cids ? '&cid='+cids : ''}${entities ?'&entities='+entities : ''}`),
             headers: this._jsonHeaders
         }
         return this.request(config).then(response=>response.data);

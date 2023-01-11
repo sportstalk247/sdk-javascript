@@ -12,6 +12,10 @@ export interface CustomFields {
     customfield1?: string;
     customfield2?: string;
 }
+export interface ConversationBatchListOptions {
+    entities?: ('reactions' | 'likecount' | 'commentcount')[];
+    cid?: string[];
+}
 export interface Conversation extends CustomFields {
     conversationid: string;
     customid?: string;

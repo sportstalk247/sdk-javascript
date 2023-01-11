@@ -1233,6 +1233,10 @@ var CommentClient = /** @class */ (function () {
         this.getUserDetails = function (user) {
             return _this._userService.getUserDetails(user);
         };
+        this.getConversationBatchDetails = function (conversations) {
+            //@ts-ignore
+            return _this._conversationService.getConversationBatchDetails(conversations);
+        };
     }
     /**
      * Creates a new Conversation Client
@@ -3347,6 +3351,19 @@ var RestfulConversationService = /** @class */ (function () {
     RestfulConversationService.prototype.getTokenExp = function () {
         return 0;
     };
+    RestfulConversationService.prototype.getConversationBatchDetails = function (conversations) {
+        //@ts-ignore
+        var ids = [].concat(conversations).map(function (conversation) {
+            //@ts-ignore
+            return conversation.conversationid ? conversation.conversationid : conversation;
+        });
+        var config = {
+            method: api_1.GET,
+            url: utils_1.buildAPI(this._config, this._apiExt + "/details/batch?ids=" + ids.join(',')),
+            headers: this._jsonHeaders
+        };
+        return this.request(config).then(function (response) { return response.data; });
+    };
     return RestfulConversationService;
 }());
 exports.RestfulConversationService = RestfulConversationService;
@@ -4306,6 +4323,7 @@ var Kind;
     Kind["repliesbyparentidlist"] = "list.repliesbyparentid";
     Kind["commentreplygrouplist"] = "list.commentreplygroup";
     Kind["chatroomextendeddetails"] = "chat.room.list.extendeddetails";
+    Kind["conversationdetailslist"] = "list.comment.conversation.details";
 })(Kind = exports.Kind || (exports.Kind = {}));
 var Reaction;
 (function (Reaction) {

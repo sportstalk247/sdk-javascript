@@ -16,7 +16,12 @@ import {
     CommentDeletionResponse,
     ConversationRequest,
     ConversationListResponse,
-    SimpleComment, RepliesBatchResponse, CommentResult, User, ConversationDetailsListResponse
+    SimpleComment,
+    RepliesBatchResponse,
+    CommentResult,
+    User,
+    ConversationDetailsListResponse,
+    ConversationBatchListOptions
 } from "../models/CommentsModels";
 import {RestfulCommentService} from "./REST/comments/RestfulCommentService";
 import {RestfulConversationService} from "./REST/comments/RestfulConversationService";
@@ -410,9 +415,9 @@ export class CommentClient implements ICommentingClient {
         return this._userService.getUserDetails(user);
     }
 
-    getConversationBatchDetails = (conversations: (Conversation| string)[]): Promise<ConversationDetailsListResponse> => {
+    getConversationBatchDetails = (conversations: Conversation[] | string[], options?:ConversationBatchListOptions ): Promise<ConversationDetailsListResponse> => {
         //@ts-ignore
-        return this._conversationService.getConversationBatchDetails(conversations);
+        return this._conversationService.getConversationBatchDetails(conversations, options);
     }
 
 

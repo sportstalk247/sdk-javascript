@@ -352,9 +352,9 @@ var CommentClient = /** @class */ (function () {
         this.getUserDetails = function (user) {
             return _this._userService.getUserDetails(user);
         };
-        this.getConversationBatchDetails = function (conversations) {
+        this.getConversationBatchDetails = function (conversations, options) {
             //@ts-ignore
-            return _this._conversationService.getConversationBatchDetails(conversations);
+            return _this._conversationService.getConversationBatchDetails(conversations, options);
         };
     }
     /**

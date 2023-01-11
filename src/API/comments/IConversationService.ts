@@ -1,6 +1,6 @@
 import {IConfigurable} from "../Configuration";
 import {
-    Conversation,
+    Conversation, ConversationBatchListOptions,
     ConversationDeletionResponse,
     ConversationDetailsListResponse,
     ConversationListResponse,
@@ -22,5 +22,5 @@ export interface IConversationService extends IConfigurable {
 
     deleteConversation(conversation: Conversation | string): Promise<ConversationDeletionResponse>
 
-    getConversationBatchDetails(conversation: Conversation[] | string[]): Promise<ConversationDetailsListResponse>
+    getConversationBatchDetails(conversation: Conversation[] | string[], options?:ConversationBatchListOptions ): Promise<ConversationDetailsListResponse>
 }

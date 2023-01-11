@@ -185,15 +185,18 @@ var RestfulConversationService = /** @class */ (function () {
     RestfulConversationService.prototype.getTokenExp = function () {
         return 0;
     };
-    RestfulConversationService.prototype.getConversationBatchDetails = function (conversations) {
+    RestfulConversationService.prototype.getConversationBatchDetails = function (conversations, options) {
         //@ts-ignore
         var ids = [].concat(conversations).map(function (conversation) {
             //@ts-ignore
             return conversation.conversationid ? conversation.conversationid : conversation;
         });
+        var requestOptions = Object.assign({}, options || {});
+        var cids = [].concat(requestOptions.cid).join(',');
+        var entities = [].concat(requestOptions.entities).join(',');
         var config = {
             method: api_1.GET,
-            url: utils_1.buildAPI(this._config, this._apiExt + "/details/batch?ids=" + ids.join(',')),
+            url: utils_1.buildAPI(this._config, this._apiExt + "/details/batch?ids=" + ids.join(',') + (cids ? '&cid=' + cids : '') + (entities ? '&entities=' + entities : '')),
             headers: this._jsonHeaders
         };
         return this.request(config).then(function (response) { return response.data; });

@@ -20,6 +20,11 @@ export interface CustomFields {
     customfield2?: string
 }
 
+
+export interface ConversationBatchListOptions {
+    entities?:('reactions' | 'likecount' | 'commentcount')[],
+    cid?:string[]
+}
 export interface Conversation extends CustomFields {
     conversationid: string,
     customid?: string,
@@ -32,7 +37,6 @@ export interface Conversation extends CustomFields {
     maxcommentlen?: number,
     enableprofanityfilter?: boolean,
     open?: boolean
-
 }
 
 export interface CommentListResponse extends ListResponse {
