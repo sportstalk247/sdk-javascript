@@ -25,7 +25,7 @@ var RestfulConversationService_1 = require("./impl/REST/comments/RestfulConversa
 var RestfulCommentModerationService_1 = require("./impl/REST/comments/RestfulCommentModerationService");
 var RestfulCommentService_1 = require("./impl/REST/comments/RestfulCommentService");
 var RestfulWebhookService_1 = require("./impl/REST/webhooks/RestfulWebhookService");
-var util = require("./util");
+var util = require("./utils");
 exports.util = util;
 var Chat = {
     RestfulChatModerationService: RestfulChatModerationService_1.RestfulChatModerationService,

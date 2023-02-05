@@ -1,4 +1,4 @@
-import {User} from "./models/user/User";
+import {User} from "../src/models/user/User";
 import {sign} from 'jsonwebtoken';
 
 export interface IUserJwtOptions {

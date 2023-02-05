@@ -5,7 +5,7 @@ import * as dotenv from 'dotenv';
 import {Kind, SportsTalkConfig} from "../../../src/models/CommonModels";
 import {API_SUCCESS_MESSAGE} from "../../../src/impl/constants/api";
 import {EventResult, Event} from "../../../src/models/ChatModels";
-import {createUserToken} from '../../../src/utils'
+import {createUserToken} from '../../util'
 
 dotenv.config();
 

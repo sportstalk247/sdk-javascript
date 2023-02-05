@@ -16,7 +16,7 @@ import { RestfulConversationService } from "./impl/REST/comments/RestfulConversa
 import { RestfulCommentModerationService } from "./impl/REST/comments/RestfulCommentModerationService";
 import { RestfulCommentService } from './impl/REST/comments/RestfulCommentService';
 import { RestfulWebhookService } from "./impl/REST/webhooks/RestfulWebhookService";
-import * as util from './util';
+import * as util from './utils';
 declare const Services: {
     ChatModerationService: typeof RestfulChatModerationService;
     ChatEventService: typeof RestfulChatEventService;
