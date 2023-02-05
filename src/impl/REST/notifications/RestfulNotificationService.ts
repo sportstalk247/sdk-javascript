@@ -1,4 +1,4 @@
-import {decode} from 'jsonwebtoken'
+import decode from "jwt-decode"
 import {
     SportsTalkConfig,
     UserTokenRefreshFunction
@@ -42,7 +42,9 @@ export class RestfulNotificationService implements INotificationService {
 
     setUserToken = (token:string) => {
         const decoded = decode(token);
+        // @ts-ignore
         if(decoded.exp) {
+            // @ts-ignore
             this._tokenExpiry = decoded.exp;
         } else {
             this._tokenExpiry = undefined;

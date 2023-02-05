@@ -37,7 +37,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.RestfulNotificationService = void 0;
-var jsonwebtoken_1 = require("jsonwebtoken");
+var jwt_decode_1 = require("jwt-decode");
 var utils_1 = require("../../utils");
 var ChatModels_1 = require("../../../models/ChatModels");
 var errors_1 = require("../../errors");
@@ -51,8 +51,10 @@ var RestfulNotificationService = /** @class */ (function () {
             return _this._user;
         };
         this.setUserToken = function (token) {
-            var decoded = jsonwebtoken_1.decode(token);
+            var decoded = jwt_decode_1.default(token);
+            // @ts-ignore
             if (decoded.exp) {
+                // @ts-ignore
                 _this._tokenExpiry = decoded.exp;
             }
             else {
