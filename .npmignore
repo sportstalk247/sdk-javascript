@@ -7,3 +7,4 @@ samples/
 .readthedocs.yml
 docs/
 src/
+dist/test

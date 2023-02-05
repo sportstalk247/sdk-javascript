@@ -1,4 +1,4 @@
-import { User } from "./models/user/User";
+import { User } from "../src/models/user/User";
 export interface IUserJwtOptions {
     expiresIn?: number;
 }
