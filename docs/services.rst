@@ -228,7 +228,7 @@ To instantiate the Chat Moderation service and get the moderation queue:
     const sdk = require('sportstalk-sdk');
     const service = new sdk.Services.ChatModerationService({appId: 'your-app-id', apiToken: 'your-api-token'});
     async function moderationExample() {
-        const queue =  await service.getModerationQueue();
+        const queue =  await service.listMessagesInModerationQueue();
         // queue has events awaiting moderation
     }
 
@@ -241,7 +241,7 @@ Approving a Chat Event
     const sdk = require('sportstalk-sdk');
     const service = new sdk.Services.ChatModerationService({appId: 'your-app-id', apiToken: 'your-api-token'});
     async function moderationApproveExample() {
-        const queue =  await service.getModerationQueue();
+        const queue =  await service.listMessagesInModerationQueue();
         const event = queue.events[0]; // this assumes there is at least one event.
         const result = service.approveEvent(event);
     }
@@ -255,7 +255,7 @@ Reject a Chat Event
     const sdk = require('sportstalk-sdk');
     const service = new sdk.Services.ChatModerationService({appId: 'your-app-id', apiToken: 'your-api-token'});
     async function moderationApproveExample() {
-        const queue =  await service.getModerationQueue();
+        const queue =  await service.listMessagesInModerationQueue();
         const event = queue.events[0]; // this assumes there is at least one event.
         const result = service.rejectEvent(event);
     }

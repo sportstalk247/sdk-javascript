@@ -1,6 +1,6 @@
 {
   "name": "sportstalk-sdk",
-  "version": "3.13.7",
+  "version": "3.13.8",
   "description": "Javascript SDK for SportsTalk",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
