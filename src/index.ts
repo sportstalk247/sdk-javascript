@@ -17,7 +17,7 @@ import {RestfulCommentModerationService} from "./impl/REST/comments/RestfulComme
 import {RestfulCommentService} from './impl/REST/comments/RestfulCommentService'
 import {RestfulWebhookService} from "./impl/REST/webhooks/RestfulWebhookService";
 
-import * as util from './util';
+import * as util from './utils';
 
 const Chat = {
     RestfulChatModerationService,
