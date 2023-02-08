@@ -564,7 +564,7 @@ export class RestfulChatEventService implements IChatEventService {
      * @param replyto
      * @param options
      */
-    sendThreadedReply = (user: User, message: string, replyto: EventResult |string, options?: CommandOptions): Promise<MessageResult<CommandResponse>> => {
+    sendThreadedReply = (user: User, message: string, replyto: EventResult |string, options?: CommandOptions): Promise<MessageResult<EventResult>> => {
         // @ts-ignore
         const id = replyto.id || replyto;
         const data = Object.assign({
@@ -589,7 +589,7 @@ export class RestfulChatEventService implements IChatEventService {
      * @param replyto
      * @param options
      */
-    sendQuotedReply = (user: User, message: string, replyto: EventResult |string, options?: QuoteCommandOptions): Promise<MessageResult<CommandResponse>> => {
+    sendQuotedReply = (user: User, message: string, replyto: EventResult |string, options?: QuoteCommandOptions): Promise<MessageResult<EventResult>> => {
         // @ts-ignore
         const id = replyto.id || replyto;
         const data = Object.assign({
@@ -769,7 +769,7 @@ export class RestfulChatEventService implements IChatEventService {
         return stRequest(config).then(result=>{
             return result;
         }).catch(e=>{
-            throw new Error(`${e.response.status} ${e.response.data && e.response.data.message ? e.response.data.message : e.response.statusText} - ${e.message}`);
+            throw new Error(`${e.response.status} ${e.response.data && e.response.data.message ? e.response.data.message : e.response.statusText} - ${e.message}, config:${JSON.stringify(config)}`);
         })
     }
 

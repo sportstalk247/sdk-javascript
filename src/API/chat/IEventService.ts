@@ -45,9 +45,9 @@ export interface IChatEventService extends IChatClientConfigurable, IUserConfigu
 
     executeChatCommand(user: User, command: string, options?: CommandOptions): Promise<MessageResult<CommandResponse> | ErrorResult>;
 
-    sendThreadedReply(user: User, message: string, replyto: EventResult | string, options?: CommandOptions): Promise<MessageResult<CommandResponse>>
+    sendThreadedReply(user: User, message: string, replyto: EventResult | string, options?: CommandOptions): Promise<MessageResult<EventResult>>
 
-    sendQuotedReply(user: User, message: string, replyto: EventResult | string, options?: CommandOptions): Promise<MessageResult<CommandResponse>>
+    sendQuotedReply(user: User, message: string, replyto: EventResult | string, options?: CommandOptions): Promise<MessageResult<EventResult>>
 
     reactToEvent(user: User, reaction: Reaction | string, reactToMessage: EventResult | string, options?: CommandOptions): Promise<MessageResult<CommandResponse>>
 

@@ -7,7 +7,13 @@ import {
 } from "../../../models/ChatModels";
 import {stRequest} from '../../network';
 import {GET, DELETE, POST, API_SUCCESS_MESSAGE} from "../../constants/api";
-import {buildAPI, forceObjKeyOrString, getJSONHeaders, getUrlEncodedHeaders, formify} from "../../utils";
+import {
+    buildAPI,
+    forceObjKeyOrString,
+    getJSONHeaders,
+    getUrlEncodedHeaders,
+    queryStringify
+} from "../../utils";
 import {RestApiResult, SportsTalkConfig} from "../../../models/CommonModels";
 import {AxiosRequestConfig} from "axios";
 import {SettingsError} from "../../errors";
@@ -382,7 +388,7 @@ export class RestfulChatRoomService implements IChatRoomService {
     getRoomExtendedDetails = (request:ChatRoomExtendedDetailsRequest): Promise<ChatRoomExtendedDetailsResponse> => {
         // extract only fields we want in case they send too much.
         const {roomids, entities, customids} = request;
-        const query = formify({
+        const query = queryStringify({
             roomid: roomids,
             entity: entities,
             customid: customids

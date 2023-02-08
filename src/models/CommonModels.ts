@@ -18,7 +18,7 @@ export enum Kind {
     chatsubscription = "chat.subscription",
     roomusereffects = "chat.list.roomusereffects",
     room = "chat.room",
-    userroomsubscriptions = "list.userroomsubscriptions",
+    userroomsubscriptions = "chat.list.userroomsubscriptions",
     notification = "notification",
     bounce = "chat.bounceuser",
     user = "app.user",

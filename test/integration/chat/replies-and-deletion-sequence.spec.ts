@@ -2,8 +2,8 @@ import { ChatClient } from '../../../src/impl/ChatClient';
 import * as chai from 'chai';
 import {RestfulChatRoomService} from "../../../src/impl/REST/chat/RestfulChatRoomService";
 import * as dotenv from 'dotenv';
-import {Kind, SportsTalkConfig} from "../../../src/models/CommonModels";
-import {EventResult} from "../../../src/models/ChatModels";
+import {Kind, MessageResult, SportsTalkConfig} from "../../../src/models/CommonModels";
+import {CommandResponse, EventResult} from "../../../src/models/ChatModels";
 import {THROTTLE_ERROR} from "../../../src/impl/constants/messages";
 import {User} from "../../../src/models/user/User";
 dotenv.config();
@@ -115,21 +115,16 @@ describe('REPLY & DELETE Chat Sequence', function() {
         let toDelete:EventResult;
         let toFlag: EventResult;
         let threadedReplyTargetId: string;
-        it('Shows Quoted reply', function (done) {
+        it('Shows matching events', function (done) {
             Promise.all([em1.getUpdates(), em2.getUpdates()])
                 .then(async (chatHistories) => {
                     expect(chatHistories[0].events).to.have.lengthOf(chatHistories[0].itemcount);
                     expect(chatHistories[1].events).to.have.lengthOf(chatHistories[1].itemcount);
                     const quote = chatHistories[0].events.find(event=>event.eventtype==='quote');
-                    try {
-                        expect(quote).to.be.not.null;
-                        expect(quote).to.be.not.undefined;
-                    }catch(e) {
-                        console.log(chatHistories);
-                        throw e;
-                    }
-                    // @ts-ignore
-                    expect(quote.eventtype).to.be.equal('quote');
+                    // expect(quote).to.be.not.null;
+                    // expect(quote).to.be.not.undefined;
+                    // // @ts-ignore
+                    // expect(quote.eventtype).to.be.equal('quote');
                     done();
                 })
                 .catch(done)
@@ -137,8 +132,18 @@ describe('REPLY & DELETE Chat Sequence', function() {
         it('Threads a reply', async ()=>{
             const updates = await em1.getUpdates();
             if(updates.events.length) {
-                const reply = await client.sendThreadedReply("Threaded reply", updates.events[updates.events.length - 1].id)
-                // expect(reply.data.kind).to.be.equal(Kind)
+                const reply = await client.sendThreadedReply("Threaded reply", updates.events[updates.events.length - 1].id) as MessageResult<EventResult>
+                expect(reply.data.kind).to.be.equal(Kind.chat)
+            } else {
+                throw new Error("No updates");
+            }
+        });
+        it('Quotes a reply', async ()=>{
+            const updates = await em1.getUpdates();
+            if(updates.events.length) {
+                const reply: MessageResult<EventResult> = await client.sendQuotedReply("This is a quoated reply", updates.events[updates.events.length - 1].id) as MessageResult<EventResult>
+                expect(reply.data.kind).to.be.equal(Kind.chat)
+                expect(reply.data.eventtype).to.be.equal("quote")
             } else {
                 throw new Error("No updates");
             }

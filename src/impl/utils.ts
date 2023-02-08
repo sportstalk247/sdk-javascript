@@ -18,6 +18,25 @@ export function formify(data) {
     return formBody.join("&");
 }
 
+
+export function queryStringify(data,key?) {
+    const formBody: Array<String> = []
+    for (const property in data) {
+        const encodedKey = key || property;
+        // If null/undefined/empty value, skip this.  Need careful check in case value is a number and is zero.
+        if(data[property] === undefined || data[property] === null || data[property] === NaN) {
+            continue;
+        }
+        if(Array.isArray(data[property])) {
+            formBody.push(queryStringify(data[property], property))
+        } else {
+            const encodedValue = encodeURIComponent(data[property]);
+            formBody.push(`${encodedKey}=${encodedValue}`);
+        }
+    }
+    return formBody.join("&");
+}
+
 export function buildAPI(config: SportsTalkConfig, ext: string, request?: Object): string {
     let endpoint = `${config.endpoint || DEFAULT_CONFIG.endpoint}/${config.appId}/${ext}`;
     if(request && Object.keys(request).length > 0) {
@@ -45,7 +64,7 @@ export function getUrlEncodedHeaders(apiKey?: string, userToken?: string): ApiHe
 
 export function getJSONHeaders(apiKey?: string, userToken?: string): ApiHeaders {
     const headers  = {
-        // 'Content-Type': APPLICATION_JSON // causes issues in browsers with cors, but not necessary for server.
+        'Content-Type': APPLICATION_JSON // causes issues in browsers with cors, but not necessary for server.
     }
     if(apiKey) {
         headers[API_TOKEN_HEADER] = apiKey

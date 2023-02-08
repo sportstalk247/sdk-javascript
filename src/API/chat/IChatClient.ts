@@ -52,7 +52,7 @@ export interface IChatClient extends IUserConfigurable, ISportsTalkConfigurable 
      * @param replyto the Event that is being replied to or the event ID as a string
      * @param options custom options, will depend on your chat implementation
      */
-    sendQuotedReply(message: string, replyto: string, options?: CommandOptions): Promise<MessageResult<null | CommandResponse>>
+    sendQuotedReply(message: string, replyto: string, options?: CommandOptions): Promise<MessageResult<null | EventResult>>
 
     /**
      * Reply to an event
@@ -60,7 +60,7 @@ export interface IChatClient extends IUserConfigurable, ISportsTalkConfigurable 
      * @param replyto the Event that is being replied to or the event ID as a string
      * @param options custom options, will depend on your chat implementation
      */
-    sendThreadedReply(message: string, replyto: string, options?: CommandOptions): Promise<MessageResult<null | CommandResponse>>
+    sendThreadedReply(message: string, replyto: string, options?: CommandOptions): Promise<MessageResult<null | EventResult>>
 
     /**
      * Sends an announcement, forces the announcement eventType.  Convenience method around executeChatCommand.

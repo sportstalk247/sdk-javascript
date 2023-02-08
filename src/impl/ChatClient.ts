@@ -619,7 +619,7 @@ export class ChatClient implements IChatClient {
      * @param replyto the Event that is being replied to or the event ID as a string
      * @param options custom options, will depend on your chat implementation
      */
-    sendQuotedReply = (message: string, replyto: EventResult | string, options?: CommandOptions): Promise<MessageResult<CommandResponse | null>> => {
+    sendQuotedReply = (message: string, replyto: EventResult | string, options?: CommandOptions): Promise<MessageResult<EventResult | null>> => {
         this._throttle(message);
         return this._eventService.sendQuotedReply(this._user, message, replyto, options);
     }
@@ -630,7 +630,7 @@ export class ChatClient implements IChatClient {
      * @param replyto the Event that is being replied to or the event ID as a string
      * @param options custom options, will depend on your chat implementation
      */
-    sendThreadedReply =(message: string, replyto: EventResult | string, options?: CommandOptions): Promise<MessageResult<CommandResponse | null>> => {
+    sendThreadedReply =(message: string, replyto: EventResult | string, options?: CommandOptions): Promise<MessageResult<EventResult | null>> => {
         this._throttle(message);
         return this._eventService.sendThreadedReply(this._user, message, replyto, options);
     }

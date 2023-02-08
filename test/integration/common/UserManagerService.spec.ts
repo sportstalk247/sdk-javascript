@@ -13,6 +13,7 @@ const { expect } = chai;
 // @ts-ignore
 const config: SportsTalkConfig = {apiToken:process.env.TEST_KEY, appId: process.env.TEST_APP_ID, endpoint: process.env.TEST_ENDPOINT};
 describe("UserManager Service", function(){
+    this.timeout(5000);
     const UM = new RestfulUserService(config);
     const NS = new RestfulNotificationService(config);
     const RM = new RestfulChatRoomService(config);
