@@ -94,8 +94,8 @@ export class RestfulCommentModerationService implements ICommentModerationServic
         const config:AxiosRequestConfig = {
             method: 'POST',
             url: buildAPI(this._config, `${this._apiExt}/${comment.id}/applydecision`),
-            headers: this._apiHeaders,
-            data: formify({approve: false})
+            headers: this._jsonHeaders,
+            data: {approve: false}
         }
         return stRequest(config).then(result => {
             return result.data
@@ -111,8 +111,8 @@ export class RestfulCommentModerationService implements ICommentModerationServic
         const config:AxiosRequestConfig = {
             method: 'POST',
             url: buildAPI(this._config, `${this._apiExt}/${comment.id}/applydecision`),
-            headers: this._apiHeaders,
-            data: formify({approve: approve})
+            headers: this._jsonHeaders,
+            data:{approve: approve}
         }
         return stRequest(config).then(result => {
             return result.data
@@ -127,8 +127,8 @@ export class RestfulCommentModerationService implements ICommentModerationServic
         const config: AxiosRequestConfig = {
             method: POST,
             url: buildAPI(this._config, `${this._apiExt}/${comment.id}/applydecision`),
-            headers: this._apiHeaders,
-            data: formify({approve: true})
+            headers: this._jsonHeaders,
+            data: {approve: true}
         };
         return stRequest(config).then(result => {
             return result.data

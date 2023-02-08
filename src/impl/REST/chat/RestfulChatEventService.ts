@@ -229,7 +229,7 @@ export class RestfulChatEventService implements IChatEventService {
         const config: AxiosRequestConfig = {
             method: POST,
             url: buildAPI(this._config, `/chat/rooms/${roomid}/sessions/${userid}/touch`),
-            headers: this._apiHeaders
+            headers: this._jsonHeaders
         }
         this._keepAliveFunction = function keepAliveFunction() {
             return stRequest(config);
@@ -377,7 +377,7 @@ export class RestfulChatEventService implements IChatEventService {
         const request: AxiosRequestConfig =  {
             method: GET,
             url: `${this._updatesApi}?limit=${limit}&cursor=${cursor}`,
-            headers: this._apiHeaders
+            headers: this._jsonHeaders
         };
         return stRequest(request).then((result) => {
             if(this._eventHandlers && this._eventHandlers.onNetworkResponse) {
@@ -786,7 +786,7 @@ export class RestfulChatEventService implements IChatEventService {
         return stRequest({
             method: GET,
             url: `${this._roomApi}/listpreviousevents?cursor=${previousCursor? previousCursor : ''}&limit=${limit ? limit : 100}`,
-            headers: this._apiHeaders
+            headers: this._jsonHeaders
         }).then((result) => {
             if(!cursor) {
                 this.oldestCursor = result.data ? result.data.cursor : this.oldestCursor;
@@ -808,7 +808,7 @@ export class RestfulChatEventService implements IChatEventService {
         return stRequest({
             method: GET,
             url: `${this._roomApi}/listeventshistory?cursor=${cursor ? cursor: ''}&limit=${limit ? limit : 100}`,
-            headers: this._apiHeaders
+            headers: this._jsonHeaders
         }).then((result) => {
             return result.data;
         });
@@ -818,19 +818,20 @@ export class RestfulChatEventService implements IChatEventService {
         if(params.fromhandle && params.fromuserid) {
             throw new SettingsError("Search for ID or Handle, not both");
         }
-        return stRequest({
+        const config:AxiosRequestConfig = {
             method: POST,
             url: buildAPI(this._config, `chat/searchevents`),
-            headers: this._apiHeaders,
+            headers: this._jsonHeaders,
             data: params
-        }).then(result=>result.data);
+        }
+        return stRequest(config).then(result=>result.data);
     }
 
     listEventsByType = (type:EventType): Promise<ChatEventsList> =>  {
         return stRequest({
             method: GET,
             url: `${this._roomApi}/listeventsbytype?eventtype=${type}`,
-            headers: this._apiHeaders,
+            headers: this._jsonHeaders
         }).then(result=>result.data);
     }
 

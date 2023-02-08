@@ -98,7 +98,7 @@ describe('Conversation Operations', function() {
             const response = await client.listConversations({propertyid: "UNIQUE_PROPERTY_KEY"});
             expect(response.conversations.length).to.be.equal(1);
         })
-        it("Can get comments by conversation", async()=>{
+        it("Can get comments by conversation object", async()=>{
             const requestedConversation = await client.getConversation(conversation);
             expect(requestedConversation.conversationid).to.be.equal(conversation.conversationid);
         })

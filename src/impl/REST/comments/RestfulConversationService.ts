@@ -109,6 +109,9 @@ export class RestfulConversationService implements IConversationService, IUserCo
     public getConversation = (conversation: Conversation | string): Promise<ConversationResponse> => {
         // @ts-ignore
         const id = getUrlConversationId(conversation);
+        if(!id) {
+            throw new Error("Must supply a conversationid to get a conversation");
+        }
         const config: AxiosRequestConfig = {
             method: GET,
             url: buildAPI(this._config, `${this._apiExt}/${id}`),
