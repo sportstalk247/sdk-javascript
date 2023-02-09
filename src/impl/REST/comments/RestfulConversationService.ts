@@ -1,4 +1,10 @@
-import {ApiHeaders, ClientConfig, SportsTalkConfig, UserTokenRefreshFunction} from "../../../models/CommonModels";
+import {
+    ApiHeaders,
+    ClientConfig,
+    Reaction, ReactionCommand,
+    SportsTalkConfig,
+    UserTokenRefreshFunction
+} from "../../../models/CommonModels";
 import axios, {AxiosRequestConfig} from "axios";
 import {
     Conversation,
@@ -7,11 +13,12 @@ import {
     ConversationRequest, ConversationListResponse, User, ConversationDetailsListResponse, ConversationBatchListOptions
 } from "../../../models/CommentsModels";
 import {GET, POST, DELETE} from "../../constants/api";
-import {getUrlEncodedHeaders, getJSONHeaders, buildAPI, formify} from "../../utils";
+import {getUrlEncodedHeaders, getJSONHeaders, buildAPI, formify, forceObjKeyOrString} from "../../utils";
 import {getUrlConversationId} from "./ConversationUtils";
 import {bindJWTUpdates, NetworkRequest, stRequest} from "../../network";
 import {IConversationService} from "../../../API/comments/IConversationService";
 import { IUserConfigurable } from "../../../API/Configuration";
+import {UserResult} from "../../../models/user/User";
 
 /**
  * This is the class that governs the lifecycle of conversations.
@@ -121,6 +128,35 @@ export class RestfulConversationService implements IConversationService, IUserCo
             return result.data
         });
     }
+
+    public reactToConversationTopic = (conversation: Conversation | string, reaction: ReactionCommand = {reaction:'like', reacted: true}, user?: User): Promise<ConversationResponse> => {
+        const id = getUrlConversationId(conversation);
+        const reactingUser = user ||  this._config.user;
+        const userid = forceObjKeyOrString(reactingUser, 'userid');
+        if(!reaction) {
+            throw new Error("Must provide a ReactionCommand object to react or send nothing to do a default like")
+        }
+        if(!userid) {
+            throw new Error("Must send a userid to react to a conversation topic")
+        }
+        if(!id) {
+            throw new Error("Must have a conversation ID to react to a conversation topic")
+        }
+        const config: AxiosRequestConfig = {
+            method: POST,
+            url: buildAPI(this._config, `comment/conversations/${id}/react/`),
+            headers: this._jsonHeaders,
+            data: {
+                reaction: reaction.reaction || 'like',
+                reacted: reaction.reacted || true,
+                userid,
+            }
+        }
+        return this.request(config).then(result=>{
+            return result.data
+        });
+    }
+
     /**
      * Get a conversation object
      * @param conversation

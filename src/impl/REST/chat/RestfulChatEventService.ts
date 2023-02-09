@@ -844,7 +844,7 @@ export class RestfulChatEventService implements IChatEventService {
         }
         const config:AxiosRequestConfig = {
             method: PUT,
-            url: buildAPI(this._config, `/chat/rooms/${this._currentRoom.id}/events/${eventid}`),
+            url: buildAPI(this._config, `chat/rooms/${this._currentRoom.id}/events/${eventid}`),
             headers: this._jsonHeaders,
             data:{
                 userid,

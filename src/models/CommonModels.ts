@@ -94,6 +94,11 @@ export interface ListResponse {
     itemcount?: number
 }
 
+export interface ReactionCommand {
+    reaction: Reaction | string,
+    reacted: boolean
+}
+
 export interface ISO8601DATE {
 
 }

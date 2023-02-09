@@ -5,8 +5,10 @@ import {
     ConversationDetailsListResponse,
     ConversationListResponse,
     ConversationRequest,
-    ConversationResponse
+    ConversationResponse, User
 } from "../../models/CommentsModels";
+import {ReactionCommand} from "../../models/CommonModels";
+import {UserResult} from "../../models/user/User";
 
 /**
  * @interface
@@ -23,4 +25,6 @@ export interface IConversationService extends IConfigurable {
     deleteConversation(conversation: Conversation | string): Promise<ConversationDeletionResponse>
 
     getConversationBatchDetails(conversation: Conversation[] | string[], options?:ConversationBatchListOptions ): Promise<ConversationDetailsListResponse>
+
+    reactToConversationTopic(conversation: Conversation | string, reaction?: ReactionCommand, user?: User): Promise<ConversationResponse>
 }

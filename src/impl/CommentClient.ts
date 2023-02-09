@@ -3,7 +3,7 @@ import {
     SportsTalkConfig,
     RestApiResult,
     UserTokenRefreshFunction,
-    ListRequest,
+    ListRequest, ReactionCommand,
 } from "../models/CommonModels";
 import {
     Conversation,
@@ -268,6 +268,10 @@ export class CommentClient implements ICommentingClient {
 
     public getConversationByCustomId(conversation: Conversation | string): Promise<ConversationResponse> {
         return this._conversationService.getConversationByCustomId(conversation);
+    }
+
+    public reactToConversationTopic = (conversation: Conversation | string, reaction: ReactionCommand = {reaction:'like', reacted: true}, user?: User) => {
+        return this._conversationService.reactToConversationTopic(conversation, reaction || {}, user || this._user)
     }
 
     /**

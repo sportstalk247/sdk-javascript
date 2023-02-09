@@ -119,12 +119,23 @@ describe("Event Service", () => {
                 expect(reactionTriggered).to.be.true;
             })
         })
-
+        describe("Search chat events", ()=>{
+            it('can search events', done=>{
+                EM.searchEventHistory({fromuserid: "chatEventUser"}).then(res=>{
+                    expect(res.kind).to.be.equal('list.chatevents');
+                    done();
+                }).catch(done)
+            })
+        })
 
         describe("onAdmin", ()=>{
             it("Will trigger onAdminCommand", async()=>{
-                const purge = await client.executeChatCommand("*purge chatEventUser");
-                expect(onAdminCommand.callCount).to.be.greaterThan(0);
+                try {
+                    const purge = await client.executeChatCommand("*purge chatEventUser");
+                    expect(onAdminCommand.callCount).to.be.greaterThan(0);
+                }catch(e){
+                    throw e;
+                }
             })
         })
         describe('onPurge', ()=>{
@@ -134,6 +145,7 @@ describe("Event Service", () => {
                 expect(onPurgeEvent.callCount).to.be.greaterThan(0);
             })
         })
+
         describe("Kill chat room", ()=>{
             it("closes chat", done=>{
                 RM.deleteRoom(room).then(()=>{
@@ -142,13 +154,6 @@ describe("Event Service", () => {
                 }).catch(done);
             })
         })
-        describe("Search chat events", ()=>{
-            it('can search events', done=>{
-                EM.searchEventHistory({fromuserid: "chatEventUser"}).then(res=>{
-                    expect(res.kind).to.be.equal('list.chatevents');
-                    done();
-                })
-            })
-        })
+
     })
 })

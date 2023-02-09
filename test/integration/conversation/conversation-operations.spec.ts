@@ -85,7 +85,7 @@ describe('Conversation Operations', function() {
         })
     });
 
-    describe('list conversations', function() {
+    describe('Operations', function() {
         let conversation:Conversation;
         let conversations: Conversation[];
         it("Can list all conversations", async () => {
@@ -106,6 +106,11 @@ describe('Conversation Operations', function() {
             const requestedConversation = await client.getConversation(conversation.conversationid);
             expect(requestedConversation.conversationid).to.be.equal(conversation.conversationid);
         })
+        it("Can react to a conversation topic", async()=>{
+            const reaction = await client.reactToConversationTopic(conversation);
+            expect(reaction);
+        })
+
         it("Can get conversations in a Batch", async ()=>{
             const conversationDetails = await client.getConversationBatchDetails(conversations, {entities:['likecount'], cid:[]});
             expect(conversationDetails).to.be.not.null;
