@@ -245,14 +245,14 @@ export declare class ChatClient implements IChatClient {
      * @param replyto the Event that is being replied to or the event ID as a string
      * @param options custom options, will depend on your chat implementation
      */
-    sendQuotedReply: (message: string, replyto: EventResult | string, options?: CommandOptions | undefined) => Promise<MessageResult<CommandResponse | null>>;
+    sendQuotedReply: (message: string, replyto: EventResult | string, options?: CommandOptions | undefined) => Promise<MessageResult<EventResult | null>>;
     /**
      * Reply to an event
      * @param message the text that will make up the reply
      * @param replyto the Event that is being replied to or the event ID as a string
      * @param options custom options, will depend on your chat implementation
      */
-    sendThreadedReply: (message: string, replyto: EventResult | string, options?: CommandOptions | undefined) => Promise<MessageResult<CommandResponse | null>>;
+    sendThreadedReply: (message: string, replyto: EventResult | string, options?: CommandOptions | undefined) => Promise<MessageResult<EventResult | null>>;
     /**
      * React to an event
      * @param reaction

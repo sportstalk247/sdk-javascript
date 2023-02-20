@@ -213,7 +213,7 @@ var RestfulChatEventService = /** @class */ (function () {
             var config = {
                 method: api_1.POST,
                 url: utils_1.buildAPI(_this._config, "/chat/rooms/" + roomid + "/sessions/" + userid + "/touch"),
-                headers: _this._apiHeaders
+                headers: _this._jsonHeaders
             };
             _this._keepAliveFunction = function keepAliveFunction() {
                 return network_1.stRequest(config);
@@ -350,7 +350,7 @@ var RestfulChatEventService = /** @class */ (function () {
             var request = {
                 method: api_1.GET,
                 url: _this._updatesApi + "?limit=" + limit + "&cursor=" + cursor,
-                headers: _this._apiHeaders
+                headers: _this._jsonHeaders
             };
             return network_1.stRequest(request).then(function (result) {
                 if (_this._eventHandlers && _this._eventHandlers.onNetworkResponse) {
@@ -749,7 +749,7 @@ var RestfulChatEventService = /** @class */ (function () {
             return network_1.stRequest(config).then(function (result) {
                 return result;
             }).catch(function (e) {
-                throw new Error(e.response.status + " " + (e.response.data && e.response.data.message ? e.response.data.message : e.response.statusText) + " - " + e.message);
+                throw new Error(e.response.status + " " + (e.response.data && e.response.data.message ? e.response.data.message : e.response.statusText) + " - " + e.message + ", config:" + JSON.stringify(config));
             });
         };
         /**
@@ -767,7 +767,7 @@ var RestfulChatEventService = /** @class */ (function () {
             return network_1.stRequest({
                 method: api_1.GET,
                 url: _this._roomApi + "/listpreviousevents?cursor=" + (previousCursor ? previousCursor : '') + "&limit=" + (limit ? limit : 100),
-                headers: _this._apiHeaders
+                headers: _this._jsonHeaders
             }).then(function (result) {
                 if (!cursor) {
                     _this.oldestCursor = result.data ? result.data.cursor : _this.oldestCursor;
@@ -790,7 +790,7 @@ var RestfulChatEventService = /** @class */ (function () {
             return network_1.stRequest({
                 method: api_1.GET,
                 url: _this._roomApi + "/listeventshistory?cursor=" + (cursor ? cursor : '') + "&limit=" + (limit ? limit : 100),
-                headers: _this._apiHeaders
+                headers: _this._jsonHeaders
             }).then(function (result) {
                 return result.data;
             });
@@ -799,18 +799,19 @@ var RestfulChatEventService = /** @class */ (function () {
             if (params.fromhandle && params.fromuserid) {
                 throw new errors_1.SettingsError("Search for ID or Handle, not both");
             }
-            return network_1.stRequest({
+            var config = {
                 method: api_1.POST,
                 url: utils_1.buildAPI(_this._config, "chat/searchevents"),
-                headers: _this._apiHeaders,
+                headers: _this._jsonHeaders,
                 data: params
-            }).then(function (result) { return result.data; });
+            };
+            return network_1.stRequest(config).then(function (result) { return result.data; });
         };
         this.listEventsByType = function (type) {
             return network_1.stRequest({
                 method: api_1.GET,
                 url: _this._roomApi + "/listeventsbytype?eventtype=" + type,
-                headers: _this._apiHeaders,
+                headers: _this._jsonHeaders
             }).then(function (result) { return result.data; });
         };
         this.updateChatEvent = function (event, body, user) {
@@ -822,7 +823,7 @@ var RestfulChatEventService = /** @class */ (function () {
             }
             var config = {
                 method: api_1.PUT,
-                url: utils_1.buildAPI(_this._config, "/chat/rooms/" + _this._currentRoom.id + "/events/" + eventid),
+                url: utils_1.buildAPI(_this._config, "chat/rooms/" + _this._currentRoom.id + "/events/" + eventid),
                 headers: _this._jsonHeaders,
                 data: {
                     userid: userid,

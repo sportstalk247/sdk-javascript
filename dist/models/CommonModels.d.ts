@@ -16,7 +16,7 @@ export declare enum Kind {
     chatsubscription = "chat.subscription",
     roomusereffects = "chat.list.roomusereffects",
     room = "chat.room",
-    userroomsubscriptions = "list.userroomsubscriptions",
+    userroomsubscriptions = "chat.list.userroomsubscriptions",
     notification = "notification",
     bounce = "chat.bounceuser",
     user = "app.user",
@@ -83,6 +83,10 @@ export interface ListResponse {
     cursor?: string;
     more?: boolean;
     itemcount?: number;
+}
+export interface ReactionCommand {
+    reaction: Reaction | string;
+    reacted: boolean;
 }
 export interface ISO8601DATE {
 }

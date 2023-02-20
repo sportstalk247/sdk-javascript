@@ -81,8 +81,8 @@ var RestfulCommentModerationService = /** @class */ (function () {
             var config = {
                 method: 'POST',
                 url: utils_1.buildAPI(_this._config, _this._apiExt + "/" + comment.id + "/applydecision"),
-                headers: _this._apiHeaders,
-                data: utils_1.formify({ approve: false })
+                headers: _this._jsonHeaders,
+                data: { approve: false }
             };
             return network_1.stRequest(config).then(function (result) {
                 return result.data;
@@ -96,8 +96,8 @@ var RestfulCommentModerationService = /** @class */ (function () {
             var config = {
                 method: 'POST',
                 url: utils_1.buildAPI(_this._config, _this._apiExt + "/" + comment.id + "/applydecision"),
-                headers: _this._apiHeaders,
-                data: utils_1.formify({ approve: approve })
+                headers: _this._jsonHeaders,
+                data: { approve: approve }
             };
             return network_1.stRequest(config).then(function (result) {
                 return result.data;
@@ -111,8 +111,8 @@ var RestfulCommentModerationService = /** @class */ (function () {
             var config = {
                 method: api_1.POST,
                 url: utils_1.buildAPI(_this._config, _this._apiExt + "/" + comment.id + "/applydecision"),
-                headers: _this._apiHeaders,
-                data: utils_1.formify({ approve: true })
+                headers: _this._jsonHeaders,
+                data: { approve: true }
             };
             return network_1.stRequest(config).then(function (result) {
                 return result.data;

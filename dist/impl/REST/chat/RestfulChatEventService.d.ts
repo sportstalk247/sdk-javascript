@@ -192,7 +192,7 @@ export declare class RestfulChatEventService implements IChatEventService {
      * @param replyto
      * @param options
      */
-    sendThreadedReply: (user: User, message: string, replyto: EventResult | string, options?: CommandOptions | undefined) => Promise<MessageResult<CommandResponse>>;
+    sendThreadedReply: (user: User, message: string, replyto: EventResult | string, options?: CommandOptions | undefined) => Promise<MessageResult<EventResult>>;
     /**
      * Send a quoted reply to a chat event.
      * @param user
@@ -200,7 +200,7 @@ export declare class RestfulChatEventService implements IChatEventService {
      * @param replyto
      * @param options
      */
-    sendQuotedReply: (user: User, message: string, replyto: EventResult | string, options?: QuoteCommandOptions | undefined) => Promise<MessageResult<CommandResponse>>;
+    sendQuotedReply: (user: User, message: string, replyto: EventResult | string, options?: QuoteCommandOptions | undefined) => Promise<MessageResult<EventResult>>;
     /**
      * Report an event for breaking community rules
      * @param event

@@ -222,6 +222,10 @@ var CommentClient = /** @class */ (function () {
         this.getConversation = function (conversation) {
             return _this._conversationService.getConversation(conversation);
         };
+        this.reactToConversationTopic = function (conversation, reaction, user) {
+            if (reaction === void 0) { reaction = { reaction: 'like', reacted: true }; }
+            return _this._conversationService.reactToConversationTopic(conversation, reaction || {}, user || _this._user);
+        };
         /**
          * Deletes a comments. Be careful. Cannot be reversed
          * @param conversation

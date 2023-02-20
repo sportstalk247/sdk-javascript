@@ -1103,6 +1103,10 @@ var CommentClient = /** @class */ (function () {
         this.getConversation = function (conversation) {
             return _this._conversationService.getConversation(conversation);
         };
+        this.reactToConversationTopic = function (conversation, reaction, user) {
+            if (reaction === void 0) { reaction = { reaction: 'like', reacted: true }; }
+            return _this._conversationService.reactToConversationTopic(conversation, reaction || {}, user || _this._user);
+        };
         /**
          * Deletes a comments. Be careful. Cannot be reversed
          * @param conversation
@@ -1481,7 +1485,7 @@ var RestfulChatEventService = /** @class */ (function () {
             var config = {
                 method: api_1.POST,
                 url: utils_1.buildAPI(_this._config, "/chat/rooms/" + roomid + "/sessions/" + userid + "/touch"),
-                headers: _this._apiHeaders
+                headers: _this._jsonHeaders
             };
             _this._keepAliveFunction = function keepAliveFunction() {
                 return network_1.stRequest(config);
@@ -1618,7 +1622,7 @@ var RestfulChatEventService = /** @class */ (function () {
             var request = {
                 method: api_1.GET,
                 url: _this._updatesApi + "?limit=" + limit + "&cursor=" + cursor,
-                headers: _this._apiHeaders
+                headers: _this._jsonHeaders
             };
             return network_1.stRequest(request).then(function (result) {
                 if (_this._eventHandlers && _this._eventHandlers.onNetworkResponse) {
@@ -2017,7 +2021,7 @@ var RestfulChatEventService = /** @class */ (function () {
             return network_1.stRequest(config).then(function (result) {
                 return result;
             }).catch(function (e) {
-                throw new Error(e.response.status + " " + (e.response.data && e.response.data.message ? e.response.data.message : e.response.statusText) + " - " + e.message);
+                throw new Error(e.response.status + " " + (e.response.data && e.response.data.message ? e.response.data.message : e.response.statusText) + " - " + e.message + ", config:" + JSON.stringify(config));
             });
         };
         /**
@@ -2035,7 +2039,7 @@ var RestfulChatEventService = /** @class */ (function () {
             return network_1.stRequest({
                 method: api_1.GET,
                 url: _this._roomApi + "/listpreviousevents?cursor=" + (previousCursor ? previousCursor : '') + "&limit=" + (limit ? limit : 100),
-                headers: _this._apiHeaders
+                headers: _this._jsonHeaders
             }).then(function (result) {
                 if (!cursor) {
                     _this.oldestCursor = result.data ? result.data.cursor : _this.oldestCursor;
@@ -2058,7 +2062,7 @@ var RestfulChatEventService = /** @class */ (function () {
             return network_1.stRequest({
                 method: api_1.GET,
                 url: _this._roomApi + "/listeventshistory?cursor=" + (cursor ? cursor : '') + "&limit=" + (limit ? limit : 100),
-                headers: _this._apiHeaders
+                headers: _this._jsonHeaders
             }).then(function (result) {
                 return result.data;
             });
@@ -2067,18 +2071,19 @@ var RestfulChatEventService = /** @class */ (function () {
             if (params.fromhandle && params.fromuserid) {
                 throw new errors_1.SettingsError("Search for ID or Handle, not both");
             }
-            return network_1.stRequest({
+            var config = {
                 method: api_1.POST,
                 url: utils_1.buildAPI(_this._config, "chat/searchevents"),
-                headers: _this._apiHeaders,
+                headers: _this._jsonHeaders,
                 data: params
-            }).then(function (result) { return result.data; });
+            };
+            return network_1.stRequest(config).then(function (result) { return result.data; });
         };
         this.listEventsByType = function (type) {
             return network_1.stRequest({
                 method: api_1.GET,
                 url: _this._roomApi + "/listeventsbytype?eventtype=" + type,
-                headers: _this._apiHeaders,
+                headers: _this._jsonHeaders
             }).then(function (result) { return result.data; });
         };
         this.updateChatEvent = function (event, body, user) {
@@ -2090,7 +2095,7 @@ var RestfulChatEventService = /** @class */ (function () {
             }
             var config = {
                 method: api_1.PUT,
-                url: utils_1.buildAPI(_this._config, "/chat/rooms/" + _this._currentRoom.id + "/events/" + eventid),
+                url: utils_1.buildAPI(_this._config, "chat/rooms/" + _this._currentRoom.id + "/events/" + eventid),
                 headers: _this._jsonHeaders,
                 data: {
                     userid: userid,
@@ -2604,7 +2609,7 @@ var RestfulChatRoomService = /** @class */ (function () {
         this.getRoomExtendedDetails = function (request) {
             // extract only fields we want in case they send too much.
             var roomids = request.roomids, entities = request.entities, customids = request.customids;
-            var query = utils_1.formify({
+            var query = utils_1.queryStringify({
                 roomid: roomids,
                 entity: entities,
                 customid: customids
@@ -3289,10 +3294,41 @@ var RestfulConversationService = /** @class */ (function () {
         this.getConversation = function (conversation) {
             // @ts-ignore
             var id = ConversationUtils_1.getUrlConversationId(conversation);
+            if (!id) {
+                throw new Error("Must supply a conversationid to get a conversation");
+            }
             var config = {
                 method: api_1.GET,
                 url: utils_1.buildAPI(_this._config, _this._apiExt + "/" + id),
                 headers: _this._jsonHeaders,
+            };
+            return _this.request(config).then(function (result) {
+                return result.data;
+            });
+        };
+        this.reactToConversationTopic = function (conversation, reaction, user) {
+            if (reaction === void 0) { reaction = { reaction: 'like', reacted: true }; }
+            var id = ConversationUtils_1.getUrlConversationId(conversation);
+            var reactingUser = user || _this._config.user;
+            var userid = utils_1.forceObjKeyOrString(reactingUser, 'userid');
+            if (!reaction) {
+                throw new Error("Must provide a ReactionCommand object to react or send nothing to do a default like");
+            }
+            if (!userid) {
+                throw new Error("Must send a userid to react to a conversation topic");
+            }
+            if (!id) {
+                throw new Error("Must have a conversation ID to react to a conversation topic");
+            }
+            var config = {
+                method: api_1.POST,
+                url: utils_1.buildAPI(_this._config, "comment/conversations/" + id + "/react/"),
+                headers: _this._jsonHeaders,
+                data: {
+                    reaction: reaction.reaction || 'like',
+                    reacted: reaction.reacted || true,
+                    userid: userid,
+                }
             };
             return _this.request(config).then(function (result) {
                 return result.data;
@@ -4126,7 +4162,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CallBackDelegate = exports.forceObjKeyOrString = exports.getJSONHeaders = exports.getUrlEncodedHeaders = exports.buildAPI = exports.formify = void 0;
+exports.CallBackDelegate = exports.forceObjKeyOrString = exports.getJSONHeaders = exports.getUrlEncodedHeaders = exports.buildAPI = exports.queryStringify = exports.formify = void 0;
 var api_1 = require("./constants/api");
 var errors_1 = require("./errors");
 function formify(data) {
@@ -4143,6 +4179,25 @@ function formify(data) {
     return formBody.join("&");
 }
 exports.formify = formify;
+function queryStringify(data, key) {
+    var formBody = [];
+    for (var property in data) {
+        var encodedKey = key || property;
+        // If null/undefined/empty value, skip this.  Need careful check in case value is a number and is zero.
+        if (data[property] === undefined || data[property] === null || data[property] === NaN) {
+            continue;
+        }
+        if (Array.isArray(data[property])) {
+            formBody.push(queryStringify(data[property], property));
+        }
+        else {
+            var encodedValue = encodeURIComponent(data[property]);
+            formBody.push(encodedKey + "=" + encodedValue);
+        }
+    }
+    return formBody.join("&");
+}
+exports.queryStringify = queryStringify;
 function buildAPI(config, ext, request) {
     var endpoint = (config.endpoint || api_1.DEFAULT_CONFIG.endpoint) + "/" + config.appId + "/" + ext;
     if (request && Object.keys(request).length > 0) {
@@ -4171,7 +4226,7 @@ function getUrlEncodedHeaders(apiKey, userToken) {
 exports.getUrlEncodedHeaders = getUrlEncodedHeaders;
 function getJSONHeaders(apiKey, userToken) {
     var headers = {
-    // 'Content-Type': APPLICATION_JSON // causes issues in browsers with cors, but not necessary for server.
+        'Content-Type': api_1.APPLICATION_JSON // causes issues in browsers with cors, but not necessary for server.
     };
     if (apiKey) {
         headers[api_1.API_TOKEN_HEADER] = apiKey;
@@ -4303,7 +4358,7 @@ var Kind;
     Kind["chatsubscription"] = "chat.subscription";
     Kind["roomusereffects"] = "chat.list.roomusereffects";
     Kind["room"] = "chat.room";
-    Kind["userroomsubscriptions"] = "list.userroomsubscriptions";
+    Kind["userroomsubscriptions"] = "chat.list.userroomsubscriptions";
     Kind["notification"] = "notification";
     Kind["bounce"] = "chat.bounceuser";
     Kind["user"] = "app.user";

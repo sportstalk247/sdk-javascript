@@ -228,7 +228,7 @@ export class RestfulChatEventService implements IChatEventService {
     _startKeepAlive = (roomid, userid) => {
         const config: AxiosRequestConfig = {
             method: POST,
-            url: buildAPI(this._config, `/chat/rooms/${roomid}/sessions/${userid}/touch`),
+            url: buildAPI(this._config, `chat/rooms/${roomid}/sessions/${userid}/touch`),
             headers: this._jsonHeaders
         }
         this._keepAliveFunction = function keepAliveFunction() {

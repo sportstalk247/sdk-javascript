@@ -320,7 +320,7 @@ var RestfulChatRoomService = /** @class */ (function () {
         this.getRoomExtendedDetails = function (request) {
             // extract only fields we want in case they send too much.
             var roomids = request.roomids, entities = request.entities, customids = request.customids;
-            var query = utils_1.formify({
+            var query = utils_1.queryStringify({
                 roomid: roomids,
                 entity: entities,
                 customid: customids

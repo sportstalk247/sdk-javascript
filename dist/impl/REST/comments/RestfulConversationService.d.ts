@@ -1,4 +1,4 @@
-import { ApiHeaders, SportsTalkConfig, UserTokenRefreshFunction } from "../../../models/CommonModels";
+import { ApiHeaders, ReactionCommand, SportsTalkConfig, UserTokenRefreshFunction } from "../../../models/CommonModels";
 import { Conversation, ConversationResponse, ConversationDeletionResponse, ConversationRequest, ConversationListResponse, User, ConversationDetailsListResponse, ConversationBatchListOptions } from "../../../models/CommentsModels";
 import { IConversationService } from "../../../API/comments/IConversationService";
 import { IUserConfigurable } from "../../../API/Configuration";
@@ -50,6 +50,7 @@ export declare class RestfulConversationService implements IConversationService,
      * @param conversation
      */
     getConversation: (conversation: Conversation | string) => Promise<ConversationResponse>;
+    reactToConversationTopic: (conversation: Conversation | string, reaction?: ReactionCommand, user?: User | undefined) => Promise<ConversationResponse>;
     /**
      * Get a conversation object
      * @param conversation

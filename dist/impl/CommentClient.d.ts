@@ -1,4 +1,4 @@
-import { Reaction, SportsTalkConfig, UserTokenRefreshFunction, ListRequest } from "../models/CommonModels";
+import { Reaction, SportsTalkConfig, UserTokenRefreshFunction, ListRequest, ReactionCommand } from "../models/CommonModels";
 import { Conversation, Vote, Comment, CommentRequest, ConversationDeletionResponse, ConversationResponse, CommentListResponse, CommentDeletionResponse, ConversationRequest, ConversationListResponse, RepliesBatchResponse, CommentResult, User, ConversationDetailsListResponse, ConversationBatchListOptions } from "../models/CommentsModels";
 import { ICommentService } from "../API/comments/ICommentService";
 import { IConversationService } from "../API/comments/IConversationService";
@@ -132,6 +132,7 @@ export declare class CommentClient implements ICommentingClient {
      */
     getConversation: (conversation: Conversation | string) => Promise<Conversation>;
     getConversationByCustomId(conversation: Conversation | string): Promise<ConversationResponse>;
+    reactToConversationTopic: (conversation: Conversation | string, reaction?: ReactionCommand, user?: User | undefined) => Promise<ConversationResponse>;
     /**
      * Deletes a comments. Be careful. Cannot be reversed
      * @param conversation

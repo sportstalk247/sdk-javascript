@@ -20,8 +20,8 @@ export interface IChatEventService extends IChatClientConfigurable, IUserConfigu
     setPreviousEventsCursor(cursor: string): any;
     reportMessage(event: EventResult | string, reason: ReportReason): Promise<MessageResult<null>>;
     executeChatCommand(user: User, command: string, options?: CommandOptions): Promise<MessageResult<CommandResponse> | ErrorResult>;
-    sendThreadedReply(user: User, message: string, replyto: EventResult | string, options?: CommandOptions): Promise<MessageResult<CommandResponse>>;
-    sendQuotedReply(user: User, message: string, replyto: EventResult | string, options?: CommandOptions): Promise<MessageResult<CommandResponse>>;
+    sendThreadedReply(user: User, message: string, replyto: EventResult | string, options?: CommandOptions): Promise<MessageResult<EventResult>>;
+    sendQuotedReply(user: User, message: string, replyto: EventResult | string, options?: CommandOptions): Promise<MessageResult<EventResult>>;
     reactToEvent(user: User, reaction: Reaction | string, reactToMessage: EventResult | string, options?: CommandOptions): Promise<MessageResult<CommandResponse>>;
     sendAdvertisement(user: User, options: AdvertisementOptions): Promise<MessageResult<CommandResponse>>;
     sendGoal(user: User, img: string, message?: string, options?: GoalOptions): Promise<MessageResult<CommandResponse>>;

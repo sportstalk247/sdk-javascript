@@ -36,7 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.CallBackDelegate = exports.forceObjKeyOrString = exports.getJSONHeaders = exports.getUrlEncodedHeaders = exports.buildAPI = exports.formify = void 0;
+exports.CallBackDelegate = exports.forceObjKeyOrString = exports.getJSONHeaders = exports.getUrlEncodedHeaders = exports.buildAPI = exports.queryStringify = exports.formify = void 0;
 var api_1 = require("./constants/api");
 var errors_1 = require("./errors");
 function formify(data) {
@@ -53,6 +53,25 @@ function formify(data) {
     return formBody.join("&");
 }
 exports.formify = formify;
+function queryStringify(data, key) {
+    var formBody = [];
+    for (var property in data) {
+        var encodedKey = key || property;
+        // If null/undefined/empty value, skip this.  Need careful check in case value is a number and is zero.
+        if (data[property] === undefined || data[property] === null || data[property] === NaN) {
+            continue;
+        }
+        if (Array.isArray(data[property])) {
+            formBody.push(queryStringify(data[property], property));
+        }
+        else {
+            var encodedValue = encodeURIComponent(data[property]);
+            formBody.push(encodedKey + "=" + encodedValue);
+        }
+    }
+    return formBody.join("&");
+}
+exports.queryStringify = queryStringify;
 function buildAPI(config, ext, request) {
     var endpoint = (config.endpoint || api_1.DEFAULT_CONFIG.endpoint) + "/" + config.appId + "/" + ext;
     if (request && Object.keys(request).length > 0) {
@@ -81,7 +100,7 @@ function getUrlEncodedHeaders(apiKey, userToken) {
 exports.getUrlEncodedHeaders = getUrlEncodedHeaders;
 function getJSONHeaders(apiKey, userToken) {
     var headers = {
-    // 'Content-Type': APPLICATION_JSON // causes issues in browsers with cors, but not necessary for server.
+        'Content-Type': api_1.APPLICATION_JSON // causes issues in browsers with cors, but not necessary for server.
     };
     if (apiKey) {
         headers[api_1.API_TOKEN_HEADER] = apiKey;

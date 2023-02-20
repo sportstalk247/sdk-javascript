@@ -1,6 +1,7 @@
 import { ApiHeaders, SportsTalkConfig, UserTokenRefreshFunction } from "../models/CommonModels";
 import { IUserConfigurable } from "../API/Configuration";
 export declare function formify(data: any): string;
+export declare function queryStringify(data: any, key?: any): string;
 export declare function buildAPI(config: SportsTalkConfig, ext: string, request?: Object): string;
 /**
  * Gets proper API headers with optional token.

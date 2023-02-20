@@ -1,5 +1,6 @@
 import { IConfigurable } from "../Configuration";
-import { Conversation, ConversationBatchListOptions, ConversationDeletionResponse, ConversationDetailsListResponse, ConversationListResponse, ConversationRequest, ConversationResponse } from "../../models/CommentsModels";
+import { Conversation, ConversationBatchListOptions, ConversationDeletionResponse, ConversationDetailsListResponse, ConversationListResponse, ConversationRequest, ConversationResponse, User } from "../../models/CommentsModels";
+import { ReactionCommand } from "../../models/CommonModels";
 /**
  * @interface
  */
@@ -10,4 +11,5 @@ export interface IConversationService extends IConfigurable {
     listConversations(filter?: ConversationRequest): Promise<ConversationListResponse>;
     deleteConversation(conversation: Conversation | string): Promise<ConversationDeletionResponse>;
     getConversationBatchDetails(conversation: Conversation[] | string[], options?: ConversationBatchListOptions): Promise<ConversationDetailsListResponse>;
+    reactToConversationTopic(conversation: Conversation | string, reaction?: ReactionCommand, user?: User): Promise<ConversationResponse>;
 }

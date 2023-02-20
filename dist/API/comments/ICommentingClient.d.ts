@@ -1,5 +1,5 @@
 import { ISportsTalkConfigurable, IUserConfigurable } from "../Configuration";
-import { ListRequest, Reaction, SportsTalkConfig } from "../../models/CommonModels";
+import { ListRequest, Reaction, ReactionCommand, SportsTalkConfig } from "../../models/CommonModels";
 import { ICommentService } from "./ICommentService";
 import { IConversationService } from "./IConversationService";
 import { Comment, CommentDeletionResponse, CommentListResponse, CommentRequest, CommentResult, Conversation, ConversationBatchListOptions, ConversationDeletionResponse, ConversationDetailsListResponse, ConversationListResponse, ConversationRequest, ConversationResponse, RepliesBatchResponse, SimpleComment, User, Vote } from "../../models/CommentsModels";
@@ -36,4 +36,5 @@ export interface ICommentingClient extends ISportsTalkConfigurable, IUserConfigu
     getUserDetails(user: User | string): Promise<UserResult>;
     listRepliesBatch(parentids: string[], limit: number): Promise<RepliesBatchResponse>;
     getConversationBatchDetails(conversation: Conversation[] | string[], options?: ConversationBatchListOptions): Promise<ConversationDetailsListResponse>;
+    reactToConversationTopic(conversation: Conversation | string, reaction?: ReactionCommand, user?: User): Promise<ConversationResponse>;
 }

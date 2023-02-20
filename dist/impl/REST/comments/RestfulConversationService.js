@@ -123,10 +123,41 @@ var RestfulConversationService = /** @class */ (function () {
         this.getConversation = function (conversation) {
             // @ts-ignore
             var id = ConversationUtils_1.getUrlConversationId(conversation);
+            if (!id) {
+                throw new Error("Must supply a conversationid to get a conversation");
+            }
             var config = {
                 method: api_1.GET,
                 url: utils_1.buildAPI(_this._config, _this._apiExt + "/" + id),
                 headers: _this._jsonHeaders,
+            };
+            return _this.request(config).then(function (result) {
+                return result.data;
+            });
+        };
+        this.reactToConversationTopic = function (conversation, reaction, user) {
+            if (reaction === void 0) { reaction = { reaction: 'like', reacted: true }; }
+            var id = ConversationUtils_1.getUrlConversationId(conversation);
+            var reactingUser = user || _this._config.user;
+            var userid = utils_1.forceObjKeyOrString(reactingUser, 'userid');
+            if (!reaction) {
+                throw new Error("Must provide a ReactionCommand object to react or send nothing to do a default like");
+            }
+            if (!userid) {
+                throw new Error("Must send a userid to react to a conversation topic");
+            }
+            if (!id) {
+                throw new Error("Must have a conversation ID to react to a conversation topic");
+            }
+            var config = {
+                method: api_1.POST,
+                url: utils_1.buildAPI(_this._config, "comment/conversations/" + id + "/react/"),
+                headers: _this._jsonHeaders,
+                data: {
+                    reaction: reaction.reaction || 'like',
+                    reacted: reaction.reacted || true,
+                    userid: userid,
+                }
             };
             return _this.request(config).then(function (result) {
                 return result.data;

@@ -7,7 +7,7 @@ var Kind;
     Kind["chatsubscription"] = "chat.subscription";
     Kind["roomusereffects"] = "chat.list.roomusereffects";
     Kind["room"] = "chat.room";
-    Kind["userroomsubscriptions"] = "list.userroomsubscriptions";
+    Kind["userroomsubscriptions"] = "chat.list.userroomsubscriptions";
     Kind["notification"] = "notification";
     Kind["bounce"] = "chat.bounceuser";
     Kind["user"] = "app.user";

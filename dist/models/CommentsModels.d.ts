@@ -1,6 +1,7 @@
 import { Kind, ListRequest, ListResponse } from "./CommonModels";
 import { User } from "./user/User";
 import { ModerationType, ReportReason } from "./Moderation";
+import { EventReaction } from "./ChatModels";
 export { Kind, ModerationType, User };
 export interface HasConversationID {
     conversationid: string;
@@ -47,6 +48,7 @@ export interface ConversationResponse extends Conversation {
     appid: string;
     commentcount: number;
     open: boolean;
+    reactions: Array<EventReaction>;
 }
 export declare enum CommentType {
     comment = "comment"

@@ -54,7 +54,7 @@ export interface EventHandlerConfig {
 }
 export interface CommandResponse {
     kind: Kind.chatcommand;
-    op: string;
+    op?: string;
     room?: ChatRoomResult;
     speech?: EventResult;
     action?: any;
