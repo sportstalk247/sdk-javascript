@@ -1484,7 +1484,7 @@ var RestfulChatEventService = /** @class */ (function () {
         this._startKeepAlive = function (roomid, userid) {
             var config = {
                 method: api_1.POST,
-                url: utils_1.buildAPI(_this._config, "/chat/rooms/" + roomid + "/sessions/" + userid + "/touch"),
+                url: utils_1.buildAPI(_this._config, "chat/rooms/" + roomid + "/sessions/" + userid + "/touch"),
                 headers: _this._jsonHeaders
             };
             _this._keepAliveFunction = function keepAliveFunction() {

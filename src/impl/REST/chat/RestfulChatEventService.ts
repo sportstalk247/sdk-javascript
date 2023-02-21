@@ -40,7 +40,7 @@ const INVALID_POLL_FREQUENCY = "Invalid poll _pollFrequency.  Must be between 25
  * @class
  */
 export class RestfulChatEventService implements IChatEventService {
-    private
+
     private _config: ChatClientConfig = {appId: ""};
     private _polling: any; // holds the timer reference.
     private _apiHeaders = {} // holds the API headers
@@ -70,8 +70,8 @@ export class RestfulChatEventService implements IChatEventService {
     private firstMessageTime: number | undefined;
 
     // Maintain room connection.
-    private _keepAliveFunction: Function;
-    private _keepAliveInterval;
+    _keepAliveFunction: Function;
+    _keepAliveInterval;
 
     // Holds the size of the updates we we will request.
     private _maxEventsPerUpdateLimit:number = 100;
@@ -220,12 +220,15 @@ export class RestfulChatEventService implements IChatEventService {
         }
     }
 
+    _getKeepAlive = () => {
+        return this._keepAliveFunction
+    }
     /**
-     *
+     * Kills previous keep-alive api calls and creates a new keep alive request function
      * @param roomid
      * @param userid
      */
-    _startKeepAlive = (roomid, userid) => {
+    _resetKeepAlive = (roomid, userid) => {
         const config: AxiosRequestConfig = {
             method: POST,
             url: buildAPI(this._config, `chat/rooms/${roomid}/sessions/${userid}/touch`),
@@ -235,6 +238,14 @@ export class RestfulChatEventService implements IChatEventService {
             return stRequest(config);
         }
         this._endKeepAlive();
+    }
+    /**
+     *
+     * @param roomid
+     * @param userid
+     */
+    _startKeepAlive = (roomid, userid) => {
+        this._resetKeepAlive(roomid, userid);
         this._keepAliveInterval = setInterval(this._keepAliveFunction, 1000);
     }
 

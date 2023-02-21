@@ -96,6 +96,19 @@ describe('BASIC Chat Sequence', function() {
                 done(e);
             })
         })
+        it("Touches for keep alive", async()=>{
+            const eventService = client.getEventService();
+            const room = client.getCurrentRoom();
+            const user = client.getCurrentUser();
+            //@ts-ignore
+            eventService._resetKeepAlive(room.id, user.userid);
+            //@ts-ignore
+            const keepAlive = eventService._getKeepAlive()
+            const touch = await keepAlive();
+            expect(touch).to.be.not.null;
+            expect(touch.kind).to.be.equal('api.result');
+            expect(touch.data.kind).to.be.equal('chat.subscription');
+        })
     });
     describe('Notificaitons', function() {
         it('Lists notifications', async ()=> {

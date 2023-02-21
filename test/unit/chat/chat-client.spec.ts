@@ -11,6 +11,7 @@ const event:EventResult = require('./event.json');
 
 const { expect } = chai;
 const client = ChatClient.init(DEFAULT_CONFIG)
+const eventService = client.getEventService();
 
 describe("Chat Client", function(){
     it("Can set current room state", function(){
@@ -41,6 +42,6 @@ describe("Chat Client", function(){
         isLiked = client.messageIsReactedTo(event, Reaction.like);
         expect(isLiked).to.be.false
     })
-    it('Can set a userToken callback')
+
 
 })
