@@ -235,7 +235,11 @@ export class RestfulChatEventService implements IChatEventService {
             headers: this._jsonHeaders
         }
         this._keepAliveFunction = function keepAliveFunction() {
-            return stRequest(config);
+            const touch = stRequest(config);
+            if(this._eventHandlers.onTouch) {
+                this._eventHandlers.onTouch(touch);
+            }
+            return touch;
         }
         this._endKeepAlive();
     }
@@ -407,6 +411,16 @@ export class RestfulChatEventService implements IChatEventService {
         if(event.shadowban && (event.userid !== this._user.userid || !this._user)) {
             return;
         }
+        if(event.eventtype == EventType.speech) {
+            if(this._eventHandlers.onSpeech) {
+                this._eventHandlers.onSpeech(event);
+                return;
+            }
+            if(this._eventHandlers.onChatEvent) {
+                this._eventHandlers.onChatEvent(event);
+                return;
+            }
+        }
         if (event.eventtype == EventType.purge && this._eventHandlers.onPurgeEvent) {
             this._eventHandlers.onPurgeEvent(event);
             return;
@@ -429,6 +443,10 @@ export class RestfulChatEventService implements IChatEventService {
         }
         if(event.eventtype == EventType.remove && this._eventHandlers.onRemove) {
             this._eventHandlers.onRemove(event);
+            return;
+        }
+        if(event.eventtype == EventType.banned && this._eventHandlers.onBanned) {
+            this._eventHandlers.onBanned(event)
             return;
         }
         if(this._eventHandlers.onAnnouncement && (event.eventtype == EventType.announcement || event.customtype == EventType.announcement)) {

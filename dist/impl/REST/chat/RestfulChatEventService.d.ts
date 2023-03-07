@@ -13,7 +13,6 @@ import { ReportReason } from "../../../models/Moderation";
  * @class
  */
 export declare class RestfulChatEventService implements IChatEventService {
-    private: any;
     private _config;
     private _polling;
     private _apiHeaders;
@@ -35,8 +34,8 @@ export declare class RestfulChatEventService implements IChatEventService {
     private lastMessageId;
     private firstMessageId;
     private firstMessageTime;
-    private _keepAliveFunction;
-    private _keepAliveInterval;
+    _keepAliveFunction: Function;
+    _keepAliveInterval: any;
     private _maxEventsPerUpdateLimit;
     private _maxEventBufferSize;
     private NetworkRequest;
@@ -110,6 +109,13 @@ export declare class RestfulChatEventService implements IChatEventService {
      * @param smoothing
      */
     setEventSmoothingMs: (smoothing: number) => void;
+    _getKeepAlive: () => Function;
+    /**
+     * Kills previous keep-alive api calls and creates a new keep alive request function
+     * @param roomid
+     * @param userid
+     */
+    _resetKeepAlive: (roomid: any, userid: any) => void;
     /**
      *
      * @param roomid

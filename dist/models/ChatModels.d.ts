@@ -10,6 +10,7 @@ export declare enum EventType {
     speech = "speech",
     purge = "purge",
     mute = "mute",
+    banned = "banned",
     bounce = "bounce",
     reaction = "reaction",
     replace = "replace",
@@ -45,12 +46,15 @@ export interface EventHandlerConfig {
     onReply?(event: EventResult): void;
     onReplace?(event: EventResult): void;
     onRemove?(event: EventResult): void;
+    onBanned?(event: EventResult): void;
     onReaction?(event: EventResult): void;
     onPurgeEvent?(event: EventResult): void;
+    onSpeech?(event: EventResult): void;
     onAdminCommand?(response: RestApiResult<Kind.api>): void;
     onHelp?(result: MessageResult<Event | CommandResponse | null>): void;
     onNetworkError?: ErrorHandlerFunction<any>;
     onRoomChange?(newRoom?: ChatRoom, oldRoom?: ChatRoom): void;
+    onTouch?(): void;
 }
 export interface CommandResponse {
     kind: Kind.chatcommand;

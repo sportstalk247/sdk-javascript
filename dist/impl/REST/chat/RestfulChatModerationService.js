@@ -49,7 +49,7 @@ var RestfulChatModerationService = /** @class */ (function () {
             var roomid = utils_1.forceObjKeyOrString(room);
             var config = {
                 method: api_1.GET,
-                url: utils_1.buildAPI(_this._config, "/chat/rooms/" + roomid + "/usereffects"),
+                url: utils_1.buildAPI(_this._config, "chat/rooms/" + roomid + "/usereffects"),
                 headers: _this._jsonHeaders
             };
             return network_1.stRequest(config).then(function (response) { return response.data; });
@@ -59,7 +59,7 @@ var RestfulChatModerationService = /** @class */ (function () {
             var userid = utils_1.forceObjKeyOrString(user, 'userid');
             var config = {
                 method: api_1.POST,
-                url: utils_1.buildAPI(_this._config, "/chat/rooms/" + roomid + "/moderation/flaggedusers/" + userid + "/applydecision"),
+                url: utils_1.buildAPI(_this._config, "chat/rooms/" + roomid + "/moderation/flaggedusers/" + userid + "/applydecision"),
                 headers: _this._jsonHeaders,
                 data: { approve: !!approve + "" }
             };
@@ -78,7 +78,7 @@ var RestfulChatModerationService = /** @class */ (function () {
             }
             var config = {
                 method: api_1.POST,
-                url: utils_1.buildAPI(_this._config, "/chat/rooms/" + roomid + "/mute"),
+                url: utils_1.buildAPI(_this._config, "chat/rooms/" + roomid + "/mute"),
                 headers: _this._jsonHeaders,
                 data: data
             };
@@ -94,7 +94,7 @@ var RestfulChatModerationService = /** @class */ (function () {
             };
             var config = {
                 method: api_1.POST,
-                url: utils_1.buildAPI(_this._config, "/chat/rooms/" + roomid + "/mute"),
+                url: utils_1.buildAPI(_this._config, "chat/rooms/" + roomid + "/mute"),
                 headers: _this._jsonHeaders,
                 data: data
             };
@@ -140,7 +140,7 @@ var RestfulChatModerationService = /** @class */ (function () {
             var userId = utils_1.forceObjKeyOrString(user, 'userid');
             var config = {
                 method: api_1.POST,
-                url: utils_1.buildAPI(_this._config, "/chat/rooms/" + roomId + "/commands/purge/" + userId),
+                url: utils_1.buildAPI(_this._config, "chat/rooms/" + roomId + "/commands/purge/" + userId),
                 headers: _this._jsonHeaders
             };
             return network_1.stRequest(config).then(function (result) { return result.data; });

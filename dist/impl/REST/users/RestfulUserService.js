@@ -203,7 +203,7 @@ var RestfulUserService = /** @class */ (function () {
         };
         this.reportUser = function (userToReport, reportedBy, reportType) {
             if (reportType === void 0) { reportType = Moderation_1.ReportType.abuse; }
-            var id = utils_1.forceObjKeyOrString(userToReport, 'userid');
+            var userid = utils_1.forceObjKeyOrString(userToReport, 'userid');
             var reporter = utils_1.forceObjKeyOrString(reportedBy, 'userid');
             var data = {
                 userid: reporter,
@@ -211,7 +211,7 @@ var RestfulUserService = /** @class */ (function () {
             };
             var config = {
                 method: api_1.POST,
-                url: utils_1.buildAPI(_this._config, "user/users/" + id + "/report"),
+                url: utils_1.buildAPI(_this._config, "user/users/" + userid + "/report"),
                 headers: _this._jsonHeaders,
                 data: data
             };

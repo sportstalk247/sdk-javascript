@@ -80,7 +80,7 @@ export class RestfulChatModerationService implements IChatModerationService {
         const roomid:string = forceObjKeyOrString(room)
         const config: AxiosRequestConfig = {
             method: GET,
-            url: buildAPI(this._config, `/chat/rooms/${roomid}/usereffects`),
+            url: buildAPI(this._config, `chat/rooms/${roomid}/usereffects`),
             headers: this._jsonHeaders
         }
         return stRequest(config).then(response=>response.data);
@@ -91,7 +91,7 @@ export class RestfulChatModerationService implements IChatModerationService {
         const userid:string = forceObjKeyOrString(user, 'userid');
         const config: AxiosRequestConfig = {
             method: POST,
-            url: buildAPI(this._config, `/chat/rooms/${roomid}/moderation/flaggedusers/${userid}/applydecision`),
+            url: buildAPI(this._config, `chat/rooms/${roomid}/moderation/flaggedusers/${userid}/applydecision`),
             headers: this._jsonHeaders,
             data: { approve: !!approve + "" }
         }
@@ -111,7 +111,7 @@ export class RestfulChatModerationService implements IChatModerationService {
         }
         const config: AxiosRequestConfig = {
             method:POST,
-            url: buildAPI(this._config, `/chat/rooms/${roomid}/mute`),
+            url: buildAPI(this._config, `chat/rooms/${roomid}/mute`),
             headers: this._jsonHeaders,
             data
         }
@@ -129,7 +129,7 @@ export class RestfulChatModerationService implements IChatModerationService {
 
         const config: AxiosRequestConfig = {
             method:POST,
-            url: buildAPI(this._config, `/chat/rooms/${roomid}/mute`),
+            url: buildAPI(this._config, `chat/rooms/${roomid}/mute`),
             headers: this._jsonHeaders,
             data
         }
@@ -179,7 +179,7 @@ export class RestfulChatModerationService implements IChatModerationService {
         const userId = forceObjKeyOrString(user, 'userid');
         const config: AxiosRequestConfig = {
             method: POST,
-            url: buildAPI(this._config, `/chat/rooms/${roomId}/commands/purge/${userId}`),
+            url: buildAPI(this._config, `chat/rooms/${roomId}/commands/purge/${userId}`),
             headers: this._jsonHeaders
         }
         return stRequest(config).then(result=>result.data)

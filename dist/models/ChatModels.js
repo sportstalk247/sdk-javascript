@@ -6,6 +6,7 @@ var EventType;
     EventType["speech"] = "speech";
     EventType["purge"] = "purge";
     EventType["mute"] = "mute";
+    EventType["banned"] = "banned";
     EventType["bounce"] = "bounce";
     EventType["reaction"] = "reaction";
     EventType["replace"] = "replace";

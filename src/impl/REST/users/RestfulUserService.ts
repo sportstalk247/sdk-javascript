@@ -245,7 +245,7 @@ export class RestfulUserService implements IUserService {
     }
 
     reportUser = (userToReport: User | string, reportedBy: User | string, reportType: ReportType = ReportType.abuse): Promise<UserResult> => {
-        const id = forceObjKeyOrString(userToReport, 'userid');
+        const userid = forceObjKeyOrString(userToReport, 'userid');
         const reporter = forceObjKeyOrString(reportedBy, 'userid');
         const data = {
             userid: reporter,
@@ -253,7 +253,7 @@ export class RestfulUserService implements IUserService {
         }
         const config: AxiosRequestConfig = {
             method: POST,
-            url: buildAPI(this._config, `user/users/${id}/report`),
+            url: buildAPI(this._config, `user/users/${userid}/report`),
             headers: this._jsonHeaders,
             data: data
         }
