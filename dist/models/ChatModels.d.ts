@@ -3,7 +3,7 @@
  */
 import { Kind, ListResponse, MessageResult, Reaction, RestApiResult } from "./CommonModels";
 import { ErrorHandlerFunction } from "../impl/network";
-import { ChatRoom, ChatRoomResult, RoomEffectData, RoomOptional } from "./chat/ChatRoom";
+import { ChatRoom, ChatRoomResult, RoomEffectData, RoomOptional, UserChatroomSubscription } from "./chat/ChatRoom";
 import { UserResult } from "./user/User";
 import { ReportReason } from "./Moderation";
 export declare enum EventType {
@@ -54,7 +54,7 @@ export interface EventHandlerConfig {
     onHelp?(result: MessageResult<Event | CommandResponse | null>): void;
     onNetworkError?: ErrorHandlerFunction<any>;
     onRoomChange?(newRoom?: ChatRoom, oldRoom?: ChatRoom): void;
-    onTouch?(): void;
+    onTouch?(apiresult: RestApiResult<UserChatroomSubscription>): void;
 }
 export interface CommandResponse {
     kind: Kind.chatcommand;

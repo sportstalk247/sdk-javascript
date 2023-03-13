@@ -1476,21 +1476,36 @@ var RestfulChatEventService = /** @class */ (function () {
                 _this._eventSpacingMs = smoothing;
             }
         };
+        this._getKeepAlive = function () {
+            return _this._keepAliveFunction;
+        };
         /**
-         *
+         * Kills previous keep-alive api calls and creates a new keep alive request function
          * @param roomid
          * @param userid
          */
-        this._startKeepAlive = function (roomid, userid) {
+        this._resetKeepAlive = function (roomid, userid) {
             var config = {
                 method: api_1.POST,
                 url: utils_1.buildAPI(_this._config, "chat/rooms/" + roomid + "/sessions/" + userid + "/touch"),
                 headers: _this._jsonHeaders
             };
             _this._keepAliveFunction = function keepAliveFunction() {
-                return network_1.stRequest(config);
+                var touch = network_1.stRequest(config);
+                if (this._eventHandlers.onTouch) {
+                    this._eventHandlers.onTouch(touch);
+                }
+                return touch;
             };
             _this._endKeepAlive();
+        };
+        /**
+         *
+         * @param roomid
+         * @param userid
+         */
+        this._startKeepAlive = function (roomid, userid) {
+            _this._resetKeepAlive(roomid, userid);
             _this._keepAliveInterval = setInterval(_this._keepAliveFunction, 1000);
         };
         /**
@@ -1640,6 +1655,16 @@ var RestfulChatEventService = /** @class */ (function () {
             if (event.shadowban && (event.userid !== _this._user.userid || !_this._user)) {
                 return;
             }
+            if (event.eventtype == ChatModels_1.EventType.speech) {
+                if (_this._eventHandlers.onSpeech) {
+                    _this._eventHandlers.onSpeech(event);
+                    return;
+                }
+                if (_this._eventHandlers.onChatEvent) {
+                    _this._eventHandlers.onChatEvent(event);
+                    return;
+                }
+            }
             if (event.eventtype == ChatModels_1.EventType.purge && _this._eventHandlers.onPurgeEvent) {
                 _this._eventHandlers.onPurgeEvent(event);
                 return;
@@ -1662,6 +1687,10 @@ var RestfulChatEventService = /** @class */ (function () {
             }
             if (event.eventtype == ChatModels_1.EventType.remove && _this._eventHandlers.onRemove) {
                 _this._eventHandlers.onRemove(event);
+                return;
+            }
+            if (event.eventtype == ChatModels_1.EventType.banned && _this._eventHandlers.onBanned) {
+                _this._eventHandlers.onBanned(event);
                 return;
             }
             if (_this._eventHandlers.onAnnouncement && (event.eventtype == ChatModels_1.EventType.announcement || event.customtype == ChatModels_1.EventType.announcement)) {
@@ -2175,7 +2204,7 @@ var RestfulChatModerationService = /** @class */ (function () {
             var roomid = utils_1.forceObjKeyOrString(room);
             var config = {
                 method: api_1.GET,
-                url: utils_1.buildAPI(_this._config, "/chat/rooms/" + roomid + "/usereffects"),
+                url: utils_1.buildAPI(_this._config, "chat/rooms/" + roomid + "/usereffects"),
                 headers: _this._jsonHeaders
             };
             return network_1.stRequest(config).then(function (response) { return response.data; });
@@ -2185,7 +2214,7 @@ var RestfulChatModerationService = /** @class */ (function () {
             var userid = utils_1.forceObjKeyOrString(user, 'userid');
             var config = {
                 method: api_1.POST,
-                url: utils_1.buildAPI(_this._config, "/chat/rooms/" + roomid + "/moderation/flaggedusers/" + userid + "/applydecision"),
+                url: utils_1.buildAPI(_this._config, "chat/rooms/" + roomid + "/moderation/flaggedusers/" + userid + "/applydecision"),
                 headers: _this._jsonHeaders,
                 data: { approve: !!approve + "" }
             };
@@ -2204,7 +2233,7 @@ var RestfulChatModerationService = /** @class */ (function () {
             }
             var config = {
                 method: api_1.POST,
-                url: utils_1.buildAPI(_this._config, "/chat/rooms/" + roomid + "/mute"),
+                url: utils_1.buildAPI(_this._config, "chat/rooms/" + roomid + "/mute"),
                 headers: _this._jsonHeaders,
                 data: data
             };
@@ -2220,7 +2249,7 @@ var RestfulChatModerationService = /** @class */ (function () {
             };
             var config = {
                 method: api_1.POST,
-                url: utils_1.buildAPI(_this._config, "/chat/rooms/" + roomid + "/mute"),
+                url: utils_1.buildAPI(_this._config, "chat/rooms/" + roomid + "/mute"),
                 headers: _this._jsonHeaders,
                 data: data
             };
@@ -2266,7 +2295,7 @@ var RestfulChatModerationService = /** @class */ (function () {
             var userId = utils_1.forceObjKeyOrString(user, 'userid');
             var config = {
                 method: api_1.POST,
-                url: utils_1.buildAPI(_this._config, "/chat/rooms/" + roomId + "/commands/purge/" + userId),
+                url: utils_1.buildAPI(_this._config, "chat/rooms/" + roomId + "/commands/purge/" + userId),
                 headers: _this._jsonHeaders
             };
             return network_1.stRequest(config).then(function (result) { return result.data; });
@@ -3842,7 +3871,7 @@ var RestfulUserService = /** @class */ (function () {
         };
         this.reportUser = function (userToReport, reportedBy, reportType) {
             if (reportType === void 0) { reportType = Moderation_1.ReportType.abuse; }
-            var id = utils_1.forceObjKeyOrString(userToReport, 'userid');
+            var userid = utils_1.forceObjKeyOrString(userToReport, 'userid');
             var reporter = utils_1.forceObjKeyOrString(reportedBy, 'userid');
             var data = {
                 userid: reporter,
@@ -3850,7 +3879,7 @@ var RestfulUserService = /** @class */ (function () {
             };
             var config = {
                 method: api_1.POST,
-                url: utils_1.buildAPI(_this._config, "user/users/" + id + "/report"),
+                url: utils_1.buildAPI(_this._config, "user/users/" + userid + "/report"),
                 headers: _this._jsonHeaders,
                 data: data
             };
@@ -4280,6 +4309,7 @@ var EventType;
     EventType["speech"] = "speech";
     EventType["purge"] = "purge";
     EventType["mute"] = "mute";
+    EventType["banned"] = "banned";
     EventType["bounce"] = "bounce";
     EventType["reaction"] = "reaction";
     EventType["replace"] = "replace";

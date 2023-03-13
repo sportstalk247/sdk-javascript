@@ -218,10 +218,10 @@ var RestfulChatEventService = /** @class */ (function () {
                 url: utils_1.buildAPI(_this._config, "chat/rooms/" + roomid + "/sessions/" + userid + "/touch"),
                 headers: _this._jsonHeaders
             };
-            _this._keepAliveFunction = function keepAliveFunction() {
+            _this._keepAliveFunction = function () {
                 var touch = network_1.stRequest(config);
-                if (this._eventHandlers.onTouch) {
-                    this._eventHandlers.onTouch(touch);
+                if (_this._eventHandlers.onTouch) {
+                    _this._eventHandlers.onTouch(touch);
                 }
                 return touch;
             };
@@ -393,16 +393,8 @@ var RestfulChatEventService = /** @class */ (function () {
                     return;
                 }
             }
-            if (event.eventtype == ChatModels_1.EventType.purge && _this._eventHandlers.onPurgeEvent) {
-                _this._eventHandlers.onPurgeEvent(event);
-                return;
-            }
             if (event.eventtype == ChatModels_1.EventType.reply && _this._eventHandlers.onReply) {
                 _this._eventHandlers.onReply(event);
-                return;
-            }
-            if (event.eventtype == ChatModels_1.EventType.bounce && _this._eventHandlers.onBounce) {
-                _this._eventHandlers.onBounce(event);
                 return;
             }
             if (event.eventtype == ChatModels_1.EventType.reaction && _this._eventHandlers.onReaction) {
@@ -417,8 +409,16 @@ var RestfulChatEventService = /** @class */ (function () {
                 _this._eventHandlers.onRemove(event);
                 return;
             }
+            if (event.eventtype == ChatModels_1.EventType.bounce && _this._eventHandlers.onBounce) {
+                _this._eventHandlers.onBounce(event);
+                return;
+            }
             if (event.eventtype == ChatModels_1.EventType.banned && _this._eventHandlers.onBanned) {
                 _this._eventHandlers.onBanned(event);
+                return;
+            }
+            if (event.eventtype == ChatModels_1.EventType.purge && _this._eventHandlers.onPurgeEvent) {
+                _this._eventHandlers.onPurgeEvent(event);
                 return;
             }
             if (_this._eventHandlers.onAnnouncement && (event.eventtype == ChatModels_1.EventType.announcement || event.customtype == ChatModels_1.EventType.announcement)) {

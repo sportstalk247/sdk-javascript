@@ -234,7 +234,7 @@ export class RestfulChatEventService implements IChatEventService {
             url: buildAPI(this._config, `chat/rooms/${roomid}/sessions/${userid}/touch`),
             headers: this._jsonHeaders
         }
-        this._keepAliveFunction = function keepAliveFunction() {
+        this._keepAliveFunction = () => {
             const touch = stRequest(config);
             if(this._eventHandlers.onTouch) {
                 this._eventHandlers.onTouch(touch);
@@ -421,16 +421,8 @@ export class RestfulChatEventService implements IChatEventService {
                 return;
             }
         }
-        if (event.eventtype == EventType.purge && this._eventHandlers.onPurgeEvent) {
-            this._eventHandlers.onPurgeEvent(event);
-            return;
-        }
         if (event.eventtype == EventType.reply && this._eventHandlers.onReply) {
             this._eventHandlers.onReply(event);
-            return;
-        }
-        if (event.eventtype == EventType.bounce && this._eventHandlers.onBounce) {
-            this._eventHandlers.onBounce(event);
             return;
         }
         if (event.eventtype == EventType.reaction && this._eventHandlers.onReaction) {
@@ -445,8 +437,16 @@ export class RestfulChatEventService implements IChatEventService {
             this._eventHandlers.onRemove(event);
             return;
         }
+        if (event.eventtype == EventType.bounce && this._eventHandlers.onBounce) {
+            this._eventHandlers.onBounce(event);
+            return;
+        }
         if(event.eventtype == EventType.banned && this._eventHandlers.onBanned) {
             this._eventHandlers.onBanned(event)
+            return;
+        }
+        if (event.eventtype == EventType.purge && this._eventHandlers.onPurgeEvent) {
+            this._eventHandlers.onPurgeEvent(event);
             return;
         }
         if(this._eventHandlers.onAnnouncement && (event.eventtype == EventType.announcement || event.customtype == EventType.announcement)) {
