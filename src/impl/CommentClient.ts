@@ -340,7 +340,7 @@ export class CommentClient implements ICommentingClient {
      * @param comment
      * @param reaction
      */
-    public reactToComment = (comment:CommentResult, reaction:Reaction): Promise<Comment> => {
+    public reactToComment = (comment:CommentResult, reaction: ReactionCommand = {reaction:'like', reacted: true}): Promise<Comment> => {
         const conversationid = forceObjKeyOrString(this._currentConversation, 'conversationid')
         return this._commentService.react(conversationid, comment, this._user, reaction);
     }

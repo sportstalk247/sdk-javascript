@@ -11,7 +11,7 @@ import {
     User,
     Vote
 } from "../../models/CommentsModels";
-import {Reaction} from "../../models/CommonModels";
+import {Reaction, ReactionCommand} from "../../models/CommonModels";
 import {ReportType} from "../../models/Moderation";
 
 /**
@@ -30,7 +30,7 @@ export interface ICommentService extends ISportsTalkConfigurable {
 
     report(convesationId: string, comment: Comment, user: User, reporttype: ReportType): Promise<CommentResult>
 
-    react(convesationId: string, comment: Comment | string, user: User, reaction: Reaction, enable?: boolean): Promise<CommentResult>;
+    react(convesationId: string, comment: Comment | string, user: User, reaction: ReactionCommand): Promise<CommentResult>;
 
     getReplies(convesationId: string, comment: Comment | string, request?: CommentRequest): Promise<CommentListResponse>
 

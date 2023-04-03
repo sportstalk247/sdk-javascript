@@ -323,7 +323,7 @@ export class RestfulChatEventService implements IChatEventService {
         }
 
         if(this._polling) {
-            console.log("ALREADY CONNECTED TO TALK");
+            // console.log("ALREADY CONNECTED TO TALK");
             return;
         }
 

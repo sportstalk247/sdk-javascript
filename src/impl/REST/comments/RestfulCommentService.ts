@@ -4,7 +4,7 @@ import {
     SportsTalkConfig,
     ClientConfig,
     UserTokenRefreshFunction,
-    Kind
+    Kind, ReactionCommand
 } from "../../../models/CommonModels";
 import {
     Comment, CommentListResponse, CommentDeletionResponse,
@@ -13,7 +13,7 @@ import {
     Vote, RepliesBatchResponse, CommentResult, User
 } from "../../../models/CommentsModels";
 import {DELETE, GET, POST, PUT} from "../../constants/api";
-import {getUrlEncodedHeaders, getJSONHeaders, buildAPI, formify} from "../../utils";
+import {getUrlEncodedHeaders, getJSONHeaders, buildAPI, formify, forceObjKeyOrString} from "../../utils";
 import {getUrlCommentId, getUrlConversationId} from "./ConversationUtils";
 import {RequireUserError, SettingsError, ValidationError} from "../../errors";
 import {
@@ -292,14 +292,15 @@ export class RestfulCommentService implements ICommentService {
      * @param reaction The reaction type.  Currently only "like" is supported and built-in.
      * @param enable Whether the reaction should be toggled on or off, defaults to true.
      */
-    public react = (conversationId: string, comment:Comment | string, user:User, reaction:Reaction,enable = true): Promise<CommentResult> => {
+    public react = (conversationId: string, comment:Comment | string, user:User | string, reaction:ReactionCommand = {reaction:'like', reacted: true}): Promise<CommentResult> => {
         this._requireConversationId(conversationId);
         this._requireUser(user);
         const id = getUrlCommentId(comment);
+        const userid = forceObjKeyOrString(user, 'userid');
         const data = {
-            userid : user.userid,
-            reaction : reaction,
-            reacted : enable ? true : false // null protection.
+            userid : userid,
+            reaction : reaction.reaction,
+            reacted : reaction.reacted ? true : false // null protection.
         }
         const config:AxiosRequestConfig = {
             method: POST,

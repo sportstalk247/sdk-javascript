@@ -54,7 +54,7 @@ export interface ICommentingClient extends ISportsTalkConfigurable, IUserConfigu
 
     updateComment(comment: Comment): Promise<Comment>;
 
-    reactToComment(comment: Comment | string, reaction: Reaction): Promise<Comment>;
+    reactToComment(comment:CommentResult, reaction: ReactionCommand): Promise<Comment>;
 
     voteOnComment(comment: Comment | string, vote: Vote): Promise<CommentResult>;
 
