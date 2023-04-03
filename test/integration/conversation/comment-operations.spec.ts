@@ -84,9 +84,13 @@ describe('Comment Operations', function() {
                 expect(resp.customfield2).to.be.equal("CF2");
                 expect(resp.customtags).to.have.length(2)
                 // @ts-ignore
-                const response:CommentResult = await client.reactToComment(resp, Reaction.like);
+                const response:CommentResult = await client.reactToComment(resp, {reaction: Reaction.like});
                 expect(response.kind).to.be.equal(Kind.comment);
-
+                //@ts-ignore
+                expect(response.reactions.length).to.be.equal(1);
+                const unreact:Comment = await client.reactToComment(resp, {reaction: Reaction.like, reacted: false});
+                //@ts-ignore
+                expect(unreact.reactions.length).to.be.equal(0);
             } catch (e) {
                 throw e;
             }

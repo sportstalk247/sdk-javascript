@@ -300,7 +300,7 @@ export class RestfulCommentService implements ICommentService {
         const data = {
             userid : userid,
             reaction : reaction.reaction,
-            reacted : reaction.reacted ? true : false // null protection.
+            reacted : reaction.reacted == false ? false: true // null protection.
         }
         const config:AxiosRequestConfig = {
             method: POST,
