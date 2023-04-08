@@ -23,7 +23,7 @@ import {
     ChatRoomEffectsList, ChatRoomExitResult,
     ChatRoomExtendedDetailsRequest,
     ChatRoomExtendedDetailsResponse,
-    ChatRoomListResponse, ChatRoomResult, DeletedChatRoomResponse, JoinChatRoomResponse
+    ChatRoomListResponse, ChatRoomResult, DeletedChatRoomResponse, JoinChatRoomResponse, JoinOptions
 } from "../../../models/chat/ChatRoom";
 import {User, UserResult} from "../../../models/user/User";
 import {ReportType} from "../../../models/Moderation";
@@ -145,7 +145,7 @@ export class RestfulChatRoomService implements IChatRoomService {
      * @param {string | User} user
      * @param {ChatRoomResult | string} room
      */
-    joinRoom = (room: ChatRoomResult | string, user: User): Promise<JoinChatRoomResponse> => {
+    joinRoom = (room: ChatRoomResult | string, user: User, options?: JoinOptions): Promise<JoinChatRoomResponse> => {
         // @ts-ignore
         const roomId = forceObjKeyOrString(room);
         const config: AxiosRequestConfig = {
@@ -162,6 +162,10 @@ export class RestfulChatRoomService implements IChatRoomService {
                 profileurl: user.profileurl || "",
             }
         }
+        if(options && options.limit) {
+            config.data = config.data || {};
+            config.data.limit = options.limit || 50;
+        }
         return stRequest(config).then(response => {
             return response.data;
         }).catch(e=>{
@@ -174,7 +178,7 @@ export class RestfulChatRoomService implements IChatRoomService {
      * @param user
      * @param room
      */
-    joinRoomByCustomId(room: ChatRoom | string, user?: User): Promise<JoinChatRoomResponse> {
+    joinRoomByCustomId(room: ChatRoom | string, user?: User, options?: JoinOptions): Promise<JoinChatRoomResponse> {
         // @ts-ignore
         const customId = forceObjKeyOrString(room, 'customid');
         const config: AxiosRequestConfig = {
@@ -190,6 +194,10 @@ export class RestfulChatRoomService implements IChatRoomService {
                 pictureurl: user.pictureurl || "",
                 profileurl: user.profileurl || "",
             }
+        }
+        if(options && options.limit) {
+            config.data = config.data || {};
+            config.data.limit = options.limit || 50;
         }
         return stRequest(config).then(response => {
             return response.data;

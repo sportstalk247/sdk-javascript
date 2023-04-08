@@ -8,7 +8,7 @@ import {
     ChatRoom, ChatRoomExitResult,
     ChatRoomExtendedDetailsRequest,
     ChatRoomExtendedDetailsResponse,
-    ChatRoomListResponse, ChatRoomResult, DeletedChatRoomResponse, JoinChatRoomResponse
+    ChatRoomListResponse, ChatRoomResult, DeletedChatRoomResponse, JoinChatRoomResponse, JoinOptions
 } from "../../models/chat/ChatRoom";
 import {User, UserResult} from "../../models/user/User";
 import {ReportType} from "../../models/Moderation";
@@ -96,9 +96,9 @@ export interface IChatRoomService extends ISportsTalkConfigurable {
 
     listUserMessages(user: User | string, Room: ChatRoom | String, cursor?: string, limit?: number): Promise<Array<EventResult>>
 
-    joinRoom(room: ChatRoom | string, user: User): Promise<JoinChatRoomResponse>
+    joinRoom(room: ChatRoom | string, user: User, options?: JoinOptions): Promise<JoinChatRoomResponse>
 
-    joinRoomByCustomId(room: ChatRoom | string, user: User): Promise<JoinChatRoomResponse>
+    joinRoomByCustomId(room: ChatRoom | string, user: User, options?: JoinOptions): Promise<JoinChatRoomResponse>
 
     exitRoom(user: User | string, room: ChatRoom | string): Promise<ChatRoomExitResult>
 

@@ -24,7 +24,7 @@ import {
     ChatRoom,
     ChatRoomExtendedDetailsRequest,
     ChatRoomExtendedDetailsResponse,
-    ChatRoomListResponse, ChatRoomResult, JoinChatRoomResponse, UserSubscriptionListResponse
+    ChatRoomListResponse, ChatRoomResult, JoinChatRoomResponse, JoinOptions, UserSubscriptionListResponse
 } from "../../models/chat/ChatRoom";
 import {User, UserDeletionResponse, UserListResponse, UserResult, UserSearchType} from "../../models/user/User";
 import {Notification} from "../../models/user/Notifications";
@@ -159,14 +159,14 @@ export interface IChatClient extends IUserConfigurable, ISportsTalkConfigurable 
      * @param room or room ID
      * @return Promise the JoinChatRoomResponse from the server.
      */
-    joinRoom(room: ChatRoomResult | string, ignoreMessages?: boolean): Promise<JoinChatRoomResponse>;
+    joinRoom(room: ChatRoomResult | string, joinOptions: JoinOptions): Promise<JoinChatRoomResponse>;
 
     /**
      * Join a chat room
      * @param room or room customID
      * @return Promise the JoinChatRoomResponse from the server.
      */
-    joinRoomByCustomId(room: ChatRoom | string, ignoreMessages: boolean): Promise<JoinChatRoomResponse>;
+    joinRoomByCustomId(room: ChatRoom | string, joinOptions: JoinOptions): Promise<JoinChatRoomResponse>;
 
     /**
      * Gets the current Chatroom.

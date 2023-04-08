@@ -45,7 +45,7 @@ describe('BASIC Chat Sequence', function() {
                 customid: "chat-test-room"+new Date().getTime(),
             }).then(room => {
                 theRoom = room;
-                return client.joinRoom(room)
+                return client.joinRoom(room, {limit: 10})
             }).then(async (resp) => {
                 expect(resp.room.id).to.be.not.null;
                 await client.executeChatCommand("Sending a message");
@@ -57,7 +57,7 @@ describe('BASIC Chat Sequence', function() {
     });
     describe('User 2', function () {
         it('Joins room', function (done) {
-            client2.joinRoom(theRoom, true)
+            client2.joinRoom(theRoom, {ignoreInitialMessages: true, limit: 30})
                 .then((resp) => {
                     expect(resp.room.id).to.be.not.null;
                     done()

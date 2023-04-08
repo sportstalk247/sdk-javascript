@@ -84,6 +84,12 @@ export interface ChatRoomResult extends ChatRoom {
     whenmodified?: string // ISO Date
 }
 
+export interface JoinOptions {
+    ignoreInitialMessages?: boolean
+    limit?: number
+
+}
+
 /**
  * The response for any room listing queries.
  */

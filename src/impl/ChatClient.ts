@@ -38,10 +38,16 @@ import {IChatRoomService} from "../API/chat/IChatRoomService";
 import {IUserService} from "../API/users/IUserService";
 import {INotificationService} from "../API/users/INotificationService";
 import {
-    ChatRoom, ChatRoomExitResult,
+    ChatRoom,
+    ChatRoomExitResult,
     ChatRoomExtendedDetailsRequest,
     ChatRoomExtendedDetailsResponse,
-    ChatRoomListResponse, ChatRoomResult, DeletedChatRoomResponse, JoinChatRoomResponse, UserSubscriptionListResponse
+    ChatRoomListResponse,
+    ChatRoomResult,
+    DeletedChatRoomResponse,
+    JoinChatRoomResponse,
+    JoinOptions,
+    UserSubscriptionListResponse
 } from "../models/chat/ChatRoom";
 import {User, UserDeletionResponse, UserListResponse, UserResult, UserSearchType} from "../models/user/User";
 import {Notification, NotificationListRequest} from "../models/user/Notifications";
@@ -295,9 +301,9 @@ export class ChatClient implements IChatClient {
      * Start the "talk".  This will being retrieving events from sportstalk servers.
      * If you pass a room parameter, will join the room and then start listening to updates.
      */
-    startListeningToEventUpdates = (room?: ChatRoomResult) => {
+    startListeningToEventUpdates = (room?: ChatRoomResult, joinOptions?: JoinOptions) => {
         if(room) {
-            return this.joinRoom(room).then(()=>this.startListeningToEventUpdates())
+            return this.joinRoom(room, joinOptions).then(()=>this.startListeningToEventUpdates())
         }
         this._eventService.startEventUpdates();
     }
@@ -377,13 +383,13 @@ export class ChatClient implements IChatClient {
      * Join a chat room
      * @param room
      */
-    joinRoom = (room: ChatRoomResult | string, ignoreInitialMessages:  boolean = false): Promise<JoinChatRoomResponse> => {
-        return this._roomService.joinRoom(room, this._user).then(async (response:JoinChatRoomResponse) => {
+    joinRoom = (room: ChatRoomResult | string, options: JoinOptions = { ignoreInitialMessages: false} ): Promise<JoinChatRoomResponse> => {
+        return this._roomService.joinRoom(room, this._user, options).then(async (response:JoinChatRoomResponse) => {
             this._currentRoom = response.room;
             this._eventService.setCurrentRoom(this._currentRoom);
             this._eventService.setPreviousEventsCursor(response.previouseventscursor || '');
             response.eventscursor.events.reverse();
-            if(!ignoreInitialMessages) {
+            if(options && !options.ignoreInitialMessages) {
                 await this._eventService.handleUpdates(response.eventscursor);
             }
             return response;
@@ -395,12 +401,12 @@ export class ChatClient implements IChatClient {
      * @param user
      * @param room
      */
-    joinRoomByCustomId(room: ChatRoom | string, ignoreInitialMessages: boolean = false): Promise<JoinChatRoomResponse> {
-        return this._roomService.joinRoomByCustomId(room, this._user).then(async (response:JoinChatRoomResponse) => {
+    joinRoomByCustomId(room: ChatRoom | string,  options: JoinOptions = { ignoreInitialMessages: false}): Promise<JoinChatRoomResponse> {
+        return this._roomService.joinRoomByCustomId(room, this._user, options).then(async (response:JoinChatRoomResponse) => {
             this._currentRoom = response.room;
             this._eventService.setCurrentRoom(this._currentRoom);
             this._eventService.setPreviousEventsCursor(response.previouseventscursor || '');
-            if(!ignoreInitialMessages) {
+            if(options && !options.ignoreInitialMessages) {
                 await this._eventService.handleUpdates(response.eventscursor);
             }
             return response;

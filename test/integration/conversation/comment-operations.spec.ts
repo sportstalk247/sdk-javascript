@@ -87,10 +87,10 @@ describe('Comment Operations', function() {
                 const response:CommentResult = await client.reactToComment(resp, {reaction: Reaction.like});
                 expect(response.kind).to.be.equal(Kind.comment);
                 //@ts-ignore
-                expect(response.reactions.length).to.be.equal(1);
+                expect(response.reactions[0].count).to.be.equal(1);
                 const unreact:Comment = await client.reactToComment(resp, {reaction: Reaction.like, reacted: false});
                 //@ts-ignore
-                expect(unreact.reactions.length).to.be.equal(0);
+                expect(unreact.reactions[0].count).to.be.equal(0);
             } catch (e) {
                 throw e;
             }
