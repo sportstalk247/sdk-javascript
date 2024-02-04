@@ -26,13 +26,18 @@ export interface ConversationBatchListOptions {
     entities?:('reactions' | 'likecount' | 'commentcount')[],
     cid?:string[]
 }
+
+interface ReactionSummary {
+    type: Reaction,
+    count: number
+    users: User[]
+}
+
 export interface Conversation extends CustomFields {
     conversationid: string,
     customid?: string,
     property: string,
-    replycount?: number,
-    reactions?: Array<any>,
-    reactioncount?: number,
+
     moderation: ModerationType,
     owneruserid?: string,
     maxreports? : number,
@@ -63,6 +68,8 @@ export interface ConversationResponse extends Conversation {
     kind: Kind.conversation
     appid: string,
     commentcount: number
+    replycount?: number,
+    reactioncount?: number,
     open: boolean
     reactions: Array<EventReaction>
 }
