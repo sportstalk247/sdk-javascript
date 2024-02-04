@@ -73,7 +73,9 @@ export class RestfulChatModerationService implements IChatModerationService {
             headers: this._jsonHeaders,
             data: { approve: !!approved + "" }
         }
-        return stRequest(config).then(response=>response.data)
+        return stRequest(config).then(response=>{
+            return response.data
+        })
     }
 
     listRoomEffects = (room: ChatRoomResult | string): Promise<ChatRoomEffectsList> => {

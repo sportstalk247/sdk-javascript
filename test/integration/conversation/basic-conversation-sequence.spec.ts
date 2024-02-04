@@ -3,6 +3,7 @@ import {Kind} from '../../../src/models/CommonModels';
 import * as chai from 'chai';
 import * as dotenv from 'dotenv';
 import {ModerationType} from "../../../src/models/Moderation";
+import {Conversation} from "../../../src/models/CommentsModels";
 
 dotenv.config();
 
@@ -39,6 +40,9 @@ describe('BASIC Conversation Sequence', function() {
         "title": "Test Conversation",
         "maxcommentlen": 512,
         "open" : true,
+        replycount: 0,
+        reactioncount:0,
+        reactions: [],
         "customtags" : ["taga", "tagb"],
         "customfield1" : "/sample/userdefined1",
         "customfield2" : "/sample/userdefined2/äöüÄÖÜß"
@@ -51,12 +55,15 @@ describe('BASIC Conversation Sequence', function() {
         "moderation" : ModerationType.post,
         "maxreports" : 3,
         "title": "Test Conversation",
-        "maxcommentlen": 512,
+        "maxcommentlen»": 512,
+        replycount: 0,
+        reactioncount:0,
+        reactions: [],
         "open" : false,
         "customtags" : ["taga", "tagb"],
         "customfield1" : "/sample/userdefined1",
         "customfield2" : "/sample/userdefined2/äöüÄÖÜß"
-    }
+    } as Conversation
 
     describe('Setup Conversation', function () {
         it('User Creates Conversation', function (done) {

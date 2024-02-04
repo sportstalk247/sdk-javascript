@@ -1,4 +1,4 @@
-import {Kind, ListRequest, ListResponse} from "./CommonModels";
+import {Kind, ListRequest, ListResponse, Reaction} from "./CommonModels";
 import {User} from "./user/User";
 import {ModerationType, ReportReason} from "./Moderation";
 import {EventReaction} from "./ChatModels";
@@ -30,6 +30,9 @@ export interface Conversation extends CustomFields {
     conversationid: string,
     customid?: string,
     property: string,
+    replycount?: number,
+    reactions?: Array<any>,
+    reactioncount?: number,
     moderation: ModerationType,
     owneruserid?: string,
     maxreports? : number,
@@ -38,6 +41,7 @@ export interface Conversation extends CustomFields {
     maxcommentlen?: number,
     enableprofanityfilter?: boolean,
     open?: boolean
+    whenmodified?: string
 }
 
 export interface CommentListResponse extends ListResponse {
@@ -166,6 +170,9 @@ export interface CommentResponse extends Comment {
 
 export interface ConversationRequest extends ListRequest {
     propertyid?: string,
+    filterStartTime?: string,
+    filterEndTime?: string,
+    sort?: "newest" | "oldest" | "reactioncount"
 }
 
 export interface ConversationListResponse extends ListResponse{

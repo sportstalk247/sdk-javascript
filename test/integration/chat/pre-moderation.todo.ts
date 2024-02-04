@@ -56,6 +56,7 @@ describe('Pre Moderation sequences', function() {
         it("lets the user execute a chat command", async ()=> {
             return client.executeChatCommand('Test message')
                 .then((resp) => {
+                    //@ts-ignore
                     expect(resp.data.op).to.be.equal(EventType.speech);
                 });
         });

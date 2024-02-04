@@ -7,7 +7,7 @@ import {
     Comment,
     CommentListResponse,
     CommentModeration, CommentReplyList,
-    CommentResult, ModerationType,
+    CommentResult, Conversation, ModerationType,
     Vote
 } from "../../../src/models/CommentsModels";
 import {RestfulCommentService} from "../../../src/impl/REST/comments/RestfulCommentService";
@@ -51,9 +51,12 @@ describe('Comment Operations', function() {
         "maxreports" : 0,
         "title": "Test Conversation",
         "maxcommentlen": 512,
+        replycount: 0,
+        reactioncount:0,
+        reactions: [],
         "open" : true,
         "tags" : ["taga", "tagb"],
-    }
+    } as Conversation;
 
     describe('Setup Conversation', function () {
         it('User Creates Conversation', function (done) {

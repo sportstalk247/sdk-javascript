@@ -14,6 +14,7 @@ export enum EventType  {
     banned = "banned",
     bounce = "bounce",
     reaction= "reaction",
+    userrolesupdated = "userrolesupdated",
     replace="replace",
     remove="remove",
     roomClosed= "roomclosed",

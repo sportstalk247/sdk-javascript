@@ -41,7 +41,9 @@ const makeAxiosRequest = async function makeAxiosRequest(config:AxiosRequestConf
         // @ts-ignore
         config.decompress=true
     }
-    return axios(config).then(result=>result.data).catch(e=>{
+    return axios(config).then(result=>{
+        return result.data
+    }).catch(e=>{
         if(errorHandlerfunction) {
             return errorHandlerfunction(e, config);
         }

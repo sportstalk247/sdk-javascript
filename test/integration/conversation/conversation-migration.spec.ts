@@ -16,11 +16,14 @@ const testconversation:Conversation = {
     "maxreports" : 3,
     "title": "Test Conversation",
     "maxcommentlen": 512,
+    replycount: 0,
+    reactioncount:0,
+    reactions: [],
     "open" : true,
     "customtags" : ["taga", "tagb"],
     "customfield1" : "/sample/userdefined1",
     "customfield2" : "/sample/userdefined2/äöüÄÖÜß"
-}
+} as Conversation;
 
 const sampleUser:User = {
     userid: 'testuser1',
