@@ -93,7 +93,7 @@ describe('BASIC Conversation Sequence', function() {
     });
     describe("User joins Conversation", function() {
         it("Lets user 2 join", function(done){
-            client2.setCurrentConversation(conversation);
+            client2.setCurrentConversationId(conversation);
             client2.publishComment("This is my comment")
                 .then(resp=>{
                     expect(resp.body).to.be.equal("This is my comment");

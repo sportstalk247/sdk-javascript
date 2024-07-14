@@ -1,5 +1,6 @@
 import {ISportsTalkConfigurable, IUserConfigurable} from "../Configuration";
 import {
+    HasCustomId,
     ListRequest,
     Reaction, ReactionCommand,
     SportsTalkConfig
@@ -16,7 +17,7 @@ import {
     ConversationDeletionResponse, ConversationDetailsListResponse,
     ConversationListResponse,
     ConversationRequest,
-    ConversationResponse,
+    ConversationResponse, HasConversationID,
     RepliesBatchResponse,
     SimpleComment, User,
     Vote
@@ -36,15 +37,15 @@ export interface ICommentingClient extends ISportsTalkConfigurable, IUserConfigu
 
     createOrUpdateUser(user: User, setDefault?: boolean): Promise<User>;
 
-    setCurrentConversation(conversation: Conversation | string): Conversation | string;
+    setCurrentConversationId(conversation: HasConversationID | string): Conversation | string;
 
     getCurrentConversation(): Conversation | string | null | undefined;
 
-    getConversation(conversation: Conversation | string): Promise<Conversation>;
+    getConversation(conversation: HasConversationID | string): Promise<Conversation>;
 
-    getConversationByCustomId(conversation: Conversation | string): Promise<ConversationResponse>
+    getConversationByCustomId(conversation_custom_id: HasCustomId | string): Promise<ConversationResponse>
 
-    deleteConversation(conversation: Conversation | string): Promise<ConversationDeletionResponse>;
+    deleteConversation(conversation: HasConversationID | string): Promise<ConversationDeletionResponse>;
 
     publishComment(comment: string | SimpleComment | Comment, replyto?: Comment | string): Promise<Comment>;
 
@@ -80,7 +81,7 @@ export interface ICommentingClient extends ISportsTalkConfigurable, IUserConfigu
 
     listRepliesBatch(parentids: string[], limit: number): Promise<RepliesBatchResponse>
 
-    getConversationBatchDetails(conversation: Conversation[] | string[], options?:ConversationBatchListOptions ): Promise<ConversationDetailsListResponse>
+    getConversationBatchDetails(conversation: HasConversationID[] | string[], options?:ConversationBatchListOptions ): Promise<ConversationDetailsListResponse>
 
-    reactToConversationTopic(conversation: Conversation | string, reaction?: ReactionCommand, user?: User): Promise<ConversationResponse>
+    reactToConversationTopic(conversation: HasConversationID | string, reaction?: ReactionCommand, user?: User): Promise<ConversationResponse>
 }

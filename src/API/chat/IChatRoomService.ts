@@ -31,6 +31,12 @@ export interface IChatRoomService extends ISportsTalkConfigurable {
     getRoomDetails(room: ChatRoomResult | string): Promise<ChatRoomResult | null>
 
     /**
+     * Resets a chat room's data.
+     * @param room
+     */
+    resetChatRoom(room: ChatRoomResult | string): Promise<ChatRoomResult>
+
+    /**
      * Gets room details
      * @param room a ChatRoomResult or a string which represents customid.
      * @returns the ChatRoomResult or null, if no room found.  If there is no customid set on the ChatRoomResult object, this will return null.

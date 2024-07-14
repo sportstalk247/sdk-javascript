@@ -5,9 +5,9 @@ import {
     ConversationDetailsListResponse,
     ConversationListResponse,
     ConversationRequest,
-    ConversationResponse, User
+    ConversationResponse, HasConversationID, User
 } from "../../models/CommentsModels";
-import {ReactionCommand} from "../../models/CommonModels";
+import {ReactionCommand, HasCustomId} from "../../models/CommonModels";
 import {UserResult} from "../../models/user/User";
 
 /**
@@ -16,15 +16,17 @@ import {UserResult} from "../../models/user/User";
 export interface IConversationService extends IConfigurable {
     createConversation(settings: Conversation): Promise<ConversationResponse>;
 
-    getConversation(conversation: Conversation | string): Promise<ConversationResponse>;
+    resetConversation(conversation:HasConversationID | string):Promise<ConversationResponse>;
 
-    getConversationByCustomId(conversation: Conversation | string): Promise<ConversationResponse>
+    getConversation(conversation: HasConversationID | string): Promise<ConversationResponse>;
+
+    getConversationByCustomId(conversation: HasCustomId | string): Promise<ConversationResponse>
 
     listConversations(filter?: ConversationRequest): Promise<ConversationListResponse>
 
-    deleteConversation(conversation: Conversation | string): Promise<ConversationDeletionResponse>
+    deleteConversation(conversation: HasConversationID | string): Promise<ConversationDeletionResponse>
 
     getConversationBatchDetails(conversation: Conversation[] | string[], options?:ConversationBatchListOptions ): Promise<ConversationDetailsListResponse>
 
-    reactToConversationTopic(conversation: Conversation | string, reaction?: ReactionCommand, user?: User): Promise<ConversationResponse>
+    reactToConversationTopic(conversation: HasConversationID | string, reaction?: ReactionCommand, user?: User): Promise<ConversationResponse>
 }

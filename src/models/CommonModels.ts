@@ -79,6 +79,21 @@ export interface RestApiResult<T> extends MessageResult<T> {
     code: number,  //e.g. 200, 400
 }
 
+export interface MayHaveCustomId {
+    customid?: string
+}
+
+export interface HasCustomId {
+    customid: string
+}
+
+export interface MayHaveCustomType {
+    customtype?:string
+}
+
+export interface MayHaveCustomPayload {
+    custompayload?:object,
+}
 
 export interface ErrorResult extends MessageResult<null>{
     data: null

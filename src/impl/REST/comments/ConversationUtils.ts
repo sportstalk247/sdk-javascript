@@ -1,4 +1,4 @@
-import {Comment, Conversation} from "../../../models/CommentsModels";
+import {Comment, Conversation, HasConversationID} from "../../../models/CommentsModels";
 
 /**
  * Helper for finding the id of a comment
@@ -17,7 +17,7 @@ export function getUrlCommentId(comment: Comment | string): string {
  * Helper for finding the id of a comments
  * @param conversation
  */
-export function getUrlConversationId(conversation: Conversation | string): string {
+export function getUrlConversationId(conversation: HasConversationID | string): string {
     // @ts-ignore
     const id = conversation.conversationid || conversation;
     if(typeof id !== 'string') {

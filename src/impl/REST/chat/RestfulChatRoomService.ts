@@ -140,6 +140,23 @@ export class RestfulChatRoomService implements IChatRoomService {
         return stRequest(config).then(result=>result.data);
     }
 
+    resetChatRoom = (room: ChatRoomResult | string): Promise<ChatRoomResult> =>{
+        const roomId = forceObjKeyOrString(room);
+        const config: AxiosRequestConfig = {
+            method: POST,
+            url: buildAPI(this._config,`${this._apiExt}/${roomId}/reset`),
+            headers: this._jsonHeaders,
+            data: {
+                removeusereffects: true
+            }
+        }
+        return stRequest(config).then(response => {
+            return response.data;
+        }).catch(e=>{
+            throw new Error(e);
+        })
+    }
+
     /**
      * Join a room
      * @param {string | User} user

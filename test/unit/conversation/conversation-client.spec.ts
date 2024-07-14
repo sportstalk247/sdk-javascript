@@ -51,7 +51,7 @@ describe("Conversation Client", function(){
             const property = "propertytest";
             const moderation = ModerationType.post;
             const client = CommentClient.init(DEFAULT_CONFIG);
-            client.setCurrentConversation({
+            client.setCurrentConversationId({
                 conversationid,
                 property,
                 moderation

@@ -1,6 +1,6 @@
 import {
     ApiHeaders,
-    ClientConfig,
+    ClientConfig, HasCustomId,
     Reaction, ReactionCommand,
     SportsTalkConfig,
     UserTokenRefreshFunction
@@ -10,7 +10,12 @@ import {
     Conversation,
     ConversationResponse,
     ConversationDeletionResponse,
-    ConversationRequest, ConversationListResponse, User, ConversationDetailsListResponse, ConversationBatchListOptions
+    ConversationRequest,
+    ConversationListResponse,
+    User,
+    ConversationDetailsListResponse,
+    ConversationBatchListOptions,
+    HasConversationID
 } from "../../../models/CommentsModels";
 import {GET, POST, DELETE} from "../../constants/api";
 import {getUrlEncodedHeaders, getJSONHeaders, buildAPI, formify, forceObjKeyOrString} from "../../utils";
@@ -42,6 +47,22 @@ export class RestfulConversationService implements IConversationService, IUserCo
         if(config) {
             this.setConfig(config);
         }
+    }
+
+
+    resetConversation = (conversation:HasConversationID | string):Promise<ConversationResponse> => {
+        const conversation_id = getUrlConversationId(conversation);
+        if(!conversation_id) {
+            throw new Error("Must supply a conversation id to reset a conversation");
+        }
+        const config: AxiosRequestConfig = {
+            method: POST,
+            url: buildAPI(this._config, `${this._apiExt}/${conversation_id}/reset`),
+            headers: this._jsonHeaders,
+        }
+        return this.request(config).then(result=>{
+            return result.data
+        });
     }
 
     getCurrentUser = (): User | null | undefined => {
@@ -113,7 +134,7 @@ export class RestfulConversationService implements IConversationService, IUserCo
      * Get a conversation object
      * @param conversation
      */
-    public getConversation = (conversation: Conversation | string): Promise<ConversationResponse> => {
+    public getConversation = (conversation: HasConversationID | string): Promise<ConversationResponse> => {
         // @ts-ignore
         const id = getUrlConversationId(conversation);
         if(!id) {
@@ -129,7 +150,7 @@ export class RestfulConversationService implements IConversationService, IUserCo
         });
     }
 
-    public reactToConversationTopic = (conversation: Conversation | string, reaction: ReactionCommand = {reaction:'like', reacted: true}, user?: User): Promise<ConversationResponse> => {
+    public reactToConversationTopic = (conversation: HasConversationID | string, reaction: ReactionCommand = {reaction:'like', reacted: true}, user?: User): Promise<ConversationResponse> => {
         const id = getUrlConversationId(conversation);
         const reactingUser = user ||  this._config.user;
         const userid = forceObjKeyOrString(reactingUser, 'userid');
@@ -161,7 +182,7 @@ export class RestfulConversationService implements IConversationService, IUserCo
      * Get a conversation object
      * @param conversation
      */
-    public getConversationByCustomId = (conversation: Conversation | string): Promise<ConversationResponse> => {
+    public getConversationByCustomId = (conversation: HasCustomId | string): Promise<ConversationResponse> => {
         // @ts-ignore
         const id = getUrlConversationId(conversation, 'customid');
         const config: AxiosRequestConfig = {
@@ -177,7 +198,7 @@ export class RestfulConversationService implements IConversationService, IUserCo
     /**
      * Deletes a conversation and all the comments in it.
      */
-    public deleteConversation = (conversation: Conversation | string): Promise<ConversationDeletionResponse> => {
+    public deleteConversation = (conversation: HasConversationID | string): Promise<ConversationDeletionResponse> => {
         // @ts-ignore
         const id = getUrlConversationId(conversation);
         // @ts-ignore

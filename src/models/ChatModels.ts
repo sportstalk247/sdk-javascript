@@ -1,10 +1,18 @@
 /**
  * Models used by Chat API and API Responses
  */
-import {Kind, ListResponse, MessageResult, Reaction, RestApiResult} from "./CommonModels";
+import {
+    Kind,
+    ListResponse,
+    MayHaveCustomId, MayHaveCustomPayload,
+    MayHaveCustomType,
+    MessageResult,
+    Reaction,
+    RestApiResult
+} from "./CommonModels";
 import {ErrorHandlerFunction} from "../impl/network";
 import {ChatRoom, ChatRoomResult, RoomEffectData, RoomOptional, UserChatroomSubscription} from "./chat/ChatRoom";
-import {UserResult} from "./user/User";
+import {HasUserId, UserResult} from "./user/User";
 import {ReportReason} from "./Moderation";
 
 export enum EventType  {
@@ -78,11 +86,8 @@ export enum ChatOptionsEventType {
 /**
  * Chat commands.
  */
-export interface CommandOptions {
+export interface CommandOptions extends MayHaveCustomId, MayHaveCustomPayload, MayHaveCustomType{
     eventtype?: ChatOptionsEventType,
-    customtype?: string,
-    customid?: string,
-    custompayload?: string,
 }
 
 export interface QuoteCommandOptions extends CommandOptions {
@@ -120,8 +125,7 @@ export interface EffectOptions extends Expires, RoomOptional {
     applyeffect: boolean,
 }
 
-export interface MuteOptions extends EffectOptions {
-    userid: string,
+export interface MuteOptions extends EffectOptions, HasUserId {
     mute: boolean,
 }
 
@@ -132,8 +136,7 @@ export interface UserEffect {
 }
 
 
-export interface UserReport {
-    userid: string
+export interface UserReport extends HasUserId{
     reportedbyuserid: string
     reason: ReportReason
     added: string
@@ -159,7 +162,7 @@ export enum EventModerationState {
     approved = "approved",
     rejected = "rejected"
 }
-export interface Event {
+export interface Event extends MayHaveCustomId, MayHaveCustomType, MayHaveCustomPayload {
     roomid: string, // The ID of the room to which the event was sent.
     added?: string, // ISO 8601 timestamp
     ts: number, // a millisecond level timestamp. Used for evaluating relative times between events. Do not rely on this as a true time value, use added.
@@ -169,9 +172,8 @@ export interface Event {
     eventtype: EventType, // speech, purge, etc. Can hold custom types beyond those in the enum. The enum contains only system types.
     userid: string // the ID of the user who created the event.
     user: UserResult // the User object who created the event
-    customtype?:string, // a custom type set for the event, or empty string
-    customid?:string, // a custom id for the event, or empty string.
-    custompayload?:object, // a custom payload added to the event, may be stringified JSON
+    // customtype?:string, // a custom type set for the event, or empty string
+    // custompayload?:object, // a custom payload added to the event, may be stringified JSON
     replyto?: EventResult | object, // the ID of the event that this event is a reply to
     reactions?:Array<EventReaction> // the reactions that have happened to this event.
     shadowban: boolean

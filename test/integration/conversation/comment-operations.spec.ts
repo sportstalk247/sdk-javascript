@@ -188,8 +188,8 @@ describe('Comment Operations', function() {
         let queue: CommentListResponse
         let rejectcomment;
         let acceptcomment;
-        client.setCurrentConversation(conversation);
-        client2.setCurrentConversation(conversation);
+        client.setCurrentConversationId(conversation);
+        client2.setCurrentConversationId(conversation);
         it("Let's User2 report User1's comment", async ()=> {
 
             rejectcomment = await client.publishComment("This is user1 comment to update");
@@ -226,7 +226,7 @@ describe('Comment Operations', function() {
 
     });
    describe("Create comment with preset timestamp", function(){
-       client.setCurrentConversation(conversation)
+       client.setCurrentConversationId(conversation)
        it('can create a comment with a preset timestamp', async()=>{
            try {
                const time = Math.floor(new Date().getTime() - 100000000); // unix time.
@@ -239,8 +239,8 @@ describe('Comment Operations', function() {
    })
 
    describe("Comment Deletion", function(){
-       client.setCurrentConversation(conversation);
-       client2.setCurrentConversation(conversation);
+       client.setCurrentConversationId(conversation);
+       client2.setCurrentConversationId(conversation);
        it("Lets a user delete their comment", async ()=>{
            const comment = await client.publishComment("Delete me");
            const deleted =  await client.deleteComment(comment, true);

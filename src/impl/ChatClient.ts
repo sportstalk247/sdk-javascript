@@ -52,6 +52,7 @@ import {
 import {User, UserDeletionResponse, UserListResponse, UserResult, UserSearchType} from "../models/user/User";
 import {Notification, NotificationListRequest} from "../models/user/Notifications";
 import {ReportReason, ReportType} from "../models/Moderation";
+import Message = Chai.Message;
 
 /**
  * ChatClient provides an interface to chat applications.
@@ -687,6 +688,14 @@ export class ChatClient implements IChatClient {
      */
     permanetlyDeleteEvent = (event: EventResult | string): Promise<MessageResult<null>> =>{
         return this._eventService.permanetlyDeleteEvent(this._user, event)
+    }
+
+    /**
+     * Resets the contents of a room. Be careful.
+     * @param room
+     */
+    resetChatRoom = (room: ChatRoomResult | string): Promise<ChatRoomResult> => {
+        return this._roomService.resetChatRoom(room);
     }
 
     /**

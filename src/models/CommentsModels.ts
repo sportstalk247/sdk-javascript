@@ -1,4 +1,4 @@
-import {Kind, ListRequest, ListResponse, Reaction} from "./CommonModels";
+import {MayHaveCustomId, Kind, ListRequest, ListResponse, Reaction} from "./CommonModels";
 import {User} from "./user/User";
 import {ModerationType, ReportReason} from "./Moderation";
 import {EventReaction} from "./ChatModels";
@@ -7,6 +7,9 @@ export {
     Kind,
     ModerationType,
     User
+}
+export interface MayHaveConversationID {
+    conversationid?: string,
 }
 
 export interface HasConversationID {
@@ -33,11 +36,8 @@ interface ReactionSummary {
     users: User[]
 }
 
-export interface Conversation extends CustomFields {
-    conversationid: string,
-    customid?: string,
+export interface Conversation extends CustomFields, MayHaveConversationID, MayHaveCustomId {
     property: string,
-
     moderation: ModerationType,
     owneruserid?: string,
     maxreports? : number,
@@ -64,7 +64,8 @@ export interface RepliesBatchResponse extends ListResponse {
     repliesgroupedbyparentid: CommentReplyList[]
 }
 
-export interface ConversationResponse extends Conversation {
+export interface ConversationResponse extends Conversation, HasConversationID {
+    conversationid: string,
     kind: Kind.conversation
     appid: string,
     commentcount: number

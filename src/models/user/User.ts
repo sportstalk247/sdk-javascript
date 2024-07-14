@@ -12,12 +12,14 @@ export enum UserRole {
     user = "user"
 }
 
+export interface HasUserId {
+    userid: string, // Unique ID, defined by client application to use native IDs.
+}
 /**
  * A User is someone able to chat in chatrooms and make comments in conversations.
  * Users must be created before they can make comments or chat, and they must choice a chat room before they can participate.
  */
-export interface User {
-    userid: string, // Unique ID, defined by client application to use native IDs.
+export interface User extends HasUserId {
     handle?: string, // Allowed Characters:  "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890_"
     handlelowercase?: string, // an all lowercase version of the handle
     displayname?: string, // A friendly display name.  E.g. a user has a handle "jjsmithyperson" and their display name "John J. Smith"

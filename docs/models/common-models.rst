@@ -251,6 +251,8 @@ Webhook Event
         chatroomclosed = "chatroomclosed",
         chatpurge = "chatpurge",
         commentspeech = "commentspeech",
+        commentreaction = "commentreaction",
+        commentconversationreaction = "commentconversationreaction",
         commentreply = 'commentreply'
     }
 

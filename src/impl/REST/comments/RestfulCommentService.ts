@@ -10,7 +10,7 @@ import {
     Comment, CommentListResponse, CommentDeletionResponse,
     CommentRequest,
     Conversation,
-    Vote, RepliesBatchResponse, CommentResult, User
+    Vote, RepliesBatchResponse, CommentResult, User, HasConversationID
 } from "../../../models/CommentsModels";
 import {DELETE, GET, POST, PUT} from "../../constants/api";
 import {getUrlEncodedHeaders, getJSONHeaders, buildAPI, formify, forceObjKeyOrString} from "../../utils";
@@ -387,7 +387,7 @@ export class RestfulCommentService implements ICommentService {
      * @param request
      * @param conversation
      */
-    public listComments = (conversation: Conversation | string, request?: CommentRequest): Promise<CommentListResponse>=> {
+    public listComments = (conversation: HasConversationID | string, request?: CommentRequest): Promise<CommentListResponse>=> {
         if(!conversation) {
             throw new ValidationError(MUST_SPECIFY_CONVERSATION);
         }
@@ -409,7 +409,7 @@ export class RestfulCommentService implements ICommentService {
         });
     }
 
-    public listRepliesBatch = (conversation: Conversation | string, parentids: string[], childlimit:number = 50): Promise<RepliesBatchResponse> => {
+    public listRepliesBatch = (conversation: HasConversationID | string, parentids: string[], childlimit:number = 50): Promise<RepliesBatchResponse> => {
         const id = getUrlConversationId(conversation);
         this._requireConversationId(id);
         if(!parentids || !parentids.length) {
