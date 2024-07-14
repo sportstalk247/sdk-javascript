@@ -1,4 +1,5 @@
 import {User} from "./user/User";
+import { AxiosHeaderValue} from "axios";
 export interface ClientConfig {
     appId?: string,
     apiToken?: string,
@@ -9,8 +10,8 @@ export interface UserTokenRefreshFunction {
 }
 
 export interface ApiHeaders {
-    'Content-Type'?: string,
-    'x-api-token'?: string
+    'Content-Type'?: AxiosHeaderValue,
+    'x-api-token'?: AxiosHeaderValue
 }
 
 export enum Kind {

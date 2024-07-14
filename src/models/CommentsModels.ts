@@ -36,7 +36,7 @@ interface ReactionSummary {
     users: User[]
 }
 
-export interface Conversation extends CustomFields, MayHaveConversationID, MayHaveCustomId {
+export interface Conversation extends CustomFields, HasConversationID, MayHaveCustomId {
     property: string,
     moderation: ModerationType,
     owneruserid?: string,

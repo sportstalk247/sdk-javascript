@@ -5,7 +5,7 @@ import {
     SportsTalkConfig,
     UserTokenRefreshFunction
 } from "../../../models/CommonModels";
-import axios, {AxiosRequestConfig} from "axios";
+import axios, {AxiosHeaders, AxiosRequestConfig} from "axios";
 import {
     Conversation,
     ConversationResponse,
@@ -35,8 +35,8 @@ import {UserResult} from "../../../models/user/User";
 export class RestfulConversationService implements IConversationService, IUserConfigurable {
 
     _config: SportsTalkConfig;
-    _apiHeaders: ApiHeaders;
-    _jsonHeaders: ApiHeaders;
+    _apiHeaders: AxiosHeaders;
+    _jsonHeaders: AxiosHeaders;
     _apiExt:string = 'comment/conversations'
     private request: NetworkRequest = bindJWTUpdates(this);
     /**
@@ -90,8 +90,8 @@ export class RestfulConversationService implements IConversationService, IUserCo
      */
     public setConfig = (config: SportsTalkConfig) => {
         this._config = config;
-        this._apiHeaders = getUrlEncodedHeaders(this._config.apiToken, this._config.userToken);
-        this._jsonHeaders = getJSONHeaders(this._config.apiToken, this._config.userToken);
+        this._apiHeaders = getUrlEncodedHeaders(this._config.apiToken, this._config.userToken) as AxiosHeaders;
+        this._jsonHeaders = getJSONHeaders(this._config.apiToken, this._config.userToken) as AxiosHeaders;
     }
 
     /**
@@ -228,7 +228,7 @@ export class RestfulConversationService implements IConversationService, IUserCo
     }
 
 
-    getConversationBatchDetails(conversations: Conversation[] | string[], options?:ConversationBatchListOptions): Promise<ConversationDetailsListResponse> {
+    getConversationBatchDetails(conversations: HasConversationID[] | string[], options?:ConversationBatchListOptions): Promise<ConversationDetailsListResponse> {
         //@ts-ignore
         const ids = [].concat(conversations).map(conversation => {
             //@ts-ignore

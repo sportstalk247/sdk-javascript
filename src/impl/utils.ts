@@ -9,7 +9,7 @@ export function formify(data) {
     for (const property in data) {
         const encodedKey = property;
         // If null/undefined/empty value, skip this.  Need careful check in case value is a number and is zero.
-        if(data[property] === undefined || data[property] === null || data[property] === NaN) {
+        if(data[property] === undefined || data[property] === null || Number.isNaN(data[property])) {
             continue;
         }
         const  encodedValue = encodeURIComponent(data[property]);
@@ -24,7 +24,7 @@ export function queryStringify(data,key?) {
     for (const property in data) {
         const encodedKey = key || property;
         // If null/undefined/empty value, skip this.  Need careful check in case value is a number and is zero.
-        if(data[property] === undefined || data[property] === null || data[property] === NaN) {
+        if(data[property] === undefined || data[property] === null || Number.isNaN(data[property])) {
             continue;
         }
         if(Array.isArray(data[property])) {

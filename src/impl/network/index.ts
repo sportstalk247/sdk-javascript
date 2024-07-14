@@ -11,11 +11,13 @@ export interface NetworkRequest {
  */
 //@ts-ignore
 const makeRequest = async function makeRequest(config:Request | AxiosRequestConfig) {
+    config = config || { headers:{} };
     // @ts-ignore
     if(config.data) {
             // @ts-ignore
             config.body = JSON.stringify(config.data);
     }
+    // @ts-ignore
     config.headers['Content-Type'] = 'application/json';
     // @ts-ignore
     return window.fetch(config.url, config).then((response:Response)=>{
@@ -71,6 +73,7 @@ export const bindJWTUpdates = (target: IUserConfigurable): NetworkRequest => asy
         // Should refresh for future api calls but we patch it here because config is not dynamically updated.
         const token = await target.refreshUserToken();
         if(token) {
+            //@ts-ignore
             config.headers['Authorization'] = `Bearer ${token}`
         }
     }

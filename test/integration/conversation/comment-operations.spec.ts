@@ -7,7 +7,7 @@ import {
     Comment,
     CommentListResponse,
     CommentModeration, CommentReplyList,
-    CommentResult, Conversation, ModerationType,
+    CommentResult, Conversation, HasConversationID, ModerationType,
     Vote
 } from "../../../src/models/CommentsModels";
 import {RestfulCommentService} from "../../../src/impl/REST/comments/RestfulCommentService";
@@ -60,7 +60,7 @@ describe('Comment Operations', function() {
 
     describe('Setup Conversation', function () {
         it('User Creates Conversation', function (done) {
-            client.createConversation(conversation, true).then(results => {
+            client.createConversation(conversation as Conversation, true).then(results => {
                 expect(results.kind).to.be.equal(Kind.conversation)
                 expect(results.owneruserid).to.be.equal('testuser1');
                 expect(results.conversationid).to.be.equal('TEST_ITEM');
@@ -75,7 +75,7 @@ describe('Comment Operations', function() {
         let resp:CommentResult;
         it("React to a comment", async ()=>{
             try {
-                const conv = await client2.createConversation(conversation, true)
+                const conv = await client2.createConversation(conversation as Conversation, true)
                 resp = await client2.publishComment({
                     body:"This is my comment",
                     customfield1: "CF1",
@@ -188,8 +188,8 @@ describe('Comment Operations', function() {
         let queue: CommentListResponse
         let rejectcomment;
         let acceptcomment;
-        client.setCurrentConversationId(conversation);
-        client2.setCurrentConversationId(conversation);
+        client.setCurrentConversationId(conversation as HasConversationID);
+        client2.setCurrentConversationId(conversation as HasConversationID);
         it("Let's User2 report User1's comment", async ()=> {
 
             rejectcomment = await client.publishComment("This is user1 comment to update");
@@ -226,7 +226,7 @@ describe('Comment Operations', function() {
 
     });
    describe("Create comment with preset timestamp", function(){
-       client.setCurrentConversationId(conversation)
+       client.setCurrentConversationId(conversation as HasConversationID)
        it('can create a comment with a preset timestamp', async()=>{
            try {
                const time = Math.floor(new Date().getTime() - 100000000); // unix time.
@@ -239,8 +239,8 @@ describe('Comment Operations', function() {
    })
 
    describe("Comment Deletion", function(){
-       client.setCurrentConversationId(conversation);
-       client2.setCurrentConversationId(conversation);
+       client.setCurrentConversationId(conversation as HasConversationID);
+       client2.setCurrentConversationId(conversation as HasConversationID);
        it("Lets a user delete their comment", async ()=>{
            const comment = await client.publishComment("Delete me");
            const deleted =  await client.deleteComment(comment, true);

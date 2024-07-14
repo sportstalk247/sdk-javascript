@@ -8,7 +8,6 @@ import {
     ConversationResponse, HasConversationID, User
 } from "../../models/CommentsModels";
 import {ReactionCommand, HasCustomId} from "../../models/CommonModels";
-import {UserResult} from "../../models/user/User";
 
 /**
  * @interface
@@ -26,7 +25,7 @@ export interface IConversationService extends IConfigurable {
 
     deleteConversation(conversation: HasConversationID | string): Promise<ConversationDeletionResponse>
 
-    getConversationBatchDetails(conversation: Conversation[] | string[], options?:ConversationBatchListOptions ): Promise<ConversationDetailsListResponse>
+    getConversationBatchDetails(conversation: HasConversationID[] | string[], options?:ConversationBatchListOptions ): Promise<ConversationDetailsListResponse>
 
     reactToConversationTopic(conversation: HasConversationID | string, reaction?: ReactionCommand, user?: User): Promise<ConversationResponse>
 }

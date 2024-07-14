@@ -5,6 +5,7 @@ import * as dotenv from 'dotenv';
 import {DEFAULT_CONFIG} from "../../../src/impl/constants/api";
 import {User} from "../../../src/models/user/User";
 import {ModerationType, ReportType} from "../../../src/models/Moderation";
+import {Conversation, HasConversationID} from "../../../src/models/CommentsModels";
 dotenv.config();
 
 const { expect } = chai;
@@ -37,32 +38,25 @@ describe("Conversation Client", function(){
                 { conversationid,
                 property,
                 moderation
-            });
-            const conversation  = client.getCurrentConversation();
+            } as Conversation);
+            const conversation  = client.getCurrentConversationId();
             // @ts-ignore
-            expect(conversation.conversationid).to.be.equal(conversationid);
-            // @ts-ignore
-            expect(conversation.property).to.be.equal(property);
-            // @ts-ignore
-            expect(conversation.moderation).to.be.equal(moderation)
+            expect(conversation).to.be.equal(conversationid);
         })
         it("Can set comments after creation", function(){
             const conversationid = "TestId";
             const property = "propertytest";
             const moderation = ModerationType.post;
             const client = CommentClient.init(DEFAULT_CONFIG);
+            // Test that we can pass in a conversation object, not just a string.
             client.setCurrentConversationId({
                 conversationid,
                 property,
                 moderation
-            })
-            const conversation  = client.getCurrentConversation();
+            } as HasConversationID)
+            const conversation  = client.getCurrentConversationId();
             // @ts-ignore
-            expect(conversation.conversationid).to.be.equal(conversationid);
-            // @ts-ignore
-            expect(conversation.property).to.be.equal(property);
-            // @ts-ignore
-            expect(conversation.moderation).to.be.equal(moderation)
+            expect(conversationid).to.be.equal(conversation);
         })
     })
 

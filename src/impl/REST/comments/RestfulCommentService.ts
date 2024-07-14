@@ -24,7 +24,7 @@ import {
     USER_NEEDS_ID
 } from "../../constants/messages";
 
-import {AxiosRequestConfig} from "axios";
+import {Axios, AxiosHeaders, AxiosRequestConfig} from "axios";
 import {stRequest} from "../../network";
 import {ICommentService} from "../../../API/comments/ICommentService";
 import {ReportType} from "../../../models/Moderation";
@@ -39,8 +39,8 @@ import {ReportType} from "../../../models/Moderation";
 export class RestfulCommentService implements ICommentService {
     private _config: SportsTalkConfig;
     private _conversation: Conversation;
-    private _apiHeaders: ApiHeaders;
-    private _jsonHeaders: ApiHeaders;
+    private _apiHeaders: AxiosHeaders;
+    private _jsonHeaders: AxiosHeaders;
     private _apiExt:string = 'comment/conversations';
 
     /**
@@ -61,8 +61,8 @@ export class RestfulCommentService implements ICommentService {
      */
     public setConfig = (config: SportsTalkConfig): SportsTalkConfig => {
         this._config = config;
-        this._apiHeaders = getUrlEncodedHeaders(this._config.apiToken, this._config.userToken)
-        this._jsonHeaders = getJSONHeaders(this._config.apiToken, this._config.userToken);
+        this._apiHeaders = getUrlEncodedHeaders(this._config.apiToken, this._config.userToken) as AxiosHeaders,
+        this._jsonHeaders = getJSONHeaders(this._config.apiToken, this._config.userToken) as AxiosHeaders;
         return config;
     }
 
@@ -151,7 +151,7 @@ export class RestfulCommentService implements ICommentService {
         const config:AxiosRequestConfig = {
             method: POST,
             url: buildAPI(this._config, `${this._apiExt}/${conversationId}/comments`),
-            headers: this._jsonHeaders,
+            headers: this._jsonHeaders as AxiosHeaders,
             data: comment
         }
         return stRequest(config).then(result=>{
@@ -174,7 +174,7 @@ export class RestfulCommentService implements ICommentService {
         const config: AxiosRequestConfig = {
             method: POST,
             url: buildAPI(this._config, `${this._apiExt}/${conversationId}/comments/${replyId}`),
-            headers: this._jsonHeaders,
+            headers: this._jsonHeaders as AxiosHeaders,
             data: comment
         }
 

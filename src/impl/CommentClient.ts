@@ -93,11 +93,11 @@ export class CommentClient implements ICommentingClient {
     /**
      * Creates a new Conversation Client
      * @param SportsTalkConfig
-     * @param initialConversation Either a comments object or a comments id
+     * @param initialConversation Either a conversation object with 'conversationid' property or a conversation id as a string.
      * @param commentService optional and here for future extension for custom implementations of the comment service.
      * @param conversationService optional and here for future extension for cusstom implementations of the comments service.
      */
-    static init(config: SportsTalkConfig, initialConversation?:Conversation | string, commentService?: IConversationService, conversationService?: IConversationService): CommentClient {
+    static init(config: SportsTalkConfig, initialConversation?:HasConversationID | string, commentService?: IConversationService, conversationService?: IConversationService): CommentClient {
         const commentClient = new CommentClient();
         // @ts-ignore
         commentClient.setConfig(config, commentService, conversationService)
@@ -106,7 +106,7 @@ export class CommentClient implements ICommentingClient {
             if(conversationid) {
                 commentClient.setCurrentConversationId(conversationid);
             } else {
-                console.log("WARN: cannot set initial conversation, because no conversationID was supplied.")
+                throw new Error("Cannot set initial conversation, because no conversationID was supplied.")
             }
 
         }
@@ -262,7 +262,7 @@ export class CommentClient implements ICommentingClient {
      * Returns the current default comments
      * @return conversation a Conversation object, a string for the conversationID, or null.
      */
-    public getCurrentConversation = (): Conversation | string | null => {
+    public getCurrentConversationId = (): Conversation | string | null => {
        return this._currentConversationId;
     }
 

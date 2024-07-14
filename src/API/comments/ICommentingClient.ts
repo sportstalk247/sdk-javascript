@@ -39,7 +39,7 @@ export interface ICommentingClient extends ISportsTalkConfigurable, IUserConfigu
 
     setCurrentConversationId(conversation: HasConversationID | string): Conversation | string;
 
-    getCurrentConversation(): Conversation | string | null | undefined;
+    getCurrentConversationId(): Conversation | string | null | undefined;
 
     getConversation(conversation: HasConversationID | string): Promise<Conversation>;
 

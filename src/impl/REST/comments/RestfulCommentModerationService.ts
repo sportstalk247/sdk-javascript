@@ -1,5 +1,5 @@
 import {ApiHeaders, RestApiResult, SportsTalkConfig, UserTokenRefreshFunction} from "../../../models/CommonModels";
-import {AxiosRequestConfig} from "axios";
+import {Axios, AxiosHeaders, AxiosRequestConfig} from "axios";
 import {stRequest} from '../../network';
 import {Comment, CommentListResponse, CommentResult} from "../../../models/CommentsModels";
 import {DEFAULT_CONFIG, GET, POST} from "../../constants/api";
@@ -18,8 +18,8 @@ import {ICommentModerationService} from "../../../API/comments/ICommentModeratio
 export class RestfulCommentModerationService implements ICommentModerationService {
 
     private _config: SportsTalkConfig
-    private _apiHeaders: ApiHeaders;
-    private _jsonHeaders: ApiHeaders;
+    private _apiHeaders: AxiosHeaders;
+    private _jsonHeaders: AxiosHeaders;
     private _apiExt:string = 'comment/moderation/queues/comments';
 
     constructor(config?: SportsTalkConfig) {
@@ -49,8 +49,8 @@ export class RestfulCommentModerationService implements ICommentModerationServic
      */
     public setConfig = (config: SportsTalkConfig = {}) => {
         this._config = Object.assign({}, DEFAULT_CONFIG, config);
-        this._apiHeaders = getUrlEncodedHeaders(this._config.apiToken, this._config.userToken);
-        this._jsonHeaders = getJSONHeaders(this._config.apiToken, this._config.userToken);
+        this._apiHeaders = getUrlEncodedHeaders(this._config.apiToken, this._config.userToken) as AxiosHeaders;
+        this._jsonHeaders = getJSONHeaders(this._config.apiToken, this._config.userToken) as AxiosHeaders;
     }
 
     /**

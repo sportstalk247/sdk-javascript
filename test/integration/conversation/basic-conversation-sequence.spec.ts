@@ -3,7 +3,11 @@ import {Kind} from '../../../src/models/CommonModels';
 import * as chai from 'chai';
 import * as dotenv from 'dotenv';
 import {ModerationType} from "../../../src/models/Moderation";
-import {Conversation} from "../../../src/models/CommentsModels";
+import {
+    Conversation,
+    ConversationResponse,
+    HasConversationID
+} from "../../../src/models/CommentsModels";
 
 dotenv.config();
 
@@ -46,7 +50,7 @@ describe('BASIC Conversation Sequence', function() {
         "customtags" : ["taga", "tagb"],
         "customfield1" : "/sample/userdefined1",
         "customfield2" : "/sample/userdefined2/äöüÄÖÜß"
-    }
+    } as Conversation
 
     const closedconversation = {
         "conversationid": "TEST_ITEM_CLOSED",
@@ -80,7 +84,7 @@ describe('BASIC Conversation Sequence', function() {
 
     describe('Setup Closed Conversation', function () {
         it('User Creates Conversation', function (done) {
-            client.createConversation(closedconversation, true).then(results => {
+            client.createConversation(closedconversation as Conversation, true).then(results => {
                 expect(results.kind).to.be.equal(Kind.conversation)
                 expect(results.owneruserid).to.be.equal('testuser1');
                 expect(results.conversationid).to.be.equal('TEST_ITEM_CLOSED');
@@ -124,7 +128,7 @@ describe('BASIC Conversation Sequence', function() {
        })
        it('Deletes Conversation by object', async function () {
            // test by object
-           return await client.deleteConversation(closedconversation);
+           return await client.deleteConversation(closedconversation as HasConversationID);
        })
    });
 });
