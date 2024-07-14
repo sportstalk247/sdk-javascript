@@ -13,13 +13,13 @@ export interface MayHavePollId{
 
 export interface PollSettings extends MayHavePollId, MayHaveCustomId {
     ownerid: string,
-    title?: string,
+    title: string,
     description?: "Vote for your favorite color",
-    sortanswers:string,
-    maxtotalresponsesperuser: number,
-    allowmultiplechoicesperuser: boolean,
-    maxresponsesperchoiceperuser:number,
-    maxtotalvotesperuser: number
+    sortanswers?:string,
+    maxtotalresponsesperuser?: number,
+    allowmultiplechoicesperuser?: boolean,
+    maxresponsesperchoiceperuser?:number,
+    maxtotalvotesperuser?: number
 }
 
 export interface Poll extends PollSettings, HasPollId {

@@ -85,7 +85,7 @@ export class RestfulPollService implements IPollService {
         const config: AxiosRequestConfig = {
             method: POST,
             headers:this._jsonHeaders,
-            url: buildAPI(this._config, `/poll/poll/${pollid}/response`),
+            url: buildAPI(this._config, `poll/poll/${pollid}/response`),
             data: data
         }
         return stRequest(config).then(response=>response.data);
@@ -97,7 +97,7 @@ export class RestfulPollService implements IPollService {
         const config: AxiosRequestConfig = {
             method: POST,
             headers:this._jsonHeaders,
-            url: buildAPI(this._config, `/poll/poll/${pollid}/choice`),
+            url: buildAPI(this._config, `poll/poll/${pollid}/choice`),
             data: pollChoice
         }
         return stRequest(config).then(response=>response.data);
@@ -107,10 +107,12 @@ export class RestfulPollService implements IPollService {
         const config: AxiosRequestConfig = {
             method: POST,
             headers:this._jsonHeaders,
-            url: buildAPI(this._config, `/poll/poll/create`),
+            url: buildAPI(this._config, `poll/poll/create`),
             data: poll
         }
-        return stRequest(config).then(response=>response.data);
+        return stRequest(config).then(response=>{
+            return response.data
+        })
     }
 
     getPollDetails(poll: HasPollId | string): Promise<Poll> {
@@ -135,7 +137,7 @@ export class RestfulPollService implements IPollService {
         const config: AxiosRequestConfig = {
             method: GET,
             headers:this._jsonHeaders,
-            url: buildAPI(this._config, `/poll/pollbycustomid/${pollid}`),
+            url: buildAPI(this._config, `poll/pollbycustomid/${pollid}`),
         }
         return stRequest(config).then(response=>response.data);
     }
@@ -148,7 +150,7 @@ export class RestfulPollService implements IPollService {
         const config: AxiosRequestConfig = {
             method: GET,
             headers:this._jsonHeaders,
-            url: buildAPI(this._config, `/poll/poll/${pollid}/standings`),
+            url: buildAPI(this._config, `poll/poll/${pollid}/standings`),
         }
         return stRequest(config).then(response=>response.data);
     }
@@ -162,7 +164,7 @@ export class RestfulPollService implements IPollService {
         const config: AxiosRequestConfig = {
             method: GET,
             headers:this._jsonHeaders,
-            url: buildAPI(this._config, `/poll/poll/${pollid}/choices?limit=${max_responses}`),
+            url: buildAPI(this._config, `poll/poll/${pollid}/choices?limit=${max_responses}`),
         }
         return stRequest(config).then(response=>response.data);
     }
@@ -177,7 +179,7 @@ export class RestfulPollService implements IPollService {
         const config: AxiosRequestConfig = {
             method: GET,
             headers:this._jsonHeaders,
-            url: buildAPI(this._config, `/poll/poll?${cursor ? `cursor=${cursor}&` : '' }limit=${max_responses}`),
+            url: buildAPI(this._config, `poll/poll?${cursor ? `cursor=${cursor}&` : '' }limit=${max_responses}`),
         }
         return stRequest(config).then(response=>response.data);
     }
@@ -199,7 +201,7 @@ export class RestfulPollService implements IPollService {
         const config: AxiosRequestConfig = {
             method: GET,
             headers:this._jsonHeaders,
-            url: buildAPI(this._config, `/poll/poll/${pollid}/responses/user/${userid}`),
+            url: buildAPI(this._config, `poll/poll/${pollid}/responses/user/${userid}`),
         }
         return stRequest(config).then(response=>response.data);
     }
@@ -212,7 +214,7 @@ export class RestfulPollService implements IPollService {
         const config: AxiosRequestConfig = {
             method: PUT,
             headers:this._jsonHeaders,
-            url: buildAPI(this._config, `/poll/poll/${pollid}/reset`),
+            url: buildAPI(this._config, `poll/poll/${pollid}/reset`),
         }
         return stRequest(config).then(response=>response.data);
     }
@@ -225,7 +227,7 @@ export class RestfulPollService implements IPollService {
         const config: AxiosRequestConfig = {
             method: DELETE,
             headers:this._jsonHeaders,
-            url: buildAPI(this._config, `/poll/poll/${pollid}`),
+            url: buildAPI(this._config, `poll/poll/${pollid}`),
         }
         return stRequest(config).then(response=>response.data);
     }
