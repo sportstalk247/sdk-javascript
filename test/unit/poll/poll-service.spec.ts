@@ -19,6 +19,8 @@ describe("Poll service", function() {
             ownerid: "moderator",
             title: "TestPoll",
             description: "Vote for your favorite color",
+            sortanswers: "random",
+            customid: "custompoll",
         } as PollSettings);
         expect(poll)
 

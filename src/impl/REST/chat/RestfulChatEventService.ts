@@ -72,6 +72,7 @@ export class RestfulChatEventService implements IChatEventService {
     // Maintain room connection.
     _keepAliveFunction: Function;
     _keepAliveInterval;
+    _keepAliveTimeInterval = 10000;
 
     // Holds the size of the updates we we will request.
     private _maxEventsPerUpdateLimit:number = 100;
@@ -148,6 +149,9 @@ export class RestfulChatEventService implements IChatEventService {
      * @param user
      */
     setUser = (user: User) => {
+        if(!user) {
+            throw new Error("Must set a user");
+        }
         this._config.user = Object.assign(this._user, user);
         this._user = this._config.user;
     }
@@ -250,7 +254,7 @@ export class RestfulChatEventService implements IChatEventService {
      */
     _startKeepAlive = (roomid, userid) => {
         this._resetKeepAlive(roomid, userid);
-        this._keepAliveInterval = setInterval(this._keepAliveFunction, 1000);
+        this._keepAliveInterval = setInterval(this._keepAliveFunction, this._keepAliveTimeInterval);
     }
 
     /**

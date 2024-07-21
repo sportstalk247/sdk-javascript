@@ -11,19 +11,20 @@ export interface MayHavePollId{
     pollid?: string
 }
 
-export interface PollSettings extends MayHavePollId, MayHaveCustomId {
+export interface PollSettings extends MayHavePollId, HasCustomId {
     ownerid: string,
     title: string,
-    description?: "Vote for your favorite color",
-    sortanswers?:string,
+    description: string,
+    sortanswers:string,
     maxtotalresponsesperuser?: number,
     allowmultiplechoicesperuser?: boolean,
     maxresponsesperchoiceperuser?:number,
     maxtotalvotesperuser?: number
 }
 
-export interface Poll extends PollSettings, HasPollId {
-    pollid: string
+export interface Poll extends PollSettings {
+    kind?: "poll.poll"
+    id: string
 }
 export interface PollChoice extends HasPollChoiceId {
     position: number
