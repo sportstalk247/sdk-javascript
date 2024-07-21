@@ -2,10 +2,12 @@ import {ChatClient} from './impl/ChatClient';
 import {CommentClient} from './impl/CommentClient';
 import {UserClient} from './impl/UserClient';
 import {RestfulChatModerationService} from "./impl/REST/chat/RestfulChatModerationService";
+import {RestfulPollService} from "./impl/REST/poll/RestfulPollService";
 import {RestfulChatEventService} from "./impl/REST/chat/RestfulChatEventService";
 import {RestfulChatRoomService} from "./impl/REST/chat/RestfulChatRoomService";
 import {RestfulUserService} from "./impl/REST/users/RestfulUserService";
 import * as ChatModels from './models/ChatModels';
+import * as PollModels from './models/PollModels';
 import * as CommentModels from './models/CommentsModels';
 import { SportsTalkConfig } from './models/CommonModels';
 import * as CommonModels from './models/CommonModels';
@@ -30,6 +32,10 @@ const Comments = {
     RestfulCommentModerationService
 }
 
+const Polls = {
+    RestfulPollService
+}
+
 
 const Users = {
     RestfulUserService,
@@ -43,6 +49,7 @@ const REST ={
     Chat,
     Comments,
     Users,
+    Polls,
     Webhooks
 }
 
@@ -54,7 +61,8 @@ const Services = {
     WebhookService: RestfulWebhookService,
     ConversationService: RestfulConversationService,
     CommentService: RestfulCommentService,
-    CommentModerationService: RestfulCommentModerationService
+    CommentModerationService: RestfulCommentModerationService,
+    PollsService: RestfulPollService
 }
 
 const impl = {
@@ -65,6 +73,7 @@ const Types = {
     Comments: CommentModels,
     Chat: ChatModels,
     Common: CommonModels,
+    Polls: PollModels,
     Errors,
     Messages,
 }
