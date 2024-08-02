@@ -1,4 +1,4 @@
-import {MayHaveCustomId} from "../CommonModels";
+import {HasCustomId} from "../CommonModels";
 
 export interface HasPollId {
     pollid: string

@@ -1,6 +1,6 @@
 import {ISportsTalkConfigurable} from "../Configuration";
 import {
-    BounceUserResult,
+    BounceUserResult, EventListResponse,
     EventResult
 } from "../../models/ChatModels";
 import {RestApiResult} from "../../models/CommonModels";
@@ -100,7 +100,7 @@ export interface IChatRoomService extends ISportsTalkConfigurable {
 
     listParticipants(room: ChatRoom, cursor?: string, maxresults?: number): Promise<Array<UserResult>>
 
-    listUserMessages(user: User | string, Room: ChatRoom | String, cursor?: string, limit?: number): Promise<Array<EventResult>>
+    listUserMessages(user: User | string, Room: ChatRoom | string, cursor?: string, limit?: number): Promise<EventListResponse>
 
     joinRoom(room: ChatRoom | string, user: User, options?: JoinOptions): Promise<JoinChatRoomResponse>
 

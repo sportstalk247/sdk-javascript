@@ -6,7 +6,7 @@ import {
     MuteUserApiData
 } from "../../../models/ChatModels";
 import {stRequest} from '../../network';
-import {GET, DELETE, POST, API_SUCCESS_MESSAGE} from "../../constants/api";
+import {GET, DELETE, POST} from "../../constants/api";
 import {
     buildAPI,
     forceObjKeyOrString,
@@ -20,7 +20,7 @@ import {SettingsError} from "../../errors";
 import {IChatRoomService} from "../../../API/chat/IChatRoomService";
 import {
     ChatRoom,
-    ChatRoomEffectsList, ChatRoomExitResult,
+    ChatRoomExitResult,
     ChatRoomExtendedDetailsRequest,
     ChatRoomExtendedDetailsResponse,
     ChatRoomListResponse, ChatRoomResult, DeletedChatRoomResponse, JoinChatRoomResponse, JoinOptions
@@ -110,7 +110,6 @@ export class RestfulChatRoomService implements IChatRoomService {
      * @param {string} cursor - cursor, optional
      * @param {number} limit - result limit, optiona.  Default 100.
      */
-    // @ts-ignore
     listUserMessages = (user: User | string, room: ChatRoom | string, cursor: string = "", limit: number = 100): Promise<EventListResponse> => {
         // @ts-ignore
         const roomid = forceObjKeyOrString(room);
@@ -161,6 +160,7 @@ export class RestfulChatRoomService implements IChatRoomService {
      * Join a room
      * @param {string | User} user
      * @param {ChatRoomResult | string} room
+     * @param   {ignoreInitialMessages?: boolean, limit?: number} options
      */
     joinRoom = (room: ChatRoomResult | string, user: User, options?: JoinOptions): Promise<JoinChatRoomResponse> => {
         // @ts-ignore
@@ -194,6 +194,7 @@ export class RestfulChatRoomService implements IChatRoomService {
      * Join a room
      * @param user
      * @param room
+     * @param {ignoreInitialMessages?: boolean, limit?: number} options
      */
     joinRoomByCustomId(room: ChatRoom | string, user?: User, options?: JoinOptions): Promise<JoinChatRoomResponse> {
         // @ts-ignore
@@ -223,7 +224,7 @@ export class RestfulChatRoomService implements IChatRoomService {
 
     /**
      * Returns a specific event for the room
-     * @param id
+     * @param eventid
      * @param roomid OPTIONAL.  The room id for the room holding the event. Defaults to the current room. If no value passed and no room set, the method will throw an error.
      */
     getEventById = (eventid:string, roomid: string): Promise<EventResult> => {
@@ -347,14 +348,17 @@ export class RestfulChatRoomService implements IChatRoomService {
     /**
      * Will remove all of a user's messages from a room and send a purge event to clients.
      * @param room the ChatRoomResult or a room ID.
-     * @param user the User or a userid string.
+     * @param user the User or an userid string.
      */
     purgeUserMessagesFromRoom = (room: ChatRoomResult | string, user: User | string): Promise<RestApiResult<BounceUserResult>> => {
         const roomId = forceObjKeyOrString(room, 'id');
         const userId = forceObjKeyOrString(user, 'userid');
         const config:AxiosRequestConfig = {
             method: POST,
-            url: buildAPI(this._config,`chat/rooms/${roomId}/commands/purge/${userId}`),
+            url: buildAPI(this._config,`chat/rooms/${roomId}/commands/purge`),
+            data: {
+                byuserid:userId
+            },
             headers: this._jsonHeaders,
         };
         return stRequest(config)

@@ -181,7 +181,10 @@ export class RestfulChatModerationService implements IChatModerationService {
         const userId = forceObjKeyOrString(user, 'userid');
         const config: AxiosRequestConfig = {
             method: POST,
-            url: buildAPI(this._config, `chat/rooms/${roomId}/commands/purge/${userId}`),
+            url: buildAPI(this._config, `chat/rooms/${roomId}/commands/purge`),
+            data: {
+                byuserid:userId
+            },
             headers: this._jsonHeaders
         }
         return stRequest(config).then(result=>result.data)
