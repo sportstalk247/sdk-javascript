@@ -419,7 +419,7 @@ export class ChatClient implements IChatClient {
      * @param user Optional.  A user whose messages to purge from room.
      * @param room Optional.  The room to purge messages from. Defaults to current room, if set.  Otherwise throws an error.
      */
-    purgeUserMessagesFromRoom = (room: ChatRoomResult | string, forUser: User | string, byUser?: User | string): Promise<RestApiResult<BounceUserResult>> => {
+    purgeUserMessagesFromRoom = (forUser: User | string, room?: ChatRoomResult | string, byUser?: User | string): Promise<RestApiResult<BounceUserResult>> => {
         const foruser = forUser || "";
         const byuser = byUser || this._user;
         const theRoom = room || this._currentRoom;

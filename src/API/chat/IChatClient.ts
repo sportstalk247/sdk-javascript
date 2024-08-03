@@ -206,7 +206,7 @@ export interface IChatClient extends IUserConfigurable, ISportsTalkConfigurable 
      * @param byUser Optional if current client user is set. Otherwise required.
      *
      */
-    purgeUserMessagesFromRoom(room: ChatRoomResult | string, forUser: User | string, byUser?: User | string): Promise<RestApiResult<BounceUserResult>>
+    purgeUserMessagesFromRoom(forUser: User | string, room?: ChatRoomResult | string, byUser?: User | string): Promise<RestApiResult<BounceUserResult>>
 
     /**
      * If the user exists, updates the user. Otherwise creates a new user.

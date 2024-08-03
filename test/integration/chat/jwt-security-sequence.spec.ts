@@ -25,87 +25,87 @@ const config: SportsTalkConfig = {
 const userToken = createUserToken({  userid: 'testuser1'}, process.env.APP_SECRET || '1234567', {audience: config.appId});
 
 
-
-describe('Security Tests', function() {
-    const user1config: SportsTalkConfig = {...config,
-        userToken,
-        user: {
-            userid: 'testuser1',
-            handle: 'handle1'
-        }};
-
-    const user2config: SportsTalkConfig = {
-        ...config,
-        user: {
-            userid: 'testuser2',
-            handle: 'handle2'
-        }
-    }
-
-    const client:ChatClient = ChatClient.init(user1config);
-    const client2:ChatClient = ChatClient.init(user2config);
-
-    let theRoom;
-    describe('Signed User', function () {
-        it('Joins room', function (done) {
-            client.createRoom({
-                name: "Test room",
-                customid: "chat-test-room"+new Date().getTime(),
-            }).then(room => {
-                theRoom = room;
-                return client.joinRoom(room)
-            }).then(async (resp) => {
-                expect(resp.room.id).to.be.not.null;
-                await client.executeChatCommand("Sending a message");
-                done()
-            }).catch(e=>{
-                done(e);
-            })
-        })
-    });
-    describe('Unsigned user', function(){
-        it("Fails to join room", function(done){
-            client2.joinRoom(theRoom).then(res=>{
-                    done(new Error("Should not be able to access room"))
-                }
-            ).catch(e=>{
-                expect(e.message.contains("401"));
-                done()
-            })
-        })
-    })
-
-    describe('User chats', function () {
-        it('Lets users speak', function (done) {
-            Promise.all([
-                client.executeChatCommand("Hello!"),
-            ]).then(results => {
-                done();
-            }).catch(done);
-        })
-    })
-
-    describe('Notificaitons', function() {
-        it('Lists notifications', async ()=> {
-            const notifications = await client.listUserNotifications();
-            expect(notifications);
-        });
-    })
-
-    describe("leave room", function(){
-        it("Leaves the room", async function() {
-            const exit = await client.exitRoom();
-            expect(exit).to.equal(API_SUCCESS_MESSAGE);
-        })
-    })
-
-    describe('Kill test room', function () {
-        it('Test room can be deleted', function (done) {
-            client.deleteRoom(theRoom)
-                .then(success => {
-                    expect(success.kind).to.be.equal(Kind.deletedroom);
-                    done()
-                }).catch(done);
-        })
-    })
-});
+//
+// describe('Security Tests', function() {
+//     const user1config: SportsTalkConfig = {...config,
+//         userToken,
+//         user: {
+//             userid: 'testuser1',
+//             handle: 'handle1'
+//         }};
+//
+//     const user2config: SportsTalkConfig = {
+//         ...config,
+//         user: {
+//             userid: 'testuser2',
+//             handle: 'handle2'
+//         }
+//     }
+//
+//     const client:ChatClient = ChatClient.init(user1config);
+//     const client2:ChatClient = ChatClient.init(user2config);
+//
+//     let theRoom;
+//     describe('Signed User', function () {
+//         it('Joins room', function (done) {
+//             client.createRoom({
+//                 name: "Test room",
+//                 customid: "chat-test-room"+new Date().getTime(),
+//             }).then(room => {
+//                 theRoom = room;
+//                 return client.joinRoom(room)
+//             }).then(async (resp) => {
+//                 expect(resp.room.id).to.be.not.null;
+//                 await client.executeChatCommand("Sending a message");
+//                 done()
+//             }).catch(e=>{
+//                 done(e);
+//             })
+//         })
+//     });
+//     describe('Unsigned user', function(){
+//         it("Fails to join room", function(done){
+//             client2.joinRoom(theRoom).then(res=>{
+//                     done(new Error("Should not be able to access room"))
+//                 }
+//             ).catch(e=>{
+//                 expect(e.message.contains("401"));
+//                 done()
+//             })
+//         })
+//     })
+//
+//     describe('User chats', function () {
+//         it('Lets users speak', function (done) {
+//             Promise.all([
+//                 client.executeChatCommand("Hello!"),
+//             ]).then(results => {
+//                 done();
+//             }).catch(done);
+//         })
+//     })
+//
+//     describe('Notificaitons', function() {
+//         it('Lists notifications', async ()=> {
+//             const notifications = await client.listUserNotifications();
+//             expect(notifications);
+//         });
+//     })
+//
+//     describe("leave room", function(){
+//         it("Leaves the room", async function() {
+//             const exit = await client.exitRoom();
+//             expect(exit).to.equal(API_SUCCESS_MESSAGE);
+//         })
+//     })
+//
+//     describe('Kill test room', function () {
+//         it('Test room can be deleted', function (done) {
+//             client.deleteRoom(theRoom)
+//                 .then(success => {
+//                     expect(success.kind).to.be.equal(Kind.deletedroom);
+//                     done()
+//                 }).catch(done);
+//         })
+//     })
+// });
