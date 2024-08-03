@@ -94,7 +94,7 @@ export interface IChatRoomService extends ISportsTalkConfigurable {
      */
     bounceUserFromRoom(room: ChatRoomResult | string, user: UserResult | string, message?: string): Promise<RestApiResult<BounceUserResult>>
 
-    purgeUserMessagesFromRoom(room: ChatRoomResult | string, user: User | string): Promise<RestApiResult<any>>
+    purgeUserMessagesFromRoom(room: ChatRoomResult | string, byUser: User | string, forUser: User | string): Promise<RestApiResult<BounceUserResult>>
 
     unbounceUserFromRoom(room: ChatRoomResult | string, user: UserResult | string, message?: string): Promise<RestApiResult<BounceUserResult>>
 

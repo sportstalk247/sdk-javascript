@@ -15,7 +15,7 @@ import {
 import {DEFAULT_CONFIG, DELETE, GET, POST, PUT} from "../../constants/api";
 import {buildAPI, forceObjKeyOrString, getJSONHeaders, getUrlEncodedHeaders} from "../../utils";
 import {SettingsError} from "../../errors";
-import {NO_HANDLER_SET, NO_ROOM_SET, REQUIRE_ROOM_ID} from "../../constants/messages";
+import {NO_HANDLER_SET, NO_ROOM_SET, REQUIRE_ROOM_ID, THROTTLE_ERROR} from "../../constants/messages";
 import {stRequest, NetworkRequest, bindJWTUpdates} from '../../network'
 import {
     RestApiResult,
@@ -40,7 +40,9 @@ const INVALID_POLL_FREQUENCY = "Invalid poll _pollFrequency.  Must be between 25
  * @class
  */
 export class RestfulChatEventService implements IChatEventService {
-
+    private _lastCommand: string | null = null;
+    private _lastCommandTime: number = 0;
+    private _lastCommandTimeoutDuration = 3000;
     private _config: ChatClientConfig = {appId: ""};
     private _polling: any; // holds the timer reference.
     private _apiHeaders = {} // holds the API headers
@@ -572,6 +574,7 @@ export class RestfulChatEventService implements IChatEventService {
      * @param options
      */
     executeChatCommand = (user: User, command: string, options?: CommandOptions): Promise<MessageResult<CommandResponse> | ErrorResult> => {
+        this._throttle(command);
         const data = Object.assign(options || {}, {
             command,
             userid: user.userid
@@ -588,6 +591,19 @@ export class RestfulChatEventService implements IChatEventService {
         }).catch(e=>{
             throw new Error(`${e.response.status} ${e.response.data && e.response.data.message ? e.response.data.message : e.response.statusText} - ${e.message}`);
         })
+    }
+
+
+    private _throttle = (command: string) => {
+        if(command == this._lastCommand && (new Date().getTime()-this._lastCommandTime) < this._lastCommandTimeoutDuration) {
+            const throttleError = new Error(THROTTLE_ERROR);
+            // @ts-ignore
+            throttleError.code = 405;
+            throw throttleError;
+        } else {
+            this._lastCommandTime = new Date().getTime();
+            this._lastCommand = command
+        }
     }
 
     /**

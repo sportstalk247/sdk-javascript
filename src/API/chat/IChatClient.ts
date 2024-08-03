@@ -201,10 +201,12 @@ export interface IChatClient extends IUserConfigurable, ISportsTalkConfigurable 
 
     /**
      * Removes all user messages from a room.
-     * @param user Optional.  A user whose messages to purge from room.
-     * @param room Optional.  The room to purge messages from. Defaults to current room, if set.  Otherwise throws an error.
+     * @param room  The room to purge messages from. Defaults to current room, if set.  Otherwise throws an error.
+     * @param forUser  A user whose messages to purge from room.
+     * @param byUser Optional if current client user is set. Otherwise required.
+     *
      */
-    purgeUserMessagesFromRoom(user?: UserResult | string, room?: ChatRoomResult | string): Promise<RestApiResult<null>>
+    purgeUserMessagesFromRoom(room: ChatRoomResult | string, forUser: User | string, byUser?: User | string): Promise<RestApiResult<BounceUserResult>>
 
     /**
      * If the user exists, updates the user. Otherwise creates a new user.

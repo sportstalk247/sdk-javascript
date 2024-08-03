@@ -27,7 +27,7 @@ import {
     ListRequest,
     ErrorResult
 } from "../models/CommonModels";
-import {MISSING_ROOM, THROTTLE_ERROR} from "./constants/messages";
+import {MISSING_ROOM} from "./constants/messages";
 import {forceObjKeyOrString, CallBackDelegate} from "./utils";
 import {RestfulNotificationService} from "./REST/notifications/RestfulNotificationService";
 import {RestfulChatModerationService} from "./REST/chat/RestfulChatModerationService";
@@ -125,18 +125,6 @@ export class ChatClient implements IChatClient {
      */
     _getDebug = () => {
         return JSON.stringify(this);
-    }
-
-    private _throttle(command: string) {
-        if(command == this._lastCommand && (new Date().getTime()-this._lastCommandTime) < this._lastCommandTimeoutDuration) {
-            const throttleError = new Error(THROTTLE_ERROR);
-            // @ts-ignore
-            throttleError.code = 405;
-            throw throttleError;
-        } else {
-            this._lastCommandTime = new Date().getTime();
-            this._lastCommand = command
-        }
     }
 
     /**
@@ -431,13 +419,14 @@ export class ChatClient implements IChatClient {
      * @param user Optional.  A user whose messages to purge from room.
      * @param room Optional.  The room to purge messages from. Defaults to current room, if set.  Otherwise throws an error.
      */
-    purgeUserMessagesFromRoom = (user?: UserResult | string, room?: ChatRoomResult | string): Promise<RestApiResult<null>> => {
-        const theUser = user || this._user;
+    purgeUserMessagesFromRoom = (room: ChatRoomResult | string, forUser: User | string, byUser?: User | string): Promise<RestApiResult<BounceUserResult>> => {
+        const foruser = forUser || "";
+        const byuser = byUser || this._user;
         const theRoom = room || this._currentRoom;
         if(!theRoom) {
             throw new SettingsError("Requires setting a room to issue purge");
         }
-        return this._roomService.purgeUserMessagesFromRoom(theRoom, theUser);
+        return this._roomService.purgeUserMessagesFromRoom(theRoom, byuser, foruser);
     }
 
     /**
@@ -605,7 +594,7 @@ export class ChatClient implements IChatClient {
      * @param options the custom parameters.  See CommandOptions interface for details.
      */
     executeChatCommand = (command: string, options?: CommandOptions): Promise<MessageResult<CommandResponse> | ErrorResult> => {
-        this._throttle(command);
+
         return this._eventService.executeChatCommand(this._user, command, options);
     }
 
@@ -615,7 +604,6 @@ export class ChatClient implements IChatClient {
      * @param options
      */
     sendAnnouncement = (command:string, options?: CommandOptions): Promise<MessageResult<CommandResponse> | ErrorResult> => {
-        this._throttle(command);
         return this._eventService.executeChatCommand(this._user, command, Object.assign(options || {}, {eventtype: ChatOptionsEventType.announcement}))
     }
 
@@ -627,7 +615,6 @@ export class ChatClient implements IChatClient {
      * @param options custom options, will depend on your chat implementation
      */
     sendQuotedReply = (message: string, replyto: EventResult | string, options?: CommandOptions): Promise<MessageResult<EventResult | null>> => {
-        this._throttle(message);
         return this._eventService.sendQuotedReply(this._user, message, replyto, options);
     }
 
@@ -638,7 +625,6 @@ export class ChatClient implements IChatClient {
      * @param options custom options, will depend on your chat implementation
      */
     sendThreadedReply =(message: string, replyto: EventResult | string, options?: CommandOptions): Promise<MessageResult<EventResult | null>> => {
-        this._throttle(message);
         return this._eventService.sendThreadedReply(this._user, message, replyto, options);
     }
 
@@ -931,6 +917,7 @@ export class ChatClient implements IChatClient {
     reportUserInRoom = (userToReport: User | string, reportedBy: User | string, reportType: ReportType = ReportType.abuse, room: ChatRoomResult | string): Promise<ChatRoomResult> => {
         return this._roomService.reportUser(userToReport, reportedBy, reportType, room)
     }
+
     updateChatEvent = (event: EventResult | string, body: string, user?: string | User): Promise<EventResult> => {
         return this._eventService.updateChatEvent(event, body, user);
     }
