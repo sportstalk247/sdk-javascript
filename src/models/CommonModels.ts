@@ -95,6 +95,14 @@ export interface MayHaveCustomType {
 export interface MayHaveCustomPayload {
     custompayload?:object,
 }
+export interface MayHaveCustomTags {
+    customtags?: Array<string>
+}
+
+export interface MayHaveCustomFields {
+    customfield1?:string,
+    customfield2?:string
+}
 
 export interface ErrorResult extends MessageResult<null>{
     data: null

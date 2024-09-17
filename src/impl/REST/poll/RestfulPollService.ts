@@ -1,12 +1,22 @@
 import {IPollService} from "../../../API/polls/IPollService";
 import {MayHaveCustomId, SportsTalkConfig} from "../../../models/CommonModels";
-import {HasPollId, Poll, PollChoice, PollSettings, PollStanding, UserPollChoice, HasPollChoiceId} from "../../../models/polls/Poll";
+import {
+    HasPollId,
+    Poll,
+    CreatePollChoiceRequest,
+    PollSettings,
+    PollStanding,
+    UserPollChoice,
+    MayHavePollChoiceId,
+    PollVoteResponse, PollChoice
+} from "../../../models/polls/Poll";
 import {HasUserId, User, UserResult} from "../../../models/user/User";
 import decode from "jwt-decode";
 import {buildAPI, forceObjKeyOrString, getJSONHeaders} from "../../utils";
 import {AxiosRequestConfig} from "axios";
 import {DELETE, GET, POST, PUT} from "../../constants/api";
 import {stRequest} from "../../network";
+import {HasPollChoiceId} from "../../../../dist/models/polls/Poll";
 
 export class RestfulPollService implements IPollService {
     private _config: SportsTalkConfig;
@@ -64,12 +74,12 @@ export class RestfulPollService implements IPollService {
         this.setConfig(config);
     }
 
-    createOrUpdatePollResponse(poll: string | HasPollId, pollChoice: string | HasPollChoiceId, user: string | HasUserId | undefined) {
-        const pollid = forceObjKeyOrString(poll, 'pollid');
+    createPollResponse(poll: string | Poll, pollChoice: string | CreatePollChoiceRequest, user: string | HasUserId | undefined): Promise<PollVoteResponse> {
+        const pollid = forceObjKeyOrString(poll, 'id');
         if(!pollid) {
             throw new Error("Require a pollid in order to register a poll choice response")
         }
-        const choiceid = forceObjKeyOrString(pollChoice, 'choiceid');
+        const choiceid = forceObjKeyOrString(pollChoice, 'id');
         if(!choiceid) {
             throw new Error("Requires a choiceid in order to register a poll choice response");
         }
@@ -92,8 +102,8 @@ export class RestfulPollService implements IPollService {
     }
 
 
-    createOrUpdatePollChoice(poll: HasPollId | string, pollChoice: PollChoice) {
-        const pollid = forceObjKeyOrString(poll, 'pollid');
+    createOrUpdatePollChoice(poll: Poll | string, pollChoice: CreatePollChoiceRequest): Promise<Array<PollChoice>> {
+        const pollid = forceObjKeyOrString(poll, 'id');
         const config: AxiosRequestConfig = {
             method: POST,
             headers:this._jsonHeaders,
@@ -115,8 +125,8 @@ export class RestfulPollService implements IPollService {
         })
     }
 
-    getPollDetails(poll: HasPollId | string): Promise<Poll> {
-        const pollid = forceObjKeyOrString(poll, 'pollid');
+    getPollDetails(poll: Poll | string): Promise<Poll> {
+        const pollid = forceObjKeyOrString(poll, 'id');
         if(!pollid) {
             throw new Error("Must supply a pollid to retrieve Poll")
         }
@@ -142,8 +152,8 @@ export class RestfulPollService implements IPollService {
         return stRequest(config).then(response=>response.data);
     }
 
-    getPollStandings(poll: HasPollId | string): Promise<Array<PollStanding>> {
-        const pollid = forceObjKeyOrString(poll, 'pollid');
+    getPollStandings(poll: Poll | string): Promise<Array<PollStanding>> {
+        const pollid = forceObjKeyOrString(poll, 'id');
         if(!pollid) {
             throw new Error("Must supply a poll id for a Poll to retrieve Poll Standings")
         }
@@ -155,8 +165,8 @@ export class RestfulPollService implements IPollService {
         return stRequest(config).then(response=>response.data);
     }
 
-    listChoicesForPoll(poll: HasPollId | string, limit?): Promise<Array<PollChoice>> {
-        const pollid = forceObjKeyOrString(poll, 'pollid');
+    listChoicesForPoll(poll: Poll | string, limit?): Promise<Array<PollChoice>> {
+        const pollid = forceObjKeyOrString(poll, 'id');
         if(!pollid) {
             throw new Error("Must supply a poll id for a Poll to retrieve Poll choices")
         }
@@ -206,8 +216,8 @@ export class RestfulPollService implements IPollService {
         return stRequest(config).then(response=>response.data);
     }
 
-    resetPoll(poll: HasPollId | string): Promise<Poll> {
-        const pollid = forceObjKeyOrString(poll, 'pollid');
+    resetPoll(poll: Poll | string): Promise<Poll> {
+        const pollid = forceObjKeyOrString(poll, 'id');
         if(!pollid) {
             throw new Error("Must supply a poll id for a Poll reset that Poll")
         }
@@ -219,8 +229,8 @@ export class RestfulPollService implements IPollService {
         return stRequest(config).then(response=>response.data);
     }
 
-    deletePoll(poll: HasPollId | string): Promise<Poll> {
-        const pollid = forceObjKeyOrString(poll, 'pollid');
+    deletePoll(poll: Poll | string): Promise<Poll> {
+        const pollid = forceObjKeyOrString(poll, 'id');
         if(!pollid) {
             throw new Error("Must supply a poll id for a Poll to delete the poll")
         }
