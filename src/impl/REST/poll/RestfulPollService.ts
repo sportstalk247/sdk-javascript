@@ -7,7 +7,6 @@ import {
     PollSettings,
     PollStanding,
     UserPollChoice,
-    MayHavePollChoiceId,
     PollVoteResponse, PollChoice
 } from "../../../models/polls/Poll";
 import {HasUserId, User, UserResult} from "../../../models/user/User";
@@ -16,7 +15,6 @@ import {buildAPI, forceObjKeyOrString, getJSONHeaders} from "../../utils";
 import {AxiosRequestConfig} from "axios";
 import {DELETE, GET, POST, PUT} from "../../constants/api";
 import {stRequest} from "../../network";
-import {HasPollChoiceId} from "../../../../dist/models/polls/Poll";
 
 export class RestfulPollService implements IPollService {
     private _config: SportsTalkConfig;

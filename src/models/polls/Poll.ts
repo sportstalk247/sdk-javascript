@@ -1,12 +1,11 @@
 import {
-    HasCustomId, MayHaveCustomFields,
+    MayHaveCustomFields,
     MayHaveCustomId,
     MayHaveCustomPayload,
     MayHaveCustomTags,
     MayHaveCustomType
 } from "../CommonModels";
 import {HasUserId} from "../user/User";
-import {HasPollChoiceId} from "../../../dist/models/polls/Poll";
 
 export interface HasPollId {
     pollid: string
@@ -23,7 +22,6 @@ export interface MayHavePollChoiceId {
 export interface PollSettings extends MayHaveCustomId, MayHaveCustomPayload,  MayHaveCustomType, MayHaveCustomTags, MayHaveCustomFields {
     ownerid: string,
     title: string,
-    description: string,
     sortanswers:string,
     maxtotalresponsesperuser?: number,
     allowmultiplechoicesperuser?: boolean,

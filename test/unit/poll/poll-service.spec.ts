@@ -1,7 +1,6 @@
 import * as dotenv from "dotenv";
 import chai from "chai";
 import {RestfulPollService} from "../../../src/impl/REST/poll/RestfulPollService";
-import {SettingsError} from "../../../src/impl/errors";
 import {DEFAULT_CONFIG} from "../../../src/impl/constants/api";
 import {PollSettings} from "../../../src/models/polls/Poll";
 import {Poll} from "../../../src/models/PollModels";
@@ -16,7 +15,7 @@ describe("Poll service", function() {
     let pollid = "";
     let pollchoice;
     it("Can Create Poll", async function () {
-        const poll: Poll = await service.createOrUpdatePoll({
+        const pollSettings:PollSettings =  {
             ownerid: "moderator",
             title: "TestPoll",
             description: "Vote for your favorite color",
@@ -26,7 +25,8 @@ describe("Poll service", function() {
             allowmultiplechoicesperuser: true,
             maxresponsesperchoiceperuser:50,
             maxtotalvotesperuser: 50
-        } as PollSettings);
+        }
+        const poll: Poll = await service.createOrUpdatePoll( pollSettings);
         expect(poll)
         pollid = poll.id
     })
