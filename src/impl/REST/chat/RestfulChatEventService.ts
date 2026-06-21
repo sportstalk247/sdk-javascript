@@ -206,13 +206,14 @@ export class RestfulChatEventService implements IChatEventService {
         this._jsonHeaders = getJSONHeaders(this._config.apiToken, this._config.userToken);
         this._smoothEventUpdates = !!(this._config.smoothEventUpdates || this._smoothEventUpdates);
         this._maxEventBufferSize = this._config.maxEventBufferSize || this._maxEventBufferSize;
-        try {
-            const frequency  = process.env.SPORTSTALK_POLL_FREQUENCY ? parseInt(process.env.SPORTSTALK_POLL_FREQUENCY): 800;
-            this._pollFrequency = frequency
-        } catch (e) {
-            console.log(e);
-            this._pollFrequency = config.chatEventPollFrequency || 800;
-        }
+        // Precedence: explicit config.chatEventPollFrequency, then the env override, then
+        // the 800ms default. Reading process.env never throws, so the old try/catch
+        // fallback to config.chatEventPollFrequency was dead code and the config value was
+        // ignored; a non-numeric env var also silently produced NaN.
+        const envFreq = process.env.SPORTSTALK_POLL_FREQUENCY ? parseInt(process.env.SPORTSTALK_POLL_FREQUENCY) : NaN;
+        const configFreq = config.chatEventPollFrequency;
+        this._pollFrequency = (configFreq && !isNaN(configFreq)) ? configFreq
+            : (!isNaN(envFreq) ? envFreq : 800);
         this._eventSpacingMs = config.updateEmitFrequency || Math.floor(this._pollFrequency/100)
     }
 
@@ -241,7 +242,14 @@ export class RestfulChatEventService implements IChatEventService {
             headers: this._jsonHeaders
         }
         this._keepAliveFunction = () => {
-            const touch = stRequest(config);
+            // Swallow keep-alive failures into onNetworkError — an uncaught touch rejection
+            // every interval becomes an unhandled promise rejection (fatal in Node under
+            // --unhandled-rejections=strict).
+            const touch = stRequest(config).catch((e) => {
+                if(this._eventHandlers.onNetworkError) {
+                    this._eventHandlers.onNetworkError(e);
+                }
+            });
             if(this._eventHandlers.onTouch) {
                 this._eventHandlers.onTouch(touch);
             }
@@ -265,6 +273,7 @@ export class RestfulChatEventService implements IChatEventService {
     _endKeepAlive = () => {
         if(this._keepAliveInterval) {
             clearInterval(this._keepAliveInterval);
+            this._keepAliveInterval = null;
         }
     }
 
@@ -323,6 +332,13 @@ export class RestfulChatEventService implements IChatEventService {
      * Start the chat polling
      */
     startEventUpdates = (updatesLimit?: number) => {
+        // Validate the room BEFORE touching this._currentRoom.id — otherwise calling
+        // startEventUpdates() with no room threw an opaque "Cannot read properties of
+        // undefined (reading 'id')" instead of the descriptive NO_ROOM_SET, and left a
+        // keep-alive interval running.
+        if(!this._updatesApi || !this._currentRoom) {
+            throw new SettingsError(NO_ROOM_SET)
+        }
         this._startKeepAlive(this._currentRoom.id, this._user.userid || "anonymous");
         if(updatesLimit) {
             this._maxEventsPerUpdateLimit = updatesLimit
@@ -331,10 +347,6 @@ export class RestfulChatEventService implements IChatEventService {
         if(this._polling) {
             // console.log("ALREADY CONNECTED TO TALK");
             return;
-        }
-
-        if(!this._updatesApi || !this._currentRoom) {
-            throw new SettingsError(NO_ROOM_SET)
         }
 
         if (this._eventHandlers.onChatStart) {
@@ -385,6 +397,9 @@ export class RestfulChatEventService implements IChatEventService {
         this._endKeepAlive();
         if(this._polling) {
             clearInterval(this._polling);
+            // Null the handle — startEventUpdates() early-returns when _polling is truthy,
+            // so without this a stopped client could never restart polling.
+            this._polling = null;
         }
     }
 
@@ -413,8 +428,9 @@ export class RestfulChatEventService implements IChatEventService {
     }
 
     private _handleUpdate = (event) => {
-        // ignore if shadowbanned.
-        if(event.shadowban && (event.userid !== this._user.userid || !this._user)) {
+        // ignore if shadowbanned (but always show the current user their own message).
+        // Guard _user BEFORE reading _user.userid, and drop the dead `|| !this._user`.
+        if(event.shadowban && (!this._user || event.userid !== this._user.userid)) {
             return;
         }
         if(event.eventtype == EventType.speech) {
@@ -574,8 +590,13 @@ export class RestfulChatEventService implements IChatEventService {
      * @param options
      */
     executeChatCommand = (user: User, command: string, options?: CommandOptions): Promise<MessageResult<CommandResponse> | ErrorResult> => {
+        if(!user || !user.userid) {
+            throw new SettingsError("Must set a user with a userid before sending a chat command. Call createOrUpdateUser() or setUser() first.");
+        }
         this._throttle(command);
-        const data = Object.assign(options || {}, {
+        // Spread into a NEW object — Object.assign(options, ...) mutated the caller's
+        // options, leaking command/userid into an object they may reuse.
+        const data = Object.assign({}, options, {
             command,
             userid: user.userid
         });
@@ -589,7 +610,11 @@ export class RestfulChatEventService implements IChatEventService {
         return stRequest(config, errorHandler).then(response=>{
             return this._evaluateCommandResponse(command, response)
         }).catch(e=>{
-            throw new Error(`${e.response.status} ${e.response.data && e.response.data.message ? e.response.data.message : e.response.statusText} - ${e.message}`);
+            // e.response is absent on network failures (offline/DNS/CORS/timeout); guard it
+            // so we surface the real cause instead of "Cannot read properties of undefined".
+            const status = e.response?.status ?? 'network-error';
+            const detail = (e.response?.data && e.response.data.message) ? e.response.data.message : (e.response?.statusText || e.message);
+            throw new Error(`${status} ${detail} - ${e.message}`);
         })
     }
 
@@ -686,6 +711,9 @@ export class RestfulChatEventService implements IChatEventService {
      * @param options
      */
     reactToEvent = (user: User, reaction: Reaction, reactToMessage: EventResult | string, options?: CommandOptions): Promise<MessageResult<CommandResponse>> => {
+        if(!user || !user.userid) {
+            throw new SettingsError("Must set a user with a userid before reacting to an event. Call createOrUpdateUser() or setUser() first.");
+        }
         // @ts-ignore
         const source = reactToMessage.id || reactToMessage;
         const data = Object.assign({
@@ -812,13 +840,17 @@ export class RestfulChatEventService implements IChatEventService {
         const config: AxiosRequestConfig = {
             method: PUT,
             headers: this._jsonHeaders,
-            url: buildAPI(this._config, `chat/rooms/${this._currentRoom.id}/events/${id}/setdeleted?userid=${userid}&deleted=true&permanentifnoreplies=${permanentIfNoReplies}`)
+            url: buildAPI(this._config, `chat/rooms/${this._currentRoom.id}/events/${id}/setdeleted?userid=${encodeURIComponent(userid)}&deleted=true&permanentifnoreplies=${permanentIfNoReplies}`)
         }
         // @ts-ignore
         return stRequest(config).then(result=>{
             return result;
         }).catch(e=>{
-            throw new Error(`${e.response.status} ${e.response.data && e.response.data.message ? e.response.data.message : e.response.statusText} - ${e.message}, config:${JSON.stringify(config)}`);
+            // NEVER serialize `config` here — config.headers carries x-api-token and the
+            // user's Bearer JWT, which would leak into logs/consoles on any failed delete.
+            const status = e.response?.status ?? 'network-error';
+            const detail = (e.response?.data && e.response.data.message) ? e.response.data.message : (e.response?.statusText || e.message);
+            throw new Error(`${status} ${detail} - ${e.message}`);
         })
     }
 
@@ -909,7 +941,7 @@ export class RestfulChatEventService implements IChatEventService {
         }
         const config:AxiosRequestConfig = {
             method: GET,
-            url: buildAPI(this._config, `/chat/rooms/${this._currentRoom.id}}/eventsbytimestamp/list/${query.ts}?limitolder=${query.limitolder? query.limitolder:0}&limitnewer=${query.limitnewer ? query.limitnewer:0}`),
+            url: buildAPI(this._config, `chat/rooms/${this._currentRoom.id}/eventsbytimestamp/list/${query.ts}?limitolder=${query.limitolder? query.limitolder:0}&limitnewer=${query.limitnewer ? query.limitnewer:0}`),
             headers: this._jsonHeaders,
         }
         return stRequest(config).then(result=>result.data);

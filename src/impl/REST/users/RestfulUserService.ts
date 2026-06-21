@@ -9,7 +9,6 @@ import {
 } from "../../../models/CommonModels";
 import {EventType} from '../../../models/ChatModels';
 import {SettingsError} from "../../errors";
-import {config} from "dotenv";
 import {IUserService} from "../../../API/users/IUserService";
 import {
     User,

@@ -124,7 +124,18 @@ export class ChatClient implements IChatClient {
      * Debugging method to grab the internal state and help debug.
      */
     _getDebug = () => {
-        return JSON.stringify(this);
+        // Never serialize the whole client — this._config holds apiToken and userToken,
+        // so the old JSON.stringify(this) leaked both secrets into any log/console that
+        // printed the debug string. Redact them.
+        const safeConfig = Object.assign({}, this._config, {
+            apiToken: this._config && this._config.apiToken ? '[redacted]' : undefined,
+            userToken: this._config && this._config.userToken ? '[redacted]' : undefined,
+        });
+        return JSON.stringify({
+            config: safeConfig,
+            user: this._user,
+            currentRoom: this._currentRoom,
+        });
     }
 
     /**
@@ -355,6 +366,11 @@ export class ChatClient implements IChatClient {
         return this._userService.createOrUpdateUser(user).then(user=>{
             if(setDefault) {
                 this._user = user;
+                // Propagate to the event service too — otherwise it keeps its empty
+                // default user and keep-alive/touch (and any event-service call that reads
+                // its own _user) runs as "anonymous", e.g. POST .../sessions/anonymous/touch
+                // → 404. setUser() does this; createOrUpdateUser previously did not.
+                this._eventService.setUser(this._user);
             }
             return user;
         })
@@ -377,7 +393,11 @@ export class ChatClient implements IChatClient {
             this._currentRoom = response.room;
             this._eventService.setCurrentRoom(this._currentRoom);
             this._eventService.setPreviousEventsCursor(response.previouseventscursor || '');
-            response.eventscursor.events.reverse();
+            // An empty room (or a response without an events array) would throw here and
+            // reject the whole join even though it succeeded.
+            if(response.eventscursor && Array.isArray(response.eventscursor.events)) {
+                response.eventscursor.events.reverse();
+            }
             if(options && !options.ignoreInitialMessages) {
                 await this._eventService.handleUpdates(response.eventscursor);
             }
@@ -409,6 +429,10 @@ export class ChatClient implements IChatClient {
         if(!this._eventService.getCurrentRoom()) {
             throw new SettingsError("Cannot exit if not in a room!");
         }
+        // Stop polling and the keep-alive touch before leaving — otherwise both intervals
+        // keep running against the room the user just left (extra traffic, and the server
+        // still thinks the user is present via keep-alive).
+        this._eventService.stopEventUpdates();
         return this._roomService.exitRoom(this._user, this._currentRoom).then(response=>{
             return response;
         });
@@ -782,22 +806,22 @@ export class ChatClient implements IChatClient {
     }
 
     setNotificationReadStatus = (notificationid: string, read?: boolean, userid?: string): Promise<Notification> => {
-        const finaluserid = userid || this._user ? this._user.userid : ''
+        const finaluserid = userid || (this._user ? this._user.userid : '')
         return this._notificationServce.setNotificationReadStatus(notificationid, finaluserid, read);
     }
 
     setNotificationReadStatusByChatEventId(chateventid: string, read?: boolean, userid?: string): Promise<Notification> {
-        const finaluserid = userid || this._user ? this._user.userid : ''
+        const finaluserid = userid || (this._user ? this._user.userid : '')
         return this._notificationServce.setNotificationReadStatusByChatEventId(chateventid, finaluserid, read)
     }
 
     deleteNotification = async (notificationid: string, userid?: string): Promise<Notification> => {
-        const finaluserid = userid || this._user ? this._user.userid : ''
+        const finaluserid = userid || (this._user ? this._user.userid : '')
         return this._notificationServce.deleteNotification(notificationid, finaluserid)
     }
 
     deleteNotificationByChatEventId = (chateventid: string, userid?: string): Promise<Notification> => {
-        const finaluserid = userid || this._user ? this._user.userid : ''
+        const finaluserid = userid || (this._user ? this._user.userid : '')
         return this._notificationServce.deleteNotificationByChatEventId(chateventid, finaluserid)
     }
 
@@ -819,7 +843,10 @@ export class ChatClient implements IChatClient {
     messageIsReported = (event: EventResult, user?: User | string): Boolean => {
         const checkUser = user || this._user;
         const id = forceObjKeyOrString(checkUser, 'userid');
-        if(id) {
+        // Bail only when there is NO user to check against. The guard was inverted
+        // (`if(id) return false`), so with a valid user it always returned false and the
+        // reports check below was unreachable.
+        if(!id) {
             return false;
         }
         if(event && event.reports && event.reports.length) {
