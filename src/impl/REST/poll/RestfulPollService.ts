@@ -134,7 +134,7 @@ export class RestfulPollService implements IPollService {
             headers:this._jsonHeaders,
             url: buildAPI(this._config, `poll/poll/${pollid}/choice/${choiceid}`),
         }
-        return stRequest(config).then(response=>response.data);
+        return stRequest(config).then((response:any)=>response.data);
     }
 
     createOrUpdatePoll(poll: PollSettings): Promise<Poll> {
@@ -164,7 +164,7 @@ export class RestfulPollService implements IPollService {
             url: buildAPI(this._config, `poll/poll/${pollid}/update`),
             data: settings
         }
-        return stRequest(config).then(response=>response.data);
+        return stRequest(config).then((response:any)=>response.data);
     }
 
     getPollDetails(poll: Poll | string): Promise<Poll> {
@@ -300,7 +300,7 @@ export class RestfulPollService implements IPollService {
             headers:this._jsonHeaders,
             url: buildAPI(this._config, `poll/poll/${pollid}/responses/all${userid ? `?UserId=${userid}` : ''}`),
         }
-        return stRequest(config).then(response=>response.data);
+        return stRequest(config).then((response:any)=>response.data);
     }
 
     /**
@@ -317,7 +317,7 @@ export class RestfulPollService implements IPollService {
             headers:this._jsonHeaders,
             url: buildAPI(this._config, `poll/poll/${pollid}/responses?${cursor ? `cursor=${cursor}&` : '' }limit=${max_responses}`),
         }
-        return stRequest(config).then(response=>response.data);
+        return stRequest(config).then((response:any)=>response.data);
     }
 
     /**
@@ -335,7 +335,7 @@ export class RestfulPollService implements IPollService {
             url: buildAPI(this._config, `poll/poll/${pollid}/lead`),
             data: lead
         }
-        return stRequest(config).then(response=>response.data);
+        return stRequest(config).then((response:any)=>response.data);
     }
 
     /**
@@ -352,7 +352,7 @@ export class RestfulPollService implements IPollService {
             headers:this._jsonHeaders,
             url: buildAPI(this._config, `poll/poll/${pollid}/leads?${cursor ? `cursor=${cursor}&` : '' }limit=${max_responses}`),
         }
-        return stRequest(config).then(response=>response.data);
+        return stRequest(config).then((response:any)=>response.data);
     }
 
 

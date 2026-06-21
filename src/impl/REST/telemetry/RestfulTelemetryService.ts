@@ -33,7 +33,7 @@ const MISSING_KEY = "A signal key is required for this telemetry operation";
  */
 export class RestfulTelemetryService implements ITelemetryService {
     private _config: SportsTalkConfig = {appId: ""};
-    private _apiHeaders;
+    private _apiHeaders = {};
     private _apiExt = 'telemetry/contexts';
 
     constructor(config: SportsTalkConfig) {
@@ -115,6 +115,6 @@ export class RestfulTelemetryService implements ITelemetryService {
             headers: this._apiHeaders,
             url: buildAPI(this._config, this._contextPath(contextid)),
         }
-        return stRequest(config).then(response => response.data);
+        return stRequest(config).then((response: any) => response.data);
     }
 }
