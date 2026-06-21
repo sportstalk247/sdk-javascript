@@ -49,11 +49,6 @@
     "axios": "^1.7.2",
     "jwt-decode": "^3.1.2"
   },
-  "files": [
-    "/src",
-    "/dist",
-    "/lib"
-  ],
   "nyc": {
     "include": [
       "src/impl/**/*.ts",
