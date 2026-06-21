@@ -7,7 +7,12 @@ import {
     PollSettings,
     PollStanding,
     UserPollChoice,
-    PollVoteResponse, PollChoice
+    PollVoteResponse, PollChoice,
+    CreatePollLeadRequest,
+    PollLead,
+    PollResponse,
+    PollLeadListResponse,
+    PollResponseListResponse
 } from "../../../models/polls/Poll";
 import {HasUserId, User, UserResult} from "../../../models/user/User";
 import decode from "jwt-decode";
@@ -111,6 +116,27 @@ export class RestfulPollService implements IPollService {
         return stRequest(config).then((response:any)=>response.data);
     }
 
+    /**
+     * Deletes a single choice from a poll. This also cascades to delete every response recorded for that
+     * choice, so it is a destructive operation (requires the same permission as deleting a poll).
+     */
+    deletePollChoice(poll: Poll | string, pollChoice: PollChoice | string): Promise<PollChoice> {
+        const pollid = forceObjKeyOrString(poll, 'id');
+        if(!pollid) {
+            throw new Error("Must supply a poll id to delete a poll choice")
+        }
+        const choiceid = forceObjKeyOrString(pollChoice, 'id');
+        if(!choiceid) {
+            throw new Error("Must supply a choice id to delete a poll choice")
+        }
+        const config: AxiosRequestConfig = {
+            method: DELETE,
+            headers:this._jsonHeaders,
+            url: buildAPI(this._config, `poll/poll/${pollid}/choice/${choiceid}`),
+        }
+        return stRequest(config).then(response=>response.data);
+    }
+
     createOrUpdatePoll(poll: PollSettings): Promise<Poll> {
         const config: AxiosRequestConfig = {
             method: POST,
@@ -121,6 +147,24 @@ export class RestfulPollService implements IPollService {
         return stRequest(config).then((response:any)=>{
             return response.data
         })
+    }
+
+    /**
+     * Updates an existing poll by id. Only fields present on `settings` are changed; omitted fields are
+     * left untouched (send `""` to explicitly clear a string field).
+     */
+    updatePoll(poll: Poll | string, settings: PollSettings): Promise<Poll> {
+        const pollid = forceObjKeyOrString(poll, 'id');
+        if(!pollid) {
+            throw new Error("Must supply a poll id to update a Poll")
+        }
+        const config: AxiosRequestConfig = {
+            method: PUT,
+            headers:this._jsonHeaders,
+            url: buildAPI(this._config, `poll/poll/${pollid}/update`),
+            data: settings
+        }
+        return stRequest(config).then(response=>response.data);
     }
 
     getPollDetails(poll: Poll | string): Promise<Poll> {
@@ -181,13 +225,14 @@ export class RestfulPollService implements IPollService {
      * Lists polls available for the application.
      * @param cursor
      * @param limit
+     * @param includeUnpublished when true, polls not yet published are also returned.
      */
-    listPolls(cursor?:string, limit?:number): Promise<Array<Poll>> {
+    listPolls(cursor?:string, limit?:number, includeUnpublished?:boolean): Promise<Array<Poll>> {
         const max_responses =  limit || 200;
         const config: AxiosRequestConfig = {
             method: GET,
             headers:this._jsonHeaders,
-            url: buildAPI(this._config, `poll/poll?${cursor ? `cursor=${encodeURIComponent(cursor)}&` : '' }limit=${max_responses}`),
+            url: buildAPI(this._config, `poll/poll?${includeUnpublished ? `IncludeUnpublished=true&` : '' }${cursor ? `cursor=${encodeURIComponent(cursor)}&` : '' }limit=${max_responses}`),
         }
         return stRequest(config).then((response:any)=>response.data);
     }
@@ -238,6 +283,76 @@ export class RestfulPollService implements IPollService {
             url: buildAPI(this._config, `poll/poll/${pollid}`),
         }
         return stRequest(config).then((response:any)=>response.data);
+    }
+
+    /**
+     * Returns all responses for a poll. If the poll hides results until a user has voted, pass the
+     * requesting user so the server can enforce that rule.
+     */
+    getResponses(poll: Poll | string, requestingUser?: HasUserId | string): Promise<Array<PollResponse>> {
+        const pollid = forceObjKeyOrString(poll, 'id');
+        if(!pollid) {
+            throw new Error("Must supply a poll id to list poll responses")
+        }
+        const userid = requestingUser ? forceObjKeyOrString(requestingUser, 'userid') : '';
+        const config: AxiosRequestConfig = {
+            method: GET,
+            headers:this._jsonHeaders,
+            url: buildAPI(this._config, `poll/poll/${pollid}/responses/all${userid ? `?UserId=${userid}` : ''}`),
+        }
+        return stRequest(config).then(response=>response.data);
+    }
+
+    /**
+     * Cursor-paged list of all responses for a poll.
+     */
+    listResponses(poll: Poll | string, limit?: number, cursor?: string): Promise<PollResponseListResponse> {
+        const pollid = forceObjKeyOrString(poll, 'id');
+        if(!pollid) {
+            throw new Error("Must supply a poll id to list poll responses")
+        }
+        const max_responses = limit || 200;
+        const config: AxiosRequestConfig = {
+            method: GET,
+            headers:this._jsonHeaders,
+            url: buildAPI(this._config, `poll/poll/${pollid}/responses?${cursor ? `cursor=${cursor}&` : '' }limit=${max_responses}`),
+        }
+        return stRequest(config).then(response=>response.data);
+    }
+
+    /**
+     * Captures a lead against a poll. Lead capture must be enabled on the poll; depending on its settings
+     * the firstname and/or email may be required (the server enforces this).
+     */
+    createLead(poll: Poll | string, lead: CreatePollLeadRequest): Promise<PollLead> {
+        const pollid = forceObjKeyOrString(poll, 'id');
+        if(!pollid) {
+            throw new Error("Must supply a poll id to capture a lead")
+        }
+        const config: AxiosRequestConfig = {
+            method: POST,
+            headers:this._jsonHeaders,
+            url: buildAPI(this._config, `poll/poll/${pollid}/lead`),
+            data: lead
+        }
+        return stRequest(config).then(response=>response.data);
+    }
+
+    /**
+     * Cursor-paged list of leads captured for a poll.
+     */
+    listLeads(poll: Poll | string, limit?: number, cursor?: string): Promise<PollLeadListResponse> {
+        const pollid = forceObjKeyOrString(poll, 'id');
+        if(!pollid) {
+            throw new Error("Must supply a poll id to list poll leads")
+        }
+        const max_responses = limit || 200;
+        const config: AxiosRequestConfig = {
+            method: GET,
+            headers:this._jsonHeaders,
+            url: buildAPI(this._config, `poll/poll/${pollid}/leads?${cursor ? `cursor=${cursor}&` : '' }limit=${max_responses}`),
+        }
+        return stRequest(config).then(response=>response.data);
     }
 
 

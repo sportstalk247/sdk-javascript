@@ -1,9 +1,32 @@
-import {PollSettings, HasPollId, Poll, HasPollChoiceId, PollStanding, UserPollChoice} from "./polls/Poll";
+import {
+    PollSettings,
+    HasPollId,
+    Poll,
+    HasPollChoiceId,
+    PollStanding,
+    UserPollChoice,
+    PollChoice,
+    CreatePollChoiceRequest,
+    PollVoteResponse,
+    CreatePollLeadRequest,
+    PollLead,
+    PollResponse,
+    PollLeadListResponse,
+    PollResponseListResponse,
+} from "./polls/Poll";
 export {
     PollSettings,
     Poll,
     HasPollId,
     HasPollChoiceId,
     PollStanding,
-    UserPollChoice
+    UserPollChoice,
+    PollChoice,
+    CreatePollChoiceRequest,
+    PollVoteResponse,
+    CreatePollLeadRequest,
+    PollLead,
+    PollResponse,
+    PollLeadListResponse,
+    PollResponseListResponse,
 }
