@@ -152,7 +152,9 @@ export class RestfulChatRoomService implements IChatRoomService {
         return stRequest(config).then(response => {
             return response.data;
         }).catch(e=>{
-            throw new Error(e);
+            // Rethrow the original error — `new Error(e)` stringified it to
+            // "Error: [object Object]" and discarded e.response/e.message.
+            throw e;
         })
     }
 
@@ -172,7 +174,10 @@ export class RestfulChatRoomService implements IChatRoomService {
         }
         if(user && user.userid) {
             config.data = {
-                userId: user.userid,
+                // API expects lowercase `userid`; `userId` was silently ignored, so the
+                // join was treated as anonymous and the user never actually entered the
+                // room (which makes the server reject their later reactions/commands).
+                userid: user.userid,
                 handle: user.handle,
                 displayname: user.displayname || "",
                 pictureurl: user.pictureurl || "",
@@ -186,7 +191,9 @@ export class RestfulChatRoomService implements IChatRoomService {
         return stRequest(config).then(response => {
             return response.data;
         }).catch(e=>{
-            throw new Error(e);
+            // Rethrow the original error — `new Error(e)` stringified it to
+            // "Error: [object Object]" and discarded e.response/e.message.
+            throw e;
         })
     }
 
@@ -206,7 +213,10 @@ export class RestfulChatRoomService implements IChatRoomService {
         }
         if(user) {
             config.data = {
-                userId: user.userid,
+                // API expects lowercase `userid`; `userId` was silently ignored, so the
+                // join was treated as anonymous and the user never actually entered the
+                // room (which makes the server reject their later reactions/commands).
+                userid: user.userid,
                 handle: user.handle,
                 displayname: user.displayname || "",
                 pictureurl: user.pictureurl || "",
@@ -279,7 +289,9 @@ export class RestfulChatRoomService implements IChatRoomService {
             data: {roomisopen: false}
         };
         return stRequest(config).then(response => {
-            return <ChatRoomResult> response.message
+            // The updated room is in response.data; response.message is just a status
+            // string ("Success"), so returning it gave callers a string, not a room.
+            return <ChatRoomResult> response.data
         })
     }
 
@@ -296,7 +308,9 @@ export class RestfulChatRoomService implements IChatRoomService {
             data: {roomisopen: true}
         };
         return stRequest(config).then(response => {
-            return <ChatRoomResult> response.message
+            // The updated room is in response.data; response.message is just a status
+            // string ("Success"), so returning it gave callers a string, not a room.
+            return <ChatRoomResult> response.data
         })
     }
 
@@ -313,7 +327,9 @@ export class RestfulChatRoomService implements IChatRoomService {
             data: room,
         };
         return stRequest(config).then(response => {
-            return <ChatRoomResult> response.message
+            // The updated room is in response.data; response.message is just a status
+            // string ("Success"), so returning it gave callers a string, not a room.
+            return <ChatRoomResult> response.data
         })
     }
 

@@ -88,11 +88,14 @@ export interface CommentDeletionResponse {
 }
 
 export class CommentSortMethod {
-    public static oldest: "oldest"
-    public static newest: "newest"
-    public static mostreplies: "mostreplies"
-    public static votescroe: "votescore"
-    public static votes: "votes"
+    // These were declared as type-annotated statics with NO value, so at runtime
+    // CommentSortMethod.oldest === undefined and sort queries became `sort=undefined`.
+    // Assign the string values. (`votescroe` was also a typo for `votescore`.)
+    public static oldest = "oldest"
+    public static newest = "newest"
+    public static mostreplies = "mostreplies"
+    public static votescore = "votescore"
+    public static votes = "votes"
     public static reaction(type:string) {return `reaction-${type}`}
 }
 
