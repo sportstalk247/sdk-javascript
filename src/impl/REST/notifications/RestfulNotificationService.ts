@@ -102,10 +102,11 @@ export class RestfulNotificationService implements INotificationService {
         if(!finalRequest.filterNotificationTypes || !finalRequest.filterNotificationTypes.length) {
             throw new SettingsError("Must include at least one notification type");
         }
-        let typeString = '';
-        finalRequest.filterNotificationTypes.map((type:EventType)=>{
-            typeString = `${typeString}&filterNotificationTypes=${type}`;
-        });
+        // Build "filterNotificationTypes=a&filterNotificationTypes=b" WITHOUT a leading
+        // "&" — the old code produced a malformed "?&filterNotificationTypes=..." query.
+        const typeString = finalRequest.filterNotificationTypes
+            .map((type:EventType) => `filterNotificationTypes=${type}`)
+            .join('&');
         const config: AxiosRequestConfig = {
             method: GET,
             headers:this._jsonHeaders,
@@ -124,7 +125,7 @@ export class RestfulNotificationService implements INotificationService {
             throw new Error("Must set notification ID to update notificaiton");
         }
         const params:string = formify(finalRequest)
-        const url = buildAPI(this._config, `/user/users/${finalRequest.userid}/notification/notifications/${finalRequest.notificationid}/update?${params}`);
+        const url = buildAPI(this._config, `user/users/${finalRequest.userid}/notification/notifications/${finalRequest.notificationid}/update?${params}`);
         const config:AxiosRequestConfig = {
             method: PUT,
             headers: this._jsonHeaders,
@@ -155,7 +156,7 @@ export class RestfulNotificationService implements INotificationService {
         const params:string = formify(finalRequest)
         let url;
         if(finalRequest.chateventid) {
-            url = buildAPI(this._config, `/user/users/${finalRequest.userid}/notification/notifications/${finalRequest.chateventid}/update?${params}`);
+            url = buildAPI(this._config, `user/users/${finalRequest.userid}/notification/notifications/${finalRequest.chateventid}/update?${params}`);
         } else {
             throw new Error("Must include chateventid to set read status");
         }
@@ -172,13 +173,13 @@ export class RestfulNotificationService implements INotificationService {
         const config: AxiosRequestConfig = {
             method: PUT,
             headers: this._jsonHeaders,
-            url: buildAPI(this._config, `/user/users/${userid}/notification/notifications_all/markread?delete=${deleteAll}`)
+            url: buildAPI(this._config, `user/users/${userid}/notification/notifications_all/markread?delete=${deleteAll}`)
         }
         return stRequest(config).then(response=>response.data)
     }
 
     deleteNotification = async (notificationid: string, userid: string): Promise<Notification> => {
-        const url = buildAPI(this._config, `/user/users/${userid}/notification/notifications/${notificationid}`);
+        const url = buildAPI(this._config, `user/users/${userid}/notification/notifications/${notificationid}`);
         const config:AxiosRequestConfig = {
             method: DELETE,
             headers: this._jsonHeaders,
@@ -188,7 +189,7 @@ export class RestfulNotificationService implements INotificationService {
     }
 
     deleteNotificationByChatEventId = async (chateventid: string, userid: string): Promise<Notification> => {
-        const url = buildAPI(this._config,`/user/users/${userid}/notifications/notificationsbyid/chateventid/${chateventid}`);
+        const url = buildAPI(this._config,`user/users/${userid}/notifications/notificationsbyid/chateventid/${chateventid}`);
         const config:AxiosRequestConfig = {
             method: DELETE,
             headers: this._jsonHeaders,

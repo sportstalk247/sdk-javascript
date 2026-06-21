@@ -200,7 +200,9 @@ export class RestfulCommentService implements ICommentService {
         return stRequest(config).then(result=>{
             return result.data;
         }).catch(e=>{
-            if(e.response.status === 404) {
+            // Guard e.response — it's absent on network failures, where the old code threw
+            // a secondary TypeError and masked the real error instead of rethrowing it.
+            if(e.response && e.response.status === 404) {
                 return null;
             }
             throw e;

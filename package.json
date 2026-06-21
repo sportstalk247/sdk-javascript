@@ -6,6 +6,7 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "test": "nyc mocha --recursive --require ts-node/register 'test/**/*.spec.ts'  --timeout 10000",
+    "test:unit": "node test/run-unit.js",
     "test-services": "nyc mocha --recursive --require ts-node/register 'test/integration/chat/services/EventService.spec.ts'  --timeout 10000",
     "build": "tsc --declaration",
     "web": "tsc --declaration && browserify ./dist/web.js -o ./dist/web-sdk.js",
