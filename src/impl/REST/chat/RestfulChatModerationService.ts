@@ -24,8 +24,8 @@ import {ChatModerationQueueListRequest} from "../../../models/Moderation";
 export class RestfulChatModerationService implements IChatModerationService {
 
     private _config: SportsTalkConfig = {appId: ""};
-    private _jsonHeaders;
-    private _refreshFn;
+    private _jsonHeaders:any;
+    private _refreshFn:any;
     private _apiExt:string = 'chat/moderation/queues/events';
     private _handleRefresh = ()=>{}
 
@@ -57,7 +57,7 @@ export class RestfulChatModerationService implements IChatModerationService {
             headers: this._jsonHeaders
         }
         
-        return stRequest(config, this._refreshFn).then(result => {
+        return stRequest(config, this._refreshFn).then((result:any) => {
             return result.data
         });
     }
@@ -73,7 +73,7 @@ export class RestfulChatModerationService implements IChatModerationService {
             headers: this._jsonHeaders,
             data: { approve: !!approved + "" }
         }
-        return stRequest(config).then(response=>{
+        return stRequest(config).then((response:any)=>{
             return response.data
         })
     }
@@ -85,7 +85,7 @@ export class RestfulChatModerationService implements IChatModerationService {
             url: buildAPI(this._config, `chat/rooms/${roomid}/usereffects`),
             headers: this._jsonHeaders
         }
-        return stRequest(config).then(response=>response.data);
+        return stRequest(config).then((response:any)=>response.data);
     }
 
     applyFlagModerationDecision = (user: User | string, room:ChatRoomResult | string, approve: boolean) => {
@@ -97,7 +97,7 @@ export class RestfulChatModerationService implements IChatModerationService {
             headers: this._jsonHeaders,
             data: { approve: !!approve + "" }
         }
-        return stRequest(config).then(response=>response.data);
+        return stRequest(config).then((response:any)=>response.data);
     }
 
     muteUserInRoom =  (user: User | string, room:ChatRoomResult | string, expireseconds?: number) => {
@@ -117,7 +117,7 @@ export class RestfulChatModerationService implements IChatModerationService {
             headers: this._jsonHeaders,
             data
         }
-        return stRequest(config).then(result=>result.data);
+        return stRequest(config).then((result:any)=>result.data);
     }
 
     unMuteUserInRoom =  (user: User | string, room:ChatRoomResult | string) => {
@@ -135,7 +135,7 @@ export class RestfulChatModerationService implements IChatModerationService {
             headers: this._jsonHeaders,
             data
         }
-        return stRequest(config).then(result=>result.data);
+        return stRequest(config).then((result:any)=>result.data);
     }
 
 
@@ -156,7 +156,7 @@ export class RestfulChatModerationService implements IChatModerationService {
             headers: this._jsonHeaders,
             data
         }
-        return stRequest(config).then(result=>result.data);
+        return stRequest(config).then((result:any)=>result.data);
     }
 
     unShadowbanUserInRoom = (user: User | string, room: ChatRoomResult | string): Promise<ChatRoomResult> => {
@@ -173,7 +173,7 @@ export class RestfulChatModerationService implements IChatModerationService {
             headers: this._jsonHeaders,
             data
         }
-        return stRequest(config).then(result=>result.data);
+        return stRequest(config).then((result:any)=>result.data);
     }
 
     purgeMessagesInRoom = (user: User | string, room: ChatRoomResult | string, byUser?: User | string): Promise<any> => {
@@ -193,7 +193,7 @@ export class RestfulChatModerationService implements IChatModerationService {
             },
             headers: this._jsonHeaders
         }
-        return stRequest(config).then(result=>result.data)
+        return stRequest(config).then((result:any)=>result.data)
     }
 
 }

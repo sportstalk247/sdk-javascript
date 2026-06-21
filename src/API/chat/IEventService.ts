@@ -23,23 +23,23 @@ import {ReportReason} from "../../models/Moderation";
  * @interface
  */
 export interface IChatEventService extends IChatClientConfigurable, IUserConfigurable {
-    startEventUpdates(),
+    startEventUpdates(): void,
 
-    stopEventUpdates(),
+    stopEventUpdates(): void,
 
-    handleUpdates(results: ChatUpdatesResult);
+    handleUpdates(results: ChatUpdatesResult): Promise<void>;
 
     setCurrentRoom(room: ChatRoomResult | null): ChatRoom | null,
 
-    setEventHandlers(eventHandlers: EventHandlerConfig),
+    setEventHandlers(eventHandlers: EventHandlerConfig): void,
 
     getCurrentRoom(): ChatRoomResult | null,
 
     getUpdates(cursor?: string): Promise<ChatUpdatesResult>,
 
-    setUpdatesCursor(cursor: string),
+    setUpdatesCursor(cursor: string): void,
 
-    setPreviousEventsCursor(cursor: string),
+    setPreviousEventsCursor(cursor: string): void,
 
     reportMessage(event: EventResult | string, reason: ReportReason): Promise<MessageResult<null>>,
 
@@ -65,7 +65,7 @@ export interface IChatEventService extends IChatClientConfigurable, IUserConfigu
 
     listEventsHistory(cursor?: string, limit?: number): Promise<ChatUpdatesResult>
 
-    setUpdateSpeed(speed: number);
+    setUpdateSpeed(speed: number): void;
 
     searchEventHistory(params: EventSearchParams): Promise<any>
 

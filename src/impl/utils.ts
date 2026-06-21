@@ -4,7 +4,7 @@ import {ValidationError} from "./errors";
 import {IUserConfigurable} from "../API/Configuration";
 import {User} from "../models/user/User";
 
-export function formify(data) {
+export function formify(data:any) {
     const formBody: Array<String> = []
     for (const property in data) {
         const encodedKey = property;
@@ -19,7 +19,7 @@ export function formify(data) {
 }
 
 
-export function queryStringify(data,key?) {
+export function queryStringify(data:any,key?:string) {
     const formBody: Array<String> = []
     for (const property in data) {
         const encodedKey = key || property;
@@ -55,7 +55,7 @@ export function buildAPI(config: SportsTalkConfig, ext: string, request?: Object
  * @param apiKey
  */
 export function getUrlEncodedHeaders(apiKey?: string, userToken?: string): ApiHeaders {
-    const headers  = {
+    const headers:ApiHeaders & {[key:string]:any}  = {
       'Content-Type':FORM_ENCODED,
     }
     if(apiKey) {
@@ -71,7 +71,7 @@ export function getUrlEncodedHeaders(apiKey?: string, userToken?: string): ApiHe
 }
 
 export function getJSONHeaders(apiKey?: string, userToken?: string): ApiHeaders {
-    const headers  = {
+    const headers:ApiHeaders & {[key:string]:any}  = {
         'Content-Type': APPLICATION_JSON // causes issues in browsers with cors, but not necessary for server.
     }
     if(apiKey) {
@@ -83,7 +83,7 @@ export function getJSONHeaders(apiKey?: string, userToken?: string): ApiHeaders 
     return headers;
 }
 
-export function forceObjKeyOrString(obj, key = 'id'): string{
+export function forceObjKeyOrString(obj:any, key = 'id'): string{
     if(obj === null || obj === undefined) {
         throw new ValidationError(`Cannot read '${key}' from a null/undefined value`);
     }

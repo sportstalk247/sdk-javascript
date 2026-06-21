@@ -19,10 +19,10 @@ import {
 } from "../../../models/user/Notifications";
 
 export class RestfulNotificationService implements INotificationService {
-    private _config: SportsTalkConfig;
+    private _config!: SportsTalkConfig;
     private _jsonHeaders = {}
-    private _user;
-    private _tokenExpiry: number | void;
+    private _user!:User;
+    private _tokenExpiry!: number | void;
 
     constructor(config: SportsTalkConfig) {
         this.setConfig(config);
@@ -115,7 +115,7 @@ export class RestfulNotificationService implements INotificationService {
             headers:this._jsonHeaders,
             url: buildAPI(this._config, `user/users/${finalRequest.userid}/notification/listnotifications?${typeString}&limit=${finalRequest.limit}&includeread=${finalRequest.includeread}`)
         }
-        return stRequest(config).then(response=>response.data);
+        return stRequest(config).then((response:any)=>response.data);
     }
 
     setNotificationReadStatus = (notificationid: string, userid: string, read:boolean = true): Promise<Notification> => {
@@ -134,10 +134,10 @@ export class RestfulNotificationService implements INotificationService {
             headers: this._jsonHeaders,
             url
         }
-        return stRequest(config).then(response=>response.data);
+        return stRequest(config).then((response:any)=>response.data);
     }
 
-    private _validateNotificationRequest = (request) =>{
+    private _validateNotificationRequest = (request:NotificationReadRequest) =>{
         if(!request.userid){
             throw new Error("Must specify userid to set notification status");
         }
@@ -170,7 +170,7 @@ export class RestfulNotificationService implements INotificationService {
             headers: this._jsonHeaders,
             url
         }
-        return stRequest(config).then(response=>response.data);
+        return stRequest(config).then((response:any)=>response.data);
     }
 
     markAllNotificationsAsRead = (user: UserResult | string, deleteAll: boolean = true) => {
@@ -180,7 +180,7 @@ export class RestfulNotificationService implements INotificationService {
             headers: this._jsonHeaders,
             url: buildAPI(this._config, `user/users/${userid}/notification/notifications_all/markread?delete=${deleteAll}`)
         }
-        return stRequest(config).then(response=>response.data)
+        return stRequest(config).then((response:any)=>response.data)
     }
 
     deleteNotification = async (notificationid: string, userid: string): Promise<Notification> => {
@@ -190,7 +190,7 @@ export class RestfulNotificationService implements INotificationService {
             headers: this._jsonHeaders,
             url: url
         }
-        return stRequest(config).then(response=>response.data);
+        return stRequest(config).then((response:any)=>response.data);
     }
 
     deleteNotificationByChatEventId = async (chateventid: string, userid: string): Promise<Notification> => {
@@ -200,7 +200,7 @@ export class RestfulNotificationService implements INotificationService {
             headers: this._jsonHeaders,
             url: url
         }
-        return stRequest(config).then(response=>response.data);
+        return stRequest(config).then((response:any)=>response.data);
     }
 
 

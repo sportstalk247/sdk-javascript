@@ -44,5 +44,5 @@ export interface NotificationReadRequest extends NotificationRequest {
 
 export interface DeleteNotificationRequest extends NotificationRequest {
     notificationid?: string
-    chateventid?
+    chateventid?: string
 }

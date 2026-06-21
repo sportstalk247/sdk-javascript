@@ -17,10 +17,10 @@ import {DELETE, GET, POST, PUT} from "../../constants/api";
 import {stRequest} from "../../network";
 
 export class RestfulPollService implements IPollService {
-    private _config: SportsTalkConfig;
+    private _config!: SportsTalkConfig;
     private _jsonHeaders = {}
-    private _user;
-    private _tokenExpiry: number | void;
+    private _user!:User;
+    private _tokenExpiry!: number | void;
 
     getTokenExp(): number | void {
         return this._tokenExpiry;
@@ -96,7 +96,7 @@ export class RestfulPollService implements IPollService {
             url: buildAPI(this._config, `poll/poll/${pollid}/response`),
             data: data
         }
-        return stRequest(config).then(response=>response.data);
+        return stRequest(config).then((response:any)=>response.data);
     }
 
 
@@ -108,7 +108,7 @@ export class RestfulPollService implements IPollService {
             url: buildAPI(this._config, `poll/poll/${pollid}/choice`),
             data: pollChoice
         }
-        return stRequest(config).then(response=>response.data);
+        return stRequest(config).then((response:any)=>response.data);
     }
 
     createOrUpdatePoll(poll: PollSettings): Promise<Poll> {
@@ -118,7 +118,7 @@ export class RestfulPollService implements IPollService {
             url: buildAPI(this._config, `poll/poll/create`),
             data: poll
         }
-        return stRequest(config).then(response=>{
+        return stRequest(config).then((response:any)=>{
             return response.data
         })
     }
@@ -134,7 +134,7 @@ export class RestfulPollService implements IPollService {
             // No leading slash (it produced ".../{appId}//poll/...") and no body on a GET.
             url: buildAPI(this._config, `poll/poll/${pollid}`),
         }
-        return stRequest(config).then(response=>response.data);
+        return stRequest(config).then((response:any)=>response.data);
     }
 
     getPollDetailsByCustomId(poll: MayHaveCustomId | string) {
@@ -147,7 +147,7 @@ export class RestfulPollService implements IPollService {
             headers:this._jsonHeaders,
             url: buildAPI(this._config, `poll/pollbycustomid/${pollid}`),
         }
-        return stRequest(config).then(response=>response.data);
+        return stRequest(config).then((response:any)=>response.data);
     }
 
     getPollStandings(poll: Poll | string): Promise<Array<PollStanding>> {
@@ -160,10 +160,10 @@ export class RestfulPollService implements IPollService {
             headers:this._jsonHeaders,
             url: buildAPI(this._config, `poll/poll/${pollid}/standings`),
         }
-        return stRequest(config).then(response=>response.data);
+        return stRequest(config).then((response:any)=>response.data);
     }
 
-    listChoicesForPoll(poll: Poll | string, limit?): Promise<Array<PollChoice>> {
+    listChoicesForPoll(poll: Poll | string, limit?:number): Promise<Array<PollChoice>> {
         const pollid = forceObjKeyOrString(poll, 'id');
         if(!pollid) {
             throw new Error("Must supply a poll id for a Poll to retrieve Poll choices")
@@ -174,7 +174,7 @@ export class RestfulPollService implements IPollService {
             headers:this._jsonHeaders,
             url: buildAPI(this._config, `poll/poll/${pollid}/choices?limit=${max_responses}`),
         }
-        return stRequest(config).then(response=>response.data);
+        return stRequest(config).then((response:any)=>response.data);
     }
 
     /**
@@ -189,7 +189,7 @@ export class RestfulPollService implements IPollService {
             headers:this._jsonHeaders,
             url: buildAPI(this._config, `poll/poll?${cursor ? `cursor=${encodeURIComponent(cursor)}&` : '' }limit=${max_responses}`),
         }
-        return stRequest(config).then(response=>response.data);
+        return stRequest(config).then((response:any)=>response.data);
     }
 
     /**
@@ -211,7 +211,7 @@ export class RestfulPollService implements IPollService {
             headers:this._jsonHeaders,
             url: buildAPI(this._config, `poll/poll/${pollid}/responses/user/${userid}`),
         }
-        return stRequest(config).then(response=>response.data);
+        return stRequest(config).then((response:any)=>response.data);
     }
 
     resetPoll(poll: Poll | string): Promise<Poll> {
@@ -224,7 +224,7 @@ export class RestfulPollService implements IPollService {
             headers:this._jsonHeaders,
             url: buildAPI(this._config, `poll/poll/${pollid}/reset`),
         }
-        return stRequest(config).then(response=>response.data);
+        return stRequest(config).then((response:any)=>response.data);
     }
 
     deletePoll(poll: Poll | string): Promise<Poll> {
@@ -237,7 +237,7 @@ export class RestfulPollService implements IPollService {
             headers:this._jsonHeaders,
             url: buildAPI(this._config, `poll/poll/${pollid}`),
         }
-        return stRequest(config).then(response=>response.data);
+        return stRequest(config).then((response:any)=>response.data);
     }
 
 

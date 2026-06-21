@@ -17,9 +17,9 @@ import {ICommentModerationService} from "../../../API/comments/ICommentModeratio
  */
 export class RestfulCommentModerationService implements ICommentModerationService {
 
-    private _config: SportsTalkConfig
-    private _apiHeaders: AxiosHeaders;
-    private _jsonHeaders: AxiosHeaders;
+    private _config!: SportsTalkConfig
+    private _apiHeaders!: AxiosHeaders;
+    private _jsonHeaders!: AxiosHeaders;
     private _apiExt:string = 'comment/moderation/queues/comments';
 
     constructor(config?: SportsTalkConfig) {
@@ -81,7 +81,7 @@ export class RestfulCommentModerationService implements ICommentModerationServic
             url: buildAPI(this._config, `${this._apiExt}?cursor=${encodeURIComponent(cursor)}`),
             headers: this._jsonHeaders,
         }
-        return stRequest(config).then(result=>{
+        return stRequest(config).then((result:any)=>{
             return result.data
         });
     }
@@ -97,7 +97,7 @@ export class RestfulCommentModerationService implements ICommentModerationServic
             headers: this._jsonHeaders,
             data: {approve: false}
         }
-        return stRequest(config).then(result => {
+        return stRequest(config).then((result:any) => {
             return result.data
         })
     }
@@ -114,7 +114,7 @@ export class RestfulCommentModerationService implements ICommentModerationServic
             headers: this._jsonHeaders,
             data:{approve: approve}
         }
-        return stRequest(config).then(result => {
+        return stRequest(config).then((result:any) => {
             return result.data
         })
     }
@@ -130,7 +130,7 @@ export class RestfulCommentModerationService implements ICommentModerationServic
             headers: this._jsonHeaders,
             data: {approve: true}
         };
-        return stRequest(config).then(result => {
+        return stRequest(config).then((result:any) => {
             return result.data
         })
     }
