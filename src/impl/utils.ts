@@ -38,6 +38,11 @@ export function queryStringify(data,key?) {
 }
 
 export function buildAPI(config: SportsTalkConfig, ext: string, request?: Object): string {
+    // Fail loudly on a missing appId instead of silently building ".../undefined/..."
+    // URLs that 404 with no actionable message. appId is a required path segment.
+    if(!config || !config.appId) {
+        throw new ValidationError("Missing appId — set appId in your SportsTalkConfig (e.g. ChatClient.init({ appId, apiToken })) before making API calls.");
+    }
     let endpoint = `${config.endpoint || DEFAULT_CONFIG.endpoint}/${config.appId}/${ext}`;
     if(request && Object.keys(request).length > 0) {
         endpoint = `${endpoint}?${formify(request)}`;
@@ -57,7 +62,10 @@ export function getUrlEncodedHeaders(apiKey?: string, userToken?: string): ApiHe
         headers[API_TOKEN_HEADER] = apiKey
     }
     if(userToken) {
-        headers[AUTHORIZATION_HEADER] = userToken;
+        // Use the Bearer scheme consistently with getJSONHeaders — the form-encoded path
+        // previously sent the raw token, which proxies/loggers that special-case "Bearer"
+        // can mishandle.
+        headers[AUTHORIZATION_HEADER] = `Bearer ${userToken}`;
     }
     return headers;
 }
@@ -76,6 +84,9 @@ export function getJSONHeaders(apiKey?: string, userToken?: string): ApiHeaders 
 }
 
 export function forceObjKeyOrString(obj, key = 'id'): string{
+    if(obj === null || obj === undefined) {
+        throw new ValidationError(`Cannot read '${key}' from a null/undefined value`);
+    }
     const val = obj[key] || obj;
     if(typeof val === 'string') {
         return val;

@@ -78,7 +78,7 @@ export class RestfulCommentModerationService implements ICommentModerationServic
         this._requireAppId();
         const config: AxiosRequestConfig = {
             method: GET,
-            url: buildAPI(this._config, `${this._apiExt}?cursor=${cursor}`),
+            url: buildAPI(this._config, `${this._apiExt}?cursor=${encodeURIComponent(cursor)}`),
             headers: this._jsonHeaders,
         }
         return stRequest(config).then(result=>{

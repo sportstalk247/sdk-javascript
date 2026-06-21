@@ -119,4 +119,36 @@ describe('network fetch transport (browser path)', () => {
             expect(refreshes).to.equal(1);
         });
     });
+
+    describe('retry (idempotent GET only)', () => {
+        it('retries a transient 503 GET, then succeeds', async () => {
+            let calls = 0;
+            fetchStub = () => {
+                calls++;
+                if (calls < 2) { return Promise.resolve(fakeResponse({ ok: false, status: 503, statusText: 'Service Unavailable', body: '{"message":"try later"}' })); }
+                return Promise.resolve(fakeResponse({ ok: true, status: 200, body: JSON.stringify({ data: { ok: 1 } }) }));
+            };
+            const result = await net.stRequest({ url: 'http://x', method: 'GET', headers: {} });
+            expect(calls).to.equal(2);
+            expect(result.data.ok).to.equal(1);
+        });
+
+        it('does NOT retry a 4xx GET', async () => {
+            let calls = 0;
+            fetchStub = () => { calls++; return Promise.resolve(fakeResponse({ ok: false, status: 400, statusText: 'Bad Request', body: '{"message":"nope"}' })); };
+            let threw = false;
+            try { await net.stRequest({ url: 'http://x', method: 'GET', headers: {} }); } catch (e) { threw = true; }
+            expect(threw).to.be.true;
+            expect(calls).to.equal(1);
+        });
+
+        it('does NOT retry a non-GET (POST) even on a network error', async () => {
+            let calls = 0;
+            fetchStub = () => { calls++; return Promise.reject(new Error('network down')); };
+            let threw = false;
+            try { await net.stRequest({ url: 'http://x', method: 'POST', headers: {} }); } catch (e) { threw = true; }
+            expect(threw).to.be.true;
+            expect(calls).to.equal(1);
+        });
+    });
 });

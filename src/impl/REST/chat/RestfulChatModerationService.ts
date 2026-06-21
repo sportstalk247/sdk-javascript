@@ -152,7 +152,7 @@ export class RestfulChatModerationService implements IChatModerationService {
         }
         const config: AxiosRequestConfig = {
             method: POST,
-            url: buildAPI(this._config, `${this._apiExt}/${roomId}/shadowban`),
+            url: buildAPI(this._config, `chat/rooms/${roomId}/shadowban`),
             headers: this._jsonHeaders,
             data
         }
@@ -169,21 +169,27 @@ export class RestfulChatModerationService implements IChatModerationService {
         }
         const config: AxiosRequestConfig = {
             method: POST,
-            url: buildAPI(this._config, `${this._apiExt}/${roomId}/shadowban`),
+            url: buildAPI(this._config, `chat/rooms/${roomId}/shadowban`),
             headers: this._jsonHeaders,
             data
         }
         return stRequest(config).then(result=>result.data);
     }
 
-    purgeMessagesInRoom = (user: User | string, room: ChatRoomResult | string): Promise<any> => {
+    purgeMessagesInRoom = (user: User | string, room: ChatRoomResult | string, byUser?: User | string): Promise<any> => {
         const roomId = forceObjKeyOrString(room);
         const userId = forceObjKeyOrString(user, 'userid');
+        // Doc body is { userid, byuserid }: userid = whose messages to purge (the target),
+        // byuserid = the moderator acting. The old code put the target in byuserid and left
+        // userid unset, so the server had no target. byUser defaults to the target when no
+        // separate moderator is supplied.
+        const byUserId = byUser ? forceObjKeyOrString(byUser, 'userid') : userId;
         const config: AxiosRequestConfig = {
             method: POST,
             url: buildAPI(this._config, `chat/rooms/${roomId}/commands/purge`),
             data: {
-                byuserid:userId
+                userid: userId,
+                byuserid: byUserId
             },
             headers: this._jsonHeaders
         }

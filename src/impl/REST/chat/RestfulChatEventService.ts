@@ -412,7 +412,7 @@ export class RestfulChatEventService implements IChatEventService {
         }
         const request: AxiosRequestConfig =  {
             method: GET,
-            url: `${this._updatesApi}?limit=${limit}&cursor=${cursor}`,
+            url: `${this._updatesApi}?limit=${limit}&cursor=${encodeURIComponent(cursor)}`,
             headers: this._jsonHeaders
         };
         return stRequest(request).then((result) => {
@@ -815,14 +815,17 @@ export class RestfulChatEventService implements IChatEventService {
         }
         const config:AxiosRequestConfig =  {
             method: DELETE,
-            url: buildAPI(this._config, `chat/rooms/${this._currentRoom.id}/events/${id}`),
+            // The documented endpoint requires ?userid=<the user performing the delete>.
+            url: buildAPI(this._config, `chat/rooms/${this._currentRoom.id}/events/${id}?userid=${encodeURIComponent(userid)}`),
             headers: this._jsonHeaders,
         };
         // @ts-ignore
         return stRequest(config).then(result=>{
             return result;
         }).catch(e=>{
-            throw new Error(`${e.response.status} ${e.response.data && e.response.data.message ? e.response.data.message : e.response.statusText} - ${e.message}`);
+            const status = e.response?.status ?? 'network-error';
+            const detail = (e.response?.data && e.response.data.message) ? e.response.data.message : (e.response?.statusText || e.message);
+            throw new Error(`${status} ${detail} - ${e.message}`);
         })
     }
 
@@ -872,7 +875,7 @@ export class RestfulChatEventService implements IChatEventService {
         const previousCursor = cursor || this.oldestCursor || '';
         return stRequest({
             method: GET,
-            url: `${this._roomApi}/listpreviousevents?cursor=${previousCursor? previousCursor : ''}&limit=${limit ? limit : 100}`,
+            url: `${this._roomApi}/listpreviousevents?cursor=${previousCursor ? encodeURIComponent(previousCursor) : ''}&limit=${limit ? limit : 100}`,
             headers: this._jsonHeaders
         }).then((result) => {
             if(!cursor) {
@@ -894,7 +897,7 @@ export class RestfulChatEventService implements IChatEventService {
         }
         return stRequest({
             method: GET,
-            url: `${this._roomApi}/listeventshistory?cursor=${cursor ? cursor: ''}&limit=${limit ? limit : 100}`,
+            url: `${this._roomApi}/listeventshistory?cursor=${cursor ? encodeURIComponent(cursor) : ''}&limit=${limit ? limit : 100}`,
             headers: this._jsonHeaders
         }).then((result) => {
             return result.data;

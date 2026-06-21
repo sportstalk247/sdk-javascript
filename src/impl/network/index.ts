@@ -104,7 +104,39 @@ export interface ErrorHandlerFunction<T> {
     (error: Error, config?: AxiosRequestConfig):T
 }
 
-export const stRequest = getRequestLibrary();
+// Retry policy: only safe (idempotent) GET reads are retried, and only on transient
+// failures — a network error (no response) or a 5xx/429 from the server. 4xx and any
+// non-GET method pass straight through so we never double-apply a write.
+const MAX_RETRIES = 2;
+const RETRY_BASE_DELAY_MS = 200;
+const delay = (ms:number) => new Promise((resolve) => setTimeout(resolve, ms));
+function isTransient(err:any):boolean {
+    const status = err && err.response && err.response.status;
+    if(!status) { return true; }            // network/timeout/abort — no HTTP response
+    return status >= 500 || status === 429; // server error / rate-limited
+}
+function withRetry(transport: NetworkRequest): NetworkRequest {
+    return async function(config:AxiosRequestConfig, errorHandlerfunction?: ErrorHandlerFunction<any>) {
+        const method = ((config && config.method) || 'GET').toString().toUpperCase();
+        if(method !== 'GET') {
+            // Non-idempotent — preserve exact behavior (errorHandler honored, no retry).
+            return transport(config, errorHandlerfunction);
+        }
+        for(let attempt = 0; ; attempt++) {
+            const isLast = attempt >= MAX_RETRIES;
+            try {
+                // Only let the errorHandler swallow on the final attempt; earlier attempts
+                // must throw so a transient error can be retried.
+                return await transport(config, isLast ? errorHandlerfunction : undefined);
+            } catch (e) {
+                if(isLast || !isTransient(e)) { throw e; }
+                await delay(RETRY_BASE_DELAY_MS * Math.pow(2, attempt));
+            }
+        }
+    } as NetworkRequest;
+}
+
+export const stRequest = withRetry(getRequestLibrary());
 
 // Refresh the JWT this many ms before it actually expires.
 const JWT_REFRESH_SKEW_MS = 30000;

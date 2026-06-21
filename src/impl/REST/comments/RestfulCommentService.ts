@@ -373,9 +373,10 @@ export class RestfulCommentService implements ICommentService {
         const requestString = formify(request);
         return stRequest({
             method: GET,
-            url: buildAPI(this._config, `${this._apiExt}/${conversationId}/comments/${id}/replies/?${requestString}`),
+            // Doc path is ".../replies?..." (no slash before the query); also a GET carries
+            // no body, so `data` is dropped.
+            url: buildAPI(this._config, `${this._apiExt}/${conversationId}/comments/${id}/replies?${requestString}`),
             headers: this._jsonHeaders,
-            data: request
         }).then(result=>{
             return {
                 conversation: result.data.conversation,
