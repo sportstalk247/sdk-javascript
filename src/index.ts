@@ -3,11 +3,13 @@ import {CommentClient} from './impl/CommentClient';
 import {UserClient} from './impl/UserClient';
 import {RestfulChatModerationService} from "./impl/REST/chat/RestfulChatModerationService";
 import {RestfulPollService} from "./impl/REST/poll/RestfulPollService";
+import {RestfulTelemetryService} from "./impl/REST/telemetry/RestfulTelemetryService";
 import {RestfulChatEventService} from "./impl/REST/chat/RestfulChatEventService";
 import {RestfulChatRoomService} from "./impl/REST/chat/RestfulChatRoomService";
 import {RestfulUserService} from "./impl/REST/users/RestfulUserService";
 import * as ChatModels from './models/ChatModels';
 import * as PollModels from './models/PollModels';
+import * as TelemetryModels from './models/TelemetryModels';
 import * as CommentModels from './models/CommentsModels';
 import { SportsTalkConfig } from './models/CommonModels';
 import * as CommonModels from './models/CommonModels';
@@ -36,6 +38,10 @@ const Polls = {
     RestfulPollService
 }
 
+const Telemetry = {
+    RestfulTelemetryService
+}
+
 
 const Users = {
     RestfulUserService,
@@ -50,6 +56,7 @@ const REST ={
     Comments,
     Users,
     Polls,
+    Telemetry,
     Webhooks
 }
 
@@ -62,7 +69,8 @@ const Services = {
     ConversationService: RestfulConversationService,
     CommentService: RestfulCommentService,
     CommentModerationService: RestfulCommentModerationService,
-    PollsService: RestfulPollService
+    PollsService: RestfulPollService,
+    TelemetryService: RestfulTelemetryService
 }
 
 const impl = {
@@ -74,6 +82,7 @@ const Types = {
     Chat: ChatModels,
     Common: CommonModels,
     Polls: PollModels,
+    Telemetry: TelemetryModels,
     Errors,
     Messages,
 }
@@ -87,6 +96,7 @@ export {
     ChatModels,
     CommentModels,
     CommonModels,
+    TelemetryModels,
     Constants,
     Types,
     SportsTalkConfig,

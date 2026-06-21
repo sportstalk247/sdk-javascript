@@ -1,0 +1,26 @@
+import {
+    TelemetrySignalKind,
+    TelemetryReading,
+    TelemetrySnapshot,
+    TelemetryIncrementRequest,
+    TelemetrySampleRequest,
+    TelemetryHeartbeatRequest,
+    TelemetryBatchOp,
+    TelemetryBatchItem,
+    TelemetryBatchRequest,
+    TelemetryBatchResult,
+    TelemetryAck,
+} from "./telemetry/Telemetry";
+export {
+    TelemetrySignalKind,
+    TelemetryReading,
+    TelemetrySnapshot,
+    TelemetryIncrementRequest,
+    TelemetrySampleRequest,
+    TelemetryHeartbeatRequest,
+    TelemetryBatchOp,
+    TelemetryBatchItem,
+    TelemetryBatchRequest,
+    TelemetryBatchResult,
+    TelemetryAck,
+}

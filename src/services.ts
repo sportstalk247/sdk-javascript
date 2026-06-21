@@ -8,6 +8,7 @@ import {RestfulCommentService} from "./impl/REST/comments/RestfulCommentService"
 import {RestfulCommentModerationService} from "./impl/REST/comments/RestfulCommentModerationService";
 import {RestfulNotificationService} from "./impl/REST/notifications/RestfulNotificationService";
 import {RestfulPollService} from "./impl/REST/poll/RestfulPollService";
+import {RestfulTelemetryService} from "./impl/REST/telemetry/RestfulTelemetryService";
 
 export const ChatModerationService = RestfulChatModerationService;
 export const ChatEventService = RestfulChatEventService;
@@ -19,3 +20,4 @@ export const CommentService = RestfulCommentService;
 export const CommentModerationService = RestfulCommentModerationService;
 export const NotificationService = RestfulNotificationService;
 export const PollsService = RestfulPollService;
+export const TelemetryService = RestfulTelemetryService;
