@@ -22,7 +22,7 @@ export interface IPollService extends ISportsTalkConfigurable {
     listPolls():Promise<Array<Poll>>
     getPollStandings(poll:Poll | string): Promise<Array<PollStanding>>
     getPollDetails(poll:Poll| string): Promise<Poll>
-    getPollDetailsByCustomId(poll: MayHaveCustomId | string)
+    getPollDetailsByCustomId(poll: MayHaveCustomId | string): Promise<any>
     listChoicesForPoll(poll:Poll | string): Promise<Array<PollChoice>>
 
     /**

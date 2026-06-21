@@ -49,39 +49,39 @@ export class CommentClient implements ICommentingClient {
      * Holds the config object
      * @private
      */
-    private _config: SportsTalkConfig
+    private _config!: SportsTalkConfig
 
     /**
      * Used to create a holder for callbacks that will propagate to sub-modules.
      * @private
      */
-    private _callbackDelegate: CallBackDelegate;
+    private _callbackDelegate!: CallBackDelegate;
 
     /**
      * Holds the ConversationService powering the client
      * @private
      */
-    private _conversationService: IConversationService;
+    private _conversationService!: IConversationService;
     /**
      * Holds the CommentService powering the client
      * @private
      */
-    private _commentService: ICommentService;
+    private _commentService!: ICommentService;
     /**
      * Holds the UserService powering the CommentClient
      * @private
      */
-    private _userService: IUserService
+    private _userService!: IUserService
     /**
      * The current user
      * @private
      */
-    private _user: User;
+    private _user!: User;
     /**
      * Holds the current conversation state.
      * @private
      */
-    private _currentConversationId: string;
+    private _currentConversationId!: string;
 
     /**
      * Default settings for comment requests.

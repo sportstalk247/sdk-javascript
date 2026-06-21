@@ -118,7 +118,7 @@ export interface IChatClient extends IUserConfigurable, ISportsTalkConfigurable 
      * each time a goal event happens.
      * @param url should be a complete URL, including http://
      */
-    setDefaultGoalImage(url: string);
+    setDefaultGoalImage(url: string): string;
 
     /**
      * Report a chat event for violating community policy.
@@ -145,7 +145,7 @@ export interface IChatClient extends IUserConfigurable, ISportsTalkConfigurable 
      * @param room the Room object describing the room
      * @return the Room created on the server, with a roomID.
      */
-    createRoom(room): Promise<ChatRoomResult>;
+    createRoom(room: any): Promise<ChatRoomResult>;
 
     /**
      * Update a room that's been created.
@@ -178,7 +178,7 @@ export interface IChatClient extends IUserConfigurable, ISportsTalkConfigurable 
      * Sets the current room. The room must have an ID and have already been created on the server.
      * @param room
      */
-    setCurrentRoom(room: ChatRoomResult);
+    setCurrentRoom(room: ChatRoomResult): void;
 
     /**
      * List participants in the chatroom.
@@ -191,7 +191,7 @@ export interface IChatClient extends IUserConfigurable, ISportsTalkConfigurable 
      * Sets the event handling objects
      * @param eventHandlers
      */
-    setEventHandlers(eventHandlers: EventHandlerConfig);
+    setEventHandlers(eventHandlers: EventHandlerConfig): void;
 
     /**
      * Gets the current handler functions. Often used for debugging.
@@ -225,12 +225,12 @@ export interface IChatClient extends IUserConfigurable, ISportsTalkConfigurable 
      * Starts polling the server for updates.
      * SIDE EFFECTS: will repeatedly trigger the event handler functions.  Will not stop until stopListeningToEventUpdates() is called.
      */
-    startListeningToEventUpdates();
+    startListeningToEventUpdates(): void;
 
     /**
      * Stops server polling.
      */
-    stopListeningToEventUpdates();
+    stopListeningToEventUpdates(): void;
 
     /**
      * Will look backwards
@@ -344,14 +344,14 @@ export interface IChatClient extends IUserConfigurable, ISportsTalkConfigurable 
      * and wish to limit the number of events somehow to improve UI responsiveness.
      * @param cursor
      */
-    setUpdatesCursor(cursor: string)
+    setUpdatesCursor(cursor: string): void
 
     /**
      * Manually set the cursor holding the oldest event known, for scrollback.
      * You may need to use this if you scroll back a lot
      * @param cursor
      */
-    setPreviousEventsCursor(cursor: string)
+    setPreviousEventsCursor(cursor: string): void
 
 
     updateChatEvent(event: EventResult | string, body: string, user?: string | User): Promise<EventResult>

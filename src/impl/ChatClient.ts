@@ -70,7 +70,7 @@ export class ChatClient implements IChatClient {
      * @private
      */
     private _config: SportsTalkConfig = {appId: ""};
-    private _callBackDelegate: CallBackDelegate;
+    private _callBackDelegate!: CallBackDelegate;
     /**
      * Holds the current user for the client.
      * @private
@@ -86,7 +86,7 @@ export class ChatClient implements IChatClient {
      * A client can observe one room at a time.
      * @private
      */
-    private _currentRoom: ChatRoomResult;
+    private _currentRoom!: ChatRoomResult;
 
     /**
      * Convenience holder for a goal image for the goal API
@@ -98,27 +98,27 @@ export class ChatClient implements IChatClient {
      * Holds an event service used by the ChatClient
      * @private
      */
-    private _eventService: IChatEventService;
+    private _eventService!: IChatEventService;
 
     /**
      * Holds the RoomService used by the ChatClient
      * @private
      */
 
-    private _roomService: IChatRoomService;
+    private _roomService!: IChatRoomService;
     /**
      * Holds the UserService used by the ChatClient
      * @private
      */
-    private _userService: IUserService;
+    private _userService!: IUserService;
 
     /**
      * Notification Service
      * @private
      */
-    private _notificationServce: INotificationService
+    private _notificationServce!: INotificationService
 
-    private _moderationService: IChatModerationService
+    private _moderationService!: IChatModerationService
 
     /**
      * Debugging method to grab the internal state and help debug.
@@ -301,7 +301,7 @@ export class ChatClient implements IChatClient {
      * Start the "talk".  This will being retrieving events from sportstalk servers.
      * If you pass a room parameter, will join the room and then start listening to updates.
      */
-    startListeningToEventUpdates = (room?: ChatRoomResult, joinOptions?: JoinOptions) => {
+    startListeningToEventUpdates = (room?: ChatRoomResult, joinOptions?: JoinOptions):any => {
         if(room) {
             return this.joinRoom(room, joinOptions).then(()=>this.startListeningToEventUpdates())
         }
@@ -338,7 +338,7 @@ export class ChatClient implements IChatClient {
      * @param user
      * @param cursor
      */
-    listUserSubscribedRooms = (user: User | string, cursor?): Promise<UserSubscriptionListResponse> => {
+    listUserSubscribedRooms = (user: User | string, cursor?:string): Promise<UserSubscriptionListResponse> => {
         return this._userService.listUserSubscribedRooms(user, cursor);
     }
     /**

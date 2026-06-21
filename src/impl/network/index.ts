@@ -172,12 +172,12 @@ export const bindJWTUpdates = (target: IUserConfigurable): NetworkRequest => {
 
 
 export class NetworkHandler {
-    _jsonHeaders
-    _formHeaders
-    _apiKey
-    Authorization
+    _jsonHeaders:any
+    _formHeaders:any
+    _apiKey:any
+    Authorization:any
 
-    constructor({headers, apiKey, Authorization}) {
+    constructor({headers, apiKey, Authorization}:any) {
         this._apiKey = apiKey;
         this.Authorization = Authorization;
     }
@@ -185,16 +185,16 @@ export class NetworkHandler {
     // These were never implemented and nothing in the SDK instantiates NetworkHandler.
     // Left as no-ops they silently resolved `undefined`, which is a trap for any future
     // caller — fail loudly instead.
-    post = (url:string, data, onError, options: NetworkRequestOptions) => {
+    post = (url:string, data:any, onError:any, options: NetworkRequestOptions) => {
         throw new Error('NetworkHandler.post is not implemented; use stRequest().');
     }
-    get = (url:string, query, onError, options: NetworkRequestOptions) => {
+    get = (url:string, query:any, onError:any, options: NetworkRequestOptions) => {
         throw new Error('NetworkHandler.get is not implemented; use stRequest().');
     }
-    put = (url:string, data, options: NetworkRequestOptions) => {
+    put = (url:string, data:any, options: NetworkRequestOptions) => {
         throw new Error('NetworkHandler.put is not implemented; use stRequest().');
     }
-    delete = (url: string, data, options:NetworkRequestOptions) => {
+    delete = (url: string, data:any, options:NetworkRequestOptions) => {
         throw new Error('NetworkHandler.delete is not implemented; use stRequest().');
     }
 

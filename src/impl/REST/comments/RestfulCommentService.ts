@@ -37,10 +37,10 @@ import {ReportType} from "../../../models/Moderation";
  * @class
  */
 export class RestfulCommentService implements ICommentService {
-    private _config: SportsTalkConfig;
-    private _conversation: Conversation;
-    private _apiHeaders: AxiosHeaders;
-    private _jsonHeaders: AxiosHeaders;
+    private _config!: SportsTalkConfig;
+    private _conversation!: Conversation;
+    private _apiHeaders!: AxiosHeaders;
+    private _jsonHeaders!: AxiosHeaders;
     private _apiExt:string = 'comment/conversations';
 
     /**
@@ -89,7 +89,7 @@ export class RestfulCommentService implements ICommentService {
      * @param user
      * @private
      */
-    private _requireUser = (user) => {
+    private _requireUser = (user:any) => {
         if(!user) {
             throw new RequireUserError(MUST_SET_USER);
         }
@@ -154,7 +154,7 @@ export class RestfulCommentService implements ICommentService {
             headers: this._jsonHeaders as AxiosHeaders,
             data: comment
         }
-        return stRequest(config).then(result=>{
+        return stRequest(config).then((result:any)=>{
             return result.data;
         });
     }
@@ -178,9 +178,9 @@ export class RestfulCommentService implements ICommentService {
             data: comment
         }
 
-        return stRequest(config).then(result=>{
+        return stRequest(config).then((result:any)=>{
             return result.data;
-        }).catch(e=>{
+        }).catch((e:any)=>{
             throw e;
         });
     }
@@ -197,9 +197,9 @@ export class RestfulCommentService implements ICommentService {
             url: buildAPI(this._config, `${this._apiExt}/${conversationId}/comments/${id}`),
             headers: this._jsonHeaders,
         }
-        return stRequest(config).then(result=>{
+        return stRequest(config).then((result:any)=>{
             return result.data;
-        }).catch(e=>{
+        }).catch((e:any)=>{
             // Guard e.response — it's absent on network failures, where the old code threw
             // a secondary TypeError and masked the real error instead of rethrowing it.
             if(e.response && e.response.status === 404) {
@@ -242,7 +242,7 @@ export class RestfulCommentService implements ICommentService {
             headers: this._jsonHeaders,
         }
 
-        return stRequest(config).then(result => {
+        return stRequest(config).then((result:any) => {
             const comment:Comment = result.data;
             // @ts-ignore
             const response: CommentDeletionResponse = {
@@ -284,7 +284,7 @@ export class RestfulCommentService implements ICommentService {
                 body: comment.body,
                 userid: comment.userid
             }
-        }).then(result=>{
+        }).then((result:any)=>{
             return result.data;
         });
     }
@@ -310,7 +310,7 @@ export class RestfulCommentService implements ICommentService {
             headers: this._jsonHeaders,
             data
         }
-        return stRequest(config).then(result=>{
+        return stRequest(config).then((result:any)=>{
             return result.data;
         });
     }
@@ -334,7 +334,7 @@ export class RestfulCommentService implements ICommentService {
                 userid: user.userid
             }
         };
-        return stRequest(request).then(result=>{
+        return stRequest(request).then((result:any)=>{
             return result.data;
         });
     }
@@ -357,7 +357,7 @@ export class RestfulCommentService implements ICommentService {
                 reporttype: reporttype,
                 userid: user.userid
             }
-        }).then(result=>{
+        }).then((result:any)=>{
             return result.data;
         });
     }
@@ -377,7 +377,7 @@ export class RestfulCommentService implements ICommentService {
             // no body, so `data` is dropped.
             url: buildAPI(this._config, `${this._apiExt}/${conversationId}/comments/${id}/replies?${requestString}`),
             headers: this._jsonHeaders,
-        }).then(result=>{
+        }).then((result:any)=>{
             return {
                 conversation: result.data.conversation,
                 comments: result.data.comments
@@ -401,7 +401,7 @@ export class RestfulCommentService implements ICommentService {
             url: buildAPI(this._config, `${this._apiExt}/${id}/comments`, request),
             headers: this._jsonHeaders,
         }
-        return stRequest(config).then(result => {
+        return stRequest(config).then((result:any) => {
             const {conversation, comments, cursor, more} = result.data;
             return {
                 conversation,
@@ -423,6 +423,6 @@ export class RestfulCommentService implements ICommentService {
             url: buildAPI(this._config, `${this._apiExt}/${id}/repliesbyparentidbatch`, {parentids, childlimit}),
             headers: this._jsonHeaders,
         }
-        return stRequest(config).then(resp=>resp.data);
+        return stRequest(config).then((resp:any)=>resp.data);
     }
 }

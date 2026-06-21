@@ -36,7 +36,7 @@ import {ReportType} from "../../../models/Moderation";
  * @class
  */
 export class RestfulChatRoomService implements IChatRoomService {
-    private _config: SportsTalkConfig;
+    private _config!: SportsTalkConfig;
     private _apiHeaders = {};
     private _jsonHeaders = {}
     private _apiExt = 'chat/rooms';
@@ -64,7 +64,7 @@ export class RestfulChatRoomService implements IChatRoomService {
             url: buildAPI(this._config, `${this._apiExt}?cursor=${cursor ? encodeURIComponent(cursor) : ''}&limit=${ limit ? limit : 100}`),
             headers: this._jsonHeaders,
         };
-        return stRequest(config).then(result=>{
+        return stRequest(config).then((result:any)=>{
             return result.data;
         });
     }
@@ -98,7 +98,7 @@ export class RestfulChatRoomService implements IChatRoomService {
             headers: this._jsonHeaders,
             data: room
         };
-        return stRequest(config).then(result=>{
+        return stRequest(config).then((result:any)=>{
             return result.data;
         });
     }
@@ -119,7 +119,7 @@ export class RestfulChatRoomService implements IChatRoomService {
             method: GET,
             url: url,
             headers: this._jsonHeaders
-        }).then(result => {
+        }).then((result:any) => {
             return result.data
         });
     };
@@ -136,7 +136,7 @@ export class RestfulChatRoomService implements IChatRoomService {
             url: buildAPI(this._config,`${this._apiExt}/${room.id}/participants?cursor=${cursor ? encodeURIComponent(cursor) : ''}&limit=${maxresults ? maxresults : 200}`),
             headers: this._jsonHeaders
         };
-        return stRequest(config).then(result=>result.data);
+        return stRequest(config).then((result:any)=>result.data);
     }
 
     resetChatRoom = (room: ChatRoomResult | string): Promise<ChatRoomResult> =>{
@@ -149,9 +149,9 @@ export class RestfulChatRoomService implements IChatRoomService {
                 removeusereffects: true
             }
         }
-        return stRequest(config).then(response => {
+        return stRequest(config).then((response:any) => {
             return response.data;
-        }).catch(e=>{
+        }).catch((e:any)=>{
             // Rethrow the original error — `new Error(e)` stringified it to
             // "Error: [object Object]" and discarded e.response/e.message.
             throw e;
@@ -188,9 +188,9 @@ export class RestfulChatRoomService implements IChatRoomService {
             config.data = config.data || {};
             config.data.limit = options.limit || 50;
         }
-        return stRequest(config).then(response => {
+        return stRequest(config).then((response:any) => {
             return response.data;
-        }).catch(e=>{
+        }).catch((e:any)=>{
             // Rethrow the original error — `new Error(e)` stringified it to
             // "Error: [object Object]" and discarded e.response/e.message.
             throw e;
@@ -227,7 +227,7 @@ export class RestfulChatRoomService implements IChatRoomService {
             config.data = config.data || {};
             config.data.limit = options.limit || 50;
         }
-        return stRequest(config).then(response => {
+        return stRequest(config).then((response:any) => {
             return response.data;
         })
     }
@@ -249,7 +249,7 @@ export class RestfulChatRoomService implements IChatRoomService {
             url: buildAPI(this._config,`${this._apiExt}/${roomid}/events/${eventid}`),
             headers: this._apiHeaders
         };
-        return stRequest(request).then((result) => {
+        return stRequest(request).then((result:any) => {
             return result.data;
         });
     }
@@ -271,7 +271,7 @@ export class RestfulChatRoomService implements IChatRoomService {
                 userid: userId
             }
         };
-        return stRequest(config).then(response => {
+        return stRequest(config).then((response:any) => {
             return <ChatRoomExitResult> response.message
         })
     }
@@ -288,7 +288,7 @@ export class RestfulChatRoomService implements IChatRoomService {
             headers: this._jsonHeaders,
             data: {roomisopen: false}
         };
-        return stRequest(config).then(response => {
+        return stRequest(config).then((response:any) => {
             // The updated room is in response.data; response.message is just a status
             // string ("Success"), so returning it gave callers a string, not a room.
             return <ChatRoomResult> response.data
@@ -307,7 +307,7 @@ export class RestfulChatRoomService implements IChatRoomService {
             headers: this._jsonHeaders,
             data: {roomisopen: true}
         };
-        return stRequest(config).then(response => {
+        return stRequest(config).then((response:any) => {
             // The updated room is in response.data; response.message is just a status
             // string ("Success"), so returning it gave callers a string, not a room.
             return <ChatRoomResult> response.data
@@ -326,7 +326,7 @@ export class RestfulChatRoomService implements IChatRoomService {
             headers: this._jsonHeaders,
             data: room,
         };
-        return stRequest(config).then(response => {
+        return stRequest(config).then((response:any) => {
             // The updated room is in response.data; response.message is just a status
             // string ("Success"), so returning it gave callers a string, not a room.
             return <ChatRoomResult> response.data
@@ -344,7 +344,7 @@ export class RestfulChatRoomService implements IChatRoomService {
             url: buildAPI(this._config,`${this._apiExt}/${roomId}`),
             headers: this._jsonHeaders,
         };
-        return stRequest(config).then(result=>result.data);
+        return stRequest(config).then((result:any)=>result.data);
     }
 
     /**
@@ -358,7 +358,7 @@ export class RestfulChatRoomService implements IChatRoomService {
             url: buildAPI(this._config,`chat/roomsbycustomid/${roomId}`),
             headers: this._jsonHeaders,
         };
-        return stRequest(config).then(result=>result.data);
+        return stRequest(config).then((result:any)=>result.data);
     }
 
     /**
@@ -445,7 +445,7 @@ export class RestfulChatRoomService implements IChatRoomService {
             url: buildAPI(this._config, `${this._apiExt}/batch/details?${query}`),
             headers: this._jsonHeaders
         }
-        return stRequest(config).then(result=>result.data);
+        return stRequest(config).then((result:any)=>result.data);
     }
 
     setRoomShadowbanStatus = (user: User | string, room: ChatRoomResult | string, shadowban: boolean, expiresSeconds?: number): Promise<ChatRoomResult> => {
@@ -465,7 +465,7 @@ export class RestfulChatRoomService implements IChatRoomService {
             headers: this._jsonHeaders,
             data
         }
-        return stRequest(config).then(result=>result.data);
+        return stRequest(config).then((result:any)=>result.data);
     }
 
     setRoomMuteStatus = (user: User | string, room: ChatRoomResult | string, mute: boolean, expiresSeconds?: number): Promise<ChatRoomResult> => {
@@ -485,7 +485,7 @@ export class RestfulChatRoomService implements IChatRoomService {
             headers: this._jsonHeaders,
             data
         }
-        return stRequest(config).then(result=>result.data);
+        return stRequest(config).then((result:any)=>result.data);
     }
 
     reportUser = (reported: User | string, reportedBy: User | string, reportType: ReportType = ReportType.abuse,  room?: ChatRoomResult | string): Promise<ChatRoomResult> => {
@@ -501,6 +501,6 @@ export class RestfulChatRoomService implements IChatRoomService {
                 reporttype: reportType
             }
         }
-        return stRequest(config).then(result=>result.data);
+        return stRequest(config).then((result:any)=>result.data);
     }
 }

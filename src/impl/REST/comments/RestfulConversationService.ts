@@ -34,9 +34,9 @@ import {UserResult} from "../../../models/user/User";
  */
 export class RestfulConversationService implements IConversationService, IUserConfigurable {
 
-    _config: SportsTalkConfig;
-    _apiHeaders: AxiosHeaders;
-    _jsonHeaders: AxiosHeaders;
+    _config!: SportsTalkConfig;
+    _apiHeaders!: AxiosHeaders;
+    _jsonHeaders!: AxiosHeaders;
     _apiExt:string = 'comment/conversations'
     private request: NetworkRequest = bindJWTUpdates(this);
     /**
@@ -60,7 +60,7 @@ export class RestfulConversationService implements IConversationService, IUserCo
             url: buildAPI(this._config, `${this._apiExt}/${conversation_id}/reset`),
             headers: this._jsonHeaders,
         }
-        return this.request(config).then(result=>{
+        return this.request(config).then((result:any)=>{
             return result.data
         });
     }
@@ -125,7 +125,7 @@ export class RestfulConversationService implements IConversationService, IUserCo
             headers: this._jsonHeaders,
             data: settings,
         };
-        return this.request(config).then(result=>{
+        return this.request(config).then((result:any)=>{
            return result.data
         });
     }
@@ -145,7 +145,7 @@ export class RestfulConversationService implements IConversationService, IUserCo
             url: buildAPI(this._config, `${this._apiExt}/${id}`),
             headers: this._jsonHeaders,
         }
-        return this.request(config).then(result=>{
+        return this.request(config).then((result:any)=>{
             return result.data
         });
     }
@@ -175,7 +175,7 @@ export class RestfulConversationService implements IConversationService, IUserCo
                 userid,
             }
         }
-        return this.request(config).then(result=>{
+        return this.request(config).then((result:any)=>{
             return result.data
         });
     }
@@ -192,7 +192,7 @@ export class RestfulConversationService implements IConversationService, IUserCo
             url: buildAPI(this._config, `comment/find/conversation/bycustomid?customid=${id}`),
             headers: this._jsonHeaders,
         }
-        return this.request(config).then(result=>{
+        return this.request(config).then((result:any)=>{
             return result.data
         });
     }
@@ -211,7 +211,7 @@ export class RestfulConversationService implements IConversationService, IUserCo
         }
         // Unwrap the envelope like every sibling — returning this.request(config) gave
         // callers { kind, code, message, data } instead of the ConversationDeletionResponse.
-        return this.request(config).then(result => result.data);
+        return this.request(config).then((result:any) => result.data);
     }
 
     /**
@@ -228,7 +228,7 @@ export class RestfulConversationService implements IConversationService, IUserCo
             url: buildAPI(this._config, `${this._apiExt}/${query}`),
             headers: this._jsonHeaders,
         }
-        return this.request(config).then(response=>response.data);
+        return this.request(config).then((response:any)=>response.data);
     }
 
 
@@ -246,7 +246,7 @@ export class RestfulConversationService implements IConversationService, IUserCo
             url: buildAPI(this._config, `${this._apiExt}/details/batch?ids=${ids.join(',')}${cids ? '&cid='+cids : ''}${entities ?'&entities='+entities : ''}`),
             headers: this._jsonHeaders
         }
-        return this.request(config).then(response=>response.data);
+        return this.request(config).then((response:any)=>response.data);
     }
 
 

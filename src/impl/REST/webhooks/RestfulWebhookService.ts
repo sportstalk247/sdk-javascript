@@ -21,7 +21,7 @@ const MISSING_ID = "Missing webhook or webhook missing ID";
  */
 export class RestfulWebhookService implements IWebhookService {
     private _config: SportsTalkConfig = {appId: ""};
-    private _apiHeaders;
+    private _apiHeaders:any;
     private _apiExt = 'webhook/hooks';
 
     constructor(config: SportsTalkConfig) {
@@ -45,7 +45,7 @@ export class RestfulWebhookService implements IWebhookService {
             url: buildAPI(this._config, this._apiExt),
             method: GET,
             headers: this._apiHeaders
-        }).then(response=>{
+        }).then((response:any)=>{
            return response.data;
         })
     }
@@ -61,7 +61,7 @@ export class RestfulWebhookService implements IWebhookService {
             url: buildAPI(this._config, `${this._apiExt}/${id}/logentries`, logRequest),
             method: GET,
             headers: this._apiHeaders
-        }).then(response=>{
+        }).then((response:any)=>{
             return response.data;
         })
     }
@@ -76,7 +76,7 @@ export class RestfulWebhookService implements IWebhookService {
             method: POST,
             headers: this._apiHeaders,
             data: hook
-        }).then(response=>{
+        }).then((response:any)=>{
             return response.data
         })
     }
@@ -94,7 +94,7 @@ export class RestfulWebhookService implements IWebhookService {
             method: PUT,
             headers: this._apiHeaders,
             data: hook
-        }).then(response=>{
+        }).then((response:any)=>{
             return <Webhook>response.data
         })
     }
@@ -114,7 +114,7 @@ export class RestfulWebhookService implements IWebhookService {
             method: DELETE,
             headers: this._apiHeaders
         }
-        return stRequest(config).then(response=>{
+        return stRequest(config).then((response:any)=>{
             return response.data
         })
     }

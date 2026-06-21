@@ -40,8 +40,8 @@ import {
  * @class
  */
 export class RestfulUserService implements IUserService {
-    private _config: SportsTalkConfig;
-    private _jsonHeaders: {};
+    private _config!: SportsTalkConfig;
+    private _jsonHeaders!: {};
     private _apiExt = 'user/users';
 
     constructor(config: SportsTalkConfig) {
@@ -98,7 +98,7 @@ export class RestfulUserService implements IUserService {
                 role: user.role || UserRole.user
             }
         };
-        return stRequest(config).then(response=>response.data);
+        return stRequest(config).then((response:any)=>response.data);
     }
 
     /**
@@ -122,7 +122,7 @@ export class RestfulUserService implements IUserService {
             headers: this._jsonHeaders,
             data,
         }
-        return stRequest(config).then(result=>{
+        return stRequest(config).then((result:any)=>{
             return result.data
         });
     }
@@ -151,7 +151,7 @@ export class RestfulUserService implements IUserService {
             headers: this._jsonHeaders,
             data
         }
-        return stRequest(config).then(result=> {
+        return stRequest(config).then((result:any)=> {
             return result.data
         });
     }
@@ -182,7 +182,7 @@ export class RestfulUserService implements IUserService {
             data
         }
         return stRequest(config)
-            .then(response=>{
+            .then((response:any)=>{
                 return response.data
             });
     }
@@ -199,7 +199,7 @@ export class RestfulUserService implements IUserService {
             url: buildAPI(this._config,`${this._apiExt}/${id}`),
             headers: this._jsonHeaders,
         };
-        return stRequest(config).then(response=>response.data).catch(e=>{
+        return stRequest(config).then((response:any)=>response.data).catch((e:any)=>{
             throw new Error(`${e.response.status} ${e.response.data && e.response.data.message ? e.response.data.message : e.response.statusText} - ${e.message}`);
         })
     }
@@ -218,9 +218,9 @@ export class RestfulUserService implements IUserService {
             url: buildAPI(this._config,`${this._apiExt}/${query}`),
             headers: this._jsonHeaders,
         };
-        return stRequest(config).then(response=>{
+        return stRequest(config).then((response:any)=>{
             return response.data;
-        }).catch(e=>{
+        }).catch((e:any)=>{
             throw new Error(`${e.response.status} ${e.response.data && e.response.data.message ? e.response.data.message : e.response.statusText} - ${e.message}`);
         })
     }
@@ -236,9 +236,9 @@ export class RestfulUserService implements IUserService {
             url: buildAPI(this._config,`${this._apiExt}/${id}`),
             headers: this._jsonHeaders,
         };
-        return stRequest(config).then(response=>{
+        return stRequest(config).then((response:any)=>{
             return response.data;
-        }).catch(e=>{
+        }).catch((e:any)=>{
             throw new Error(`${e.response.status} ${e.response.data && e.response.data.message ? e.response.data.message : e.response.statusText} - ${e.message}`);
         })
     }
@@ -256,7 +256,7 @@ export class RestfulUserService implements IUserService {
             headers: this._jsonHeaders,
             data: data
         }
-        return stRequest(config).then(response=>response.data).catch(e=>{
+        return stRequest(config).then((response:any)=>response.data).catch((e:any)=>{
             throw new Error(`${e.response.status} ${e.response.data && e.response.data.message ? e.response.data.message : e.response.statusText} - ${e.message}`);
         })
     }
@@ -269,7 +269,7 @@ export class RestfulUserService implements IUserService {
             url: buildAPI(this._config, `chat/user/${userid}/subscriptions?${query}`),
             headers: this._jsonHeaders,
         }
-        return stRequest(config).then(response=>response.data).catch(e=>{
+        return stRequest(config).then((response:any)=>response.data).catch((e:any)=>{
             throw new Error(`${e.response.status} ${e.response.data && e.response.data.message ? e.response.data.message : e.response.statusText} - ${e.message}`);
         })
     }
@@ -282,7 +282,7 @@ export class RestfulUserService implements IUserService {
             url: buildAPI(this._config, `user/moderation/queues/reportedusers`, request),
             headers: this._jsonHeaders,
         }
-        return stRequest(config).then(response=>response.data).catch(e=>{
+        return stRequest(config).then((response:any)=>response.data).catch((e:any)=>{
             const status = e.response?.status ?? 'network-error';
             const detail = (e.response?.data && e.response.data.message) ? e.response.data.message : (e.response?.statusText || e.message);
             throw new Error(`${status} ${detail} - ${e.message}`);

@@ -28,7 +28,7 @@ export class UserClient implements ISportsTalkConfigurable, IUserService {
     // Configuration settings
     private _config: SportsTalkConfig = {appId: ""};
 
-    private _userService: IUserService;
+    private _userService!: IUserService;
 
     public setConfig(config:SportsTalkConfig) {
         this._config = Object.assign({}, DEFAULT_CONFIG, config);
@@ -67,7 +67,7 @@ export class UserClient implements ISportsTalkConfigurable, IUserService {
         return this._userService.setBanStatus(user, isBanned);
     }
 
-    listUserSubscribedRooms = (user: User | string, cursor?): Promise<UserSubscriptionListResponse> => {
+    listUserSubscribedRooms = (user: User | string, cursor?:string): Promise<UserSubscriptionListResponse> => {
         return this._userService.listUserSubscribedRooms(user, cursor);
     }
 

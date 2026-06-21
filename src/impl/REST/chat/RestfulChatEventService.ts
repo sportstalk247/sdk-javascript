@@ -48,16 +48,16 @@ export class RestfulChatEventService implements IChatEventService {
     private _apiHeaders = {} // holds the API headers
     private _jsonHeaders = {}
     private _fetching: boolean = false; // used to prevent a queue of requests if network is down.
-    private _currentRoom: ChatRoomResult; // holds the current chat room.
-    private _updatesApi: string; // caches the string computation of the updates API path.
+    private _currentRoom!: ChatRoomResult; // holds the current chat room.
+    private _updatesApi!: string; // caches the string computation of the updates API path.
     private _eventHandlers:EventHandlerConfig = {} // holds the event handler function references.
     // api endpoints
-    private _roomApi: string | null; // holds the string of the room path
-    private _commandApi: string; // holds the string of the chat command path.
+    private _roomApi!: string | null; // holds the string of the room path
+    private _commandApi!: string; // holds the string of the chat command path.
     // Holds a set of ignored userIDs.
     private _ignoreList: Set<string> = new Set();
-    private _smoothEventUpdates: boolean;
-    private _tokenExp: number;
+    private _smoothEventUpdates!: boolean;
+    private _tokenExp!: number;
     private request: NetworkRequest = bindJWTUpdates(this);
 
     private _user: User = {userid: "", handle: ""}; // current user.
@@ -72,8 +72,8 @@ export class RestfulChatEventService implements IChatEventService {
     private firstMessageTime: number | undefined;
 
     // Maintain room connection.
-    _keepAliveFunction: Function;
-    _keepAliveInterval;
+    _keepAliveFunction!: Function;
+    _keepAliveInterval:any;
     _keepAliveTimeInterval = 10000;
 
     // Holds the size of the updates we we will request.
@@ -235,7 +235,7 @@ export class RestfulChatEventService implements IChatEventService {
      * @param roomid
      * @param userid
      */
-    _resetKeepAlive = (roomid, userid) => {
+    _resetKeepAlive = (roomid:string, userid:string) => {
         const config: AxiosRequestConfig = {
             method: POST,
             url: buildAPI(this._config, `chat/rooms/${roomid}/sessions/${userid}/touch`),
@@ -245,7 +245,7 @@ export class RestfulChatEventService implements IChatEventService {
             // Swallow keep-alive failures into onNetworkError — an uncaught touch rejection
             // every interval becomes an unhandled promise rejection (fatal in Node under
             // --unhandled-rejections=strict).
-            const touch = stRequest(config).catch((e) => {
+            const touch = stRequest(config).catch((e:any) => {
                 if(this._eventHandlers.onNetworkError) {
                     this._eventHandlers.onNetworkError(e);
                 }
@@ -262,7 +262,7 @@ export class RestfulChatEventService implements IChatEventService {
      * @param roomid
      * @param userid
      */
-    _startKeepAlive = (roomid, userid) => {
+    _startKeepAlive = (roomid:string, userid:string) => {
         this._resetKeepAlive(roomid, userid);
         this._keepAliveInterval = setInterval(this._keepAliveFunction, this._keepAliveTimeInterval);
     }
@@ -415,7 +415,7 @@ export class RestfulChatEventService implements IChatEventService {
             url: `${this._updatesApi}?limit=${limit}&cursor=${encodeURIComponent(cursor)}`,
             headers: this._jsonHeaders
         };
-        return stRequest(request).then((result) => {
+        return stRequest(request).then((result:any) => {
             if(this._eventHandlers && this._eventHandlers.onNetworkResponse) {
                 // @ts-ignore
                 this._eventHandlers.onNetworkResponse(result);
@@ -427,7 +427,7 @@ export class RestfulChatEventService implements IChatEventService {
         });
     }
 
-    private _handleUpdate = (event) => {
+    private _handleUpdate = (event:EventResult) => {
         // ignore if shadowbanned (but always show the current user their own message).
         // Guard _user BEFORE reading _user.userid, and drop the dead `|| !this._user`.
         if(event.shadowban && (!this._user || event.userid !== this._user.userid)) {
@@ -610,9 +610,9 @@ export class RestfulChatEventService implements IChatEventService {
         // value resolves the promise, so .then(_evaluateCommandResponse) would run with
         // `undefined` and crash. Instead, notify onNetworkError in the catch AND rethrow,
         // so the caller's own .catch still sees a real error.
-        return stRequest(config).then(response=>{
+        return stRequest(config).then((response:any)=>{
             return this._evaluateCommandResponse(command, response)
-        }).catch(e=>{
+        }).catch((e:any)=>{
             if(this._eventHandlers && this._eventHandlers.onNetworkError) {
                 this._eventHandlers.onNetworkError(e);
             }
@@ -657,7 +657,7 @@ export class RestfulChatEventService implements IChatEventService {
             headers:this._jsonHeaders,
             data: data
         }
-        return stRequest(config).catch(e=>{
+        return stRequest(config).catch((e:any)=>{
             throw e;
         });
     }
@@ -682,9 +682,9 @@ export class RestfulChatEventService implements IChatEventService {
             headers:this._jsonHeaders,
             data: data
         }
-        return stRequest(config).then(result=>{
+        return stRequest(config).then((result:any)=>{
             return result;
-        }).catch(e=>{
+        }).catch((e:any)=>{
             throw e;
         });
     }
@@ -734,9 +734,9 @@ export class RestfulChatEventService implements IChatEventService {
             headers: this._jsonHeaders,
             data: data
         }
-        return stRequest(config).then((response)=>{
+        return stRequest(config).then((response:any)=>{
             return response.data
-        }).catch((e)=>{
+        }).catch((e:any)=>{
             throw e;
         })
     }
@@ -760,7 +760,7 @@ export class RestfulChatEventService implements IChatEventService {
             data: data,
             url: this._commandApi,
         };
-        return stRequest(config).then(response=>response.data);
+        return stRequest(config).then((response:any)=>response.data);
     }
 
     /**
@@ -791,7 +791,7 @@ export class RestfulChatEventService implements IChatEventService {
             url: this._commandApi,
             headers: this._jsonHeaders,
             data: data
-        }).then(response=>{
+        }).then((response:any)=>{
             return response;
         })
     }
@@ -822,7 +822,7 @@ export class RestfulChatEventService implements IChatEventService {
         // @ts-ignore
         return stRequest(config).then(result=>{
             return result;
-        }).catch(e=>{
+        }).catch((e:any)=>{
             const status = e.response?.status ?? 'network-error';
             const detail = (e.response?.data && e.response.data.message) ? e.response.data.message : (e.response?.statusText || e.message);
             throw new Error(`${status} ${detail} - ${e.message}`);
@@ -854,7 +854,7 @@ export class RestfulChatEventService implements IChatEventService {
         // @ts-ignore
         return stRequest(config).then(result=>{
             return result;
-        }).catch(e=>{
+        }).catch((e:any)=>{
             // NEVER serialize `config` here — config.headers carries x-api-token and the
             // user's Bearer JWT, which would leak into logs/consoles on any failed delete.
             const status = e.response?.status ?? 'network-error';
@@ -877,7 +877,7 @@ export class RestfulChatEventService implements IChatEventService {
             method: GET,
             url: `${this._roomApi}/listpreviousevents?cursor=${previousCursor ? encodeURIComponent(previousCursor) : ''}&limit=${limit ? limit : 100}`,
             headers: this._jsonHeaders
-        }).then((result) => {
+        }).then((result:any) => {
             if(!cursor) {
                 this.oldestCursor = result.data ? result.data.cursor : this.oldestCursor;
             }
@@ -899,7 +899,7 @@ export class RestfulChatEventService implements IChatEventService {
             method: GET,
             url: `${this._roomApi}/listeventshistory?cursor=${cursor ? encodeURIComponent(cursor) : ''}&limit=${limit ? limit : 100}`,
             headers: this._jsonHeaders
-        }).then((result) => {
+        }).then((result:any) => {
             return result.data;
         });
     }
@@ -914,7 +914,7 @@ export class RestfulChatEventService implements IChatEventService {
             headers: this._jsonHeaders,
             data: params
         }
-        return stRequest(config).then(result=>result.data);
+        return stRequest(config).then((result:any)=>result.data);
     }
 
     listEventsByType = (type:EventType): Promise<ChatEventsList> =>  {
@@ -922,7 +922,7 @@ export class RestfulChatEventService implements IChatEventService {
             method: GET,
             url: `${this._roomApi}/listeventsbytype?eventtype=${type}`,
             headers: this._jsonHeaders
-        }).then(result=>result.data);
+        }).then((result:any)=>result.data);
     }
 
     updateChatEvent = (event: EventResult | string, body: string, user?: string | User): Promise<EventResult> => {
@@ -941,7 +941,7 @@ export class RestfulChatEventService implements IChatEventService {
                 body
             }
         }
-        return stRequest(config).then(result=>result.data);
+        return stRequest(config).then((result:any)=>result.data);
     }
 
     listEventsByTimestamp = (query: TimestampRequest): Promise<ChatEventsList> => {
@@ -953,7 +953,7 @@ export class RestfulChatEventService implements IChatEventService {
             url: buildAPI(this._config, `chat/rooms/${this._currentRoom.id}/eventsbytimestamp/list/${query.ts}?limitolder=${query.limitolder? query.limitolder:0}&limitnewer=${query.limitnewer ? query.limitnewer:0}`),
             headers: this._jsonHeaders,
         }
-        return stRequest(config).then(result=>result.data);
+        return stRequest(config).then((result:any)=>result.data);
     }
 
 
