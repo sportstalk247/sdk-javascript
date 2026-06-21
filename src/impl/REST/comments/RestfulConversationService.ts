@@ -169,7 +169,9 @@ export class RestfulConversationService implements IConversationService, IUserCo
             headers: this._jsonHeaders,
             data: {
                 reaction: reaction.reaction || 'like',
-                reacted: reaction.reacted || true,
+                // `reaction.reacted || true` could never send false, so a caller could
+                // never UN-react. Only treat an explicit false as false.
+                reacted: reaction.reacted === false ? false : true,
                 userid,
             }
         }
@@ -207,7 +209,9 @@ export class RestfulConversationService implements IConversationService, IUserCo
             url: buildAPI(this._config, `${this._apiExt}/${id}`),
             headers: this._jsonHeaders,
         }
-        return this.request(config);
+        // Unwrap the envelope like every sibling — returning this.request(config) gave
+        // callers { kind, code, message, data } instead of the ConversationDeletionResponse.
+        return this.request(config).then(result => result.data);
     }
 
     /**

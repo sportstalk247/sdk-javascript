@@ -212,6 +212,9 @@ export class CommentClient implements ICommentingClient {
         }
         this._conversationService.setConfig(this._config);
         this._commentService.setConfig(this._config);
+        // Re-point the user service too, otherwise after setUserToken()/setConfig() user
+        // operations (deleteUser, ban, search) keep authenticating with the stale token.
+        this._userService.setConfig(this._config);
         if(config.user) {
             this._user = config.user;
         }
@@ -245,8 +248,12 @@ export class CommentClient implements ICommentingClient {
                 return conversation
             })
             .catch(error=>{
-                console.log(error);
-                return this.createConversation(conversation, true);
+                // Only auto-create when the conversation genuinely doesn't exist (404).
+                // A transient failure (401/500/network) must NOT silently trigger a create.
+                if(error && error.response && error.response.status === 404) {
+                    return this.createConversation(conversation, true);
+                }
+                throw error;
             })
     }
 

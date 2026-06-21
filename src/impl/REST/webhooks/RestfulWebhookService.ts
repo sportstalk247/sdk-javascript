@@ -56,7 +56,9 @@ export class RestfulWebhookService implements IWebhookService {
     listWebhookLogs = (webhook: Webhook | string, logRequest: ListRequest): Promise<WebhookLogResponse> => {
         const id = forceObjKeyOrString(webhook)
         return stRequest({
-            url: buildAPI(this._config, `${this._apiExt}/${id}/logentries`),
+            // Pass logRequest (limit/cursor) through — it was accepted but never sent, so
+            // paging was impossible and every call returned the server's default page.
+            url: buildAPI(this._config, `${this._apiExt}/${id}/logentries`, logRequest),
             method: GET,
             headers: this._apiHeaders
         }).then(response=>{

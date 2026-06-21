@@ -606,10 +606,16 @@ export class RestfulChatEventService implements IChatEventService {
             headers: this._jsonHeaders,
             data: data
         };
-        const errorHandler =  this._eventHandlers && this._eventHandlers.onNetworkError;
-        return stRequest(config, errorHandler).then(response=>{
+        // Do NOT pass onNetworkError as stRequest's errorHandler: that handler's return
+        // value resolves the promise, so .then(_evaluateCommandResponse) would run with
+        // `undefined` and crash. Instead, notify onNetworkError in the catch AND rethrow,
+        // so the caller's own .catch still sees a real error.
+        return stRequest(config).then(response=>{
             return this._evaluateCommandResponse(command, response)
         }).catch(e=>{
+            if(this._eventHandlers && this._eventHandlers.onNetworkError) {
+                this._eventHandlers.onNetworkError(e);
+            }
             // e.response is absent on network failures (offline/DNS/CORS/timeout); guard it
             // so we surface the real cause instead of "Cannot read properties of undefined".
             const status = e.response?.status ?? 'network-error';
