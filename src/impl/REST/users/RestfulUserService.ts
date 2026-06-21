@@ -276,13 +276,16 @@ export class RestfulUserService implements IUserService {
 
     listUsersInModerationQueue = (request: UserModerationListRequest): Promise<UserListResponse> => {
         const config: AxiosRequestConfig = {
-            method: POST,
-            url: buildAPI(this._config, `user/moderation/queues/reportedusers`),
+            // Documented as GET with filters in the query string — POST with a body was
+            // ignored by the endpoint, so filters/paging never applied.
+            method: GET,
+            url: buildAPI(this._config, `user/moderation/queues/reportedusers`, request),
             headers: this._jsonHeaders,
-            data: request
         }
         return stRequest(config).then(response=>response.data).catch(e=>{
-            throw new Error(`${e.response.status} ${e.response.data && e.response.data.message ? e.response.data.message : e.response.statusText} - ${e.message}`);
+            const status = e.response?.status ?? 'network-error';
+            const detail = (e.response?.data && e.response.data.message) ? e.response.data.message : (e.response?.statusText || e.message);
+            throw new Error(`${status} ${detail} - ${e.message}`);
         })
     }
 

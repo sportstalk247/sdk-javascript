@@ -1,5 +1,6 @@
 import {EventType} from "../ChatModels";
 import {Kind, ListRequest, ListResponse} from "../CommonModels";
+import {WebhookEvent} from "../webhooks/Webhooks";
 
 export interface Notification {
     kind: Kind.notification,
@@ -29,7 +30,9 @@ export interface NotificationRequest {
 export interface NotificationListRequest extends ListRequest, NotificationRequest {
     userid: string,
     includeread?: boolean,
-    filterNotificationTypes?: EventType[]
+    // Notification filter tokens use the WebhookEvent vocabulary (chatreply, chatquote,
+    // chatreaction, ...), not the chat EventType enum.
+    filterNotificationTypes?: WebhookEvent[]
 }
 
 export interface NotificationReadRequest extends NotificationRequest {

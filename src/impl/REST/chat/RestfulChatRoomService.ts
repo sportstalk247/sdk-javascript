@@ -61,7 +61,7 @@ export class RestfulChatRoomService implements IChatRoomService {
     listRooms = (cursor?: string, limit?: number): Promise<ChatRoomListResponse> => {
         const config:AxiosRequestConfig = {
             method: GET,
-            url: buildAPI(this._config, `${this._apiExt}?cursor=${cursor ? cursor : ''}&limit=${ limit ? limit : 100}`),
+            url: buildAPI(this._config, `${this._apiExt}?cursor=${cursor ? encodeURIComponent(cursor) : ''}&limit=${ limit ? limit : 100}`),
             headers: this._jsonHeaders,
         };
         return stRequest(config).then(result=>{
@@ -114,7 +114,7 @@ export class RestfulChatRoomService implements IChatRoomService {
         // @ts-ignore
         const roomid = forceObjKeyOrString(room);
         const userid = forceObjKeyOrString(user, 'userid');
-        const url = buildAPI(this._config, `${this._apiExt}/${roomid}/messagesbyuser/${userid}/?limit=${limit ? limit: 100}&cursor=${cursor ? cursor : ''}`);
+        const url = buildAPI(this._config, `${this._apiExt}/${roomid}/messagesbyuser/${encodeURIComponent(userid)}/?limit=${limit ? limit: 100}&cursor=${cursor ? encodeURIComponent(cursor) : ''}`);
         return stRequest({
             method: GET,
             url: url,
@@ -133,7 +133,7 @@ export class RestfulChatRoomService implements IChatRoomService {
     listParticipants = (room: ChatRoom, cursor?: string, maxresults: number = 200): Promise<Array<UserResult>> => {
         const config:AxiosRequestConfig = {
             method: GET,
-            url: buildAPI(this._config,`${this._apiExt}/${room.id}/participants?cursor=${cursor ? cursor : ''}&maxresults=${maxresults ? maxresults : 200}`),
+            url: buildAPI(this._config,`${this._apiExt}/${room.id}/participants?cursor=${cursor ? encodeURIComponent(cursor) : ''}&limit=${maxresults ? maxresults : 200}`),
             headers: this._jsonHeaders
         };
         return stRequest(config).then(result=>result.data);
@@ -494,7 +494,7 @@ export class RestfulChatRoomService implements IChatRoomService {
         const roomid = forceObjKeyOrString(room, 'id');
         const config: AxiosRequestConfig = {
             method:POST,
-            url: buildAPI(this._config, `/chat/rooms/${roomid}/users/${userid}/report`),
+            url: buildAPI(this._config, `chat/rooms/${roomid}/users/${userid}/report`),
             headers: this._jsonHeaders,
             data: {
                 userid: reporterid,

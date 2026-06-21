@@ -4,7 +4,7 @@ import {
     UserTokenRefreshFunction
 } from "../../../models/CommonModels";
 import {buildAPI, forceObjKeyOrString, formify, getJSONHeaders} from "../../utils";
-import {EventType} from "../../../models/ChatModels";
+import {WebhookEvent} from "../../../models/webhooks/Webhooks";
 import {SettingsError} from "../../errors";
 import {AxiosRequestConfig} from "axios";
 import {DELETE, GET, PUT} from "../../constants/api";
@@ -93,7 +93,10 @@ export class RestfulNotificationService implements INotificationService {
         const defaults: Partial<NotificationListRequest> = {
             limit: 20,
             includeread: false,
-            filterNotificationTypes: [EventType.speech, EventType.reply, EventType.reaction]
+            // Notifications use the WebhookEvent vocabulary (chatreply/chatquote/...), NOT
+            // the chat EventType (speech/reply/reaction) — the old default sent tokens the
+            // API doesn't recognize, so the filter matched nothing.
+            filterNotificationTypes: [WebhookEvent.chatreply, WebhookEvent.chatquote]
         }
         const finalRequest:NotificationListRequest = Object.assign(defaults, request);
         if(!finalRequest.userid) {
@@ -105,7 +108,7 @@ export class RestfulNotificationService implements INotificationService {
         // Build "filterNotificationTypes=a&filterNotificationTypes=b" WITHOUT a leading
         // "&" — the old code produced a malformed "?&filterNotificationTypes=..." query.
         const typeString = finalRequest.filterNotificationTypes
-            .map((type:EventType) => `filterNotificationTypes=${type}`)
+            .map((type) => `filterNotificationTypes=${type}`)
             .join('&');
         const config: AxiosRequestConfig = {
             method: GET,
@@ -138,11 +141,13 @@ export class RestfulNotificationService implements INotificationService {
         if(!request.userid){
             throw new Error("Must specify userid to set notification status");
         }
-        if(!request.notificationid && !request.eventid) {
-            throw Error("Must set either notificationid or eventid to delete a notification")
+        // The request field is `chateventid` (not `eventid`) — checking `eventid` meant
+        // this guard always failed, so set/delete-by-chatevent-id always threw.
+        if(!request.notificationid && !request.chateventid) {
+            throw Error("Must set either notificationid or chateventid")
         }
-        if(request.notificationid && request.eventid) {
-            throw Error("Set either notificationid or eventid, not both")
+        if(request.notificationid && request.chateventid) {
+            throw Error("Set either notificationid or chateventid, not both")
         }
     }
 
@@ -156,7 +161,7 @@ export class RestfulNotificationService implements INotificationService {
         const params:string = formify(finalRequest)
         let url;
         if(finalRequest.chateventid) {
-            url = buildAPI(this._config, `user/users/${finalRequest.userid}/notification/notifications/${finalRequest.chateventid}/update?${params}`);
+            url = buildAPI(this._config, `user/users/${finalRequest.userid}/notification/notificationsbyid/chateventid/${finalRequest.chateventid}/update?${params}`);
         } else {
             throw new Error("Must include chateventid to set read status");
         }
@@ -189,7 +194,7 @@ export class RestfulNotificationService implements INotificationService {
     }
 
     deleteNotificationByChatEventId = async (chateventid: string, userid: string): Promise<Notification> => {
-        const url = buildAPI(this._config,`user/users/${userid}/notifications/notificationsbyid/chateventid/${chateventid}`);
+        const url = buildAPI(this._config,`user/users/${userid}/notification/notificationsbyid/chateventid/${chateventid}`);
         const config:AxiosRequestConfig = {
             method: DELETE,
             headers: this._jsonHeaders,

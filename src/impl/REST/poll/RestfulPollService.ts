@@ -131,8 +131,8 @@ export class RestfulPollService implements IPollService {
         const config: AxiosRequestConfig = {
             method: GET,
             headers:this._jsonHeaders,
-            url: buildAPI(this._config, `/poll/poll/${pollid}`),
-            data: poll
+            // No leading slash (it produced ".../{appId}//poll/...") and no body on a GET.
+            url: buildAPI(this._config, `poll/poll/${pollid}`),
         }
         return stRequest(config).then(response=>response.data);
     }
@@ -187,7 +187,7 @@ export class RestfulPollService implements IPollService {
         const config: AxiosRequestConfig = {
             method: GET,
             headers:this._jsonHeaders,
-            url: buildAPI(this._config, `poll/poll?${cursor ? `cursor=${cursor}&` : '' }limit=${max_responses}`),
+            url: buildAPI(this._config, `poll/poll?${cursor ? `cursor=${encodeURIComponent(cursor)}&` : '' }limit=${max_responses}`),
         }
         return stRequest(config).then(response=>response.data);
     }

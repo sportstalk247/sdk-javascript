@@ -10,7 +10,8 @@ dotenv.config();
 const event:EventResult = require('./event.json');
 
 const { expect } = chai;
-const client = ChatClient.init(DEFAULT_CONFIG)
+// appId is required to build room/API URLs (buildAPI now validates it).
+const client = ChatClient.init(Object.assign({}, DEFAULT_CONFIG, { appId: 'app1', apiToken: 'tok' }))
 const eventService = client.getEventService();
 
 describe("Chat Client", function(){
