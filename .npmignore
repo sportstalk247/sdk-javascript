@@ -1,10 +1,34 @@
+# Only the compiled dist/ ships (see package.json "files"). Within it, strip anything an
+# npm consumer doesn't need at runtime, to keep `npm install` tiny.
+
+# Source maps — not needed at runtime.
+**/*.js.map
+**/*.d.ts.map
+
+# Compiled tests.
+dist/test/
+dist/test
+
+# Pre-built browser bundles are for CDN / <script> usage, NOT require('sportstalk-sdk')
+# (which resolves dist/index.js). Excluding them removes the single biggest file (~400kB).
+# If you need a CDN bundle, run `npm run web` / `web:prod` and publish dist/web-sdk*.js
+# separately, or add them back here.
+dist/web.js
+dist/web.d.ts
+dist/web-sdk.js
+dist/web-sdk.min.js
+
+# Repo cruft (defensive).
 test/
 node_modules/
 samples/
+util/
 .nyc_output/
+.nycrc
 .env
 .gitignore
+.gitlab-ci.yml
 .readthedocs.yml
+tsconfig.json
 docs/
 src/
-dist/test
