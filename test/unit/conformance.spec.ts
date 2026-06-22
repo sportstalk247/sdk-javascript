@@ -6,6 +6,7 @@ import { RestfulChatModerationService } from '../../src/impl/REST/chat/RestfulCh
 import { RestfulUserService } from '../../src/impl/REST/users/RestfulUserService';
 import { RestfulNotificationService } from '../../src/impl/REST/notifications/RestfulNotificationService';
 import { RestfulCommentService } from '../../src/impl/REST/comments/RestfulCommentService';
+import { RestfulPollService } from '../../src/impl/REST/poll/RestfulPollService';
 import { DEFAULT_CONFIG } from '../../src/impl/constants/api';
 
 const { expect } = chai;
@@ -74,6 +75,14 @@ describe('API conformance: method + path', () => {
         await new RestfulCommentService(TEST_CONFIG as any).react('conv1', 'cmt1', { userid: 'u1' } as any, { reaction: 'like', reacted: true } as any);
         expect(captured.method).to.equal('POST');
         expect(captured.url).to.match(/\/comments\/cmt1\/react$/);
+    });
+
+    it('listResponsesByUser resolves a Poll OBJECT by its `id` -> GET poll/poll/{id}/responses/user/{uid}', async () => {
+        // Regression: this method used to read only `pollid`, so a Poll object (which has
+        // `id`, not `pollid`) threw "Must supply a poll id". It must now resolve from `id`.
+        await new RestfulPollService(TEST_CONFIG as any).listResponsesByUser({ id: 'p1' } as any, 'u1');
+        expect(captured.method).to.equal('GET');
+        expect(captured.url).to.match(/\/poll\/poll\/p1\/responses\/user\/u1$/);
     });
 });
 

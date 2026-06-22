@@ -197,8 +197,12 @@ export class RestfulPollService implements IPollService {
      * @param poll can either be a poll object, an object with just a pollid, or a string representing the pollid for convenience.
      * @param user can be either a User object witha userid, any object with a userid property, or a string representing the userid.
      */
-    listResponsesByUser(poll: HasPollId | string, user: HasUserId | string): Promise<Array<UserPollChoice>> {
-        const pollid = forceObjKeyOrString(poll, 'pollid');
+    listResponsesByUser(poll: Poll | HasPollId | string, user: HasUserId | string): Promise<Array<UserPollChoice>> {
+        // Accept a Poll (which has `id`), a {pollid} object, or a raw id string — the
+        // docstring promises all three. Every other poll method keys on `id`; this one
+        // read only `pollid`, so passing a Poll object (no `pollid`) threw. Resolve from
+        // whichever identifier is present.
+        const pollid = typeof poll === 'string' ? poll : ((poll as any).id || (poll as any).pollid);
         const userid = forceObjKeyOrString(user, 'userid');
         if(!pollid) {
             throw new Error("Must supply a poll id for the Poll to retrieve poll responses by a user")
